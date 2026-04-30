@@ -397,6 +397,19 @@
   /* タブボタン本体は .grade-btn のスタイルに統一（個別色はインライン） */
   .tabs .tab { flex-shrink: 0; }
 
+  /* 出馬表テーブルの横スクロール */
+  .shutsuba-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+  .shutsuba-wrapper table {
+    min-width: 800px;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
   /* BABA BUTTONS */
   .baba-btn {
     padding: 8px 16px;
@@ -1313,21 +1326,24 @@
     <!-- TAB: 出馬表 -->
     <div class="panel active" id="tab-shutsuba">
       <div class="section">
-        <div style="background:#FAEEDA;border-radius:var(--border-radius-md);
-                    padding:10px 14px;margin-bottom:14px;font-size:12px;color:#854F0B">
-          ⚠️ 枠番・馬番は5月2日（土）10時以降に確定予定です。確定後に更新されます。
+        <div style="background:#E6F1FB;border-radius:var(--border-radius-md);
+                    padding:10px 14px;margin-bottom:14px;font-size:12px;color:#185FA5;line-height:1.7">
+          📋 出馬表（第173回 天皇賞（春）/ 2026年5月3日（日）京都11R 芝3200m）<br>
+          ⚠️ 枠番・馬番は本日4/30（木）16時以降に確定予定です。確定後に更新されます。<br>
+          ※スティンガーグラスは4/29追い切り後の歩様違和感のため回避。15頭立て。
         </div>
 
-        <div style="overflow-x:auto">
-          <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <div class="shutsuba-wrapper">
+          <table>
             <thead>
               <tr style="background:#1a2744;color:#fff">
                 <th style="padding:8px 6px;text-align:center;white-space:nowrap">枠</th>
                 <th style="padding:8px 6px;text-align:center;white-space:nowrap">馬番</th>
-                <th style="padding:8px 6px;text-align:left">馬名</th>
+                <th style="padding:8px 6px;text-align:left;white-space:nowrap">馬名</th>
                 <th style="padding:8px 6px;text-align:center;white-space:nowrap">性齢</th>
-                <th style="padding:8px 6px;text-align:left">騎手</th>
-                <th style="padding:8px 6px;text-align:left">調教師</th>
+                <th style="padding:8px 6px;text-align:center;white-space:nowrap">斤量</th>
+                <th style="padding:8px 6px;text-align:left;white-space:nowrap">騎手</th>
+                <th style="padding:8px 6px;text-align:left;white-space:nowrap">調教師</th>
                 <th style="padding:8px 6px;text-align:center;white-space:nowrap">前走</th>
                 <th style="padding:8px 6px;text-align:center;white-space:nowrap">着順</th>
                 <th style="padding:8px 6px;text-align:center;white-space:nowrap">予想オッズ</th>
@@ -3361,8 +3377,23 @@ function renderShutsubaTable() {
   var WAKU_BG = ['#ffffff','#1a1a1a','#d62828','#0077b6','#ffd60a','#2a9d8f','#f77f00','#ff8fab'];
   var WAKU_FG = ['#000','#fff','#fff','#fff','#000','#fff','#fff','#000'];
 
-  var sorted = horses.slice().sort(function(a,b){
-    return (a.odds == null ? 999 : a.odds) - (b.odds == null ? 999 : b.odds);
+  // netkeiba 出馬表の登録順（枠未確定時のフォールバック）
+  var REG_ORDER = [
+    'アクアヴァーナル','アドマイヤテラ','エヒト','クロワデュノール','ケイアイサンデラ',
+    'サンライズソレイユ','シンエンペラー','タガノデュード','プレシャスデイ','ヘデントール',
+    'ホーエリート','マイネルカンパーナ','ミステリーウェイ','ヴェルテンベルク','ヴェルミセル'
+  ];
+  var regIndex = {};
+  REG_ORDER.forEach(function(n, i){ regIndex[n] = i; });
+
+  // 馬番が設定されていれば馬番順、未設定なら登録順
+  var sorted = horses.slice().sort(function(a, b){
+    if (a.umaban != null && b.umaban != null) return a.umaban - b.umaban;
+    if (a.umaban != null) return -1;
+    if (b.umaban != null) return 1;
+    var ai = regIndex[a.name] != null ? regIndex[a.name] : 999;
+    var bi = regIndex[b.name] != null ? regIndex[b.name] : 999;
+    return ai - bi;
   });
 
   var html = '';
@@ -3389,16 +3420,18 @@ function renderShutsubaTable() {
     html += '<td style="text-align:center;padding:8px 6px;font-weight:500">'
          + (h.umaban != null ? h.umaban : '<span style="color:#ccc">未定</span>') + '</td>';
     // 馬名
-    html += '<td style="padding:8px 6px;font-weight:500;color:var(--text)">' + h.name + '</td>';
+    html += '<td style="padding:8px 6px;font-weight:500;color:var(--text);white-space:nowrap">' + h.name + '</td>';
     // 性齢
     html += '<td style="text-align:center;padding:8px 6px;color:var(--text-sub)">'
          + (h.sex || '') + (h.age || '') + '</td>';
+    // 斤量（天皇賞春は定量 58.0kg）
+    html += '<td style="text-align:center;padding:8px 6px;color:var(--text-sub)">58.0</td>';
     // 騎手
-    html += '<td style="padding:8px 6px;color:var(--text-sub)">' + (h.jockey || '未定') + '</td>';
+    html += '<td style="padding:8px 6px;color:var(--text-sub);white-space:nowrap">' + (h.jockey || '未定') + '</td>';
     // 調教師
-    html += '<td style="padding:8px 6px;color:var(--text-sub);font-size:11px">' + (h.trainer || '') + '</td>';
+    html += '<td style="padding:8px 6px;color:var(--text-sub);font-size:11px;white-space:nowrap">' + (h.trainer || '') + '</td>';
     // 前走
-    html += '<td style="text-align:center;padding:8px 6px;font-size:11px;color:var(--text-sub)">'
+    html += '<td style="text-align:center;padding:8px 6px;font-size:11px;color:var(--text-sub);white-space:nowrap">'
          + (h.prevRace || '') + '</td>';
     // 前走着順
     var rank = h.prevRank;
