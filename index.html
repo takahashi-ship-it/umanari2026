@@ -395,7 +395,14 @@
   }
   .tabs::-webkit-scrollbar { display: none; }
   /* タブボタン本体は .grade-btn のスタイルに統一（個別色はインライン） */
-  .tabs .tab { flex-shrink: 0; }
+  /* アクティブ/非アクティブは opacity で区別（grade-btn の active シャドウも継承） */
+  .tabs .tab {
+    flex-shrink: 0;
+    opacity: 0.5;
+    transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
+  }
+  .tabs .tab:hover { opacity: 0.8; transform: translateY(-1px); }
+  .tabs .tab.active { opacity: 1; transform: translateY(-1px); }
 
   /* 出馬表：PC・スマホ共通の横スクロール対応 */
   .shutsuba-scroll {
