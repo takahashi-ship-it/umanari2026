@@ -395,61 +395,38 @@
   }
   .tabs::-webkit-scrollbar { display: none; }
 
+  /* タブボタン：grade-btn と同サイズ・同タイポグラフィ */
   .tab {
-    padding: 7px 16px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
     border: none;
-    border-radius: 20px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+    letter-spacing: 0.03em;
     white-space: nowrap;
     flex-shrink: 0;
-    letter-spacing: .02em;
-    transition: opacity .15s, box-shadow .15s, transform .1s;
     opacity: 0.5;
-    font-family: inherit;
   }
   .tab:hover {
-    opacity: 0.75;
+    opacity: 0.8;
     transform: translateY(-1px);
   }
   .tab.active {
-    opacity: 1.0;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    opacity: 1;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
     transform: translateY(-1px);
   }
 
-  /* タブ別カラー（data-target で割当）— SIバッジ #1a2744 と統一感 */
-  .tab[data-target="tab-criteria"] {
-    background: #0F6E56;
-    color: #ffffff;
-    border: 2px solid #0F6E56;
-  }
-  .tab[data-target="tab-data"] {
-    background: #1a2744;
-    color: #ffffff;
-    border: 2px solid #1a2744;
-  }
-  .tab[data-target="tab-horses"] {
-    background: #A32D2D;
-    color: #ffffff;
-    border: 2px solid #A32D2D;
-  }
-  .tab[data-target="tab-check"] {
-    background: #B8600C;
-    color: #ffffff;
-    border: 2px solid #B8600C;
-  }
-  .tab[data-target="tab-report"] {
-    background: #B8960C;
-    color: #1a2744;
-    border: 2px solid #B8960C;
-  }
-  .tab[data-target="tab-kaime"] {
-    background: #2563EB;
-    color: #ffffff;
-    border: 2px solid #2563EB;
-  }
+  /* 各タブ固有の色（data-target で割当） */
+  .tab[data-target="tab-criteria"] { background:#0F6E56; color:#fff; }
+  .tab[data-target="tab-data"]     { background:#1a2744; color:#fff; }
+  .tab[data-target="tab-horses"]   { background:#A32D2D; color:#fff; }
+  .tab[data-target="tab-check"]    { background:#B8600C; color:#fff; }
+  .tab[data-target="tab-report"]   { background:#B8960C; color:#1a2744; }
+  .tab[data-target="tab-kaime"]    { background:#2563EB; color:#fff; }
 
   /* BABA BUTTONS */
   .baba-btn {
