@@ -397,6 +397,28 @@
   /* タブボタン本体は .grade-btn のスタイルに統一（個別色はインライン） */
   .tabs .tab { flex-shrink: 0; }
 
+  /* 出馬表：PC・スマホ共通の横スクロール対応 */
+  .shutsuba-scroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 12px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--border-radius-md);
+  }
+  .shutsuba-scroll table {
+    border-collapse: collapse;
+    white-space: nowrap;
+    min-width: 640px;
+    width: 100%;
+    font-size: 12px;
+  }
+  @media (max-width: 640px) {
+    .shutsuba-scroll table { font-size: 11px; min-width: 580px; }
+    .shutsuba-scroll th,
+    .shutsuba-scroll td { padding: 6px 4px !important; }
+  }
+
 
   /* BABA BUTTONS */
   .baba-btn {
@@ -1321,27 +1343,21 @@
           ※スティンガーグラスは4/29追い切り後の歩様違和感のため回避。15頭立て。
         </div>
 
-        <div style="width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:12px">
-          <table id="shutsuba-table" style="
-            border-collapse:collapse;
-            font-size:12px;
-            white-space:nowrap;
-            min-width:720px;
-            width:100%;
-          ">
+        <div class="shutsuba-scroll">
+          <table id="shutsuba-table">
             <thead>
               <tr style="background:#1a2744;color:#fff;font-size:11px">
-                <th style="padding:8px 8px;text-align:center;min-width:32px">枠</th>
-                <th style="padding:8px 8px;text-align:center;min-width:32px">馬番</th>
-                <th style="padding:8px 8px;text-align:left;min-width:120px">馬名</th>
-                <th style="padding:8px 6px;text-align:center;min-width:48px">性齢</th>
-                <th style="padding:8px 6px;text-align:center;min-width:40px">斤量</th>
-                <th style="padding:8px 8px;text-align:left;min-width:80px">騎手</th>
-                <th style="padding:8px 8px;text-align:left;min-width:80px">調教師</th>
-                <th style="padding:8px 8px;text-align:center;min-width:100px">前走</th>
-                <th style="padding:8px 6px;text-align:center;min-width:48px">前走着</th>
+                <th style="padding:8px 6px;text-align:center;min-width:28px">枠</th>
+                <th style="padding:8px 6px;text-align:center;min-width:32px">馬番</th>
+                <th style="padding:8px 8px;text-align:left;min-width:110px">馬名</th>
+                <th style="padding:8px 6px;text-align:center;min-width:36px">性齢</th>
+                <th style="padding:8px 6px;text-align:center;min-width:36px">斤量</th>
+                <th style="padding:8px 8px;text-align:left;min-width:72px">騎手</th>
+                <th style="padding:8px 8px;text-align:left;min-width:72px">調教師</th>
+                <th style="padding:8px 6px;text-align:center;min-width:88px">前走</th>
+                <th style="padding:8px 6px;text-align:center;min-width:44px">前走着</th>
                 <th style="padding:8px 6px;text-align:center;min-width:64px">予想オッズ</th>
-                <th style="padding:8px 6px;text-align:center;min-width:40px">調教</th>
+                <th style="padding:8px 6px;text-align:center;min-width:36px">調教</th>
               </tr>
             </thead>
             <tbody id="shutsuba-tbody"></tbody>
