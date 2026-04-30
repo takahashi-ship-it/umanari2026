@@ -394,15 +394,35 @@
     -ms-overflow-style: none;
   }
   .tabs::-webkit-scrollbar { display: none; }
-  /* タブボタン本体は .grade-btn のスタイルに統一（個別色はインライン） */
-  /* アクティブ/非アクティブは opacity で区別（grade-btn の active シャドウも継承） */
+  /* タブボタン：grade-btn と同一デザイン（白背景・選択時ゴールド） */
   .tabs .tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong, #d0d0d0);
+    background: var(--bg, #ffffff);
+    color: var(--text-sub, #555555);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
     flex-shrink: 0;
-    opacity: 0.5;
-    transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
+    font-family: inherit;
   }
-  .tabs .tab:hover { opacity: 0.8; transform: translateY(-1px); }
-  .tabs .tab.active { opacity: 1; transform: translateY(-1px); }
+  .tabs .tab:hover {
+    border-color: var(--gold, #B8960C);
+    color: var(--navy, #1a2744);
+  }
+  .tabs .tab.active {
+    background: var(--gold, #B8960C);
+    color: #ffffff;
+    border-color: var(--gold, #B8960C);
+    box-shadow: 0 2px 6px rgba(184,150,12,0.25);
+  }
 
   /* 出馬表：PC・スマホ共通の横スクロール対応 */
   .shutsuba-scroll {
@@ -1331,13 +1351,13 @@
 
     <!-- TABS -->
     <nav class="tabs" id="contentTabs">
-      <button class="grade-btn tab active" data-target="tab-shutsuba" style="background:#1a2744;color:#fff;border-color:#1a2744">出馬表</button>
-      <button class="grade-btn tab"        data-target="tab-criteria" style="background:#0F6E56;color:#fff;border-color:#0F6E56">選定基準</button>
-      <button class="grade-btn tab"        data-target="tab-data"     style="background:#2d3a5e;color:#fff;border-color:#2d3a5e">過去10年</button>
-      <button class="grade-btn tab"        data-target="tab-horses"   style="background:#A32D2D;color:#fff;border-color:#A32D2D">登録馬・信頼度</button>
-      <button class="grade-btn tab"        data-target="tab-check"    style="background:#B8600C;color:#fff;border-color:#B8600C">危険な人気馬・穴馬</button>
-      <button class="grade-btn tab"        data-target="tab-kaime"    style="background:#2563EB;color:#fff;border-color:#2563EB">買い目</button>
-      <button class="grade-btn tab"        data-target="tab-report"   style="background:#B8960C;color:#1a2744;border-color:#B8960C">収支レポート</button>
+      <button class="tab active" data-target="tab-shutsuba">出馬表</button>
+      <button class="tab"        data-target="tab-criteria">選定基準</button>
+      <button class="tab"        data-target="tab-data">過去10年</button>
+      <button class="tab"        data-target="tab-horses">登録馬・信頼度</button>
+      <button class="tab"        data-target="tab-check">危険な人気馬・穴馬</button>
+      <button class="tab"        data-target="tab-kaime">買い目</button>
+      <button class="tab"        data-target="tab-report">収支レポート</button>
     </nav>
 
     <!-- TAB: 出馬表 -->
