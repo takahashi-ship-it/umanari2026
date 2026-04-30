@@ -3279,14 +3279,21 @@ function initOddsGrid() {
   var h = '';
   for (var i = 0; i < horses.length; i++) {
     var o = horses[i];
-    var est = o.popEstimate === 1 ? '2.5' :
-              o.popEstimate === 2 ? '5.0' :
-              o.popEstimate === 3 ? '8.0' :
-              o.popEstimate <= 5 ? '12.0' : '25.0';
+    // odds が設定されていればそれを使用、未設定なら popEstimate からの推定値
+    var est;
+    if (o.odds != null && o.odds > 0) {
+      est = (+o.odds).toFixed(1);
+    } else {
+      est = o.popEstimate === 1 ? '2.5' :
+            o.popEstimate === 2 ? '5.0' :
+            o.popEstimate === 3 ? '8.0' :
+            o.popEstimate <= 5 ? '12.0' : '25.0';
+    }
+    var umaPrefix = (o.umaban != null) ? (o.umaban + '番 ') : (o.uma != null ? (o.uma + '番 ') : '');
     h += '<div style="display:flex;align-items:center;gap:6px;background:var(--color-background-secondary);'
        + 'padding:6px 10px;border-radius:var(--border-radius-md)">';
     h += '<span style="font-size:12px;font-weight:500;color:var(--color-text-primary);flex:1">'
-       + o.name + '</span>';
+       + umaPrefix + o.name + '</span>';
     h += '<input type="number" id="odds_' + i + '" value="' + est
        + '" step="0.1" min="1" style="width:70px;padding:4px 6px;border:0.5px solid var(--color-border-secondary);'
        + 'border-radius:var(--border-radius-md);background:var(--color-background-primary);'
