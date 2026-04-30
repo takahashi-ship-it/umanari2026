@@ -1301,16 +1301,60 @@
 
     <!-- TABS -->
     <nav class="tabs" id="contentTabs">
-      <button class="grade-btn tab active" data-target="tab-criteria" style="background:#0F6E56;color:#fff;border-color:#0F6E56">選定基準</button>
-      <button class="grade-btn tab"        data-target="tab-data"     style="background:#1a2744;color:#fff;border-color:#1a2744">過去10年</button>
+      <button class="grade-btn tab active" data-target="tab-shutsuba" style="background:#1a2744;color:#fff;border-color:#1a2744">出馬表</button>
+      <button class="grade-btn tab"        data-target="tab-criteria" style="background:#0F6E56;color:#fff;border-color:#0F6E56">選定基準</button>
+      <button class="grade-btn tab"        data-target="tab-data"     style="background:#2d3a5e;color:#fff;border-color:#2d3a5e">過去10年</button>
       <button class="grade-btn tab"        data-target="tab-horses"   style="background:#A32D2D;color:#fff;border-color:#A32D2D">登録馬・信頼度</button>
-      <button class="grade-btn tab"        data-target="tab-check"    style="background:#B8600C;color:#fff;border-color:#B8600C">危険な人気馬・穴馬チェック</button>
-      <button class="grade-btn tab"        data-target="tab-report"   style="background:#B8960C;color:#1a2744;border-color:#B8960C">収支レポート</button>
+      <button class="grade-btn tab"        data-target="tab-check"    style="background:#B8600C;color:#fff;border-color:#B8600C">危険な人気馬・穴馬</button>
       <button class="grade-btn tab"        data-target="tab-kaime"    style="background:#2563EB;color:#fff;border-color:#2563EB">買い目</button>
+      <button class="grade-btn tab"        data-target="tab-report"   style="background:#B8960C;color:#1a2744;border-color:#B8960C">収支レポート</button>
     </nav>
 
+    <!-- TAB: 出馬表 -->
+    <div class="panel active" id="tab-shutsuba">
+      <div class="section">
+        <div style="background:#FAEEDA;border-radius:var(--border-radius-md);
+                    padding:10px 14px;margin-bottom:14px;font-size:12px;color:#854F0B">
+          ⚠️ 枠番・馬番は5月2日（土）10時以降に確定予定です。確定後に更新されます。
+        </div>
+
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:12px">
+            <thead>
+              <tr style="background:#1a2744;color:#fff">
+                <th style="padding:8px 6px;text-align:center;white-space:nowrap">枠</th>
+                <th style="padding:8px 6px;text-align:center;white-space:nowrap">馬番</th>
+                <th style="padding:8px 6px;text-align:left">馬名</th>
+                <th style="padding:8px 6px;text-align:center;white-space:nowrap">性齢</th>
+                <th style="padding:8px 6px;text-align:left">騎手</th>
+                <th style="padding:8px 6px;text-align:left">調教師</th>
+                <th style="padding:8px 6px;text-align:center;white-space:nowrap">前走</th>
+                <th style="padding:8px 6px;text-align:center;white-space:nowrap">着順</th>
+                <th style="padding:8px 6px;text-align:center;white-space:nowrap">予想オッズ</th>
+                <th style="padding:8px 6px;text-align:center;white-space:nowrap">調教</th>
+              </tr>
+            </thead>
+            <tbody id="shutsuba-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>当日馬場予報</h3>
+        <div style="background:#E6F1FB;border-radius:var(--border-radius-md);
+                    padding:12px 14px;font-size:12px;color:#185FA5;line-height:1.9">
+          🌧 5月3日（日）京都 <strong>降水確率90%</strong><br>
+          馬場状態：稍重〜重馬場の可能性大<br>
+          <span style="font-size:11px;color:var(--text-sub)">
+            ※雨の場合、シンエンペラー（欧州血統）・ヘデントールの評価上昇。
+            アドマイヤテラ・クロワデュノールはスピード型のため割引検討。
+          </span>
+        </div>
+      </div>
+    </div>
+
     <!-- TAB: 選定基準 -->
-    <div class="panel active" id="tab-criteria">
+    <div class="panel" id="tab-criteria">
       <div class="section">
         <h3>複勝率重視の選定基準</h3>
         <p class="lead">
@@ -1851,6 +1895,7 @@ document.querySelectorAll('#contentTabs .tab').forEach(t => {
     document.getElementById(t.dataset.target).classList.add('active');
     if (t.dataset.target === 'tab-check' && typeof sw === 'function') sw('ana');
     if (t.dataset.target === 'tab-kaime' && typeof sw === 'function') sw('kaime');
+    if (t.dataset.target === 'tab-shutsuba') renderShutsubaTable();
   });
 });
 
@@ -1874,8 +1919,8 @@ const HORSES_BY_RACE = {
     note: "【調教S急上昇】斉藤師『先週より格段に良くなっている』。専門家『良い意味でいつもとは別馬のような動き』。最終CW6F99.7秒ラスト11.3秒。初の3200m・中3週が課題だが能力最上位。折り合い不安なし。キタサンブラック産駒は芝3000m以上【0-0-2-6】と連対なしの血統データには注意",
     longDist: false, repeater: false, age45: true,
     bodyWeight: 480, kyoto: false,
-    popEstimate: 1, training: "S",
-    waku: null, umaban: null, odds: null,
+    popEstimate: 2, training: "S",
+    waku: null, umaban: null, odds: 2.8,
     speedIndex: 96, prevTime: 117.6, prevCourse: "阪神芝2000m", prevBaba: "良",
     babaScore: { good:88, slightHeavy:82, heavy:65, veryHeavy:50 },
     babaNotes: { good:'大阪杯・日本ダービーともに良馬場で圧勝', heavy:'重馬場経験なし・不安', veryHeavy:'距離延長×不良は未知数' },
@@ -1891,8 +1936,8 @@ const HORSES_BY_RACE = {
     note: "【調教B】最終CW84.8-69.5-54.0-38.5-11.2で併せ馬に遅れ。米国遠征取りやめから急転直下参戦。欧州血統で長距離適性は高いが、前走有馬記念14着・調教遅れで状態面に不安。人気薄なら面白いが積極的には買いにくい",
     longDist: false, repeater: false, age45: true,
     bodyWeight: 470, kyoto: false,
-    popEstimate: 4, training: "B",
-    waku: null, umaban: null, odds: null,
+    popEstimate: 5, training: "B",
+    waku: null, umaban: null, odds: 19.2,
     speedIndex: 60, prevTime: null, prevCourse: "中山芝2500m", prevBaba: "良",
     babaScore: { good:75, slightHeavy:78, heavy:82, veryHeavy:80 },
     babaNotes: { heavy:'欧州血統で道悪得意。稍重〜重でパフォーマンス向上', good:'良馬場でも好走実績あり' },
@@ -1909,7 +1954,7 @@ const HORSES_BY_RACE = {
     longDist: true, repeater: true, age45: true,
     bodyWeight: 490, kyoto: true,
     popEstimate: 3, training: "B",
-    waku: null, umaban: null, odds: null,
+    waku: null, umaban: null, odds: 5.3,
     speedIndex: 65, prevTime: null, prevCourse: "京都芝2200m", prevBaba: "良",
     babaScore: { good:85, slightHeavy:83, heavy:80, veryHeavy:75 },
     babaNotes: { good:'昨年天皇賞春（良）を制覇', heavy:'道悪でも崩れない安定感' },
@@ -1925,8 +1970,8 @@ const HORSES_BY_RACE = {
     note: "【調教S盤石】友道師『前走100点。追い切りはさらに良くなっている。心肺機能が高い』武豊『充実度とこの馬の成長力でいいレースをしたい』。Pコース単走の軽め調整＝仕上がり完了の証。阪神大賞典レコード勝ちからの最良ローテ。データ面で死角なし。複勝率80%の好データに複数該当",
     longDist: true, repeater: false, age45: true,
     bodyWeight: 475, kyoto: true,
-    popEstimate: 2, training: "S",
-    waku: null, umaban: null, odds: null,
+    popEstimate: 1, training: "S",
+    waku: null, umaban: null, odds: 2.8,
     speedIndex: 92, prevTime: 182.0, prevCourse: "阪神芝3000m", prevBaba: "良",
     babaScore: { good:82, slightHeavy:80, heavy:75, veryHeavy:65 },
     babaNotes: { good:'阪神大賞典レコードは良馬場での記録' },
@@ -1943,7 +1988,7 @@ const HORSES_BY_RACE = {
     longDist: false, repeater: false, age45: true,
     bodyWeight: 488, kyoto: false,
     popEstimate: 6, training: "B",
-    waku: null, umaban: null, odds: null,
+    waku: null, umaban: null, odds: 22.6,
     speedIndex: 82, prevTime: 117.6, prevCourse: "阪神芝2000m", prevBaba: "良",
   },
   {
@@ -1957,8 +2002,8 @@ const HORSES_BY_RACE = {
     note: "【調教A順調】最終CW6F84.8秒ラスト11.4秒、馬なり先着。松山『右にもたれるようなところもなくリラックスして走っていました。乗りやすくて長距離向きのイメージ。性格もいい』四位師『ジョッキーも「いい反応でした」といい追い切りだった』。牝馬のジンクス（過去10年勝利ゼロ）はあるが追い切りは出走馬中上位。牝馬の73年ぶりV狙う",
     longDist: true, repeater: false, age45: true,
     bodyWeight: 450, kyoto: true,
-    popEstimate: 7, training: "A",
-    waku: null, umaban: null, odds: null,
+    popEstimate: 4, training: "A",
+    waku: null, umaban: null, odds: 15.3,
     speedIndex: 88, prevTime: 182.2, prevCourse: "阪神芝3000m", prevBaba: "良",
     babaScore: { good:68, slightHeavy:72, heavy:70, veryHeavy:68 },
     babaNotes: { slightHeavy:'稍重以上でも崩れない安定感', good:'ただし牝馬のジンクスあり' },
@@ -1974,8 +2019,8 @@ const HORSES_BY_RACE = {
     note: "【調教A急上昇・穴候補】CWで併せ馬、ラップ16.6-15.4-15.6-14.1-12.3-11.3で併入。戸崎『スイッチが入って状態が上がってきた』追い切りの動きは出走馬中屈指。29倍なら妙味十分。牝馬の壁があるが73年ぶり牝馬Vを狙う穴馬",
     longDist: true, repeater: false, age45: true,
     bodyWeight: 458, kyoto: false,
-    popEstimate: 9, training: "A",
-    waku: null, umaban: null, odds: null,
+    popEstimate: 7, training: "A",
+    waku: null, umaban: null, odds: 29.5,
     speedIndex: 72, prevTime: 212.6, prevCourse: "東京芝3400m", prevBaba: "良",
   },
   {
@@ -1989,8 +2034,8 @@ const HORSES_BY_RACE = {
     note: "【調教C】坂路単走。問題なく調教できたが9歳・日経賞4着以下のデータ的には消し。",
     longDist: true, repeater: false, age45: false,
     bodyWeight: 500, kyoto: false,
-    popEstimate: 14, training: "C",
-    waku: null, umaban: null, odds: null,
+    popEstimate: 8, training: "C",
+    waku: null, umaban: null, odds: 88.6,
     speedIndex: 40, prevTime: null, prevCourse: "中山芝2500m", prevBaba: "良",
     babaScore: { good:45, slightHeavy:45, heavy:45, veryHeavy:45 },
     babaNotes: { good:'日経賞4着以下→天皇賞春は【0-0-0-21】どの馬場でも消し' },
@@ -2006,8 +2051,8 @@ const HORSES_BY_RACE = {
     note: "【調教B】順調。特記事項なし。",
     longDist: true, repeater: false, age45: false,
     bodyWeight: 470, kyoto: false,
-    popEstimate: 10, training: "B",
-    waku: null, umaban: null, odds: null,
+    popEstimate: 9, training: "B",
+    waku: null, umaban: null, odds: 99.5,
     speedIndex: 73, prevTime: 212.5, prevCourse: "東京芝3400m", prevBaba: "良",
     babaScore: { good:72, slightHeavy:75, heavy:78, veryHeavy:72 },
     babaNotes: { heavy:'道悪での好走実績あり' },
@@ -2023,8 +2068,8 @@ const HORSES_BY_RACE = {
     note: "【調教A超穴候補】1週前追い切りが全頭中最高評価。114倍の超大穴。3連複のヒモには必須と専門家。牝馬×6歳の割引はあるが追い切りだけなら評価大",
     longDist: true, repeater: false, age45: false,
     bodyWeight: 456, kyoto: false,
-    popEstimate: 13, training: "A",
-    waku: null, umaban: null, odds: null,
+    popEstimate: 12, training: "A",
+    waku: null, umaban: null, odds: 116.1,
     speedIndex: 55, prevTime: null, prevCourse: "阪神芝3000m", prevBaba: "良",
   },
   {
@@ -2038,8 +2083,8 @@ const HORSES_BY_RACE = {
     note: "【調教C】前走OP特別・重賞実績なし。",
     longDist: false, repeater: false, age45: true,
     bodyWeight: 460, kyoto: false,
-    popEstimate: 15, training: "C",
-    waku: null, umaban: null, odds: null,
+    popEstimate: 13, training: "C",
+    waku: null, umaban: null, odds: 156.2,
     speedIndex: 45, prevTime: null, prevCourse: "阪神芝3000m", prevBaba: "良",
   },
   {
@@ -2053,8 +2098,8 @@ const HORSES_BY_RACE = {
     note: "【調教B+穴注意】CWで格下相手に半馬身先着。前走より気持ちが入ってきた。青木師『前走は外枠が響いた。好位の内を取って隠れ、最後に抜け出るのが理想』追い切りの出来は『かなり良い部類』長距離戦の紛れを狙うなら押さえたい",
     longDist: true, repeater: false, age45: false,
     bodyWeight: 480, kyoto: false,
-    popEstimate: 16, training: "B",
-    waku: null, umaban: null, odds: null,
+    popEstimate: 10, training: "B",
+    waku: null, umaban: null, odds: 108.6,
     speedIndex: 55, prevTime: 213.0, prevCourse: "東京芝3400m", prevBaba: "良",
   },
   {
@@ -2068,8 +2113,8 @@ const HORSES_BY_RACE = {
     note: "【調教C】逃げ馬。日経賞14着からの巻き返し厳しい。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
-    popEstimate: 17, training: "C",
-    waku: null, umaban: null, odds: null,
+    popEstimate: 14, training: "C",
+    waku: null, umaban: null, odds: 187.4,
     speedIndex: 30, prevTime: null, prevCourse: "中山芝2500m", prevBaba: "良",
   },
   {
@@ -2083,8 +2128,8 @@ const HORSES_BY_RACE = {
     note: "【調教C】大敗からの参戦。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
-    popEstimate: 18, training: "C",
-    waku: null, umaban: null, odds: null,
+    popEstimate: 11, training: "C",
+    waku: null, umaban: null, odds: 111.1,
     speedIndex: 30, prevTime: null, prevCourse: "阪神芝2600m", prevBaba: "良",
   },
   {
@@ -2098,8 +2143,8 @@ const HORSES_BY_RACE = {
     note: "【調教C】障害未勝利11着からの参戦。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
-    popEstimate: 19, training: "C",
-    waku: null, umaban: null, odds: null,
+    popEstimate: 15, training: "C",
+    waku: null, umaban: null, odds: 337.0,
     speedIndex: 20, prevTime: null, prevCourse: "小倉障2860m", prevBaba: "良",
   },
 ],
@@ -3254,6 +3299,9 @@ function setCurrentRace(name) {
   var activeTab = document.querySelector('#contentTabs .tab.active');
   if (activeTab && activeTab.dataset.target === 'tab-check') initOddsGrid();
 
+  // Refresh 出馬表 if shutsuba tab is active (or always — table is cheap)
+  if (document.getElementById('shutsuba-tbody')) renderShutsubaTable();
+
   // Refresh baba prediction with current selection (works even before tab-check is opened)
   if (typeof setBaba === 'function') setBaba(currentBaba);
 
@@ -3266,6 +3314,7 @@ function setCurrentRace(name) {
 renderPastData();
 renderHorses();
 renderCriteria();
+renderShutsubaTable();
 
 /* =====================================================
  * 3.6) ANA-CHECK TAB (危険な人気馬・穴馬チェック)
@@ -3303,6 +3352,71 @@ function initOddsGrid() {
   }
   grid.innerHTML = h;
   grid.dataset.initialized = '1';
+}
+
+function renderShutsubaTable() {
+  var tbody = document.getElementById('shutsuba-tbody');
+  if (!tbody || !window.horses) return;
+
+  var WAKU_BG = ['#ffffff','#1a1a1a','#d62828','#0077b6','#ffd60a','#2a9d8f','#f77f00','#ff8fab'];
+  var WAKU_FG = ['#000','#fff','#fff','#fff','#000','#fff','#fff','#000'];
+
+  var sorted = horses.slice().sort(function(a,b){
+    return (a.odds == null ? 999 : a.odds) - (b.odds == null ? 999 : b.odds);
+  });
+
+  var html = '';
+  sorted.forEach(function(h){
+    var trainingColor = h.training === 'S' ? '#E24B4A' :
+                        h.training === 'A' ? '#1D9E75' :
+                        h.training === 'B' ? '#EF9F27' : '#888';
+
+    html += '<tr style="border-bottom:0.5px solid var(--border)">';
+    // 枠
+    html += '<td style="text-align:center;padding:8px 6px">';
+    if (h.waku) {
+      var bg = WAKU_BG[h.waku - 1] || '#999';
+      var fg = WAKU_FG[h.waku - 1] || '#fff';
+      var bd = h.waku === 1 ? 'border:1px solid #999;' : '';
+      html += '<div style="width:24px;height:24px;border-radius:4px;background:' + bg + ';color:' + fg + ';' + bd
+           + 'font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto">'
+           + h.waku + '</div>';
+    } else {
+      html += '<span style="color:#ccc">未定</span>';
+    }
+    html += '</td>';
+    // 馬番
+    html += '<td style="text-align:center;padding:8px 6px;font-weight:500">'
+         + (h.umaban != null ? h.umaban : '<span style="color:#ccc">未定</span>') + '</td>';
+    // 馬名
+    html += '<td style="padding:8px 6px;font-weight:500;color:var(--text)">' + h.name + '</td>';
+    // 性齢
+    html += '<td style="text-align:center;padding:8px 6px;color:var(--text-sub)">'
+         + (h.sex || '') + (h.age || '') + '</td>';
+    // 騎手
+    html += '<td style="padding:8px 6px;color:var(--text-sub)">' + (h.jockey || '未定') + '</td>';
+    // 調教師
+    html += '<td style="padding:8px 6px;color:var(--text-sub);font-size:11px">' + (h.trainer || '') + '</td>';
+    // 前走
+    html += '<td style="text-align:center;padding:8px 6px;font-size:11px;color:var(--text-sub)">'
+         + (h.prevRace || '') + '</td>';
+    // 前走着順
+    var rank = h.prevRank;
+    var rankColor = rank > 0 && rank <= 3 ? '#0F6E56' : rank > 0 && rank <= 5 ? '#EF9F27' : '#A32D2D';
+    html += '<td style="text-align:center;padding:8px 6px;font-weight:500;color:' + rankColor + '">'
+         + (rank ? rank + '着' : '-') + '</td>';
+    // 予想オッズ
+    var oddsDisp = h.odds != null ? (+h.odds).toFixed(1) + '倍' : '---';
+    var oddsColor = h.odds != null && h.odds <= 5 ? '#A32D2D' :
+                    h.odds != null && h.odds <= 10 ? '#EF9F27' : 'var(--text-sub)';
+    html += '<td style="text-align:center;padding:8px 6px;font-weight:600;color:' + oddsColor + '">'
+         + oddsDisp + '</td>';
+    // 調教
+    html += '<td style="text-align:center;padding:8px 6px;font-weight:700;color:' + trainingColor + '">'
+         + (h.training || '-') + '</td>';
+    html += '</tr>';
+  });
+  tbody.innerHTML = html;
 }
 
 function getDangerLogic() {
