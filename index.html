@@ -379,7 +379,7 @@
     gap: 10px;
   }
 
-  /* === タブボタン（グレードボタンと完全同スタイル）=== */
+  /* === タブコンテナ（横スクロールカルーセル）=== */
   .tabs {
     display: flex;
     flex-wrap: nowrap;
@@ -394,39 +394,8 @@
     -ms-overflow-style: none;
   }
   .tabs::-webkit-scrollbar { display: none; }
-
-  .tab {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 14px;
-    font-size: 12px;
-    font-weight: 700;
-    font-family: inherit;
-    letter-spacing: 0.03em;
-    border: none;
-    border-radius: 999px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    cursor: pointer;
-    opacity: 0.45;
-    transition: all 0.15s;
-    line-height: 1;
-  }
-  .tab:hover { opacity: 0.72; transform: translateY(-1px); }
-  .tab.active {
-    opacity: 1;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.22);
-    transform: translateY(-1px);
-  }
-
-  /* 各タブの色（既存 data-target を維持） */
-  .tab[data-target="tab-criteria"] { background:#0F6E56; color:#ffffff; }
-  .tab[data-target="tab-data"]     { background:#1a2744; color:#ffffff; }
-  .tab[data-target="tab-horses"]   { background:#A32D2D; color:#ffffff; }
-  .tab[data-target="tab-check"]    { background:#B8600C; color:#ffffff; }
-  .tab[data-target="tab-report"]   { background:#B8960C; color:#1a2744; }
-  .tab[data-target="tab-kaime"]    { background:#2563EB; color:#ffffff; }
+  /* タブボタン本体は .grade-btn のスタイルに統一（個別色はインライン） */
+  .tabs .tab { flex-shrink: 0; }
 
   /* BABA BUTTONS */
   .baba-btn {
@@ -1332,12 +1301,12 @@
 
     <!-- TABS -->
     <nav class="tabs" id="contentTabs">
-      <button class="tab active" data-target="tab-criteria">選定基準</button>
-      <button class="tab" data-target="tab-data">過去10年</button>
-      <button class="tab" data-target="tab-horses">登録馬・信頼度</button>
-      <button class="tab" data-target="tab-check">危険な人気馬・穴馬チェック</button>
-      <button class="tab" data-target="tab-report">収支レポート</button>
-      <button class="tab" data-target="tab-kaime">買い目</button>
+      <button class="grade-btn tab active" data-target="tab-criteria" style="background:#0F6E56;color:#fff;border-color:#0F6E56">選定基準</button>
+      <button class="grade-btn tab"        data-target="tab-data"     style="background:#1a2744;color:#fff;border-color:#1a2744">過去10年</button>
+      <button class="grade-btn tab"        data-target="tab-horses"   style="background:#A32D2D;color:#fff;border-color:#A32D2D">登録馬・信頼度</button>
+      <button class="grade-btn tab"        data-target="tab-check"    style="background:#B8600C;color:#fff;border-color:#B8600C">危険な人気馬・穴馬チェック</button>
+      <button class="grade-btn tab"        data-target="tab-report"   style="background:#B8960C;color:#1a2744;border-color:#B8960C">収支レポート</button>
+      <button class="grade-btn tab"        data-target="tab-kaime"    style="background:#2563EB;color:#fff;border-color:#2563EB">買い目</button>
     </nav>
 
     <!-- TAB: 選定基準 -->
