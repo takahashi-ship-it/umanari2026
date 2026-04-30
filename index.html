@@ -379,31 +379,44 @@
     gap: 10px;
   }
 
-  /* TABS */
+  /* TABS — 横スクロール（カルーセル）形式 */
   .tabs {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
     gap: 6px;
     margin-bottom: 1.5rem;
+    padding: 4px 0 12px;
     border-bottom: none;
-    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
+  .tabs::-webkit-scrollbar { display: none; }
+
   .tab {
-    padding: 8px 16px;
+    padding: 7px 16px;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
-    border-radius: 6px;
+    border: none;
+    border-radius: 20px;
     white-space: nowrap;
-    letter-spacing: 0.03em;
-    transition: opacity .15s, box-shadow .15s;
-    opacity: 0.55;
+    flex-shrink: 0;
+    letter-spacing: .02em;
+    transition: opacity .15s, box-shadow .15s, transform .1s;
+    opacity: 0.5;
     font-family: inherit;
   }
-  .tab:hover { opacity: 0.8; }
+  .tab:hover {
+    opacity: 0.75;
+    transform: translateY(-1px);
+  }
   .tab.active {
     opacity: 1.0;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    transform: translateY(-1px);
   }
 
   /* タブ別カラー（data-target で割当）— SIバッジ #1a2744 と統一感 */
