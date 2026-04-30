@@ -4061,9 +4061,13 @@ function updateHeaderStats() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  updateHeaderStats();
-  if (typeof renderShutsubaTable === 'function') renderShutsubaTable();
+document.addEventListener('DOMContentLoaded', updateHeaderStats);
+
+// スマホ・PC両対応：ページ読み込み完了後に出馬表データを確実に描画
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    if (typeof renderShutsubaTable === 'function') renderShutsubaTable();
+  }, 50);
 });
 </script>
 </body>
