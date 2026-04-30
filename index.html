@@ -3324,12 +3324,12 @@ function setCurrentRace(name) {
 renderPastData();
 renderHorses();
 renderCriteria();
-renderShutsubaTable();
 
 /* =====================================================
  * 3.6) ANA-CHECK TAB (危険な人気馬・穴馬チェック)
  * ===================================================== */
 window.horses = HORSES;
+renderShutsubaTable();
 
 function initOddsGrid() {
   var grid = document.getElementById('odds-input-grid');
@@ -3366,7 +3366,8 @@ function initOddsGrid() {
 
 function renderShutsubaTable() {
   var tbody = document.getElementById('shutsuba-tbody');
-  if (!tbody || !window.horses) return;
+  var horses = window.horses || (typeof HORSES !== 'undefined' ? HORSES : null);
+  if (!tbody || !horses) return;
 
   // 登録順（netkeiba順）
   var order = [
