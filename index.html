@@ -1397,6 +1397,13 @@
           ※スティンガーグラスは4/29追い切り後の歩様違和感のため回避。15頭立て。
         </div>
 
+        <!-- 馬体重入力パネル -->
+        <div style="background:#F8F8F8;border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:14px">
+          <div style="font-size:12px;font-weight:700;color:#1a2744;margin-bottom:4px">⚖️ 馬体重入力（当日確定後に入力）</div>
+          <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">前走比 ±8kg 以上は赤字で警告表示されます</div>
+          <div id="bw-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px"></div>
+        </div>
+
         <div class="shutsuba-scroll">
           <table id="shutsuba-table">
             <thead>
@@ -1544,6 +1551,12 @@
                    border:none;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer">
             危険馬・穴馬チェックを実行
           </button>
+        </div>
+
+        <!-- 1.5 展開予想パネル -->
+        <div class="card">
+          <div class="ct">🏇 展開予想（脚質・枠番から自動算出）</div>
+          <div id="pace-predict">読み込み中...</div>
         </div>
 
         <!-- 2. 危険な人気馬アラート -->
@@ -1981,7 +1994,11 @@ document.querySelectorAll('#contentTabs .tab').forEach(t => {
     document.getElementById(t.dataset.target).classList.add('active');
     if (t.dataset.target === 'tab-check' && typeof sw === 'function') sw('ana');
     if (t.dataset.target === 'tab-kaime' && typeof sw === 'function') sw('kaime');
-    if (t.dataset.target === 'tab-shutsuba') renderShutsubaTable();
+    if (t.dataset.target === 'tab-shutsuba') {
+      renderShutsubaTable();
+      initBwGrid();
+    }
+    if (t.dataset.target === 'tab-check') renderPacePredict();
   });
 });
 
@@ -2033,7 +2050,7 @@ const HORSES_BY_RACE = {
     age: 5, sex: "牡",
     father: "ルーラーシップ", blood: "KK系孫",
     trainer: "木村哲也", stable: "美浦",
-    jockey: "C.ルメール", style: "先行",
+    jockey: "C.ルメール", jockeyPrev: "D.レーン", style: "先行",
     prevRace: "京都記念", prevGrade: "G2", prevRank: 8,
     prevComment: "前走京都記念は8着。骨折からの復帰・叩き台としての使用。昨年の天皇賞春覇者。リピーターとして評価。C.ルメール騎手に乗り替わり。",
     note: "【調教B・昨年比一枚落ち】「昨年は猛時計連発。今回は当時との比較でやや一枚落ちる」と専門家評価。後脚が流れてスピードに乗るまでに時間かかる状態。7枠12番の外枠も不利材料。ルメール初騎乗＋初コンタクトが吉と出るか凶と出るか。フィエールマン連覇を導いた長距離GIの経験値はプラス。「週を追うごとに状態上がっている」と太田助手。",
@@ -2114,7 +2131,7 @@ const HORSES_BY_RACE = {
     age: 9, sex: "牡",
     father: "ブラックタイド", blood: "ディープ系",
     trainer: "森秀行", stable: "栗東",
-    jockey: "川田将雅", style: "差し",
+    jockey: "川田将雅", jockeyPrev: "未定", style: "差し",
     prevRace: "日経賞", prevGrade: "G2", prevRank: 4,
     prevComment: "前走日経賞4着。データ上は【0-0-0-21】の即消し条件（日経賞4着以下）に該当。9歳で勝率0%の高齢馬。川田将雅騎乗で評価上方修正。",
     note: "【調教C】坂路単走。問題なく調教できたが9歳・日経賞4着以下のデータ的には消し。G1ジョッキー川田将雅騎乗で多少の上積みは期待。",
@@ -2208,7 +2225,7 @@ const HORSES_BY_RACE = {
     age: 5, sex: "牡",
     father: "不明", blood: "ディープ系",
     trainer: "矢作芳人", stable: "栗東",
-    jockey: "池添謙一", style: "差し",
+    jockey: "池添謙一", jockeyPrev: "未定", style: "差し",
     prevRace: "大和ハンC", prevGrade: "OP", prevRank: 11,
     prevComment: "前走大和ハンC（OP・阪神芝2600m）11着。プロフィール（年齢・性別・騎手・血統等）要確認。",
     note: "【調教B】CW馬なりで水準級。長距離への適性は示している。",
@@ -3352,12 +3369,26 @@ function renderHorses() {
       : '';
     const umaText = (h.umaban != null) ? `<span class="uma-num">${h.umaban}番</span>` : '';
 
+    // 手動印 (機能4) — 設定されていれば自動印を上書き
+    const manualMark = (window.manualMarks || {})[h.name];
+    const displayMark = manualMark || rank.mark;
+    const jockeyChangeBadge = getJockeyChangeHTML(h);
+    const escName = h.name.replace(/'/g, "\\'");
+
+    // 手動印ボタン群
+    const marks = ['◎','○','▲','△','×'];
+    const markBtns = marks.map(m => {
+      const isActive = manualMark === m;
+      return `<button onclick="setManualMark('${escName}','${m}')" style="padding:2px 9px;border-radius:var(--border-radius-md);border:1px solid ${isActive?'var(--gold)':'var(--border)'};background:${isActive?'var(--gold)':'var(--bg)'};color:${isActive?'#fff':'var(--text)'};font-size:12px;font-weight:700;cursor:pointer">${m}</button>`;
+    }).join('');
+    const manualMarkUI = `<div style="display:flex;gap:4px;justify-content:flex-end;align-items:center;margin-top:8px;flex-wrap:wrap"><span style="font-size:10px;color:var(--text-mute);margin-right:4px">手動印：</span>${markBtns}${manualMark?`<button onclick="setManualMark('${escName}','${manualMark}')" title="解除" style="margin-left:4px;padding:2px 6px;border-radius:var(--border-radius-md);border:1px solid var(--border);background:var(--bg);color:var(--text-sub);font-size:10px;cursor:pointer">×解除</button>`:''}</div>`;
+
     const card = document.createElement('article');
     card.className = `horse-card ${rank.key}`;
     card.innerHTML = `
       <div class="horse-head">
         <div class="horse-head-row1">
-          <span class="rank-mark ${rank.key}">${rank.mark}</span>
+          <span class="rank-mark ${rank.key}"${manualMark?' style="background:var(--gold)"':''}>${displayMark}</span>
           <span class="waku ${wakuClass}" data-field="waku">${wakuText}</span>
           ${umaText}
           <span class="horse-name">${h.name}</span>
@@ -3370,7 +3401,7 @@ function renderHorses() {
       </div>
       <div class="horse-meta">
         <span class="badge ${h.umaban ? '' : 'tbd'}" data-field="umaban">馬番: ${h.umaban ?? '未定'}</span>
-        <span class="badge" data-field="jockey">騎手: ${h.jockey}</span>
+        <span class="badge" data-field="jockey">騎手: ${h.jockey}</span>${jockeyChangeBadge}
         <span class="badge ${h.odds ? '' : 'tbd'}" data-field="odds">オッズ: ${h.odds ?? '--'}</span>
         <span class="badge-speed${siAvailable ? '' : ' tbd'}" title="${siBadgeTitle}">${siLabelText}</span>
         <span class="badge">${h.age}歳${h.sex}</span>
@@ -3403,6 +3434,7 @@ function renderHorses() {
 
       <div class="horse-comment">${h.prevComment}</div>
       ${h.note ? `<div class="horse-comment" style="background:#fbf6e3;border-left:3px solid var(--gold);margin-top:8px">${h.note}</div>` : ''}
+      ${manualMarkUI}
     `;
     grid.appendChild(card);
   });
@@ -3509,6 +3541,8 @@ function setCurrentRace(name) {
 
   // Refresh 出馬表 if shutsuba tab is active (or always — table is cheap)
   if (document.getElementById('shutsuba-tbody')) renderShutsubaTable();
+  if (document.getElementById('bw-grid')) initBwGrid();
+  if (document.getElementById('pace-predict')) renderPacePredict();
 
   // Refresh baba prediction with current selection (works even before tab-check is opened)
   if (typeof setBaba === 'function') setBaba(currentBaba);
@@ -3545,6 +3579,8 @@ renderCriteria();
  * ===================================================== */
 window.horses = HORSES;
 renderShutsubaTable();
+initBwGrid();
+renderPacePredict();
 
 function initOddsGrid() {
   var grid = document.getElementById('odds-input-grid');
@@ -3652,8 +3688,8 @@ function renderShutsubaTable() {
     var kinryo = (h.sex === '牝' || h.sex === 'セ') ? '56.0' : '58.0';
     html += '<td style="text-align:center;padding:8px 6px;color:#555">' + kinryo + '</td>';
 
-    // 騎手
-    html += '<td style="padding:8px 8px;color:#333">' + (h.jockey || '未定') + '</td>';
+    // 騎手（乗り替わり警告バッジ付き）
+    html += '<td style="padding:8px 8px;color:#333;white-space:nowrap">' + (h.jockey || '未定') + getJockeyChangeHTML(h) + '</td>';
 
     // 調教師
     html += '<td style="padding:8px 8px;color:#555;font-size:11px">' + (h.trainer || '-') + '</td>';
@@ -3682,6 +3718,123 @@ function renderShutsubaTable() {
   });
 
   tbody.innerHTML = html;
+}
+
+/* ==== 機能1: 展開予想パネル ==== */
+function renderPacePredict() {
+  var div = document.getElementById('pace-predict');
+  if (!div) return;
+  var horses = window.horses || (typeof HORSES !== 'undefined' ? HORSES : []);
+  if (!horses.length) return;
+
+  var nige = horses.filter(function(h){ return h.style === '逃げ'; });
+  var senkou = horses.filter(function(h){ return h.style === '先行'; });
+  var sashi = horses.filter(function(h){ return h.style === '差し'; });
+  var oikomi = horses.filter(function(h){ return h.style === '追込'; });
+
+  var pace = nige.length >= 3 ? 'ハイペース' : nige.length === 0 ? 'スローペース' : '平均ペース';
+  var paceColor = pace === 'ハイペース' ? '#A32D2D' : pace === 'スローペース' ? '#0F6E56' : '#185FA5';
+  var paceComment = pace === 'ハイペース' ? '逃げ馬多数でペース激化。差し・追込有利。先行馬は消耗に注意。' :
+                    pace === 'スローペース' ? '逃げ馬不在でスロー濃厚。先行馬が有利。末脚だけの馬は届かない。' :
+                    '平均ペース想定。先行有利だが差しも届く展開。';
+
+  var html = '';
+  html += '<div style="background:' + paceColor + '18;border-left:4px solid ' + paceColor + ';' +
+          'border-radius:var(--border-radius-md);padding:10px 14px;margin-bottom:10px">' +
+          '<div style="font-size:13px;font-weight:700;color:' + paceColor + ';margin-bottom:4px">' +
+          '🏇 展開予想：' + pace + '</div>' +
+          '<div style="font-size:12px;color:var(--text-sub)">' + paceComment + '</div>' +
+          '</div>';
+
+  var groups = [
+    { label:'逃げ', horses:nige,   color:'#E24B4A', advantage: pace==='ハイペース'?'×不利':'○有利' },
+    { label:'先行', horses:senkou, color:'#EF9F27', advantage: pace==='スローペース'?'◎最有利':'○有利' },
+    { label:'差し', horses:sashi,  color:'#1D9E75', advantage: pace==='ハイペース'?'◎最有利':'△やや不利' },
+    { label:'追込', horses:oikomi, color:'#534AB7', advantage: pace==='ハイペース'?'○有利':'×不利' }
+  ];
+
+  html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px">';
+  groups.forEach(function(g){
+    html += '<div style="background:var(--bg-soft);border-radius:var(--border-radius-md);' +
+            'padding:8px 10px;border-left:3px solid ' + g.color + '">' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">' +
+            '<span style="font-size:11px;font-weight:600;color:' + g.color + '">' + g.label + '</span>' +
+            '<span style="font-size:10px;color:var(--text-sub)">' + g.advantage + '</span>' +
+            '</div>';
+    if (g.horses.length) {
+      html += '<div style="display:flex;flex-wrap:wrap;gap:3px">';
+      g.horses.forEach(function(h){
+        html += '<span style="font-size:10px;background:#fff;border:0.5px solid ' + g.color +
+                ';color:var(--text);padding:1px 5px;border-radius:var(--border-radius-md)">' +
+                (h.umaban != null ? h.umaban + '番 ' : '') + h.name + '</span>';
+      });
+      html += '</div>';
+    } else {
+      html += '<span style="font-size:10px;color:var(--text-mute)">該当馬なし</span>';
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  div.innerHTML = html;
+}
+
+/* ==== 機能2: 馬体重入力 ==== */
+function initBwGrid() {
+  var grid = document.getElementById('bw-grid');
+  if (!grid) return;
+  var horses = window.horses || (typeof HORSES !== 'undefined' ? HORSES : []);
+  if (!horses.length) return;
+  var sorted = horses.slice().sort(function(a,b){ return (a.umaban||99) - (b.umaban||99); });
+  var html = '';
+  sorted.forEach(function(h, i){
+    var prevBw = h.bodyWeight || 0;
+    html += '<div style="display:flex;align-items:center;gap:6px;background:#fff;' +
+            'border:0.5px solid var(--border);padding:6px 10px;border-radius:var(--border-radius-md)">' +
+            '<span style="font-size:11px;font-weight:500;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' +
+            (h.umaban != null ? h.umaban + '番 ' : '') + h.name + '</span>' +
+            '<input type="number" id="bw_' + i + '" placeholder="' + (prevBw || '480') + '" min="380" max="600"' +
+            ' style="width:64px;padding:4px;border:0.5px solid var(--border);' +
+            'border-radius:var(--border-radius-md);font-size:11px;text-align:right"' +
+            ' oninput="checkBw(' + i + ',' + (prevBw || 0) + ',this.value)">' +
+            '<span id="bw_diff_' + i + '" style="font-size:10px;min-width:42px;text-align:right;color:var(--text-mute)">' +
+            (prevBw ? '前走' + prevBw : '') + '</span>' +
+            '</div>';
+  });
+  grid.innerHTML = html;
+}
+function checkBw(idx, prevBw, val) {
+  var diffEl = document.getElementById('bw_diff_' + idx);
+  if (!diffEl || !val || !prevBw) return;
+  var diff = parseInt(val, 10) - parseInt(prevBw, 10);
+  var color = Math.abs(diff) >= 8 ? '#A32D2D' : Math.abs(diff) >= 4 ? '#EF9F27' : '#0F6E56';
+  diffEl.style.color = color;
+  diffEl.textContent = (diff >= 0 ? '+' : '') + diff + 'kg';
+  diffEl.title = Math.abs(diff) >= 8 ? (diff > 0 ? '太め残り注意' : '絞りすぎ注意') : '';
+}
+
+/* ==== 機能3: 騎手乗り替わり警告バッジ ==== */
+function getJockeyChangeHTML(h) {
+  if (!h || !h.jockeyPrev || h.jockeyPrev === h.jockey || h.jockeyPrev === '未定') return '';
+  var upgrades = ['武豊','C.ルメール','川田将雅','D.レーン','岩田望来','坂井瑠星'];
+  var isUpgrade = upgrades.indexOf(h.jockey) !== -1;
+  var color = isUpgrade ? '#0F6E56' : '#B8600C';
+  var bg = isUpgrade ? '#E1F5EE' : '#FAEEDA';
+  var label = isUpgrade ? '↑乗替(強化)' : '↔乗替';
+  return '<span style="background:' + bg + ';color:' + color + ';font-size:9px;font-weight:600;' +
+         'padding:1px 5px;border-radius:var(--border-radius-md);white-space:nowrap;' +
+         'border:0.5px solid ' + color + ';margin-left:4px">' +
+         label + ' ' + h.jockeyPrev + '→' + h.jockey + '</span>';
+}
+
+/* ==== 機能4: 手動印 ==== */
+window.manualMarks = window.manualMarks || {};
+function setManualMark(horseName, mark) {
+  if (window.manualMarks[horseName] === mark) {
+    delete window.manualMarks[horseName];
+  } else {
+    window.manualMarks[horseName] = mark;
+  }
+  if (typeof renderHorses === 'function') renderHorses();
 }
 
 function getDangerLogic() {
