@@ -665,8 +665,14 @@
     font-size: 17px;
     font-weight: 700;
     color: var(--navy);
-    flex: 1;
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
+  .horse-head .rank-label { margin-left: auto; }
   .rank-label {
     font-size: 12px;
     font-weight: 700;
@@ -1181,6 +1187,9 @@
     .mascot-header .title-text {
       font-size: 16px !important;
     }
+    /* 信頼度カードのヘッダー：馬名・人気・オッズを 1 行に圧縮 */
+    .horse-name { font-size: 14px; max-width: 110px; }
+    .horse-head { gap: 6px; }
   }
 </style>
 </head>
@@ -3425,13 +3434,13 @@ function setCurrentRace(name) {
       if (meta.babaPrediction) {
         var bp = meta.babaPrediction;
         babaPredEl.innerHTML =
-          '<div style="display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap;' +
+          '<div style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;' +
           'background:' + bp.color + '18;border:1px solid ' + bp.color + ';' +
-          'border-radius:var(--border-radius-md);padding:3px 10px;margin-top:6px;' +
+          'border-radius:var(--border-radius-md);padding:4px 12px;margin-top:8px;' +
           'font-size:11px;font-weight:500;color:' + bp.color + '">' +
           bp.icon + ' 予想馬場：<strong>' + bp.status + '</strong>' +
-          '<span style="font-size:10px;color:var(--text-mute);margin-left:4px">' +
-          bp.comment + '</span></div>';
+          '<span style="font-size:10px;color:var(--text-mute)">' +
+          '（' + bp.comment + '）</span></div>';
       } else {
         babaPredEl.innerHTML = '';
       }
