@@ -639,11 +639,29 @@
   .horse-card.rank-keshi  { border-left: 5px solid var(--gray); opacity: 0.85; }
 
   .horse-head {
+    display: block;
+    margin-bottom: 10px;
+  }
+  .horse-head-row1 {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .horse-head-row2 {
+    display: flex;
+    align-items: center;
+    gap: 5px;
     flex-wrap: wrap;
-    margin-bottom: 10px;
+  }
+  .horse-head-row1 .uma-num {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-sub);
+    flex-shrink: 0;
+    white-space: nowrap;
   }
   .rank-mark {
     width: 32px; height: 32px;
@@ -662,17 +680,15 @@
   .rank-mark.rank-renka  { background: var(--purple); }
   .rank-mark.rank-keshi  { background: var(--gray); }
   .horse-name {
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--navy);
-    flex: 0 1 auto;
+    flex: 1 1 auto;
     min-width: 0;
-    max-width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .horse-head .rank-label { margin-left: auto; }
   .rank-label {
     font-size: 12px;
     font-weight: 700;
@@ -1187,9 +1203,10 @@
     .mascot-header .title-text {
       font-size: 16px !important;
     }
-    /* 信頼度カードのヘッダー：馬名・人気・オッズを 1 行に圧縮 */
-    .horse-name { font-size: 14px; max-width: 110px; }
-    .horse-head { gap: 6px; }
+    /* 信頼度カードのヘッダー：1行目（印・枠・馬番・馬名）でも崩れない */
+    .horse-name { font-size: 14px; }
+    .horse-head-row1 { gap: 6px; }
+    .horse-head-row2 { gap: 4px; }
   }
 </style>
 </head>
@@ -3327,19 +3344,29 @@ function renderHorses() {
     const siDetailText = siAvailable ? `${score.speed}/10` : `―/10`;
 
     const oddsStr = h.odds ? (+h.odds).toFixed(1) + '倍' : '--';
-    const popStr = getPopLabel(h.popEstimate);
-    const popOddsBadges = h.popEstimate
-      ? `<span style="background:${getPopBg(h.popEstimate)};color:${getPopColor(h.popEstimate)};font-size:10px;font-weight:700;padding:2px 7px;border-radius:9px;margin-left:6px">${popStr}</span><span style="background:#1a2744;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;margin-left:4px">${oddsStr}</span>`
+    const popBadge = h.popEstimate
+      ? `<span style="background:${getPopBg(h.popEstimate)};color:${getPopColor(h.popEstimate)};font-size:10px;font-weight:700;padding:2px 7px;border-radius:9px;white-space:nowrap;flex-shrink:0">${getPopLabel(h.popEstimate)}</span>`
       : '';
+    const oddsBadge = h.odds
+      ? `<span style="background:#1a2744;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap;flex-shrink:0">${oddsStr}</span>`
+      : '';
+    const umaText = (h.umaban != null) ? `<span class="uma-num">${h.umaban}番</span>` : '';
 
     const card = document.createElement('article');
     card.className = `horse-card ${rank.key}`;
     card.innerHTML = `
       <div class="horse-head">
-        <span class="rank-mark ${rank.key}">${rank.mark}</span>
-        <span class="waku ${wakuClass}" data-field="waku">${wakuText}</span>
-        <span class="horse-name">${h.name}</span>${popOddsBadges}
-        <span class="rank-label ${rank.key}">${rank.label}</span>
+        <div class="horse-head-row1">
+          <span class="rank-mark ${rank.key}">${rank.mark}</span>
+          <span class="waku ${wakuClass}" data-field="waku">${wakuText}</span>
+          ${umaText}
+          <span class="horse-name">${h.name}</span>
+        </div>
+        <div class="horse-head-row2">
+          ${popBadge}
+          ${oddsBadge}
+          <span class="rank-label ${rank.key}">${rank.label}</span>
+        </div>
       </div>
       <div class="horse-meta">
         <span class="badge ${h.umaban ? '' : 'tbd'}" data-field="umaban">馬番: ${h.umaban ?? '未定'}</span>
