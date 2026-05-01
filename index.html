@@ -2758,6 +2758,7 @@ Object.keys(HORSES_BY_RACE).forEach(function(race) {
 });
 
 let HORSES = HORSES_BY_RACE["天皇賞（春）"];
+window.HORSES_BY_RACE = HORSES_BY_RACE;
 
 /* =====================================================
  * 3.05) RACE METADATA (タイトル・コース等)
@@ -4397,79 +4398,108 @@ const BABA_SCORES = {
 };
 
 function setBaba(baba) {
-  currentBaba = baba;
-  window.currentBaba = baba;
+  window.currentBaba = baba || 'good';
+  baba = window.currentBaba;
+  if (typeof currentBaba !== 'undefined') currentBaba = baba;
 
-  // ボタンの on/off
+  // ボタン on/off
   document.querySelectorAll('.baba-btn').forEach(function(b) {
     b.classList.toggle('on', b.dataset.baba === baba);
   });
 
-  // 過去データ + スコア再計算
-  renderBabaPastData(baba);
-  if (typeof renderHorses === 'function') {
-    try { renderHorses(); } catch (e) {}
-  }
+  // 過去データ + 信頼度スコア再計算
+  if (typeof renderBabaPastData === 'function') renderBabaPastData(baba);
+  if (typeof renderHorses === 'function') { try { renderHorses(); } catch (e) {} }
 
   var resultDiv = document.getElementById('baba-result');
   if (!resultDiv) return;
 
   var babaLabel = {
     good:'良馬場', slightHeavy:'稍重', heavy:'重馬場', veryHeavy:'不良馬場'
-  }[baba] || baba;
+  }[baba] || '良馬場';
 
-  var currentHorses = window.horses || (typeof HORSES !== 'undefined' ? HORSES : []);
-  if (!currentHorses.length) {
-    resultDiv.innerHTML = '<div style="font-size:12px;color:var(--text-sub)">馬データが読み込まれていません</div>';
+  // 現在のレースの登録馬（HORSES_BY_RACE 優先 → window.horses → HORSES）
+  var raceKey = window.currentRaceName ||
+                (typeof currentRace !== 'undefined' ? currentRace : null) ||
+                '天皇賞（春）';
+  var allRaces = window.HORSES_BY_RACE || (typeof HORSES_BY_RACE !== 'undefined' ? HORSES_BY_RACE : {});
+  var currentHorses = (allRaces && allRaces[raceKey]) || window.horses || (typeof HORSES !== 'undefined' ? HORSES : []);
+
+  if (!currentHorses || !currentHorses.length) {
+    resultDiv.innerHTML = '<div style="font-size:12px;color:var(--text-sub)">馬データ未設定</div>';
     return;
   }
 
-  // 各馬の babaScore[baba] でソート
-  var scored = currentHorses.map(function(h){
-    var sc = (h.babaScore && h.babaScore[baba] != null) ? h.babaScore[baba] : 50;
-    return { h:h, score:sc };
-  }).sort(function(a,b){ return b.score - a.score; });
-
-  var favorHorses   = scored.filter(function(x){ return x.score >= 75; });
-  var unfavorHorses = scored.filter(function(x){ return x.score <= 45; });
-
-  function renderRow(x, color, bg, lightBg) {
-    var h = x.h;
-    var note = (h.babaNotes && h.babaNotes[baba]) ? h.babaNotes[baba] : '';
-    var head = (h.umaban != null ? h.umaban + '番 ' : '') + h.name;
-    var row =
-      '<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;' +
-      'background:' + lightBg + ';border-radius:var(--border-radius-md);margin-bottom:2px">' +
-        '<span style="font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:0">' + head + '</span>' +
-        '<div style="width:80px;height:8px;background:var(--bg-soft);border-radius:4px;overflow:hidden;flex-shrink:0">' +
-          '<div style="width:' + x.score + '%;height:100%;background:' + bg + ';border-radius:4px"></div>' +
-        '</div>' +
-        '<span style="font-size:12px;font-weight:700;color:' + color + ';min-width:36px;text-align:right">' + x.score + '点</span>' +
-      '</div>';
-    if (note) {
-      row += '<div style="font-size:10px;color:var(--text-mute);padding:0 10px 6px 12px">' + note + '</div>';
+  // babaScore でソート
+  var scored = currentHorses.map(function(h) {
+    var s = 50;
+    if (h.babaScore) {
+      if (baba === 'good'        && h.babaScore.good        != null) s = h.babaScore.good;
+      if (baba === 'slightHeavy' && h.babaScore.slightHeavy != null) s = h.babaScore.slightHeavy;
+      if (baba === 'heavy'       && h.babaScore.heavy       != null) s = h.babaScore.heavy;
+      if (baba === 'veryHeavy'   && h.babaScore.veryHeavy   != null) s = h.babaScore.veryHeavy;
     }
-    return row;
+    return { h: h, score: s };
+  }).sort(function(a, b) { return b.score - a.score; });
+
+  var favorList   = scored.filter(function(x) { return x.score >= 75; });
+  var unfavorList = scored.filter(function(x) { return x.score <= 45; });
+
+  function umaPrefix(h) {
+    if (h.umaban != null) return h.umaban + '番 ';
+    if (h.uma != null) return h.uma + '番 ';
+    return '';
   }
 
   var html = '';
 
-  if (favorHorses.length) {
-    html += '<div style="margin-bottom:12px">';
-    html += '<div style="font-size:11px;font-weight:600;color:#0F6E56;margin-bottom:6px">✅ ' + babaLabel + 'で恩恵を受ける馬</div>';
-    favorHorses.forEach(function(x){ html += renderRow(x, '#0F6E56', '#1D9E75', '#E1F5EE'); });
+  if (favorList.length) {
+    html += '<div style="margin-bottom:10px">';
+    html += '<div style="font-size:11px;font-weight:600;color:#0F6E56;margin-bottom:6px">' +
+            '✅ ' + babaLabel + 'で恩恵を受ける馬</div>';
+    favorList.forEach(function(x) {
+      var h = x.h;
+      var note = (h.babaNotes && h.babaNotes[baba]) ? h.babaNotes[baba] : '';
+      html += '<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;' +
+              'background:#E1F5EE;border-radius:var(--border-radius-md);margin-bottom:3px">';
+      html += '<span style="font-size:12px;font-weight:600;flex:1;min-width:0">' + umaPrefix(h) + h.name + '</span>';
+      html += '<div style="width:80px;height:7px;background:#d1fae5;border-radius:4px;overflow:hidden;flex-shrink:0">' +
+              '<div style="width:' + x.score + '%;height:100%;background:#1D9E75;border-radius:4px"></div></div>';
+      html += '<span style="font-size:11px;font-weight:700;color:#0F6E56;min-width:30px;text-align:right">' + x.score + '点</span>';
+      html += '</div>';
+      if (note) {
+        html += '<div style="font-size:10px;color:var(--text-mute);padding:0 10px 5px">' + note + '</div>';
+      }
+    });
     html += '</div>';
   }
 
-  if (unfavorHorses.length) {
+  if (unfavorList.length) {
     html += '<div>';
-    html += '<div style="font-size:11px;font-weight:600;color:#A32D2D;margin-bottom:6px">⚠️ ' + babaLabel + 'で割引になる馬</div>';
-    unfavorHorses.forEach(function(x){ html += renderRow(x, '#A32D2D', '#E24B4A', '#FCEBEB'); });
+    html += '<div style="font-size:11px;font-weight:600;color:#A32D2D;margin-bottom:6px">' +
+            '⚠️ ' + babaLabel + 'で割引になる馬</div>';
+    unfavorList.forEach(function(x) {
+      var h = x.h;
+      var note = (h.babaNotes && h.babaNotes[baba]) ? h.babaNotes[baba] : '';
+      html += '<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;' +
+              'background:#FCEBEB;border-radius:var(--border-radius-md);margin-bottom:3px">';
+      html += '<span style="font-size:12px;font-weight:600;flex:1;min-width:0">' + umaPrefix(h) + h.name + '</span>';
+      html += '<div style="width:80px;height:7px;background:#fee2e2;border-radius:4px;overflow:hidden;flex-shrink:0">' +
+              '<div style="width:' + x.score + '%;height:100%;background:#E24B4A;border-radius:4px"></div></div>';
+      html += '<span style="font-size:11px;font-weight:700;color:#A32D2D;min-width:30px;text-align:right">' + x.score + '点</span>';
+      html += '</div>';
+      if (note) {
+        html += '<div style="font-size:10px;color:var(--text-mute);padding:0 10px 5px">' + note + '</div>';
+      }
+    });
     html += '</div>';
   }
 
-  if (!favorHorses.length && !unfavorHorses.length) {
-    html = '<div style="font-size:12px;color:var(--text-sub)">馬場適性データが未設定です。</div>';
+  if (!favorList.length && !unfavorList.length) {
+    var bsCount = currentHorses.filter(function(h){ return h.babaScore; }).length;
+    html = '<div style="background:#FAEEDA;border-radius:var(--border-radius-md);padding:10px 12px;' +
+           'font-size:12px;color:#854F0B">babaScoreデータが未設定です。<br>' +
+           'babaScore設定数: ' + bsCount + ' / ' + currentHorses.length + ' 頭</div>';
   }
 
   resultDiv.innerHTML = html;
@@ -4662,14 +4692,16 @@ function toggleHimo(name) {
 
 function sw(t) {
   if (t === 'ana') {
-    initOddsGrid();
-    renderChecklistHorses();
+    if (typeof initOddsGrid === 'function') initOddsGrid();
+    if (typeof renderChecklistHorses === 'function') renderChecklistHorses();
     // 馬場パネルを初期表示（DOM 反映後）
-    setTimeout(function(){ setBaba(window.currentBaba || currentBaba || 'good'); }, 50);
+    setTimeout(function() {
+      setBaba(window.currentBaba || 'good');
+    }, 100);
   } else if (t === 'kaime') {
     window.selectedJiku = null;
     window.excludedHimo = [];
-    renderKaime();
+    if (typeof renderKaime === 'function') renderKaime();
   }
 }
 
