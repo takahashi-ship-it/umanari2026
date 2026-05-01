@@ -4326,6 +4326,11 @@ var babaPastData = {
 function renderBabaPastData(baba) {
   var el = document.getElementById('baba-past-data');
   if (!el) return;
+  if (typeof babaPastData === 'undefined' || !babaPastData) {
+    console.warn('[renderBabaPastData] babaPastData is undefined — skipping');
+    el.innerHTML = '';
+    return;
+  }
   var d = babaPastData[baba];
   if (!d) { el.innerHTML = ''; return; }
   function hChips(arr, color) {
@@ -4413,8 +4418,10 @@ function setBaba(baba) {
     b.classList.toggle('on', b.dataset.baba === baba);
   });
 
-  // 過去データ + 信頼度スコア再計算
-  if (typeof renderBabaPastData === 'function') renderBabaPastData(baba);
+  // 過去データ + 信頼度スコア再計算（個別 try/catch でどちらが落ちても続行）
+  if (typeof renderBabaPastData === 'function') {
+    try { renderBabaPastData(baba); } catch (e) { console.warn('[setBaba] renderBabaPastData failed:', e); }
+  }
   if (typeof renderHorses === 'function') { try { renderHorses(); } catch (e) {} }
 
   var resultDiv = document.getElementById('baba-result');
