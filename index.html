@@ -4398,6 +4398,12 @@ const BABA_SCORES = {
 };
 
 function setBaba(baba) {
+  console.log('[setBaba] called with:', baba);
+  console.log('[setBaba] window.horses:', window.horses ? window.horses.length + '頭' : 'なし');
+  console.log('[setBaba] window.HORSES_BY_RACE keys:', window.HORSES_BY_RACE ? Object.keys(window.HORSES_BY_RACE) : 'なし');
+  console.log('[setBaba] window.currentRaceName:', window.currentRaceName);
+  console.log('[setBaba] currentRace (let):', typeof currentRace !== 'undefined' ? currentRace : '未定義');
+
   window.currentBaba = baba || 'good';
   baba = window.currentBaba;
   if (typeof currentBaba !== 'undefined') currentBaba = baba;
@@ -4412,21 +4418,52 @@ function setBaba(baba) {
   if (typeof renderHorses === 'function') { try { renderHorses(); } catch (e) {} }
 
   var resultDiv = document.getElementById('baba-result');
-  if (!resultDiv) return;
+  if (!resultDiv) { console.warn('[setBaba] baba-result div not found'); return; }
 
   var babaLabel = {
     good:'良馬場', slightHeavy:'稍重', heavy:'重馬場', veryHeavy:'不良馬場'
   }[baba] || '良馬場';
 
-  // 現在のレースの登録馬（HORSES_BY_RACE 優先 → window.horses → HORSES）
-  var raceKey = window.currentRaceName ||
-                (typeof currentRace !== 'undefined' ? currentRace : null) ||
-                '天皇賞（春）';
-  var allRaces = window.HORSES_BY_RACE || (typeof HORSES_BY_RACE !== 'undefined' ? HORSES_BY_RACE : {});
-  var currentHorses = (allRaces && allRaces[raceKey]) || window.horses || (typeof HORSES !== 'undefined' ? HORSES : []);
+  // 現在のレースの馬データを取得（複数のアクセス方法を順に試す）
+  var currentHorses = [];
+
+  // 方法1: window.horses を直接使用（最も確実）
+  if (window.horses && window.horses.length > 0) {
+    currentHorses = window.horses;
+    console.log('[setBaba] horses sourced from window.horses:', currentHorses.length);
+  }
+  // 方法2: HORSES_BY_RACE から現在のレース名で取得（部分一致対応）
+  else if (window.HORSES_BY_RACE) {
+    var raceKey = window.currentRaceName ||
+                  (typeof currentRace !== 'undefined' ? currentRace : '') || '';
+    if (window.HORSES_BY_RACE[raceKey]) {
+      currentHorses = window.HORSES_BY_RACE[raceKey];
+      console.log('[setBaba] exact-match key:', raceKey);
+    } else {
+      var keys = Object.keys(window.HORSES_BY_RACE);
+      for (var i = 0; i < keys.length; i++) {
+        if ((raceKey && raceKey.includes(keys[i])) || keys[i].includes(raceKey) || keys[i].includes('天皇賞')) {
+          currentHorses = window.HORSES_BY_RACE[keys[i]];
+          console.log('[setBaba] partial-match key:', keys[i]);
+          break;
+        }
+      }
+      if (!currentHorses.length && keys.length > 0) {
+        currentHorses = window.HORSES_BY_RACE[keys[0]];
+        console.log('[setBaba] fallback to first key:', keys[0]);
+      }
+    }
+  }
+  // 方法3: グローバル HORSES へ最後のフォールバック
+  if (!currentHorses.length && typeof HORSES !== 'undefined' && HORSES.length) {
+    currentHorses = HORSES;
+    console.log('[setBaba] last-resort HORSES:', currentHorses.length);
+  }
+
+  console.log('[setBaba] resolved currentHorses count:', currentHorses.length, 'baba:', baba);
 
   if (!currentHorses || !currentHorses.length) {
-    resultDiv.innerHTML = '<div style="font-size:12px;color:var(--text-sub)">馬データ未設定</div>';
+    resultDiv.innerHTML = '<div style="font-size:12px;color:var(--text-sub)">馬データ未設定（コンソール参照）</div>';
     return;
   }
 
