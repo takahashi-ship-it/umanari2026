@@ -1445,6 +1445,11 @@
           </div>
         </div>
       </div>
+
+      <div class="section">
+        <h3>🏇 展開予想（脚質・枠番から自動算出）</h3>
+        <div id="pace-predict">読み込み中...</div>
+      </div>
     </div>
 
     <!-- TAB: 選定基準 -->
@@ -1553,12 +1558,6 @@
                    border:none;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer">
             危険馬・穴馬チェックを実行
           </button>
-        </div>
-
-        <!-- 1.5 展開予想パネル -->
-        <div class="card">
-          <div class="ct">🏇 展開予想（脚質・枠番から自動算出）</div>
-          <div id="pace-predict">読み込み中...</div>
         </div>
 
         <!-- 2. 危険な人気馬アラート -->
@@ -2153,8 +2152,8 @@ document.querySelectorAll('#contentTabs .tab').forEach(t => {
     if (t.dataset.target === 'tab-shutsuba') {
       renderShutsubaTable();
       initBwGrid();
+      setTimeout(function(){ renderPacePredict(); }, 50);
     }
-    if (t.dataset.target === 'tab-check') renderPacePredict();
     if (t.dataset.target === 'tab-report') renderSeisekiGraph();
     if (t.dataset.target === 'tab-kaime') renderSimulator();
   });
@@ -2183,8 +2182,8 @@ const HORSES_BY_RACE = {
     popEstimate: 1, training: "S",
     waku: 4, umaban: 7, odds: 3.0,
     speedIndex: 96, prevTime: 117.6, prevCourse: "阪神芝2000m", prevBaba: "良",
-    babaScore: { good:88, slightHeavy:82, heavy:65, veryHeavy:50 },
-    babaNotes: { good:'大阪杯・日本ダービーともに良馬場で圧勝', heavy:'重馬場経験なし・不安', veryHeavy:'距離延長×不良は未知数' },
+    babaScore: { good:88, slightHeavy:65, heavy:35, veryHeavy:20 },
+    babaNotes: { good:'大阪杯・ダービーともに良馬場で圧勝', heavy:'道悪経験なし・スピード型は割引', veryHeavy:'不良馬場経験なし・大幅割引' },
   },
   {
     name: "シンエンペラー",
@@ -2200,8 +2199,8 @@ const HORSES_BY_RACE = {
     popEstimate: 5, training: "B",
     waku: 4, umaban: 8, odds: 17.3,
     speedIndex: 60, prevTime: null, prevCourse: "中山芝2500m", prevBaba: "良",
-    babaScore: { good:75, slightHeavy:78, heavy:82, veryHeavy:80 },
-    babaNotes: { heavy:'欧州血統で道悪得意。稍重〜重でパフォーマンス向上', good:'良馬場でも好走実績あり' },
+    babaScore: { good:55, slightHeavy:68, heavy:82, veryHeavy:88 },
+    babaNotes: { heavy:'欧州血統（父シユーニ）で道悪◎', good:'良馬場では相対的に割引', veryHeavy:'欧州血統が最大限に輝く不良馬場' },
   },
   {
     name: "ヘデントール",
@@ -2217,8 +2216,8 @@ const HORSES_BY_RACE = {
     popEstimate: 3, training: "B",
     waku: 7, umaban: 12, odds: 5.1,
     speedIndex: 65, prevTime: null, prevCourse: "京都芝2200m", prevBaba: "良",
-    babaScore: { good:85, slightHeavy:83, heavy:80, veryHeavy:75 },
-    babaNotes: { good:'昨年天皇賞春（良）を制覇', heavy:'道悪でも崩れない安定感' },
+    babaScore: { good:82, slightHeavy:80, heavy:75, veryHeavy:65 },
+    babaNotes: { good:'昨年天皇賞春（良）を制覇', heavy:'ルーラーシップ産駒で道悪安定' },
   },
   {
     name: "アドマイヤテラ",
@@ -2234,8 +2233,8 @@ const HORSES_BY_RACE = {
     popEstimate: 2, training: "A",
     waku: 2, umaban: 3, odds: 3.2,
     speedIndex: 92, prevTime: 182.0, prevCourse: "阪神芝3000m", prevBaba: "良",
-    babaScore: { good:82, slightHeavy:80, heavy:75, veryHeavy:65 },
-    babaNotes: { good:'阪神大賞典レコードは良馬場での記録' },
+    babaScore: { good:85, slightHeavy:75, heavy:40, veryHeavy:25 },
+    babaNotes: { good:'阪神大賞典レコードは良馬場での記録', heavy:'パワーはあるが本質スピード型', veryHeavy:'スピード型は不良馬場で最大割引' },
   },
   {
     name: "タガノデュード",
@@ -2251,6 +2250,8 @@ const HORSES_BY_RACE = {
     popEstimate: 6, training: "B",
     waku: 6, umaban: 11, odds: 20.2,
     speedIndex: 82, prevTime: 117.6, prevCourse: "阪神芝2000m", prevBaba: "良",
+    babaScore: { good:65, slightHeavy:60, heavy:45, veryHeavy:30 },
+    babaNotes: { good:'大阪杯4着は良馬場', heavy:'中距離型で道悪の長距離は不安' },
   },
   {
     name: "アクアヴァーナル",
@@ -2266,8 +2267,8 @@ const HORSES_BY_RACE = {
     popEstimate: 4, training: "A",
     waku: 2, umaban: 4, odds: 14.3,
     speedIndex: 88, prevTime: 182.2, prevCourse: "阪神芝3000m", prevBaba: "良",
-    babaScore: { good:68, slightHeavy:72, heavy:70, veryHeavy:68 },
-    babaNotes: { slightHeavy:'稍重以上でも崩れない安定感', good:'ただし牝馬のジンクスあり' },
+    babaScore: { good:70, slightHeavy:75, heavy:72, veryHeavy:68 },
+    babaNotes: { slightHeavy:'稍重以上でも崩れない安定感', good:'牝馬のジンクスはあるが地力はある' },
   },
   {
     name: "ホーエリート",
@@ -2283,6 +2284,8 @@ const HORSES_BY_RACE = {
     popEstimate: 7, training: "A",
     waku: 8, umaban: 14, odds: 24.2,
     speedIndex: 72, prevTime: 212.6, prevCourse: "東京芝3400m", prevBaba: "良",
+    babaScore: { good:75, slightHeavy:76, heavy:65, veryHeavy:45 },
+    babaNotes: { good:'追い切り急上昇・ステイヤーズS勝ち', veryHeavy:'牝馬で不良馬場は厳しい' },
   },
   {
     name: "エヒト",
@@ -2298,8 +2301,8 @@ const HORSES_BY_RACE = {
     popEstimate: 8, training: "C",
     waku: 3, umaban: 6, odds: 39.6,
     speedIndex: 40, prevTime: null, prevCourse: "中山芝2500m", prevBaba: "良",
-    babaScore: { good:45, slightHeavy:45, heavy:45, veryHeavy:45 },
-    babaNotes: { good:'日経賞4着以下→天皇賞春は【0-0-0-21】どの馬場でも消し' },
+    babaScore: { good:30, slightHeavy:32, heavy:35, veryHeavy:30 },
+    babaNotes: { good:'9歳・日経賞4着以下のデータ的には消し' },
   },
   {
     name: "ヴェルテンベルク",
@@ -2315,7 +2318,7 @@ const HORSES_BY_RACE = {
     popEstimate: 9, training: "B",
     waku: 8, umaban: 15, odds: 74.8,
     speedIndex: 73, prevTime: 212.5, prevCourse: "東京芝3400m", prevBaba: "良",
-    babaScore: { good:72, slightHeavy:75, heavy:78, veryHeavy:72 },
+    babaScore: { good:60, slightHeavy:65, heavy:70, veryHeavy:65 },
     babaNotes: { heavy:'道悪での好走実績あり' },
   },
   {
@@ -2332,6 +2335,8 @@ const HORSES_BY_RACE = {
     popEstimate: 12, training: "A",
     waku: 1, umaban: 1, odds: 87.7,
     speedIndex: 55, prevTime: null, prevCourse: "阪神芝3000m", prevBaba: "良",
+    babaScore: { good:40, slightHeavy:55, heavy:80, veryHeavy:88 },
+    babaNotes: { heavy:'ゴールドシップ産駒で道悪激走パターン', good:'良馬場では能力差が出やすく割引', veryHeavy:'不良馬場で大穴激走の可能性大' },
   },
   {
     name: "プレシャスデイ",
@@ -2347,6 +2352,7 @@ const HORSES_BY_RACE = {
     popEstimate: 13, training: "C",
     waku: 5, umaban: 9, odds: 111.7,
     speedIndex: 45, prevTime: null, prevCourse: "阪神芝3000m", prevBaba: "良",
+    babaScore: { good:40, slightHeavy:40, heavy:40, veryHeavy:38 },
   },
   {
     name: "マイネルカンパーナ",
@@ -2362,6 +2368,8 @@ const HORSES_BY_RACE = {
     popEstimate: 11, training: "B",
     waku: 5, umaban: 10, odds: 92.8,
     speedIndex: 55, prevTime: 213.0, prevCourse: "東京芝3400m", prevBaba: "良",
+    babaScore: { good:58, slightHeavy:60, heavy:62, veryHeavy:55 },
+    babaNotes: { good:'追い切り良好・長距離向き' },
   },
   {
     name: "ミステリーウェイ",
@@ -2377,6 +2385,7 @@ const HORSES_BY_RACE = {
     popEstimate: 14, training: "C",
     waku: 7, umaban: 13, odds: 138.7,
     speedIndex: 30, prevTime: null, prevCourse: "中山芝2500m", prevBaba: "良",
+    babaScore: { good:35, slightHeavy:38, heavy:40, veryHeavy:35 },
   },
   {
     name: "サンライズソレイユ",
@@ -2392,6 +2401,7 @@ const HORSES_BY_RACE = {
     popEstimate: 10, training: "B",
     waku: 1, umaban: 2, odds: 73.7,
     speedIndex: 30, prevTime: null, prevCourse: "阪神芝2600m", prevBaba: "良",
+    babaScore: { good:45, slightHeavy:50, heavy:55, veryHeavy:50 },
   },
   {
     name: "ケイアイサンデラ",
@@ -2407,6 +2417,7 @@ const HORSES_BY_RACE = {
     popEstimate: 15, training: "C",
     waku: 3, umaban: 5, odds: 271.5,
     speedIndex: 20, prevTime: null, prevCourse: "小倉障2860m", prevBaba: "良",
+    babaScore: { good:25, slightHeavy:28, heavy:30, veryHeavy:28 },
   },
 ],
 
@@ -4407,43 +4418,61 @@ function setBaba(baba) {
     good:'良馬場', slightHeavy:'稍重', heavy:'重馬場', veryHeavy:'不良馬場'
   }[baba] || baba;
 
-  var raceName = (typeof currentRace !== 'undefined' && currentRace) ? currentRace : '天皇賞（春）';
-  var scores = BABA_SCORES[raceName] && BABA_SCORES[raceName][baba];
-
-  if (!scores) {
-    resultDiv.innerHTML = '<div style="font-size:12px;color:var(--text-sub)">このレースの馬場適性データは準備中です。</div>';
+  var currentHorses = window.horses || (typeof HORSES !== 'undefined' ? HORSES : []);
+  if (!currentHorses.length) {
+    resultDiv.innerHTML = '<div style="font-size:12px;color:var(--text-sub)">馬データが読み込まれていません</div>';
     return;
   }
 
-  function renderHorseRow(h, color, bg, lightBg) {
-    return '<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;' +
-           'background:' + lightBg + ';border-radius:var(--border-radius-md);margin-bottom:2px">' +
-             '<span style="font-size:13px;font-weight:600;color:var(--text);flex:0 0 110px">' + h.name + '</span>' +
-             '<div style="flex:1;height:8px;background:var(--bg-soft);border-radius:4px;overflow:hidden">' +
-               '<div style="width:' + h.score + '%;height:100%;background:' + bg + ';border-radius:4px"></div>' +
-             '</div>' +
-             '<span style="font-size:12px;font-weight:700;color:' + color + ';min-width:36px;text-align:right">' + h.score + '点</span>' +
-           '</div>' +
-           '<div style="font-size:10px;color:var(--text-sub);padding:0 10px 6px 12px;margin-bottom:2px">' + h.reason + '</div>';
+  // 各馬の babaScore[baba] でソート
+  var scored = currentHorses.map(function(h){
+    var sc = (h.babaScore && h.babaScore[baba] != null) ? h.babaScore[baba] : 50;
+    return { h:h, score:sc };
+  }).sort(function(a,b){ return b.score - a.score; });
+
+  var favorHorses   = scored.filter(function(x){ return x.score >= 75; });
+  var unfavorHorses = scored.filter(function(x){ return x.score <= 45; });
+
+  function renderRow(x, color, bg, lightBg) {
+    var h = x.h;
+    var note = (h.babaNotes && h.babaNotes[baba]) ? h.babaNotes[baba] : '';
+    var head = (h.umaban != null ? h.umaban + '番 ' : '') + h.name;
+    var row =
+      '<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;' +
+      'background:' + lightBg + ';border-radius:var(--border-radius-md);margin-bottom:2px">' +
+        '<span style="font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:0">' + head + '</span>' +
+        '<div style="width:80px;height:8px;background:var(--bg-soft);border-radius:4px;overflow:hidden;flex-shrink:0">' +
+          '<div style="width:' + x.score + '%;height:100%;background:' + bg + ';border-radius:4px"></div>' +
+        '</div>' +
+        '<span style="font-size:12px;font-weight:700;color:' + color + ';min-width:36px;text-align:right">' + x.score + '点</span>' +
+      '</div>';
+    if (note) {
+      row += '<div style="font-size:10px;color:var(--text-mute);padding:0 10px 6px 12px">' + note + '</div>';
+    }
+    return row;
   }
 
   var html = '';
 
-  if (scores.favor && scores.favor.length) {
-    html += '<div style="margin-bottom:10px">';
+  if (favorHorses.length) {
+    html += '<div style="margin-bottom:12px">';
     html += '<div style="font-size:11px;font-weight:600;color:#0F6E56;margin-bottom:6px">✅ ' + babaLabel + 'で恩恵を受ける馬</div>';
-    scores.favor.forEach(function(h){ html += renderHorseRow(h, '#0F6E56', '#1D9E75', '#E1F5EE'); });
+    favorHorses.forEach(function(x){ html += renderRow(x, '#0F6E56', '#1D9E75', '#E1F5EE'); });
     html += '</div>';
   }
 
-  if (scores.unfavor && scores.unfavor.length) {
+  if (unfavorHorses.length) {
     html += '<div>';
     html += '<div style="font-size:11px;font-weight:600;color:#A32D2D;margin-bottom:6px">⚠️ ' + babaLabel + 'で割引になる馬</div>';
-    scores.unfavor.forEach(function(h){ html += renderHorseRow(h, '#A32D2D', '#E24B4A', '#FCEBEB'); });
+    unfavorHorses.forEach(function(x){ html += renderRow(x, '#A32D2D', '#E24B4A', '#FCEBEB'); });
     html += '</div>';
   }
 
-  resultDiv.innerHTML = html || '<div style="font-size:12px;color:var(--text-sub)">データなし</div>';
+  if (!favorHorses.length && !unfavorHorses.length) {
+    html = '<div style="font-size:12px;color:var(--text-sub)">馬場適性データが未設定です。</div>';
+  }
+
+  resultDiv.innerHTML = html;
 }
 
 /* =====================================================
@@ -4635,7 +4664,6 @@ function sw(t) {
   if (t === 'ana') {
     initOddsGrid();
     renderChecklistHorses();
-    if (typeof renderPacePredict === 'function') renderPacePredict();
     // 馬場パネルを初期表示（DOM 反映後）
     setTimeout(function(){ setBaba(window.currentBaba || currentBaba || 'good'); }, 50);
   } else if (t === 'kaime') {
