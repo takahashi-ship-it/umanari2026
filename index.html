@@ -1662,6 +1662,12 @@
         </div>
       </div>
 
+      <!-- 収支グラフエリア -->
+      <div class="card">
+        <div class="ct">📊 年間収支レポート 2026</div>
+        <div id="seiseki-graph"></div>
+      </div>
+
       <!-- RACE RESULTS -->
       <div id="resultCards"></div>
 
@@ -1717,6 +1723,12 @@
               <div style="font-size:10px;color:var(--color-text-tertiary)">各200円</div>
             </div>
           </div>
+        </div>
+
+        <!-- 的中シミュレーター -->
+        <div class="card">
+          <div class="ct">💰 的中シミュレーター</div>
+          <div id="simulator"></div>
         </div>
 
       </div>
@@ -1999,6 +2011,8 @@ document.querySelectorAll('#contentTabs .tab').forEach(t => {
       initBwGrid();
     }
     if (t.dataset.target === 'tab-check') renderPacePredict();
+    if (t.dataset.target === 'tab-report') renderSeisekiGraph();
+    if (t.dataset.target === 'tab-kaime') renderSimulator();
   });
 });
 
@@ -3435,6 +3449,9 @@ function renderHorses() {
       <div class="horse-comment">${h.prevComment}</div>
       ${h.note ? `<div class="horse-comment" style="background:#fbf6e3;border-left:3px solid var(--gold);margin-top:8px">${h.note}</div>` : ''}
       ${manualMarkUI}
+      <div style="margin-top:8px">
+        <textarea id="memo_${escName.replace(/\s/g,'')}" rows="2" placeholder="✍️ ${h.name} のメモ（パドック所見・展開予想など）" oninput="saveHorseMemo('${escName}',this.value)" style="width:100%;padding:6px 8px;border:0.5px solid var(--border);border-radius:var(--border-radius-md);font-size:11px;color:var(--text);background:var(--bg-soft);resize:vertical;box-sizing:border-box;font-family:inherit;line-height:1.5">${(window.horseMemos||{})[h.name] || ''}</textarea>
+      </div>
     `;
     grid.appendChild(card);
   });
@@ -3581,6 +3598,8 @@ window.horses = HORSES;
 renderShutsubaTable();
 initBwGrid();
 renderPacePredict();
+renderSeisekiGraph();
+renderSimulator();
 
 function initOddsGrid() {
   var grid = document.getElementById('odds-input-grid');
@@ -3835,6 +3854,136 @@ function setManualMark(horseName, mark) {
     window.manualMarks[horseName] = mark;
   }
   if (typeof renderHorses === 'function') renderHorses();
+}
+
+/* ==== 機能5: 年間収支グラフ ==== */
+const SEISEKI_DATA = [
+  { race:'青葉賞',     date:'4/25', invest:4800, payout:0,     grade:'G2' },
+  { race:'フローラS',  date:'4/26', invest:6000, payout:0,     grade:'G2' },
+  { race:'マイラーズC', date:'4/26', invest:6000, payout:70140, grade:'G2' },
+];
+
+function renderSeisekiGraph() {
+  var div = document.getElementById('seiseki-graph');
+  if (!div) return;
+
+  var totalInvest = SEISEKI_DATA.reduce(function(s,r){ return s + r.invest; }, 0);
+  var totalPayout = SEISEKI_DATA.reduce(function(s,r){ return s + r.payout; }, 0);
+  var totalProfit = totalPayout - totalInvest;
+  var kaishuritu = totalInvest > 0 ? Math.round(totalPayout / totalInvest * 100) : 0;
+
+  var cumulative = [];
+  var cum = 0;
+  SEISEKI_DATA.forEach(function(r){ cum += (r.payout - r.invest); cumulative.push(cum); });
+  var maxAbs = Math.max(Math.abs(Math.min.apply(null, cumulative)), Math.abs(Math.max.apply(null, cumulative)), totalInvest, 1);
+
+  var html = '';
+
+  // KPI
+  html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px">';
+  [
+    { label:'総投資額', value:totalInvest.toLocaleString()+'円', color:'var(--text)' },
+    { label:'総払戻額', value:totalPayout.toLocaleString()+'円', color:'#0F6E56' },
+    { label:'純利益',   value:(totalProfit>=0?'+':'')+totalProfit.toLocaleString()+'円', color:totalProfit>=0?'#0F6E56':'#A32D2D' },
+    { label:'回収率',   value:kaishuritu+'%', color:kaishuritu>=100?'#0F6E56':'#A32D2D' }
+  ].forEach(function(k){
+    html += '<div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:10px 12px;text-align:center">' +
+            '<div style="font-size:10px;color:var(--text-mute);margin-bottom:3px">'+k.label+'</div>' +
+            '<div style="font-size:18px;font-weight:700;color:'+k.color+'">'+k.value+'</div>' +
+            '</div>';
+  });
+  html += '</div>';
+
+  // レース別棒グラフ
+  html += '<div style="font-size:13px;font-weight:700;color:#1a2744;margin-bottom:8px">レース別収支</div>';
+  html += '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">';
+  SEISEKI_DATA.forEach(function(r){
+    var profit = r.payout - r.invest;
+    var barColor = r.payout > 0 ? '#1D9E75' : '#E24B4A';
+    var barWidth = Math.min(100, Math.round(Math.abs(profit) / maxAbs * 100));
+    html += '<div>' +
+            '<div style="display:flex;justify-content:space-between;margin-bottom:2px;font-size:11px">' +
+            '<span style="color:var(--text);font-weight:500">'+r.date+' '+r.race+'</span>' +
+            '<span style="font-weight:700;color:'+barColor+'">' + (profit>=0?'+':'')+profit.toLocaleString()+'円</span>' +
+            '</div>' +
+            '<div style="background:var(--bg-soft);border-radius:4px;height:12px;overflow:hidden">' +
+            '<div style="height:100%;width:'+barWidth+'%;background:'+barColor+';border-radius:4px;transition:width .5s"></div>' +
+            '</div></div>';
+  });
+  html += '</div>';
+
+  // 累積収支ライングラフ（SVG）
+  html += '<div style="font-size:13px;font-weight:700;color:#1a2744;margin-bottom:8px">累積収支推移</div>';
+  var svgW = 320, svgH = 100, pad = 30;
+  var minV = Math.min.apply(null, [0].concat(cumulative));
+  var maxV = Math.max.apply(null, [0].concat(cumulative));
+  var range = (maxV - minV) || 1;
+  var n = cumulative.length;
+  function toX(i){ return pad + (i / (n-1 || 1)) * (svgW - pad*2); }
+  function toY(v){ return svgH - pad - ((v - minV) / range) * (svgH - pad*2); }
+  var zeroY = toY(0);
+  var points = cumulative.map(function(v,i){ return toX(i) + ',' + toY(v); }).join(' ');
+  var areaPoints = toX(0) + ',' + svgH + ' ' + points + ' ' + toX(n-1) + ',' + svgH;
+
+  html += '<svg viewBox="0 0 '+svgW+' '+svgH+'" style="width:100%;border-radius:var(--border-radius-md);background:var(--bg-soft)">';
+  html += '<line x1="'+pad+'" y1="'+zeroY+'" x2="'+(svgW-pad)+'" y2="'+zeroY+'" stroke="#ccc" stroke-dasharray="3,3" stroke-width="1"/>';
+  html += '<polygon points="'+areaPoints+'" fill="'+(totalProfit>=0?'#1D9E75':'#E24B4A')+'" opacity="0.15"/>';
+  html += '<polyline points="'+points+'" fill="none" stroke="'+(totalProfit>=0?'#1D9E75':'#E24B4A')+'" stroke-width="2" stroke-linejoin="round"/>';
+  cumulative.forEach(function(v,i){
+    html += '<circle cx="'+toX(i)+'" cy="'+toY(v)+'" r="4" fill="'+(v>=0?'#1D9E75':'#E24B4A')+'"/>';
+    html += '<text x="'+toX(i)+'" y="'+(toY(v)-7)+'" text-anchor="middle" font-size="9" fill="var(--text-sub)">' + (v>=0?'+':'') + Math.round(v/1000) + 'k</text>';
+  });
+  SEISEKI_DATA.forEach(function(r,i){
+    html += '<text x="'+toX(i)+'" y="'+(svgH-5)+'" text-anchor="middle" font-size="8" fill="var(--text-mute)">'+r.date+'</text>';
+  });
+  html += '</svg>';
+
+  div.innerHTML = html;
+}
+
+/* ==== 機能6: 投資額シミュレーター ==== */
+function renderSimulator() {
+  var div = document.getElementById('simulator');
+  if (!div) return;
+
+  var stdEl = document.getElementById('invest-std');
+  var pts = stdEl ? (parseInt(stdEl.textContent.replace(/[^0-9]/g,''), 10) / 100 || 30) : 30;
+
+  var html = '<div style="font-size:12px;color:var(--text-sub);margin-bottom:10px">' +
+             '各 100 円で買った場合の想定払戻シミュレーション（軸からヒモへ ' + pts + ' 点想定）：</div>';
+
+  var patterns = [
+    { label:'鉄板決着（低配当）',   odds3tan:2000,   color:'#1D9E75' },
+    { label:'ヒモ荒れ（中配当）',   odds3tan:15000,  color:'#EF9F27' },
+    { label:'大穴（高配当）',       odds3tan:80000,  color:'#E24B4A' },
+    { label:'万馬券（超高配当）',   odds3tan:200000, color:'#534AB7' }
+  ];
+
+  html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px">';
+  patterns.forEach(function(p){
+    var invest = pts * 100;
+    var payout = p.odds3tan;
+    var profit = payout - invest;
+    html += '<div style="background:'+p.color+'15;border:0.5px solid '+p.color+';' +
+            'border-radius:var(--border-radius-md);padding:10px 12px">' +
+            '<div style="font-size:10px;font-weight:500;color:'+p.color+';margin-bottom:4px">'+p.label+'</div>' +
+            '<div style="font-size:11px;color:var(--text-sub);margin-bottom:4px">3連単 '+p.odds3tan.toLocaleString()+'円の場合</div>' +
+            '<div style="font-size:14px;font-weight:700;color:'+(profit>=0?'#0F6E56':'#A32D2D')+'">' +
+            '払戻 '+payout.toLocaleString()+'円</div>' +
+            '<div style="font-size:11px;color:'+(profit>=0?'#0F6E56':'#A32D2D')+'">' +
+            '収支 '+(profit>=0?'+':'')+profit.toLocaleString()+'円</div>' +
+            '</div>';
+  });
+  html += '</div>';
+
+  div.innerHTML = html;
+}
+
+/* ==== 機能7: 予想メモ ==== */
+window.horseMemos = window.horseMemos || {};
+function saveHorseMemo(horseName, text) {
+  if (text && text.length) window.horseMemos[horseName] = text;
+  else delete window.horseMemos[horseName];
 }
 
 function getDangerLogic() {
