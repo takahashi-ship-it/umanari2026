@@ -4336,84 +4336,114 @@ function renderBabaPastData(baba) {
     '</div>';
 }
 
+// 馬場別の恩恵馬・割引馬データ（レース別に明示的に定義）
+const BABA_SCORES = {
+  '天皇賞（春）': {
+    good: {
+      favor: [
+        { name:'クロワデュノール', score:88, reason:'良馬場での瞬発力・スピード型' },
+        { name:'アドマイヤテラ',   score:85, reason:'阪神大賞典レコードは良馬場' },
+        { name:'ヘデントール',     score:82, reason:'昨年天皇賞春（良）1着' }
+      ],
+      unfavor: [
+        { name:'シンエンペラー',   score:40, reason:'欧州血統は良馬場で相対的に割引' },
+        { name:'ヴェルミセル',     score:35, reason:'ゴールドシップ系は道悪向き' }
+      ]
+    },
+    slightHeavy: {
+      favor: [
+        { name:'ヘデントール',     score:83, reason:'稍重でも崩れない安定感' },
+        { name:'アドマイヤテラ',   score:80, reason:'パワーもあり稍重対応可' },
+        { name:'アクアヴァーナル', score:78, reason:'稍重以上で安定走り' }
+      ],
+      unfavor: [
+        { name:'クロワデュノール', score:55, reason:'道悪経験が少ない' }
+      ]
+    },
+    heavy: {
+      favor: [
+        { name:'シンエンペラー',   score:85, reason:'欧州血統（父シユーニ）で道悪◎' },
+        { name:'ヴェルミセル',     score:80, reason:'ゴールドシップ産駒で道悪激走パターン' },
+        { name:'ヘデントール',     score:75, reason:'ルーラーシップ産駒で道悪安定' }
+      ],
+      unfavor: [
+        { name:'クロワデュノール', score:30, reason:'スピード型は道悪で大幅割引' },
+        { name:'アドマイヤテラ',   score:35, reason:'良馬場のレコード勝ちは高速馬場向き' }
+      ]
+    },
+    veryHeavy: {
+      favor: [
+        { name:'シンエンペラー',   score:88, reason:'欧州血統が最大限に輝く不良馬場' },
+        { name:'ヴェルミセル',     score:85, reason:'不良馬場で大穴激走の可能性大' }
+      ],
+      unfavor: [
+        { name:'クロワデュノール', score:20, reason:'不良馬場経験なし・大幅割引' },
+        { name:'アドマイヤテラ',   score:25, reason:'スピード型は不良馬場で最大割引' },
+        { name:'ホーエリート',     score:30, reason:'牝馬で不良馬場は厳しい' }
+      ]
+    }
+  }
+};
+
 function setBaba(baba) {
   currentBaba = baba;
+  window.currentBaba = baba;
 
+  // ボタンの on/off
   document.querySelectorAll('.baba-btn').forEach(function(b) {
     b.classList.toggle('on', b.dataset.baba === baba);
   });
 
+  // 過去データ + スコア再計算
   renderBabaPastData(baba);
-
-  // 馬場選択時に信頼度スコアを再描画（馬場適性スコアが変わるため）
   if (typeof renderHorses === 'function') {
     try { renderHorses(); } catch (e) {}
   }
 
-  var horses = window.horses || [];
-  var babaLabel = {
-    good: '良馬場', slightHeavy: '稍重',
-    heavy: '重馬場', veryHeavy: '不良馬場'
-  };
+  var resultDiv = document.getElementById('baba-result');
+  if (!resultDiv) return;
 
-  var sorted = horses.slice().sort(function(a, b) {
-    var sa = a.babaScore ? (a.babaScore[baba] || 50) : 50;
-    var sb = b.babaScore ? (b.babaScore[baba] || 50) : 50;
-    return sb - sa;
-  });
+  var babaLabel = {
+    good:'良馬場', slightHeavy:'稍重', heavy:'重馬場', veryHeavy:'不良馬場'
+  }[baba] || baba;
+
+  var raceName = (typeof currentRace !== 'undefined' && currentRace) ? currentRace : '天皇賞（春）';
+  var scores = BABA_SCORES[raceName] && BABA_SCORES[raceName][baba];
+
+  if (!scores) {
+    resultDiv.innerHTML = '<div style="font-size:12px;color:var(--text-sub)">このレースの馬場適性データは準備中です。</div>';
+    return;
+  }
+
+  function renderHorseRow(h, color, bg, lightBg) {
+    return '<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;' +
+           'background:' + lightBg + ';border-radius:var(--border-radius-md);margin-bottom:2px">' +
+             '<span style="font-size:13px;font-weight:600;color:var(--text);flex:0 0 110px">' + h.name + '</span>' +
+             '<div style="flex:1;height:8px;background:var(--bg-soft);border-radius:4px;overflow:hidden">' +
+               '<div style="width:' + h.score + '%;height:100%;background:' + bg + ';border-radius:4px"></div>' +
+             '</div>' +
+             '<span style="font-size:12px;font-weight:700;color:' + color + ';min-width:36px;text-align:right">' + h.score + '点</span>' +
+           '</div>' +
+           '<div style="font-size:10px;color:var(--text-sub);padding:0 10px 6px 12px;margin-bottom:2px">' + h.reason + '</div>';
+  }
 
   var html = '';
-  var goodBaba = sorted.filter(function(h) {
-    return h.babaScore && (h.babaScore[baba] || 0) >= 75;
-  });
-  var badBaba = sorted.filter(function(h) {
-    return h.babaScore && (h.babaScore[baba] || 100) <= 55;
-  });
 
-  if (goodBaba.length) {
+  if (scores.favor && scores.favor.length) {
     html += '<div style="margin-bottom:10px">';
-    html += '<div style="font-size:11px;font-weight:500;color:#0F6E56;margin-bottom:6px">';
-    html += '✅ ' + babaLabel[baba] + 'で恩恵を受ける馬</div>';
-    goodBaba.forEach(function(h) {
-      var sc = h.babaScore[baba];
-      var note = (h.babaNotes && h.babaNotes[baba]) ? h.babaNotes[baba] : '';
-      html += '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;'
-            + 'background:#E1F5EE;border-radius:var(--border-radius-md);margin-bottom:4px">'
-            + '<span style="font-size:13px;font-weight:500;color:var(--color-text-primary);min-width:120px">' + h.name + '</span>'
-            + '<div style="flex:1;height:8px;background:var(--color-background-secondary);border-radius:4px;overflow:hidden">'
-            + '<div style="width:' + sc + '%;height:100%;background:#1D9E75;border-radius:4px"></div></div>'
-            + '<span style="font-size:12px;font-weight:700;color:#0F6E56;min-width:42px;text-align:right">' + sc + '点</span>'
-            + (note ? '<span style="font-size:10px;color:var(--color-text-secondary);flex:1.5">' + note + '</span>' : '')
-            + '</div>';
-    });
+    html += '<div style="font-size:11px;font-weight:600;color:#0F6E56;margin-bottom:6px">✅ ' + babaLabel + 'で恩恵を受ける馬</div>';
+    scores.favor.forEach(function(h){ html += renderHorseRow(h, '#0F6E56', '#1D9E75', '#E1F5EE'); });
     html += '</div>';
   }
 
-  if (badBaba.length) {
+  if (scores.unfavor && scores.unfavor.length) {
     html += '<div>';
-    html += '<div style="font-size:11px;font-weight:500;color:#A32D2D;margin-bottom:6px">';
-    html += '⚠️ ' + babaLabel[baba] + 'で割引になる馬</div>';
-    badBaba.forEach(function(h) {
-      var sc = h.babaScore[baba];
-      var note = (h.babaNotes && h.babaNotes[baba]) ? h.babaNotes[baba] : '';
-      html += '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;'
-            + 'background:#FCEBEB;border-radius:var(--border-radius-md);margin-bottom:4px">'
-            + '<span style="font-size:13px;font-weight:500;color:var(--color-text-primary);min-width:120px">' + h.name + '</span>'
-            + '<div style="flex:1;height:8px;background:var(--color-background-secondary);border-radius:4px;overflow:hidden">'
-            + '<div style="width:' + sc + '%;height:100%;background:#E24B4A;border-radius:4px"></div></div>'
-            + '<span style="font-size:12px;font-weight:700;color:#A32D2D;min-width:42px;text-align:right">' + sc + '点</span>'
-            + (note ? '<span style="font-size:10px;color:var(--color-text-secondary);flex:1.5">' + note + '</span>' : '')
-            + '</div>';
-    });
+    html += '<div style="font-size:11px;font-weight:600;color:#A32D2D;margin-bottom:6px">⚠️ ' + babaLabel + 'で割引になる馬</div>';
+    scores.unfavor.forEach(function(h){ html += renderHorseRow(h, '#A32D2D', '#E24B4A', '#FCEBEB'); });
     html += '</div>';
   }
 
-  if (!goodBaba.length && !badBaba.length) {
-    html = '<div style="font-size:12px;color:var(--color-text-secondary)">馬場適性データが未入力です。枠順確定後に各馬の過去成績から更新されます。</div>';
-  }
-
-  var el = document.getElementById('baba-result');
-  if (el) el.innerHTML = html;
+  resultDiv.innerHTML = html || '<div style="font-size:12px;color:var(--text-sub)">データなし</div>';
 }
 
 /* =====================================================
@@ -4605,7 +4635,9 @@ function sw(t) {
   if (t === 'ana') {
     initOddsGrid();
     renderChecklistHorses();
-    setBaba(currentBaba);
+    if (typeof renderPacePredict === 'function') renderPacePredict();
+    // 馬場パネルを初期表示（DOM 反映後）
+    setTimeout(function(){ setBaba(window.currentBaba || currentBaba || 'good'); }, 50);
   } else if (t === 'kaime') {
     window.selectedJiku = null;
     window.excludedHimo = [];
