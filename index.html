@@ -2031,7 +2031,7 @@ const HORSES_BY_RACE = {
     longDist: true, repeater: false, age45: true,
     bodyWeight: 475, kyoto: true,
     popEstimate: 2, training: "A",
-    waku: 2, umaban: 3, odds: 2.8,
+    waku: 2, umaban: 3, odds: 3.2,
     speedIndex: 92, prevTime: 182.0, prevCourse: "阪神芝3000m", prevBaba: "良",
     babaScore: { good:82, slightHeavy:80, heavy:75, veryHeavy:65 },
     babaNotes: { good:'阪神大賞典レコードは良馬場での記録' },
@@ -2511,6 +2511,40 @@ const HORSES_BY_RACE = {
 
 };
 
+// 人気表示ヘルパー（出馬表・信頼度スコア・危険馬チェックで共通利用）
+function getPopLabel(pop) { return pop ? pop + '番人気' : '-'; }
+function getPopColor(pop) {
+  if (pop === 1) return '#A32D2D';
+  if (pop === 2) return '#185FA5';
+  if (pop === 3) return '#1D9E75';
+  if (pop && pop <= 5) return '#854F0B';
+  return '#888780';
+}
+function getPopBg(pop) {
+  if (pop === 1) return '#FCEBEB';
+  if (pop === 2) return '#E6F1FB';
+  if (pop === 3) return '#EAF3DE';
+  if (pop && pop <= 5) return '#FAEEDA';
+  return '#F1EFE8';
+}
+
+// odds から人気順位を自動計算（最新の odds データから整合の取れた popEstimate を導出）
+function calcPopularity(horses) {
+  if (!horses || !horses.length) return;
+  var withOdds = horses
+    .filter(function(h) { return h.odds != null && h.odds > 0; })
+    .slice()
+    .sort(function(a, b) { return a.odds - b.odds; });
+  withOdds.forEach(function(h, i) { h.popEstimate = i + 1; });
+  horses.filter(function(h) { return !(h.odds != null && h.odds > 0); })
+    .forEach(function(h) { h.popEstimate = null; });
+}
+
+// 全レースの popEstimate を odds から再計算
+Object.keys(HORSES_BY_RACE).forEach(function(race) {
+  calcPopularity(HORSES_BY_RACE[race]);
+});
+
 let HORSES = HORSES_BY_RACE["天皇賞（春）"];
 
 /* =====================================================
@@ -2526,7 +2560,7 @@ const RACE_META = {
     age:       "4歳上",
     pageTitle: "JRA重賞予想 2026 | 天皇賞・春",
     notice:    '<strong>⚠ 重要</strong>：スティンガーグラスは<strong>4/29追い切り後の歩様に違和感のため回避</strong>（宝塚記念を視野に在厩）。',
-    babaPrediction: { status: "良〜稍重", icon: "🌤", color: "#1D9E75", comment: "5/1大雨後、3日は回復傾向。良〜稍重の可能性大" },
+    babaPrediction: { status: "良〜稍重", icon: "🌤", color: "#1D9E75", comment: "5/1大雨後、3日は回復。良〜稍重の可能性大" },
   },
   "NHKマイルC": {
     gradeLine: "G1 / 第31回",
@@ -3284,17 +3318,9 @@ function renderHorses() {
     const siDetailText = siAvailable ? `${score.speed}/10` : `―/10`;
 
     const oddsStr = h.odds ? (+h.odds).toFixed(1) + '倍' : '--';
-    const popStr = h.popEstimate ? h.popEstimate + '番人気' : '';
-    const popBgColor = h.popEstimate === 1 ? '#FCEBEB' :
-                       h.popEstimate === 2 ? '#E6F1FB' :
-                       h.popEstimate === 3 ? '#EAF3DE' :
-                       h.popEstimate <= 5 ? '#FAEEDA' : '#F1EFE8';
-    const popTxColor = h.popEstimate === 1 ? '#A32D2D' :
-                       h.popEstimate === 2 ? '#185FA5' :
-                       h.popEstimate === 3 ? '#3B6D11' :
-                       h.popEstimate <= 5 ? '#854F0B' : '#888780';
-    const popOddsBadges = popStr
-      ? `<span style="background:${popBgColor};color:${popTxColor};font-size:10px;font-weight:700;padding:2px 7px;border-radius:9px;margin-left:6px">${popStr}</span><span style="background:#1a2744;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;margin-left:4px">${oddsStr}</span>`
+    const popStr = getPopLabel(h.popEstimate);
+    const popOddsBadges = h.popEstimate
+      ? `<span style="background:${getPopBg(h.popEstimate)};color:${getPopColor(h.popEstimate)};font-size:10px;font-weight:700;padding:2px 7px;border-radius:9px;margin-left:6px">${popStr}</span><span style="background:#1a2744;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;margin-left:4px">${oddsStr}</span>`
       : '';
 
     const card = document.createElement('article');
@@ -3609,13 +3635,8 @@ function renderShutsubaTable() {
          + (h.odds ? (+h.odds).toFixed(1) + '倍' : '---') + '</td>';
 
     // 人気
-    var popLabel = h.popEstimate ? h.popEstimate + '番人気' : '-';
-    var popColor = h.popEstimate === 1 ? '#E24B4A' :
-                   h.popEstimate === 2 ? '#185FA5' :
-                   h.popEstimate === 3 ? '#1D9E75' :
-                   h.popEstimate <= 5 ? '#EF9F27' : 'var(--text-sub)';
-    html += '<td style="text-align:center;padding:8px 4px;font-weight:600;color:' + popColor + ';white-space:nowrap">'
-         + popLabel + '</td>';
+    html += '<td style="text-align:center;padding:8px 4px;font-weight:600;color:' + getPopColor(h.popEstimate) + ';white-space:nowrap">'
+         + getPopLabel(h.popEstimate) + '</td>';
 
     // 調教評価
     html += '<td style="text-align:center;padding:8px 6px;font-weight:700;color:' + trainingColor + '">'
