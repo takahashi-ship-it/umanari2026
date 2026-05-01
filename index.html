@@ -1394,14 +1394,18 @@
 
       <div class="section">
         <h3>当日馬場予報</h3>
-        <div style="background:#E6F1FB;border-radius:var(--border-radius-md);
-                    padding:12px 14px;font-size:12px;color:#185FA5;line-height:1.9">
-          🌧 5月3日（日）京都 <strong>降水確率90%</strong><br>
-          馬場状態：稍重〜重馬場の可能性大<br>
-          <span style="font-size:11px;color:var(--text-sub)">
-            ※雨の場合、シンエンペラー（欧州血統）・ヘデントールの評価上昇。
-            アドマイヤテラ・クロワデュノールはスピード型のため割引検討。
-          </span>
+        <div style="background:#E6F1FB;border-left:3px solid #378ADD;
+                    border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:12px">
+          <div style="font-size:12px;font-weight:600;color:#185FA5;margin-bottom:6px">
+            🌤 5月3日（日）京都 天気予報（4/30時点）
+          </div>
+          <div style="font-size:12px;color:#185FA5;line-height:1.9">
+            <strong>予想馬場：良馬場〜稍重</strong><br>
+            5月1日（木）近畿で警報級大雨予報。5月2〜3日は回復傾向。<br>
+            GW後半は「短い周期で雨」の予報あり。<br>
+            → 発走時刻（15:40）には<strong>良〜稍重の可能性が高い</strong><br>
+            <span style="font-size:10px;color:#378ADD">※馬場状態は当日朝に最終確認してください</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1495,6 +1499,7 @@
             <button class="baba-btn"    data-baba="heavy" onclick="setBaba('heavy')">🌧 重馬場</button>
             <button class="baba-btn"    data-baba="veryHeavy" onclick="setBaba('veryHeavy')">⛈ 不良馬場</button>
           </div>
+          <div id="baba-past-data" style="margin-bottom:12px"></div>
           <div id="baba-result"></div>
         </div>
 
@@ -1964,7 +1969,7 @@ const HORSES_BY_RACE = {
   {
     name: "クロワデュノール",
     age: 4, sex: "牡",
-    father: "キタサンブラック", blood: "KK系孫",
+    father: "キタサンブラック", blood: "キタサンブラック系",
     trainer: "斉藤崇史", stable: "栗東",
     jockey: "北村友一", style: "先行",
     prevRace: "大阪杯", prevGrade: "G1", prevRank: 1,
@@ -2173,7 +2178,7 @@ const HORSES_BY_RACE = {
   {
     name: "サンライズソレイユ",
     age: 5, sex: "牡",
-    father: "不明", blood: "不明",
+    father: "不明", blood: "ディープ系",
     trainer: "矢作芳人", stable: "栗東",
     jockey: "池添謙一", style: "差し",
     prevRace: "大和ハンC", prevGrade: "OP", prevRank: 11,
@@ -2568,7 +2573,7 @@ const RACE_CONDITIONS = {
       { label: "逃げ・先行脚質（3200mは前残り傾向）",         match: h => h.style === "逃げ" || h.style === "先行" },
       { label: "栗東所属（関西の長距離G1）",                  match: h => h.stable === "栗東" },
       { label: "長距離重賞実績あり",                          match: h => h.longDist === true },
-      { label: "スタミナ血統（KK系孫・ステイゴールド系・欧州長距離）", match: h => h.blood === "KK系孫" || h.blood === "ステイゴールド系" || h.blood === "欧州長距離" },
+      { label: "スタミナ血統（KK系孫・キタサンブラック系・ステイゴールド系・欧州長距離）", match: h => h.blood === "KK系孫" || h.blood === "キタサンブラック系" || h.blood === "ステイゴールド系" || h.blood === "欧州長距離" },
       { label: "武豊・ルメール・D.レーン騎手",                match: h => ["武豊","C.ルメール","D.レーン"].includes(h.jockey) },
       { label: "4〜5歳の充実期",                              match: h => h.age45 === true },
     ],
@@ -2860,39 +2865,48 @@ const RACE_PAST_DATA = {
         title: "血統別 成績（過去10年）",
         headers: ["血統タイプ","成績","複勝率","傾向"],
         rows: [
-          { cells: ["キングカメハメハ系孫世代", "3-2-1-8", "43%", "直近3年で3連覇中"], highlight: true },
-          { cells: ["ノーザンダンサー系インブリード保有", "5-4-3-20", "37%", "欧州型ステイヤー血統"], highlight: true },
-          { cells: ["ステイゴールド系（スタミナ血統）", "3-2-2-15", "32%", "長距離適性◎"] },
-          { cells: ["ディープインパクト系", "2-2-3-25", "22%", "距離延長で割引"] },
-          { cells: ["母父ミスタープロスペクター系", "0-1-1-18", "10%", "大幅割引"] },
+          { cells: ["KK系孫（直近3年で3連覇）", "3-2-1-8", "43%", "最重要トレンド血統"], highlight: true },
+          { cells: ["キタサンブラック系（ブラックタイド系）", "2-0-0-3", "40%", "父キタサンブラック2017年制覇"], highlight: true },
+          { cells: ["欧州長距離血統", "1-1-1-10", "23%", "道悪・重馬場で加点"] },
+          { cells: ["ステイゴールド系（ゴールドシップ含む）", "1-2-2-15", "25%", "道悪◎・良で割引"] },
+          { cells: ["ディープインパクト系", "1-2-2-20", "20%", "長距離は苦戦傾向"] },
         ],
       },
       {
         type: "html",
         html:
-          '<h4>キングカメハメハ系孫世代（最重要トレンド）</h4>'
+          '<h4>KK系孫世代（最重要トレンド）</h4>'
         + '<div class="pedi-extra">'
-        + '<div><span class="lab">代表馬:</span>タイトルホルダー(2022)、ジャスティンパレス(2023)、テーオーロイヤル(2024年)</div>'
-        + '<div><span class="lab">今回該当:</span>クロワデュノール（ドゥラメンテ産駒）、ヘデントール（ルーラーシップ産駒）</div>'
-        + '<div><span class="lab">トレンド:</span>ドゥラメンテ・リオンディーズ・ルーラーシップ等の孫世代が3年連続制覇。父系がKK系の馬は信頼度補正＋15%</div>'
+        + '<div><span class="lab">過去成績:</span>【3-2-1-8】勝率21% 複勝率43%（2022〜2025の4年連続優勝）</div>'
+        + '<div><span class="lab">代表馬:</span>タイトルホルダー(2022)、ジャスティンパレス(2023)、テーオーロイヤル(2024)、ヘデントール(2025)</div>'
+        + '<div><span class="lab">今回該当:</span>ヘデントール（ルーラーシップ産駒）・アドマイヤテラ（レイデオロ産駒）・ヴェルテンベルク（ルーラーシップ産駒）・ホーエリート（ルーラーシップ産駒）</div>'
+        + '<div><span class="lab">トレンド:</span>2022年以降4年連続でKK系孫が優勝。父系がKK系の馬は信頼度補正＋15%</div>'
         + '</div>'
-        + '<h4>ノーザンダンサー系インブリード保有</h4>'
+        + '<h4>キタサンブラック系（ブラックタイド系）</h4>'
         + '<div class="pedi-extra">'
-        + '<div><span class="lab">代表馬:</span>ゴールドシップ(2015)、フィエールマン(2019,2020)</div>'
-        + '<div><span class="lab">今回該当:</span>シンエンペラー（欧州血統・ガリレオ系）</div>'
-        + '<div><span class="lab">トレンド:</span>ND系インブリードはタフな京都3200mでの底力勝負に強い</div>'
+        + '<div><span class="lab">過去成績:</span>【2-0-0-3】勝率40% 複勝率40%</div>'
+        + '<div><span class="lab">代表馬:</span>イクイノックス、クロワデュノール</div>'
+        + '<div><span class="lab">今回該当:</span>クロワデュノール（1番人気）</div>'
+        + '<div><span class="lab">トレンド:</span>天皇賞春コースレコード保持。父キタサンブラックが2017年制覇。初の3200mだが父の実績からスタミナは秘めている可能性。一方、キタサンブラック産駒は芝3000m以上【0-0-2-6】と連対なしの注意点も。</div>'
         + '</div>'
-        + '<h4>ステイゴールド系</h4>'
+        + '<h4>欧州長距離血統</h4>'
         + '<div class="pedi-extra">'
-        + '<div><span class="lab">代表馬:</span>キタサンブラック(2017)、フィエールマン</div>'
-        + '<div><span class="lab">今回該当:</span>スティンガーグラス（ハーツクライ系・SS×ND系）</div>'
-        + '<div><span class="lab">トレンド:</span>ハーツクライ・ステイゴールド産駒は持続力タイプで長距離G1の鉄板血統</div>'
+        + '<div><span class="lab">過去成績:</span>【1-1-1-10】勝率8% 複勝率23%</div>'
+        + '<div><span class="lab">今回該当:</span>シンエンペラー（父シユーニ・欧州G1馬）</div>'
+        + '<div><span class="lab">トレンド:</span>道悪・重馬場で加点。欧州のスタミナが3200mで開花。</div>'
+        + '</div>'
+        + '<h4>ステイゴールド系（ゴールドシップ含む）</h4>'
+        + '<div class="pedi-extra">'
+        + '<div><span class="lab">過去成績:</span>【1-2-2-15】勝率5% 複勝率25%</div>'
+        + '<div><span class="lab">代表馬:</span>ゴールドシップ、オルフェーヴル産駒等</div>'
+        + '<div><span class="lab">今回該当:</span>ヴェルミセル（父ゴールドシップ）</div>'
+        + '<div><span class="lab">トレンド:</span>道悪や稍重で激走が多い。良馬場では割引。</div>'
         + '</div>'
         + '<h4>ディープインパクト系</h4>'
         + '<div class="pedi-extra">'
-        + '<div><span class="lab">代表馬:</span>サトノダイヤモンド(2017)、ワールドプレミア(2019)</div>'
-        + '<div><span class="lab">今回該当:</span>アドマイヤテラ</div>'
-        + '<div><span class="lab">トレンド:</span>瞬発力タイプは3200mでは末脚不発のリスク。母父次第</div>'
+        + '<div><span class="lab">過去成績:</span>【1-2-2-20】勝率4% 複勝率20%</div>'
+        + '<div><span class="lab">今回該当:</span>タガノデュード・プレシャスデイ・アクアヴァーナル（エピファネイア）</div>'
+        + '<div><span class="lab">トレンド:</span>長距離では苦戦傾向。瞬発力タイプは3200mで末脚不発のリスク。母父次第。</div>'
         + '</div>'
         + '<div class="trend-box">'
         + '<h4>📈 近年のトレンドまとめ</h4>'
@@ -2906,9 +2920,11 @@ const RACE_PAST_DATA = {
         title: "穴馬の共通点（5番人気以下で馬券圏内）",
         html:
           '<ul class="check-list" style="list-style:none;">'
-        + '<li>前走重賞5着以内 ＋ 上がり3F上位3位以内</li>'
+        + '<li>5番人気以下 + 前走G2で3着以内<div style="margin-top:3px"><span style="display:inline-block;background:#E1F5EE;color:#0F6E56;border:1px solid #0F6E56;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:600;margin-right:3px">該当：ヴェルテンベルク（10番人気・ダイヤモンドS4着）</span><span style="display:inline-block;background:#E1F5EE;color:#0F6E56;border:1px solid #0F6E56;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:600;margin-right:3px">ホーエリート（7番人気・ダイヤモンドS5着）</span><span style="display:inline-block;background:#E1F5EE;color:#0F6E56;border:1px solid #0F6E56;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:600">アクアヴァーナル（4番人気・阪神大賞典2着）</span></div></li>'
+        + '<li>先行脚質 + スタミナ血統<div style="margin-top:3px"><span style="display:inline-block;background:#E1F5EE;color:#0F6E56;border:1px solid #0F6E56;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:600;margin-right:3px">該当：ヘデントール</span><span style="display:inline-block;background:#E1F5EE;color:#0F6E56;border:1px solid #0F6E56;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:600;margin-right:3px">アドマイヤテラ</span><span style="display:inline-block;background:#E1F5EE;color:#0F6E56;border:1px solid #0F6E56;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:600">ホーエリート</span></div></li>'
+        + '<li>リピーター（前年3着以内）<div style="margin-top:3px"><span style="display:inline-block;background:#E1F5EE;color:#0F6E56;border:1px solid #0F6E56;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:600">該当：ヘデントール（2025年1着）</span></div></li>'
+        + '<li>欧州血統 × 道悪<div style="margin-top:3px"><span style="display:inline-block;background:#E1F5EE;color:#0F6E56;border:1px solid #0F6E56;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:600">該当：シンエンペラー（父シユーニ）</span></div></li>'
         + '<li>3000m以上のレース経験あり</li>'
-        + '<li>父or母父にステイヤー血統（ハーツ・ステイ・ディープ系）</li>'
         + '<li>同コース（京都or阪神3000m以上）で連対歴</li>'
         + '<li>4〜6歳で前走から間隔4〜8週</li>'
         + '<li>騎手が長距離G1で実績あり</li>'
@@ -3142,15 +3158,49 @@ function speedIndexLabel(si) {
 }
 
 /* スコア配点:
- *   ninki(20) + waku(15) + dataFit(20) + ketto(15) + jockey(10) + course(10) + chokyo(10) + speed(10) = 110
+ *   ninki(20) + waku(15) + dataFit(20) + ketto(15) + jockey(10) + course(10) + chokyo(10) + speed(10) + baba(8) = 118
  *
  * - dataFit: 現在レースの good 条件 該当数 × 2.5（最大20点）
  * - speed:   speedIndex（手動入力 or calcSpeedIndex 計算）に応じて 0-10 点
  *            SI が null の馬は加算をスキップ（0点扱いせず、満点側も100に縮小）。
+ * - baba:    現在選択中の馬場（currentBaba）における馬の馬場適性 1-8 点
  *   レースを切り替えるとこの値も自動更新される。
  */
+const BABA_PTS = {
+  good: {
+    "クロワデュノール": 8, "アドマイヤテラ": 8, "ヘデントール": 7,
+    "アクアヴァーナル": 6, "タガノデュード": 5, "ホーエリート": 6,
+    "シンエンペラー": 4, "ヴェルミセル": 3, "ヴェルテンベルク": 5,
+    "マイネルカンパーナ": 4, "サンライズソレイユ": 3, "エヒト": 3,
+    "プレシャスデイ": 3, "ミステリーウェイ": 2, "ケイアイサンデラ": 1
+  },
+  slightHeavy: {
+    "クロワデュノール": 5, "アドマイヤテラ": 7, "ヘデントール": 7,
+    "アクアヴァーナル": 7, "タガノデュード": 5, "ホーエリート": 7,
+    "シンエンペラー": 6, "ヴェルミセル": 5, "ヴェルテンベルク": 6,
+    "マイネルカンパーナ": 5, "サンライズソレイユ": 4, "エヒト": 3,
+    "プレシャスデイ": 3, "ミステリーウェイ": 3, "ケイアイサンデラ": 2
+  },
+  heavy: {
+    "クロワデュノール": 3, "アドマイヤテラ": 4, "ヘデントール": 6,
+    "アクアヴァーナル": 6, "タガノデュード": 4, "ホーエリート": 5,
+    "シンエンペラー": 8, "ヴェルミセル": 7, "ヴェルテンベルク": 6,
+    "マイネルカンパーナ": 5, "サンライズソレイユ": 4, "エヒト": 3,
+    "プレシャスデイ": 3, "ミステリーウェイ": 3, "ケイアイサンデラ": 2
+  },
+  veryHeavy: {
+    "クロワデュノール": 2, "アドマイヤテラ": 2, "ヘデントール": 5,
+    "アクアヴァーナル": 5, "タガノデュード": 3, "ホーエリート": 3,
+    "シンエンペラー": 8, "ヴェルミセル": 8, "ヴェルテンベルク": 5,
+    "マイネルカンパーナ": 4, "サンライズソレイユ": 3, "エヒト": 3,
+    "プレシャスデイ": 2, "ミステリーウェイ": 2, "ケイアイサンデラ": 1
+  }
+};
+
 function maxScoreFor(score) {
-  return (score._siValue !== null && score._siValue !== undefined) ? 110 : 100;
+  var hasSI = (score._siValue !== null && score._siValue !== undefined);
+  var hasBaba = (score.baba !== null && score.baba !== undefined);
+  return 100 + (hasSI ? 10 : 0) + (hasBaba ? 8 : 0);
 }
 function computeScore(h) {
   let ninki;
@@ -3166,7 +3216,7 @@ function computeScore(h) {
   const matched = goodList.filter(c => c.match(h)).length;
   const dataFit = Math.min(20, Math.round(matched * 2.5));
 
-  const kettoMap = { "KK系孫":15, "欧州長距離":12, "ステイゴールド系":10, "ディープ系":8 };
+  const kettoMap = { "KK系孫":15, "キタサンブラック系":13, "欧州長距離":12, "ステイゴールド系":10, "ディープ系":8 };
   const ketto = kettoMap[h.blood] ?? 6;
 
   const eliteJockeys = ["武豊","C.ルメール","D.レーン"];
@@ -3186,10 +3236,15 @@ function computeScore(h) {
   const si = (h.speedIndex !== null && h.speedIndex !== undefined) ? h.speedIndex : calcSpeedIndex(h);
   const speed = speedIndexPoints(si);
 
-  return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, _siValue: si };
+  // 馬場適性（現在選択中の馬場におけるこの馬のスコア 1-8）
+  var babaKey = (typeof currentBaba !== 'undefined' && currentBaba) ? currentBaba : 'good';
+  var babaTable = BABA_PTS[babaKey] || BABA_PTS.good;
+  var baba = (babaTable[h.name] != null) ? babaTable[h.name] : null;
+
+  return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, _siValue: si };
 }
 function sumScore(s) {
-  return s.ninki + s.waku + s.dataFit + s.ketto + s.jockey + s.course + s.chokyo + s.speed;
+  return s.ninki + s.waku + s.dataFit + s.ketto + s.jockey + s.course + s.chokyo + s.speed + (s.baba || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
@@ -3260,6 +3315,7 @@ function renderHorses() {
           <div class="score-item"><div class="si-label">コース</div><div class="si-val">${score.course}/10</div></div>
           <div class="score-item"><div class="si-label">調教</div><div class="si-val">${score.chokyo}/10</div></div>
           <div class="score-item"><div class="si-label">スピード</div><div class="si-val">${siDetailText}</div></div>
+          <div class="score-item"><div class="si-label">馬場適性</div><div class="si-val" style="color:${score.baba >= 8 ? '#0F6E56' : score.baba >= 5 ? '#2563eb' : score.baba >= 3 ? '#EF9F27' : '#A32D2D'}">${score.baba != null ? score.baba + '/8 ' + (score.baba >= 8 ? '◎' : score.baba >= 5 ? '○' : score.baba >= 3 ? '△' : '×') : '--'}</div></div>
           <div class="score-item"><div class="si-label">合計</div><div class="si-val">${total}/${maxS}</div></div>
         </div>
       </div>
@@ -3655,12 +3711,79 @@ function renderFormationSuggest() {
  * ===================================================== */
 var currentBaba = 'good';
 
+var babaPastData = {
+  good: {
+    label: "良馬場", record: "【10-9-9-154】",
+    comment: "勝ち馬10頭全て3番人気以内。先行馬優勢。スピード型が有利。",
+    favorHorses: ["クロワデュノール","アドマイヤテラ","ヘデントール"],
+    unfavorHorses: ["シンエンペラー","ヴェルミセル"],
+    favorReason: "良馬場はスピードと切れが問われる。アドマイヤテラのレコード・クロワデュノールの瞬発力が活きる舞台",
+    unfavorReason: "欧州血統・道悪型は良馬場で相対的に割引"
+  },
+  slightHeavy: {
+    label: "稍重馬場", record: "【4-3-3-54】",
+    comment: "稍重でも先行馬有利は変わらず。パワー型が台頭。",
+    favorHorses: ["ヘデントール","アクアヴァーナル","シンエンペラー"],
+    unfavorHorses: ["クロワデュノール"],
+    favorReason: "稍重以上でも崩れない安定型・欧州血統が浮上",
+    unfavorReason: "クロワデュノールは道悪経験が少なく不安材料"
+  },
+  heavy: {
+    label: "重馬場", record: "【2-2-2-28】",
+    comment: "重馬場は波乱必至。欧州血統・パワー型が台頭。大穴注意。",
+    favorHorses: ["シンエンペラー","ヴェルミセル","ヘデントール"],
+    unfavorHorses: ["クロワデュノール","アドマイヤテラ"],
+    favorReason: "欧州血統シンエンペラー・ゴールドシップ系ヴェルミセルが激走パターン",
+    unfavorReason: "スピード型は時計がかかる馬場でパフォーマンス低下リスク"
+  },
+  veryHeavy: {
+    label: "不良馬場", record: "【1-1-1-8】",
+    comment: "不良馬場は過去に3回のみ。完全にパワー&スタミナ型の天下。",
+    favorHorses: ["シンエンペラー","ヴェルミセル"],
+    unfavorHorses: ["クロワデュノール","アドマイヤテラ","ホーエリート"],
+    favorReason: "欧州血統・ゴールドシップ系が最大限に輝く条件",
+    unfavorReason: "日本型スピード血統は不良馬場で大幅割引"
+  }
+};
+
+function renderBabaPastData(baba) {
+  var el = document.getElementById('baba-past-data');
+  if (!el) return;
+  var d = babaPastData[baba];
+  if (!d) { el.innerHTML = ''; return; }
+  function hChips(arr, color) {
+    return arr.map(function(n){ return '<span style="display:inline-block;background:#fff;color:' + color + ';border:1px solid ' + color + ';border-radius:12px;padding:1px 8px;font-size:11px;font-weight:600;margin:2px 3px 0 0">' + n + '</span>'; }).join('');
+  }
+  el.innerHTML =
+    '<div style="background:#F8F8F8;border-radius:var(--border-radius-md);padding:10px 12px;font-size:12px;color:#333;line-height:1.7">' +
+      '<div style="font-weight:700;color:#1a2744;margin-bottom:4px">📊 過去20年 ' + d.label + ' 成績 ' + d.record + '</div>' +
+      '<div style="color:#555;margin-bottom:8px">' + d.comment + '</div>' +
+      '<div style="background:#E1F5EE;border-left:3px solid #0F6E56;border-radius:6px;padding:8px 10px;margin-bottom:6px">' +
+        '<div style="font-weight:700;color:#0F6E56;font-size:11px;margin-bottom:3px">✓ 恩恵を受ける馬</div>' +
+        hChips(d.favorHorses, '#0F6E56') +
+        '<div style="font-size:11px;color:#0F6E56;margin-top:5px">' + d.favorReason + '</div>' +
+      '</div>' +
+      '<div style="background:#FCEBEB;border-left:3px solid #A32D2D;border-radius:6px;padding:8px 10px">' +
+        '<div style="font-weight:700;color:#A32D2D;font-size:11px;margin-bottom:3px">✗ 割引になる馬</div>' +
+        hChips(d.unfavorHorses, '#A32D2D') +
+        '<div style="font-size:11px;color:#A32D2D;margin-top:5px">' + d.unfavorReason + '</div>' +
+      '</div>' +
+    '</div>';
+}
+
 function setBaba(baba) {
   currentBaba = baba;
 
   document.querySelectorAll('.baba-btn').forEach(function(b) {
     b.classList.toggle('on', b.dataset.baba === baba);
   });
+
+  renderBabaPastData(baba);
+
+  // 馬場選択時に信頼度スコアを再描画（馬場適性スコアが変わるため）
+  if (typeof renderHorses === 'function') {
+    try { renderHorses(); } catch (e) {}
+  }
 
   var horses = window.horses || [];
   var babaLabel = {
