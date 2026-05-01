@@ -1345,6 +1345,7 @@
         <span>📏 芝3200m</span>
         <span>🐎 4歳上</span>
       </div>
+      <div id="raceBabaPrediction"></div>
     </div>
 
     <div class="race-notice" id="raceNotice" hidden></div>
@@ -1384,6 +1385,7 @@
                 <th style="padding:8px 6px;text-align:center;min-width:88px">前走</th>
                 <th style="padding:8px 6px;text-align:center;min-width:44px">前走着</th>
                 <th style="padding:8px 6px;text-align:center;min-width:64px">予想オッズ</th>
+                <th style="padding:8px 6px;text-align:center;min-width:48px">人気</th>
                 <th style="padding:8px 6px;text-align:center;min-width:36px">調教</th>
               </tr>
             </thead>
@@ -2524,6 +2526,7 @@ const RACE_META = {
     age:       "4歳上",
     pageTitle: "JRA重賞予想 2026 | 天皇賞・春",
     notice:    '<strong>⚠ 重要</strong>：スティンガーグラスは<strong>4/29追い切り後の歩様に違和感のため回避</strong>（宝塚記念を視野に在厩）。',
+    babaPrediction: { status: "良〜稍重", icon: "🌤", color: "#1D9E75", comment: "5/1大雨後、3日は回復傾向。良〜稍重の可能性大" },
   },
   "NHKマイルC": {
     gradeLine: "G1 / 第31回",
@@ -2533,8 +2536,10 @@ const RACE_META = {
     surface:   "芝1600m",
     age:       "3歳牡牝",
     pageTitle: "JRA重賞予想 2026 | NHKマイルC",
+    babaPrediction: { status: "良馬場", icon: "☀️", color: "#1D9E75", comment: "東京開催・晴れ予報" },
   },
   "ヴィクトリアマイル": {
+    babaPrediction: { status: "良馬場", icon: "☀️", color: "#1D9E75", comment: "東京開催・晴れ予報" },
     gradeLine: "G1 / 第21回",
     title:     "ヴィクトリアマイル",
     date:      "2026-05-17 (日)",
@@ -3278,13 +3283,27 @@ function renderHorses() {
       : `スピード指数 未入力（前走タイム/コース未確定）`;
     const siDetailText = siAvailable ? `${score.speed}/10` : `―/10`;
 
+    const oddsStr = h.odds ? (+h.odds).toFixed(1) + '倍' : '--';
+    const popStr = h.popEstimate ? h.popEstimate + '番人気' : '';
+    const popBgColor = h.popEstimate === 1 ? '#FCEBEB' :
+                       h.popEstimate === 2 ? '#E6F1FB' :
+                       h.popEstimate === 3 ? '#EAF3DE' :
+                       h.popEstimate <= 5 ? '#FAEEDA' : '#F1EFE8';
+    const popTxColor = h.popEstimate === 1 ? '#A32D2D' :
+                       h.popEstimate === 2 ? '#185FA5' :
+                       h.popEstimate === 3 ? '#3B6D11' :
+                       h.popEstimate <= 5 ? '#854F0B' : '#888780';
+    const popOddsBadges = popStr
+      ? `<span style="background:${popBgColor};color:${popTxColor};font-size:10px;font-weight:700;padding:2px 7px;border-radius:9px;margin-left:6px">${popStr}</span><span style="background:#1a2744;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;margin-left:4px">${oddsStr}</span>`
+      : '';
+
     const card = document.createElement('article');
     card.className = `horse-card ${rank.key}`;
     card.innerHTML = `
       <div class="horse-head">
         <span class="rank-mark ${rank.key}">${rank.mark}</span>
         <span class="waku ${wakuClass}" data-field="waku">${wakuText}</span>
-        <span class="horse-name">${h.name}</span>
+        <span class="horse-name">${h.name}</span>${popOddsBadges}
         <span class="rank-label ${rank.key}">${rank.label}</span>
       </div>
       <div class="horse-meta">
@@ -3375,6 +3394,23 @@ function setCurrentRace(name) {
       '<span>🐎 ' + meta.age + '</span>';
     if (meta.pageTitle) document.title = meta.pageTitle;
 
+    var babaPredEl = document.getElementById('raceBabaPrediction');
+    if (babaPredEl) {
+      if (meta.babaPrediction) {
+        var bp = meta.babaPrediction;
+        babaPredEl.innerHTML =
+          '<div style="display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap;' +
+          'background:' + bp.color + '18;border:1px solid ' + bp.color + ';' +
+          'border-radius:var(--border-radius-md);padding:3px 10px;margin-top:6px;' +
+          'font-size:11px;font-weight:500;color:' + bp.color + '">' +
+          bp.icon + ' 予想馬場：<strong>' + bp.status + '</strong>' +
+          '<span style="font-size:10px;color:var(--text-mute);margin-left:4px">' +
+          bp.comment + '</span></div>';
+      } else {
+        babaPredEl.innerHTML = '';
+      }
+    }
+
     var noticeEl = document.getElementById('raceNotice');
     if (noticeEl) {
       if (meta.notice) {
@@ -3424,6 +3460,23 @@ function setCurrentRace(name) {
 renderPastData();
 renderHorses();
 renderCriteria();
+
+// 初回表示の馬場予想バッジ（天皇賞春のbabaPrediction）
+(function() {
+  var meta = RACE_META[currentRace];
+  var el = document.getElementById('raceBabaPrediction');
+  if (el && meta && meta.babaPrediction) {
+    var bp = meta.babaPrediction;
+    el.innerHTML =
+      '<div style="display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap;' +
+      'background:' + bp.color + '18;border:1px solid ' + bp.color + ';' +
+      'border-radius:var(--border-radius-md);padding:3px 10px;margin-top:6px;' +
+      'font-size:11px;font-weight:500;color:' + bp.color + '">' +
+      bp.icon + ' 予想馬場：<strong>' + bp.status + '</strong>' +
+      '<span style="font-size:10px;color:var(--text-mute);margin-left:4px">' +
+      bp.comment + '</span></div>';
+  }
+})();
 
 /* =====================================================
  * 3.6) ANA-CHECK TAB (危険な人気馬・穴馬チェック)
@@ -3554,6 +3607,15 @@ function renderShutsubaTable() {
     // 予想オッズ
     html += '<td style="text-align:center;padding:8px 6px;font-weight:700;color:' + oddsColor + '">'
          + (h.odds ? (+h.odds).toFixed(1) + '倍' : '---') + '</td>';
+
+    // 人気
+    var popLabel = h.popEstimate ? h.popEstimate + '番人気' : '-';
+    var popColor = h.popEstimate === 1 ? '#E24B4A' :
+                   h.popEstimate === 2 ? '#185FA5' :
+                   h.popEstimate === 3 ? '#1D9E75' :
+                   h.popEstimate <= 5 ? '#EF9F27' : 'var(--text-sub)';
+    html += '<td style="text-align:center;padding:8px 4px;font-weight:600;color:' + popColor + ';white-space:nowrap">'
+         + popLabel + '</td>';
 
     // 調教評価
     html += '<td style="text-align:center;padding:8px 6px;font-weight:700;color:' + trainingColor + '">'
