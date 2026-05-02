@@ -1374,6 +1374,15 @@
         <span>🐎 4歳上</span>
       </div>
       <div id="raceBabaPrediction"></div>
+
+      <!-- 馬場状態選択ボタン（全タブ共通・常設） -->
+      <div id="baba-buttons-global" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center">
+        <span style="font-size:10px;color:var(--text-mute);margin-right:2px">馬場切替：</span>
+        <button class="baba-btn on" data-baba="good"        onclick="setBaba('good')">🌞 良馬場</button>
+        <button class="baba-btn"    data-baba="slightHeavy" onclick="setBaba('slightHeavy')">🌥 稍重</button>
+        <button class="baba-btn"    data-baba="heavy"       onclick="setBaba('heavy')">🌧 重馬場</button>
+        <button class="baba-btn"    data-baba="veryHeavy"   onclick="setBaba('veryHeavy')">⛈ 不良</button>
+      </div>
     </div>
 
     <div class="race-notice" id="raceNotice" hidden></div>
@@ -1530,17 +1539,11 @@
     <div class="panel" id="tab-check">
       <div id="pn-ana" class="pn">
 
-        <!-- 0. 馬場状態予想 -->
+        <!-- 0. 馬場状態予想（馬場ボタンはレース情報ヘッダーに常設） -->
         <div class="card" id="baba-panel">
           <div class="ct">当日馬場予想</div>
           <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:10px">
-            想定馬場を選択すると、各馬の馬場適性スコアから「恩恵を受ける馬」「割引になる馬」を自動表示します。
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
-            <button class="baba-btn on" data-baba="good" onclick="setBaba('good')">🌞 良馬場</button>
-            <button class="baba-btn"    data-baba="slightHeavy" onclick="setBaba('slightHeavy')">🌥 稍重</button>
-            <button class="baba-btn"    data-baba="heavy" onclick="setBaba('heavy')">🌧 重馬場</button>
-            <button class="baba-btn"    data-baba="veryHeavy" onclick="setBaba('veryHeavy')">⛈ 不良馬場</button>
+            ヘッダーの「馬場切替」ボタンから想定馬場を選択すると、各馬の馬場適性スコアから「恩恵を受ける馬」「割引になる馬」を自動表示します。
           </div>
           <div id="baba-past-data" style="margin-bottom:12px"></div>
           <div id="baba-result"></div>
@@ -5023,10 +5026,11 @@ function updateHeaderStats() {
 
 document.addEventListener('DOMContentLoaded', updateHeaderStats);
 
-// スマホ・PC両対応：ページ読み込み完了後に出馬表データを確実に描画
+// スマホ・PC両対応：ページ読み込み完了後に出馬表データ + ヘッダー馬場ボタンを確実に初期化
 window.addEventListener('load', function() {
   setTimeout(function() {
     if (typeof renderShutsubaTable === 'function') renderShutsubaTable();
+    if (typeof setBaba === 'function') setBaba(window.currentBaba || 'good');
   }, 50);
 });
 </script>
