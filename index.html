@@ -1419,6 +1419,7 @@
                 <th style="padding:8px 8px;text-align:left;min-width:72px">調教師</th>
                 <th style="padding:8px 6px;text-align:center;min-width:88px">前走</th>
                 <th style="padding:8px 6px;text-align:center;min-width:44px">前走着</th>
+                <th style="padding:8px 6px;text-align:center;min-width:72px">馬体重</th>
                 <th style="padding:8px 6px;text-align:center;min-width:64px">予想オッズ</th>
                 <th style="padding:8px 6px;text-align:center;min-width:48px">人気</th>
                 <th style="padding:8px 6px;text-align:center;min-width:36px">調教</th>
@@ -2178,7 +2179,7 @@ const HORSES_BY_RACE = {
     prevComment: "大阪杯（G1）を快勝。G1・3勝目。2000mから3200mへの距離延長が最大の課題。父キタサンブラックが当レース連覇の実績あり。",
     note: "【調教S急上昇・本命最有力】「負けられないとばかりに必勝態勢」と専門家絶賛。追われての反応素早く折り合いも問題なし。父キタサンブラックが2016-17年に当コースで連覇。ただしキタサンブラック産駒の芝3000m以上は【0-0-2-6】連対なし。中3週・距離初挑戦・血統的スタミナ不安が3大リスク。北村友一「不安と感じるところはない。馬と信頼関係ができている」",
     longDist: false, repeater: false, age45: true,
-    bodyWeight: 480, kyoto: false,
+    bodyWeight: 520, bodyWeightPrev: 522, bodyWeightDiff: -2, kyoto: false,
     popEstimate: 1, training: "S",
     waku: 4, umaban: 7, odds: 3.0,
     speedIndex: 96, prevTime: 117.6, prevCourse: "阪神芝2000m", prevBaba: "良",
@@ -2195,7 +2196,7 @@ const HORSES_BY_RACE = {
     prevComment: "前走有馬記念は14着と大敗。ただし直前のゴタゴタによる回避・急参戦が影響。ジャパンC2着の実績あり。欧州血統で3200mへの適性は高い。急転直下の参戦。",
     note: "【調教B状態面に不安】最終追い切りで「飛び抜けて悪いわけではないがこのメンバーでは見劣る」評価。1週前一杯追いで遅れた点も不安材料。有馬記念14着からの急転直下参戦。芝3000m超は初めて。全兄は凱旋門賞馬ソットサス（欧州長距離血統）。欧州血統で道悪なら浮上の可能性。岩田望来「いい馬です」とコメント。",
     longDist: false, repeater: false, age45: true,
-    bodyWeight: 470, kyoto: false,
+    bodyWeight: 516, bodyWeightPrev: null, bodyWeightDiff: null, kyoto: false,
     popEstimate: 5, training: "B",
     waku: 4, umaban: 8, odds: 17.3,
     speedIndex: 60, prevTime: null, prevCourse: "中山芝2500m", prevBaba: "良",
@@ -2212,7 +2213,7 @@ const HORSES_BY_RACE = {
     prevComment: "前走京都記念は8着。骨折からの復帰・叩き台としての使用。昨年の天皇賞春覇者。リピーターとして評価。C.ルメール騎手に乗り替わり。",
     note: "【調教B・昨年比一枚落ち】「昨年は猛時計連発。今回は当時との比較でやや一枚落ちる」と専門家評価。後脚が流れてスピードに乗るまでに時間かかる状態。7枠12番の外枠も不利材料。ルメール初騎乗＋初コンタクトが吉と出るか凶と出るか。フィエールマン連覇を導いた長距離GIの経験値はプラス。「週を追うごとに状態上がっている」と太田助手。",
     longDist: true, repeater: true, age45: true,
-    bodyWeight: 490, kyoto: true,
+    bodyWeight: 494, bodyWeightPrev: 482, bodyWeightDiff: 12, kyoto: true,
     popEstimate: 3, training: "B",
     waku: 7, umaban: 12, odds: 5.1,
     speedIndex: 65, prevTime: null, prevCourse: "京都芝2200m", prevBaba: "良",
@@ -2229,7 +2230,7 @@ const HORSES_BY_RACE = {
     prevComment: "前走阪神大賞典（G2）をレコードタイムで快勝。天皇賞春への最良ローテーション。菊花賞3着の長距離実績。武豊騎手は当レース9勝目がかかる。",
     note: "【調教A・データ最適格】友道師「今回の方がいい。胸の深さから心肺機能も高い」武豊「ここは勝たなきゃな」と闘志。阪神大賞典レコード→天皇賞春は最良ローテ。武豊騎手は当レース9勝目挑戦。2枠3番の好枠。ただし最終追い切りはポリトラックで地味な内容。「上積みは微妙」との声も。叩き良化型なので本番で真価発揮なるか。",
     longDist: true, repeater: false, age45: true,
-    bodyWeight: 475, kyoto: true,
+    bodyWeight: 514, bodyWeightPrev: 504, bodyWeightDiff: 10, kyoto: true,
     popEstimate: 2, training: "A",
     waku: 2, umaban: 3, odds: 3.2,
     speedIndex: 92, prevTime: 182.0, prevCourse: "阪神芝3000m", prevBaba: "良",
@@ -2246,7 +2247,7 @@ const HORSES_BY_RACE = {
     prevComment: "前走大阪杯4着。G1で好走できる実力は証明。ただし長距離実績なし。3200mへの距離適性が最大の課題。",
     note: "【調教B】経験豊富なキャリアを信頼。陣営コメント問題なし。",
     longDist: false, repeater: false, age45: true,
-    bodyWeight: 488, kyoto: false,
+    bodyWeight: 518, bodyWeightPrev: 500, bodyWeightDiff: 18, kyoto: false,
     popEstimate: 6, training: "B",
     waku: 6, umaban: 11, odds: 20.2,
     speedIndex: 82, prevTime: 117.6, prevCourse: "阪神芝2000m", prevBaba: "良",
@@ -2263,7 +2264,7 @@ const HORSES_BY_RACE = {
     prevComment: "前走阪神大賞典2着と好走。長距離での崩れがなく実力は確か。ただし牝馬の天皇賞春勝利は1953年レダ以来ゼロ（73年ぶりの快挙なるか）。",
     note: "【調教A良化・牝馬の壁】松山「リラックスして走っていた。先週の右にもたれる面がなくなった」と良化確認。2枠4番の好枠。京都芝外回りの連対率100%というデータあり。牝馬の天皇賞春勝利は1953年レダ以来73年ぶりの快挙に挑む。スタミナは証明済み。過去10年牝馬勝利ゼロのデータとの戦い。",
     longDist: true, repeater: false, age45: true,
-    bodyWeight: 450, kyoto: true,
+    bodyWeight: 476, bodyWeightPrev: 478, bodyWeightDiff: -2, kyoto: true,
     popEstimate: 4, training: "A",
     waku: 2, umaban: 4, odds: 14.3,
     speedIndex: 88, prevTime: 182.2, prevCourse: "阪神芝3000m", prevBaba: "良",
@@ -2280,7 +2281,7 @@ const HORSES_BY_RACE = {
     prevComment: "前走ダイヤモンドS5着。長距離で堅実に走るタイプ。牝馬のジンクスに挑む一頭。1週前追切でラスト11.0秒を記録し陣営も期待。",
     note: "【調教A急上昇・穴馬筆頭】戸崎「スイッチが入って状態が上がってきた」前走比での馬体引き締まりが顕著。ステイヤーズS1着の長距離実績。14番の外枠は不利。昨年の京都GI出走歴あり（天皇賞秋4着）。牝馬のジンクスはあるが状態面は出走馬中トップクラス。29.5倍の穴馬として最注目。",
     longDist: true, repeater: false, age45: true,
-    bodyWeight: 458, kyoto: false,
+    bodyWeight: 498, bodyWeightPrev: 486, bodyWeightDiff: 12, kyoto: false,
     popEstimate: 7, training: "A",
     waku: 8, umaban: 14, odds: 24.2,
     speedIndex: 72, prevTime: 212.6, prevCourse: "東京芝3400m", prevBaba: "良",
@@ -2297,7 +2298,7 @@ const HORSES_BY_RACE = {
     prevComment: "前走日経賞4着。データ上は【0-0-0-21】の即消し条件（日経賞4着以下）に該当。9歳で勝率0%の高齢馬。川田将雅騎乗で評価上方修正。",
     note: "【調教C】坂路単走。問題なく調教できたが9歳・日経賞4着以下のデータ的には消し。G1ジョッキー川田将雅騎乗で多少の上積みは期待。",
     longDist: true, repeater: false, age45: false,
-    bodyWeight: 500, kyoto: false,
+    bodyWeight: 462, bodyWeightPrev: 470, bodyWeightDiff: -8, kyoto: false,
     popEstimate: 8, training: "C",
     waku: 3, umaban: 6, odds: 39.6,
     speedIndex: 40, prevTime: null, prevCourse: "中山芝2500m", prevBaba: "良",
@@ -2312,10 +2313,10 @@ const HORSES_BY_RACE = {
     jockey: "松若風馬", style: "差し",
     prevRace: "ダイヤモンドS", prevGrade: "G3", prevRank: 4,
     prevComment: "前走ダイヤモンドS4着。長距離実績を積んでいる上昇馬。6歳でやや高齢だが好走圏内。",
-    note: "【調教B】坂路51.6-12.4で末強め調整。松若騎手が手綱。外目からの単走で身体コンパクト。上積みには欠ける。",
+    note: "【調教C】坂路途中で手前替え後バランス崩す。可もなく不可もなし。+14kg は太め残りリスク。",
     longDist: true, repeater: false, age45: false,
-    bodyWeight: 470, kyoto: false,
-    popEstimate: 9, training: "B",
+    bodyWeight: 500, bodyWeightPrev: 486, bodyWeightDiff: 14, kyoto: false,
+    popEstimate: 9, training: "C",
     waku: 8, umaban: 15, odds: 74.8,
     speedIndex: 73, prevTime: 212.5, prevCourse: "東京芝3400m", prevBaba: "良",
     babaScore: { good:60, slightHeavy:65, heavy:70, veryHeavy:65 },
@@ -2331,7 +2332,7 @@ const HORSES_BY_RACE = {
     prevComment: "ゴールドシップ産駒でスタミナ血統。牝馬かつ6歳で割引。長距離路線を歩んできた実績はある。前走詳細要確認。",
     note: "【調教A超穴候補】追い切りの動きは出走馬中トップクラスとの評価。「100倍超の大穴だが紐には絶対入れたい」と専門家。ゴールドシップ産駒でスタミナ血統。道悪馬場になれば評価急上昇。牝馬×6歳で割引はあるが追い切りだけ見れば最良クラス。87.7倍の妙味。",
     longDist: true, repeater: false, age45: false,
-    bodyWeight: 456, kyoto: false,
+    bodyWeight: 474, bodyWeightPrev: null, bodyWeightDiff: null, kyoto: false,
     popEstimate: 12, training: "A",
     waku: 1, umaban: 1, odds: 87.7,
     speedIndex: 55, prevTime: null, prevCourse: "阪神芝3000m", prevBaba: "良",
@@ -2348,7 +2349,7 @@ const HORSES_BY_RACE = {
     prevComment: "前走松籟S（OP）4着。前走がG2以下のOP特別で割引。重賞実績なし。",
     note: "【調教C】前走OP特別・重賞実績なし。",
     longDist: false, repeater: false, age45: true,
-    bodyWeight: 460, kyoto: false,
+    bodyWeight: 504, bodyWeightPrev: 504, bodyWeightDiff: 0, kyoto: false,
     popEstimate: 13, training: "C",
     waku: 5, umaban: 9, odds: 111.7,
     speedIndex: 45, prevTime: null, prevCourse: "阪神芝3000m", prevBaba: "良",
@@ -2364,7 +2365,7 @@ const HORSES_BY_RACE = {
     prevComment: "前走ダイヤモンドS7着。長距離路線を歩む6歳馬。人気薄で厳しいメンバー構成。",
     note: "【調教B+穴注意】「小気味よいフットワーク。長距離意識の仕上り。今の京都ならほぼ間違いなく残れる」と専門家。5枠10番の中枠。昨年ステイヤーズS2着の長距離実績。青木師「前走は外枠が響いた。好位の内を取って隠れ最後に抜け出すのが理想」。穴馬として侮れない存在。",
     longDist: true, repeater: false, age45: false,
-    bodyWeight: 480, kyoto: false,
+    bodyWeight: 430, bodyWeightPrev: 422, bodyWeightDiff: 8, kyoto: false,
     popEstimate: 11, training: "B",
     waku: 5, umaban: 10, odds: 92.8,
     speedIndex: 55, prevTime: 213.0, prevCourse: "東京芝3400m", prevBaba: "良",
@@ -2381,7 +2382,7 @@ const HORSES_BY_RACE = {
     prevComment: "前走詳細不明。プロフィール（年齢・性別・騎手・血統等）要確認。",
     note: "【調教C】逃げ馬。日経賞14着からの巻き返し厳しい。",
     longDist: false, repeater: false, age45: false,
-    bodyWeight: 0, kyoto: false,
+    bodyWeight: 510, bodyWeightPrev: 500, bodyWeightDiff: 10, kyoto: false,
     popEstimate: 14, training: "C",
     waku: 7, umaban: 13, odds: 138.7,
     speedIndex: 30, prevTime: null, prevCourse: "中山芝2500m", prevBaba: "良",
@@ -2395,10 +2396,10 @@ const HORSES_BY_RACE = {
     jockey: "池添謙一", jockeyPrev: "未定", style: "差し",
     prevRace: "大和ハンC", prevGrade: "OP", prevRank: 11,
     prevComment: "前走大和ハンC（OP・阪神芝2600m）11着。プロフィール（年齢・性別・騎手・血統等）要確認。",
-    note: "【調教B】CW馬なりで水準級。長距離への適性は示している。",
+    note: "【調教C】栗東で調整。大型馬（534kg）で長距離への適性が未知数。",
     longDist: false, repeater: false, age45: true,
-    bodyWeight: 0, kyoto: false,
-    popEstimate: 10, training: "B",
+    bodyWeight: 534, bodyWeightPrev: 532, bodyWeightDiff: 2, kyoto: false,
+    popEstimate: 10, training: "C",
     waku: 1, umaban: 2, odds: 73.7,
     speedIndex: 30, prevTime: null, prevCourse: "阪神芝2600m", prevBaba: "良",
     babaScore: { good:45, slightHeavy:50, heavy:55, veryHeavy:50 },
@@ -2411,9 +2412,9 @@ const HORSES_BY_RACE = {
     jockey: "藤懸貴志", style: "差し",
     prevRace: "障害未勝利", prevGrade: "障害", prevRank: 11,
     prevComment: "前走障害未勝利戦11着。障害戦からの転戦。プロフィール（年齢・性別・騎手・血統等）要確認。",
-    note: "【調教C】障害未勝利11着からの参戦。",
+    note: "【調教C】CW馬なり82.3-11.2で同入。動きは良かったと師コメント。ただしセン馬・障害明けで主要評価は困難。体重+18kgの大幅増で馬体重が安定していない懸念あり。",
     longDist: false, repeater: false, age45: false,
-    bodyWeight: 0, kyoto: false,
+    bodyWeight: 444, bodyWeightPrev: 426, bodyWeightDiff: 18, kyoto: false,
     popEstimate: 15, training: "C",
     waku: 3, umaban: 5, odds: 271.5,
     speedIndex: 20, prevTime: null, prevCourse: "小倉障2860m", prevBaba: "良",
@@ -2773,7 +2774,7 @@ const RACE_META = {
     age:       "4歳上",
     pageTitle: "JRA重賞予想 2026 | 天皇賞・春",
     notice:    '<strong>⚠ 重要</strong>：スティンガーグラスは<strong>4/29追い切り後の歩様に違和感のため回避</strong>（宝塚記念を視野に在厩）。',
-    babaPrediction: { status: "良〜稍重", icon: "🌤", color: "#1D9E75", comment: "5/1大雨後、3日は回復。良〜稍重の可能性大" },
+    babaPrediction: { status: "稍重〜重馬場の可能性大", icon: "🌧", color: "#378ADD", comment: "5/3(日)に傘マーク。重馬場なら95年以来31年ぶり！シンエンペラー・ヴェルミセルが急浮上" },
   },
   "NHKマイルC": {
     gradeLine: "G1 / 第31回",
@@ -2902,6 +2903,10 @@ const RACE_DANGER_LOGIC = {
       if (h.name === 'クロワデュノール') {
         r.push('キタサンブラック産駒は芝3000m以上【0-0-2-6】連対なし（父系統データ）');
         r.push('大阪杯から中3週の強行軍');
+        r.push('当日雨予報：道悪経験なし。重馬場なら大幅割引が必要。1995年ライスシャワー以来31年ぶりの重馬場の可能性');
+      }
+      if (h.name === 'アドマイヤテラ') {
+        r.push('当日雨予報：阪神大賞典レコードは良馬場。高速馬場向きのタイプで重馬場は割引');
       }
       if (h.name === 'シンエンペラー') {
         r.push('最終追い切りで併せ馬に遅れ。状態面に不安');
@@ -3454,6 +3459,17 @@ function maxScoreFor(score) {
   var hasBaba = (score.baba !== null && score.baba !== undefined);
   return 100 + (hasSI ? 10 : 0) + (hasBaba ? 8 : 0);
 }
+
+// 馬体重評価（最大+1点 / 最小-2点）
+function calcBodyWeightScore(h) {
+  if (h == null || (h.bodyWeightDiff == null)) return 0;
+  var diff = h.bodyWeightDiff;
+  if (Math.abs(diff) <= 6) return 1;            // 微増減 = 普通
+  if (diff >= 8 && diff <= 12) return 1;         // 良化の可能性
+  if (diff >= 14) return -2;                     // 太め残り
+  if (diff <= -8) return -1;                     // 絞りすぎ
+  return 0;
+}
 function computeScore(h) {
   let ninki;
   if (h.popEstimate === 1) ninki = 20;
@@ -3493,10 +3509,13 @@ function computeScore(h) {
   var babaTable = BABA_PTS[babaKey] || BABA_PTS.good;
   var baba = (babaTable[h.name] != null) ? babaTable[h.name] : null;
 
-  return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, _siValue: si };
+  // 馬体重評価（-2〜+1点）
+  var bw = calcBodyWeightScore(h);
+
+  return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, _siValue: si };
 }
 function sumScore(s) {
-  return s.ninki + s.waku + s.dataFit + s.ketto + s.jockey + s.course + s.chokyo + s.speed + (s.baba || 0);
+  return s.ninki + s.waku + s.dataFit + s.ketto + s.jockey + s.course + s.chokyo + s.speed + (s.baba || 0) + (s.bw || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
@@ -3598,6 +3617,7 @@ function renderHorses() {
           <div class="score-item"><div class="si-label">調教</div><div class="si-val">${score.chokyo}/10</div></div>
           <div class="score-item"><div class="si-label">スピード</div><div class="si-val">${siDetailText}</div></div>
           <div class="score-item"><div class="si-label">馬場適性</div><div class="si-val" style="color:${score.baba >= 8 ? '#0F6E56' : score.baba >= 5 ? '#2563eb' : score.baba >= 3 ? '#EF9F27' : '#A32D2D'}">${score.baba != null ? score.baba + '/8 ' + (score.baba >= 8 ? '◎' : score.baba >= 5 ? '○' : score.baba >= 3 ? '△' : '×') : '--'}</div></div>
+          <div class="score-item"><div class="si-label">馬体重</div><div class="si-val" style="color:${score.bw > 0 ? '#0F6E56' : score.bw < 0 ? '#A32D2D' : '#888'}">${h.bodyWeightDiff != null ? (h.bodyWeightDiff >= 0 ? '+' : '') + h.bodyWeightDiff + 'kg' : '--'} (${score.bw >= 0 ? '+' : ''}${score.bw||0})</div></div>
           <div class="score-item"><div class="si-label">合計</div><div class="si-val">${total}/${maxS}</div></div>
         </div>
       </div>
@@ -3876,6 +3896,18 @@ function renderShutsubaTable() {
     // 前走着順
     html += '<td style="text-align:center;padding:8px 6px;font-weight:600;color:' + prevColor + '">'
          + (rank ? rank + '着' : '-') + '</td>';
+
+    // 馬体重
+    var bwDiff = (h.bodyWeightDiff != null) ? h.bodyWeightDiff : null;
+    var bwColor = bwDiff === null ? '#888' :
+                  Math.abs(bwDiff) <= 6 ? '#555' :
+                  bwDiff >= 14 ? '#A32D2D' :
+                  bwDiff <= -8 ? '#EF9F27' : '#1D9E75';
+    var bwStr = h.bodyWeight ? h.bodyWeight + 'kg' : '-';
+    var diffStr = bwDiff !== null ? '(' + (bwDiff >= 0 ? '+' : '') + bwDiff + ')' : '';
+    html += '<td style="text-align:center;padding:7px 4px;white-space:nowrap">' +
+            '<span style="font-size:12px;font-weight:500">' + bwStr + '</span> ' +
+            '<span style="font-size:10px;color:' + bwColor + '">' + diffStr + '</span></td>';
 
     // 予想オッズ
     html += '<td style="text-align:center;padding:8px 6px;font-weight:700;color:' + oddsColor + '">'
