@@ -3378,10 +3378,18 @@ const RACE_PAST_DATA = {
         title: "前走別 成績（過去10年）",
         headers: ["前走","成績","複勝率","備考"],
         rows: [
-          { cells: ["桜花賞・皐月賞組（G1）", "4-5-1-27", "27%", "一桁着順なら期待大"], highlight: true },
-          { cells: ["チャーチルダウンズC（旧アーリントンC）", "1-0-3-20", "17%", "穴ステップ・3着が多い"], highlight: true },
-          { cells: ["ニュージーランドT", "2-2-2-28", "18%", "好走多数"], highlight: true },
-          { cells: ["前走G2組（その他）", "3-2-2-47", "13%", "上位人気限定で評価"] },
+          { cells: ["桜花賞・皐月賞組（G1）", "4-5-1-27", "27%", "一桁着順なら期待大"], highlight: true,
+            matchFn: function(h){ return (h.prevRace === '皐月賞' || h.prevRace === '桜花賞') && h.prevRank <= 9; }, isGood: true },
+          { cells: ["チャーチルダウンズC（旧アーリントンC）", "1-0-3-20", "17%", "穴ステップ・3着が多い"], highlight: true,
+            matchFn: function(h){ return h.prevRace === 'チャーチルダウンズC'; }, isGood: true },
+          { cells: ["ニュージーランドT", "2-2-2-28", "18%", "好走多数"], highlight: true,
+            matchFn: function(h){ return h.prevRace === 'ニュージーランドT'; }, isGood: true },
+          { cells: ["前走G2組（その他）", "3-2-2-47", "13%", "上位人気限定で評価"],
+            matchFn: function(h){ return h.prevGrade === 'G2' && h.prevRace !== 'ニュージーランドT'; }, isGood: true },
+          { cells: ["前走1着馬（頭固定禁物）", "0-2-3-25", "17%", "勝率ゼロ・頭固定厳禁"],
+            matchFn: function(h){ return h.prevRank === 1; }, isGood: false },
+          { cells: ["前走6着以下", "0-1-0-38", "3%", "大敗からの巻き返しはほぼ不可能"],
+            matchFn: function(h){ return h.prevRank >= 6; }, isGood: false },
         ],
       },
       {
@@ -3389,10 +3397,16 @@ const RACE_PAST_DATA = {
         title: "血統別 傾向（過去10年）",
         headers: ["血統タイプ","成績","傾向"],
         rows: [
-          { cells: ["ダイワメジャー産駒", "3勝", "マイル王道血統"], highlight: true },
-          { cells: ["ディープインパクト系", "2勝", "瞬発力タイプ"] },
-          { cells: ["ミスタープロスペクター系", "穴で激走", "近年穴馬輩出"] },
-          { cells: ["Storm Cat持ち", "穴で複数回激走", "人気薄からの一発"] },
+          { cells: ["ダイワメジャー産駒", "3-2-1-3 (連対率45.5%)", "マイル王道血統・出走したら必ず評価"], highlight: true,
+            matchFn: function(h){ return h.father === 'ダイワメジャー'; }, isGood: true },
+          { cells: ["ロードカナロア産駒", "1-0-0-8 (11%)", "1600m以下で種牡馬+10点加点"], highlight: true,
+            matchFn: function(h){ return h.father === 'ロードカナロア'; }, isGood: true },
+          { cells: ["ディープインパクト系", "2勝", "瞬発力タイプ・東京の長い直線向き"],
+            matchFn: function(h){ return h.blood === 'ディープ系' || h.father === 'ディープインパクト'; }, isGood: true },
+          { cells: ["Storm Cat 血脈保有馬", "1-4-1-10 (38%)", "人気薄の激走多数（タガノブルグ17人気・ケイデンスコール14人気）"],
+            matchFn: function(h){ return h.blood && (h.blood.indexOf('StormCat') !== -1 || h.blood.indexOf('Storm Cat') !== -1 || h.blood === 'MP系'); }, isGood: true },
+          { cells: ["ミスタープロスペクター系・KM系", "穴で激走多数", "近年穴馬輩出。KM系・MP系は要注意"],
+            matchFn: function(h){ return h.blood === 'MP系' || h.blood === 'KM系'; }, isGood: true },
         ],
       },
       {
@@ -3501,6 +3515,23 @@ function renderPastData() {
     root.innerHTML = '<div class="section"><p style="color:var(--text-mute);font-size:13px;">このレースの過去10年データはまだ準備中です。</p></div>';
     return;
   }
+  var horsesArr = window.horses || (typeof HORSES !== 'undefined' ? HORSES : []);
+  function chipsFor(row) {
+    if (!row.matchFn || !horsesArr.length) return '';
+    var matched = horsesArr.filter(function(h){
+      try { return row.matchFn(h); } catch(e) { return false; }
+    });
+    var color = (row.isGood === false) ? '#A32D2D' : '#0F6E56';
+    if (!matched.length) {
+      return '<div style="margin-top:3px;font-size:10px;color:var(--text-mute);font-style:italic">今年の該当馬：なし</div>';
+    }
+    var chips = matched.map(function(h){
+      return '<span style="background:' + color + ';color:#fff;font-size:10px;font-weight:500;padding:2px 7px;border-radius:9px">' + h.name + '</span>';
+    }).join(' ');
+    return '<div style="margin-top:3px;display:flex;flex-wrap:wrap;gap:3px;align-items:center">' +
+           '<span style="font-size:10px;color:var(--text-mute)">今年：</span>' + chips + '</div>';
+  }
+
   var html = '';
   data.sections.forEach(function(sec) {
     html += '<div class="section">';
@@ -3514,8 +3545,13 @@ function renderPastData() {
         var cells = row.cells.map(function(cell, i) {
           var cls = (i === 1) ? ' class="seiseki"' : (i === 2 && /%|—/.test(String(cell))) ? ' class="pct"' : '';
           return '<td' + cls + '>' + cell + '</td>';
-        }).join('');
-        html += '<tr' + rowClass + '>' + cells + '</tr>';
+        });
+        // matchFn が定義されていれば最終列に該当馬チップを追加
+        if (row.matchFn) {
+          var lastIdx = cells.length - 1;
+          cells[lastIdx] = cells[lastIdx].replace('</td>', chipsFor(row) + '</td>');
+        }
+        html += '<tr' + rowClass + '>' + cells.join('') + '</tr>';
       });
       html += '</tbody></table></div>';
     } else if (sec.type === 'html') {
