@@ -2544,6 +2544,8 @@ const HORSES_BY_RACE = {
     prevComment: "朝日杯FS覇者。皐月賞2着から巻き返し狙い。前走G1×2番人気で複勝率70%の期待値最高。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    prevCorner4: 8, prevHeadCount: 18,
+    tokyoExp: true, tokyoExpRank: 1, tokyoExpRace: "東京スポーツ杯2歳S", tokyoExpDist: 1800,
     popEstimate: 2, training: "A",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
@@ -2558,6 +2560,8 @@ const HORSES_BY_RACE = {
     prevComment: "京王杯2歳S覇者。ファルコンS快勝で本番へ。ただし前走1着馬の勝率2.4%に注意。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    prevCorner4: 3, prevHeadCount: 16,
+    tokyoExp: true, tokyoExpRank: 1, tokyoExpRace: "京王杯2歳S", tokyoExpDist: 1400,
     popEstimate: 1, training: "A",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
@@ -2572,6 +2576,8 @@ const HORSES_BY_RACE = {
     prevComment: "前走皐月賞3着。前走G1組だが3番人気は複勝率10%で不振傾向。ルメール騎手は加点。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    prevCorner4: 12, prevHeadCount: 18,
+    tokyoExp: false,
     popEstimate: 3, training: "A",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
@@ -2586,6 +2592,8 @@ const HORSES_BY_RACE = {
     prevComment: "チャーチルダウンズC快勝。同組は3着が多く穴ステップ。前走G3→G1での好走多数。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    prevCorner4: 5, prevHeadCount: 16,
+    tokyoExp: false,
     popEstimate: 4, training: "A",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
@@ -2600,6 +2608,8 @@ const HORSES_BY_RACE = {
     prevComment: "NZT優勝。ニュージーランドT組【2-2-2-28】複勝率18%。ただし5番人気は勝ちゼロ。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    prevCorner4: 4, prevHeadCount: 16,
+    tokyoExp: true, tokyoExpRank: 1, tokyoExpRace: "NZT", tokyoExpDist: 1600,
     popEstimate: 5, training: "A",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
@@ -2614,6 +2624,8 @@ const HORSES_BY_RACE = {
     prevComment: "NZT2着。前走G2好走×外枠なら穴馬候補として面白い。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    prevCorner4: 6, prevHeadCount: 16,
+    tokyoExp: false,
     popEstimate: 6, training: "A",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
@@ -2628,6 +2640,8 @@ const HORSES_BY_RACE = {
     prevComment: "桜花賞4着。前走G1組だが桜花賞4着以下は割引。外枠に入れば穴馬候補。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    prevCorner4: 10, prevHeadCount: 18,
+    tokyoExp: false,
     popEstimate: 7, training: "B",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
@@ -2642,6 +2656,8 @@ const HORSES_BY_RACE = {
     prevComment: "牝馬。桜花賞2着から参戦。前走G1×好走の牝馬は複勝率が高い。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    prevCorner4: 7, prevHeadCount: 18,
+    tokyoExp: false,
     popEstimate: 8, training: "A",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
@@ -2656,6 +2672,8 @@ const HORSES_BY_RACE = {
     prevComment: "皐月賞5着。前走G1経験は加点も5着以下は割引。人気薄で一発ある可能性あり。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    prevCorner4: 14, prevHeadCount: 18,
+    tokyoExp: false,
     popEstimate: 9, training: "B",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
@@ -2955,18 +2973,25 @@ const RACE_CONDITIONS = {
   "NHKマイルC": {
     good: [
       { label: "2番人気想定【4-2-1-3】複勝率70%（最安定）",                       match: h => h.popEstimate === 2 },
+      { label: "牝馬【複勝率20.9%・連対率16.3%が牡馬超え】",                       match: h => h.sex === "牝" },
       { label: "前走桜花賞・皐月賞で一桁着順【4-4-1-8】複勝率52%",                match: h => (h.prevRace === "桜花賞" || h.prevRace === "皐月賞") && h.prevRank >= 1 && h.prevRank <= 9 },
       { label: "前走G1組×2番人気想定【3-1-0-0】",                                 match: h => h.prevGrade === "G1" && h.popEstimate === 2 },
       { label: "前走チャーチルダウンズC組（穴ステップ・3着多数）",                match: h => h.prevRace === "チャーチルダウンズC" },
       { label: "前走ニュージーランドT組【2-2-2-28】複勝率18%",                    match: h => h.prevRace === "ニュージーランドT" },
+      { label: "ダイワメジャー産駒【連対率45.5%】最強血統",                       match: h => h.father === "ダイワメジャー" },
+      { label: "ロードカナロア産駒（マイル絶対的エース）",                         match: h => h.father === "ロードカナロア" },
+      { label: "東京コース勝利実績あり",                                          match: h => h.tokyoExp === true && h.tokyoExpRank === 1 },
+      { label: "11番馬番【4-0-0-6】勝率40%・最注目馬番",                          match: h => h.umaban === 11 },
       { label: "エリート騎手（ルメール・川田・戸崎・坂井）",                      match: h => ["C.ルメール","川田将雅","戸崎圭太","坂井瑠星","M.デムーロ","横山武史"].includes(h.jockey) },
     ],
     bad: [
       { label: "1番人気想定【1-2-1-6】複勝率40%（過信禁物）",                     match: h => h.popEstimate === 1 },
+      { label: "3番人気想定【1-0-0-9】複勝率10%（不振）",                         match: h => h.popEstimate === 3 },
       { label: "5番人気想定（1996年創設以来勝ち馬ゼロ）",                         match: h => h.popEstimate === 5 },
       { label: "前走1着馬（勝率2.4%・頭固定厳禁）",                               match: h => h.prevRank === 1 },
       { label: "前走6着以下に大敗（複勝率6.5%）",                                 match: h => h.prevRank >= 6 },
-      { label: "3番人気想定【1-0-0-9】複勝率10%（不振）",                         match: h => h.popEstimate === 3 },
+      { label: "2番・7番・12番・13番馬番【複勝圏内ゼロ】",                         match: h => [2,7,12,13].includes(h.umaban) },
+      { label: "1枠【複勝率15%・内枠不利】",                                       match: h => h.waku === 1 },
     ],
   },
 
@@ -3569,8 +3594,8 @@ const BABA_PTS = {
 function maxScoreFor(score) {
   var hasSI = (score._siValue !== null && score._siValue !== undefined);
   var hasBaba = (score.baba !== null && score.baba !== undefined);
-  // ベース 100 + SI(10) + 馬場(15) + 距離経験(8) + 種牡馬(10)
-  return 100 + (hasSI ? 10 : 0) + (hasBaba ? 15 : 0) + 8 + 10;
+  // ベース 100 + SI(10) + 馬場(15) + 距離経験(8) + 種牡馬(10) + 東京コース(10) + 牝馬(3)
+  return 100 + (hasSI ? 10 : 0) + (hasBaba ? 15 : 0) + 8 + 10 + 10 + 3;
 }
 
 // 馬場適性スコア（最大15点・最小-3点）
@@ -3585,6 +3610,40 @@ function calcBabaPts(h, baba) {
   if (s >= 50) return 2;
   if (s >= 40) return 0;
   return -3;
+}
+
+// 東京コース適性スコア（最大+10点）
+function calcTokyoExp(horse, raceVenue) {
+  if (!raceVenue || !raceVenue.includes('東京')) return { pts: 0, label: '' };
+  if (!horse || !horse.tokyoExp) return { pts: 0, label: '' };
+  var rank = horse.tokyoExpRank || 99;
+  var distLabel = (horse.tokyoExpDist != null ? horse.tokyoExpDist + 'm' : '');
+  var raceLabel = horse.tokyoExpRace || '';
+  if (rank === 1)      return { pts: 10, label: '東京コース勝利実績（' + raceLabel + ' ' + distLabel + '）' };
+  if (rank <= 3)       return { pts: 7,  label: '東京コース3着以内（' + raceLabel + ' ' + distLabel + ' ' + rank + '着）' };
+  if (rank <= 6)       return { pts: 4,  label: '東京コース6着以内（' + raceLabel + ' ' + distLabel + ' ' + rank + '着）' };
+  return { pts: 1, label: '東京コース出走経験あり' };
+}
+
+// 牝馬加点（NHKマイルC限定）
+function calcSexBonus(horse, raceName) {
+  if (raceName && raceName.indexOf('NHKマイル') !== -1 && horse && horse.sex === '牝') {
+    return { pts: 3, label: '牝馬加点（NHKマイルC複勝率20.9%で牡馬超え）' };
+  }
+  return { pts: 0, label: '' };
+}
+
+// 前走4角通過順位から想定ポジション
+function calcPositionStyle(horse) {
+  var c4 = horse.prevCorner4 || 0;
+  var hc = horse.prevHeadCount || 18;
+  if (!c4) return { style: '?', color: '#888', pos: '不明' };
+  var ratio = c4 / hc;
+  if (c4 <= 2)        return { style: '逃げ',         color: '#E24B4A', pos: 'ハナ〜2番手' };
+  if (ratio <= 0.25)  return { style: '先行',         color: '#EF9F27', pos: '3〜5番手' };
+  if (ratio <= 0.5)   return { style: '先行〜中団',    color: '#EF9F27', pos: '5〜8番手' };
+  if (ratio <= 0.7)   return { style: '中団〜差し',    color: '#1D9E75', pos: '8〜12番手' };
+  return { style: '後方・追込', color: '#534AB7', pos: '後方' };
 }
 
 // 距離経験スコア（最大+8点・減点なし → 「未経験は加点しない」のみ）
@@ -3705,12 +3764,21 @@ function computeScore(h) {
   var dist = distObj.pts;
   var stallion = stallionObj.pts;
 
-  return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion,
-           _distLabel: distObj.label, _stallionLabel: stallionObj.label, _siValue: si };
+  // 東京コース適性 + 牝馬加点（NHKマイルC等）
+  var raceVenue = (typeof RACE_META !== 'undefined' && currentRace && RACE_META[currentRace] && RACE_META[currentRace].venue) || '';
+  var tokyoObj = calcTokyoExp(h, raceVenue);
+  var sexObj = calcSexBonus(h, currentRace);
+  var tokyo = tokyoObj.pts;
+  var sexB = sexObj.pts;
+
+  return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB,
+           _distLabel: distObj.label, _stallionLabel: stallionObj.label,
+           _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label, _siValue: si };
 }
 function sumScore(s) {
   return s.ninki + s.waku + s.dataFit + s.ketto + s.jockey + s.course + s.chokyo + s.speed +
-         (s.baba || 0) + (s.bw || 0) + (s.dist || 0) + (s.stallion || 0);
+         (s.baba || 0) + (s.bw || 0) + (s.dist || 0) + (s.stallion || 0) +
+         (s.tokyo || 0) + (s.sexB || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
@@ -4141,54 +4209,64 @@ function renderPacePredict() {
   var horses = window.horses || (typeof HORSES !== 'undefined' ? HORSES : []);
   if (!horses.length) return;
 
-  var nige = horses.filter(function(h){ return h.style === '逃げ'; });
-  var senkou = horses.filter(function(h){ return h.style === '先行'; });
-  var sashi = horses.filter(function(h){ return h.style === '差し'; });
-  var oikomi = horses.filter(function(h){ return h.style === '追込'; });
-
-  var pace = nige.length >= 3 ? 'ハイペース' : nige.length === 0 ? 'スローペース' : '平均ペース';
-  var paceColor = pace === 'ハイペース' ? '#A32D2D' : pace === 'スローペース' ? '#0F6E56' : '#185FA5';
-  var paceComment = pace === 'ハイペース' ? '逃げ馬多数でペース激化。差し・追込有利。先行馬は消耗に注意。' :
-                    pace === 'スローペース' ? '逃げ馬不在でスロー濃厚。先行馬が有利。末脚だけの馬は届かない。' :
-                    '平均ペース想定。先行有利だが差しも届く展開。';
+  // 前走4角通過順位ベースのペース判定（≤2 を逃げ馬扱い）
+  var sorted = horses.slice().sort(function(a,b){ return (a.prevCorner4||99) - (b.prevCorner4||99); });
+  var nigeCount = horses.filter(function(h){ return (h.prevCorner4||99) <= 2; }).length;
+  var pace = nigeCount >= 3 ? 'ハイペース' : nigeCount === 0 ? 'スローペース' : '平均ペース';
+  var paceColor = pace==='ハイペース' ? '#A32D2D' : pace==='スローペース' ? '#0F6E56' : '#185FA5';
+  var paceComment = pace==='ハイペース'
+    ? '逃げ馬多数で縦長展開。後方差し・追込に有利。先行馬は消耗リスク。'
+    : pace==='スローペース'
+    ? '単騎逃げでスロー濃厚。前有利の瞬発力勝負。後方待機は届かない可能性。'
+    : '平均ペース想定。先行・差しともにチャンスあり。末脚型が有利。';
 
   var html = '';
-  html += '<div style="background:' + paceColor + '18;border-left:4px solid ' + paceColor + ';' +
-          'border-radius:var(--border-radius-md);padding:10px 14px;margin-bottom:10px">' +
-          '<div style="font-size:13px;font-weight:700;color:' + paceColor + ';margin-bottom:4px">' +
+
+  // ペース予測バナー
+  html += '<div style="background:'+paceColor+'18;border-left:4px solid '+paceColor+';' +
+          'padding:10px 14px;border-radius:var(--border-radius-md);margin-bottom:14px">' +
+          '<div style="font-size:13px;font-weight:700;color:'+paceColor+';margin-bottom:4px">' +
           '🏇 展開予想：' + pace + '</div>' +
           '<div style="font-size:12px;color:var(--text-sub)">' + paceComment + '</div>' +
           '</div>';
 
-  var groups = [
-    { label:'逃げ', horses:nige,   color:'#E24B4A', advantage: pace==='ハイペース'?'×不利':'○有利' },
-    { label:'先行', horses:senkou, color:'#EF9F27', advantage: pace==='スローペース'?'◎最有利':'○有利' },
-    { label:'差し', horses:sashi,  color:'#1D9E75', advantage: pace==='ハイペース'?'◎最有利':'△やや不利' },
-    { label:'追込', horses:oikomi, color:'#534AB7', advantage: pace==='ハイペース'?'○有利':'×不利' }
-  ];
-
-  html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px">';
-  groups.forEach(function(g){
-    html += '<div style="background:var(--bg-soft);border-radius:var(--border-radius-md);' +
-            'padding:8px 10px;border-left:3px solid ' + g.color + '">' +
-            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">' +
-            '<span style="font-size:11px;font-weight:600;color:' + g.color + '">' + g.label + '</span>' +
-            '<span style="font-size:10px;color:var(--text-sub)">' + g.advantage + '</span>' +
-            '</div>';
-    if (g.horses.length) {
-      html += '<div style="display:flex;flex-wrap:wrap;gap:3px">';
-      g.horses.forEach(function(h){
-        html += '<span style="font-size:10px;background:#fff;border:0.5px solid ' + g.color +
-                ';color:var(--text);padding:1px 5px;border-radius:var(--border-radius-md)">' +
-                (h.umaban != null ? h.umaban + '番 ' : '') + h.name + '</span>';
-      });
-      html += '</div>';
-    } else {
-      html += '<span style="font-size:10px;color:var(--text-mute)">該当馬なし</span>';
-    }
+  // 想定隊列（前走4角順位順 / corner4 設定済みの馬のみ）
+  var hasCorner = sorted.some(function(h){ return h.prevCorner4; });
+  if (hasCorner) {
+    html += '<div style="margin-bottom:14px">';
+    html += '<div style="font-size:11px;font-weight:600;color:var(--text-sub);margin-bottom:8px">' +
+            '📋 前走4角順位から予想する想定ポジション（前→後）</div>';
+    sorted.forEach(function(h){
+      if (!h.prevCorner4) return;
+      var ps = calcPositionStyle(h);
+      html += '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--border)">' +
+              '<span style="font-size:10px;font-weight:600;color:'+ps.color+';min-width:74px">' + ps.style + '</span>' +
+              '<span style="font-size:10px;color:var(--text-mute);min-width:64px">' + ps.pos + '</span>' +
+              '<span style="font-size:12px;font-weight:500;color:var(--text);flex:1">' +
+              (h.umaban != null ? h.umaban + '番 ' : '') + h.name + '</span>' +
+              '<span style="font-size:10px;color:var(--text-mute)">前走' + (h.prevCorner4||'-') + '番手</span>' +
+              '</div>';
+    });
     html += '</div>';
+  }
+
+  // 脚質別有利不利サマリー（4 カード）
+  html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px">';
+  var groups = [
+    { label:'逃げ・先行',     adv: pace==='スローペース'?'◎最有利':pace==='ハイペース'?'×消耗注意':'○有利', color:'#EF9F27' },
+    { label:'差し・追込',     adv: pace==='ハイペース'?'◎最有利':pace==='スローペース'?'△届かない':'○有利', color:'#1D9E75' },
+    { label:'上がり3F重視',   adv:'◎連対率70%',  color:'#534AB7' },
+    { label:'東京コース慣れ', adv:'○加点対象',  color:'#185FA5' }
+  ];
+  groups.forEach(function(g){
+    html += '<div style="background:'+g.color+'15;border-radius:var(--border-radius-md);' +
+            'padding:8px 10px;border-left:3px solid '+g.color+'">' +
+            '<div style="font-size:11px;font-weight:600;color:'+g.color+';margin-bottom:2px">' + g.label + '</div>' +
+            '<div style="font-size:12px;color:var(--text)">' + g.adv + '</div>' +
+            '</div>';
   });
   html += '</div>';
+
   div.innerHTML = html;
 }
 
