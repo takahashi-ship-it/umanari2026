@@ -3569,8 +3569,8 @@ const BABA_PTS = {
 function maxScoreFor(score) {
   var hasSI = (score._siValue !== null && score._siValue !== undefined);
   var hasBaba = (score.baba !== null && score.baba !== undefined);
-  // ベース 100 + SI(10) + 馬場(15) + 距離経験(12) + 種牡馬(10)
-  return 100 + (hasSI ? 10 : 0) + (hasBaba ? 15 : 0) + 12 + 10;
+  // ベース 100 + SI(10) + 馬場(15) + 距離経験(8) + 種牡馬(10)
+  return 100 + (hasSI ? 10 : 0) + (hasBaba ? 15 : 0) + 8 + 10;
 }
 
 // 馬場適性スコア（最大15点・最小-3点）
@@ -3587,38 +3587,48 @@ function calcBabaPts(h, baba) {
   return -3;
 }
 
-// 距離経験スコア（最大+12点 / 最小-2点）
+// 距離経験スコア（最大+8点・減点なし → 「未経験は加点しない」のみ）
+// 天皇賞春2026の教訓：距離未経験のクロワデュノールが1着、距離実績のヘデントールが5着 → 距離は加点要素のみ扱う
 function calcDistanceExpScore(horse, raceDistance) {
   var exp = horse.distExp || 0;
   var expRank = horse.distExpRank || 99;
-  if (!exp) return { pts: 0, label: '距離経験なし', level: 'none' };
-  var pts = 0, label = '', level = '';
+  if (!exp) return { pts: 0, label: '', level: 'none' };
+  var pts = 0, label = '', level = 'none';
   if (exp >= raceDistance) {
-    if (expRank <= 3)      { pts = 12; level = 'S'; label = '距離◎（' + horse.distExpRace + ' ' + exp + 'm ' + expRank + '着）'; }
-    else if (expRank <= 6) { pts = 8;  level = 'A'; label = '距離○（' + horse.distExpRace + ' ' + exp + 'm ' + expRank + '着）'; }
-    else                   { pts = 5;  level = 'B'; label = '距離△（' + horse.distExpRace + ' ' + exp + 'm ' + expRank + '着）'; }
-  } else if (exp >= raceDistance - 400) {
-    if (expRank <= 3) { pts = 6; level = 'B'; label = '距離経験あり（' + horse.distExpRace + ' ' + exp + 'm ' + expRank + '着）'; }
-    else              { pts = 3; level = 'C'; label = '距離経験あり（' + horse.distExpRace + ' ' + exp + 'm ' + expRank + '着）'; }
-  } else {
-    pts = -2; level = 'X'; label = '距離未経験（最長 ' + exp + 'm）';
+    if (expRank <= 3)      { pts = 8; level = 'A'; label = '距離実績◎（' + horse.distExpRace + ' ' + exp + 'm ' + expRank + '着）'; }
+    else if (expRank <= 6) { pts = 5; level = 'B'; label = '距離実績○（' + horse.distExpRace + ' ' + exp + 'm ' + expRank + '着）'; }
+    else                   { pts = 3; level = 'C'; label = '距離経験あり（' + horse.distExpRace + ' ' + exp + 'm ' + expRank + '着）'; }
+  } else if (exp >= raceDistance - 500 && exp < raceDistance) {
+    if (expRank <= 3) { pts = 4; level = 'C'; label = '近距離実績（' + horse.distExpRace + ' ' + exp + 'm ' + expRank + '着）'; }
+    else              { pts = 2; level = 'D'; label = '近距離経験（' + horse.distExpRace + ' ' + exp + 'm）'; }
   }
+  // 距離が大きく違う or 未経験 → 減点なし・加点なし
   return { pts: pts, label: label, level: level };
 }
 
 // 種牡馬特性ボーナス（最大+10点）
 const STALLION_BONUS = {
-  'ロードカナロア':   { distance_min: 1200, distance_max: 1600, bonus: 10, note: '1600m以下で複勝率極めて高い。短距離〜マイルの絶対的エース産駒' },
-  'キタサンブラック': { distance_min: 2400,                     bonus: 6,  note: '長距離G1で強い。父が天皇賞春2連覇' },
-  'ディープインパクト':{distance_min: 2000, distance_max: 2400, bonus: 5,  note: '中長距離で安定。東京・京都の直線向き' },
-  'ゴールドシップ':   { distance_min: 2800,                     bonus: 5,  note: '超長距離・道悪で激走パターン多数' },
-  'ハーツクライ':     { distance_min: 2400,                     bonus: 4,  note: '長距離・大箱向き' }
+  'ロードカナロア':    { distance_min: 1200, distance_max: 1600, bonus: 10, note: '1200m〜1600mで抜群の成績。短距離〜マイルの絶対的エース産駒', allRaces: true },
+  'キタサンブラック':  { distance_min: 2400,                     bonus: 5,  note: '長距離G1で安定。父が天皇賞春2連覇' },
+  'ゴールドシップ':    { distance_min: 2800,                     bonus: 5,  note: '超長距離・道悪で激走パターン多数' },
+  'ハーツクライ':      { distance_min: 2200,                     bonus: 4,  note: '中長距離・大箱向き' },
+  'ディープインパクト':{ distance_min: 1800, distance_max: 2400, bonus: 4,  note: '中距離で安定。東京・京都の広いコース向き' },
+  'ドゥラメンテ':      { distance_min: 1600, distance_max: 2000, bonus: 4,  note: 'マイル〜中距離G1で強い。KK系孫世代の代表' }
 };
 function calcStallionScore(horse, raceDistance) {
   var father = horse.father || '';
+  var raceD = raceDistance || 1600;
+
+  // ロードカナロア産駒は全レースの 1200〜1600m で大幅加点
+  if (father === 'ロードカナロア') {
+    if (raceD >= 1200 && raceD <= 1600) {
+      return { pts: 10, label: '🔥種牡馬特注：ロードカナロア産駒（1200m〜1600mで抜群の成績）' };
+    }
+    return { pts: 0, label: '' };
+  }
+
   var b = STALLION_BONUS[father];
   if (!b) return { pts: 0, label: '' };
-  var raceD = raceDistance || 1600;
   var minOk = !b.distance_min || raceD >= b.distance_min;
   var maxOk = !b.distance_max || raceD <= b.distance_max;
   if (minOk && maxOk) {
@@ -3813,7 +3823,7 @@ function renderHorses() {
           <div class="score-item"><div class="si-label">スピード</div><div class="si-val">${siDetailText}</div></div>
           <div class="score-item"><div class="si-label">馬場適性</div><div class="si-val" style="color:${score.baba >= 15 ? '#A32D2D' : score.baba >= 8 ? '#0F6E56' : score.baba >= 4 ? '#2563eb' : score.baba >= 0 ? '#EF9F27' : '#A32D2D'}">${score.baba != null ? score.baba + '/15 ' + (score.baba >= 15 ? '★' : score.baba >= 8 ? '◎' : score.baba >= 4 ? '○' : score.baba >= 0 ? '△' : '×') : '--'}</div></div>
           <div class="score-item"><div class="si-label">馬体重</div><div class="si-val" style="color:${score.bw > 0 ? '#0F6E56' : score.bw < 0 ? '#A32D2D' : '#888'}">${h.bodyWeightDiff != null ? (h.bodyWeightDiff >= 0 ? '+' : '') + h.bodyWeightDiff + 'kg' : '--'} (${score.bw >= 0 ? '+' : ''}${score.bw||0})</div></div>
-          <div class="score-item" title="${score._distLabel || ''}"><div class="si-label">距離経験</div><div class="si-val" style="color:${score.dist >= 8 ? '#0F6E56' : score.dist >= 3 ? '#2563eb' : score.dist < 0 ? '#A32D2D' : '#888'}">${(score.dist >= 0 ? '+' : '') + (score.dist || 0)}/12</div></div>
+          <div class="score-item" title="${score._distLabel || ''}"><div class="si-label">距離経験</div><div class="si-val" style="color:${score.dist >= 8 ? '#0F6E56' : score.dist >= 4 ? '#2563eb' : score.dist > 0 ? '#888' : '#bbb'}">${(score.dist || 0) > 0 ? '+' + score.dist : '0'}/8</div></div>
           <div class="score-item" title="${score._stallionLabel || ''}"><div class="si-label">種牡馬</div><div class="si-val" style="color:${score.stallion >= 8 ? '#A32D2D' : score.stallion >= 4 ? '#0F6E56' : '#888'}">${(score.stallion || 0) > 0 ? '+' + score.stallion : '0'}/10</div></div>
           <div class="score-item"><div class="si-label">合計</div><div class="si-val">${total}/${maxS}</div></div>
         </div>
