@@ -4708,7 +4708,8 @@ function selectHimo(horses, jiku) {
 }
 
 function calcKaimePoints(himoCount) {
-  return himoCount >= 2 ? himoCount * (himoCount - 1) * 2 : 0;
+  // 3連単1頭軸マルチ：軸が1/2/3着のいずれでも当たる → N×(N-1)×3
+  return himoCount >= 2 ? himoCount * (himoCount - 1) * 3 : 0;
 }
 
 function _wakuBox(w, size) {
