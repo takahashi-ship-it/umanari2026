@@ -3745,6 +3745,11 @@ function calcSpecialCondition(horse, raceName) {
     pts += 4;
     labels.push('新馬→2戦目連勝（歴代勝ち馬パターン）');
   }
+  // 🎯 オカルト加点：2026年G1で馬番15番は連対率100%（桜花賞1着・皐月賞2着・大阪杯1着・天皇賞春2着）
+  if (horse.umaban === 15) {
+    pts += 5;
+    labels.push('🎯オカルト加点：2026年G1馬番15番は連対率100%（桜花賞1着・皐月賞2着・大阪杯1着・天皇賞2着）');
+  }
   return { pts: pts, label: labels.join(' / ') };
 }
 
