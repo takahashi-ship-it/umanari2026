@@ -1546,7 +1546,6 @@
           <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:10px">
             ヘッダーの「馬場切替」ボタンから想定馬場を選択すると、各馬の馬場適性スコアから「恩恵を受ける馬」「割引になる馬」を自動表示します。
           </div>
-          <div id="baba-past-data" style="margin-bottom:12px"></div>
           <div id="baba-result"></div>
         </div>
 
@@ -4960,10 +4959,7 @@ function setBaba(baba) {
     b.classList.toggle('on', b.dataset.baba === baba);
   });
 
-  // 過去データ + 信頼度スコア再計算（個別 try/catch でどちらが落ちても続行）
-  if (typeof renderBabaPastData === 'function') {
-    try { renderBabaPastData(baba); } catch (e) { console.warn('[setBaba] renderBabaPastData failed:', e); }
-  }
+  // 信頼度スコア再計算（馬場切替に応じてスコアが変動）
   if (typeof renderHorses === 'function') { try { renderHorses(); } catch (e) {} }
 
   var resultDiv = document.getElementById('baba-result');
