@@ -2545,6 +2545,7 @@ const HORSES_BY_RACE = {
     note: "朝日杯FS覇者→皐月賞13着。距離短縮のマイル戻りは歓迎。東スポ杯2歳S（東京1800m）勝利実績で東京コース適性+10点。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    hanshin1600Win: true, maileJusho: true, newmaWin: true, secondWin: true, restWeeks: 3,
     prevCorner4: 8, prevHeadCount: 18,
     tokyoExp: true, tokyoExpRank: 1, tokyoExpRace: "東京スポーツ杯2歳S", tokyoExpDist: 1800,
     popEstimate: 2, training: "A",
@@ -2562,6 +2563,7 @@ const HORSES_BY_RACE = {
     note: "ファルコンS快勝。京王杯2歳S（東京1400m）勝利実績で東京コース適性+10点。川田将雅騎乗。前走1着馬の頭固定は禁物データあり。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    hanshin1600Win: false, newmaWin: true, secondWin: true, restWeeks: 4,
     prevCorner4: 3, prevHeadCount: 16,
     tokyoExp: true, tokyoExpRank: 1, tokyoExpRace: "京王杯2歳S", tokyoExpDist: 1400,
     popEstimate: 1, training: "A",
@@ -2579,6 +2581,7 @@ const HORSES_BY_RACE = {
     note: "シンザン記念勝ちからチャーチルダウンズC参戦。C.ルメール騎乗。東京1600mは初だが、マイルの切れ者。チャーチルダウンズC組の3着が多い穴ステップに注目",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    hanshin1600Win: false, newmaWin: true, secondWin: false, restWeeks: 6,
     prevCorner4: 12, prevHeadCount: 18,
     tokyoExp: false,
     popEstimate: 3, training: "A",
@@ -2596,6 +2599,7 @@ const HORSES_BY_RACE = {
     note: "🔥ロードカナロア産駒（1600m以下で+10点自動加点）。キャリア2戦2勝で重賞初V。チャーチルダウンズC快勝からの参戦。東京コース経験はないが、父ロードカナロアの血が1600mで爆発する可能性。ノーザンファーム生産・藤原英昭厩舎の強力タッグ",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    hanshin1600Win: false, newmaWin: true, secondWin: true, restWeeks: 4,
     prevCorner4: 5, prevHeadCount: 16,
     tokyoExp: false,
     popEstimate: 4, training: "A",
@@ -2613,6 +2617,7 @@ const HORSES_BY_RACE = {
     note: "NZT（東京1600m）勝利！東京コース適性+10点。原優介騎乗で前哨戦組のトップ。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    hanshin1600Win: false, newmaWin: true, secondWin: true, restWeeks: 3,
     prevCorner4: 4, prevHeadCount: 16,
     tokyoExp: true, tokyoExpRank: 1, tokyoExpRace: "NZT", tokyoExpDist: 1600,
     popEstimate: 5, training: "A",
@@ -2630,6 +2635,7 @@ const HORSES_BY_RACE = {
     note: "朝日杯FS3着・弥生賞2着から皐月賞15着と大敗。しかし距離短縮のマイル戻りは歓迎。坂井瑠星騎乗。皐月賞大敗からのNHKマイルC組は巻き返しデータあり",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    hanshin1600Win: false, maileJusho: true, newmaWin: true, secondWin: true, restWeeks: 3,
     prevCorner4: 6, prevHeadCount: 16,
     tokyoExp: false,
     popEstimate: 6, training: "A",
@@ -2647,6 +2653,7 @@ const HORSES_BY_RACE = {
     note: "朝日杯FS4着→初戦からG1好走の実力馬。サウジアラビアRC勝ちの東京1600m実績【重要】。横山和生騎乗。東京コース適性は出走馬中トップクラス（+10点）",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    hanshin1600Win: false, newmaWin: true, secondWin: false, restWeeks: 20,
     prevCorner4: 10, prevHeadCount: 18,
     tokyoExp: true, tokyoExpRank: 1, tokyoExpRace: "サウジアラビアRC", tokyoExpDist: 1600,
     popEstimate: 7, training: "B",
@@ -3368,9 +3375,43 @@ const RACE_PAST_DATA = {
         title: "枠順別 成績（過去10年）",
         headers: ["枠","成績","複勝率","傾向"],
         rows: [
-          { cells: ["1〜3枠（内）", "1-3-2-48", "11%", "内枠不利・勝ち1頭のみ"] },
-          { cells: ["4〜5枠（中）", "1-3-2-30", "17%", "標準的"] },
-          { cells: ["6〜8枠（外）", "8-4-6-97", "16%", "外枠優勢・勝馬10頭中8頭"], highlight: true },
+          { cells: ["1枠", "0-1-0-19", "5%",    "勝率0%・内枠は苦戦。消し候補"],
+            matchFn: function(h){ return h.waku === 1; }, isGood: false },
+          { cells: ["2枠", "1-2-1-16", "20%",   "唯一の内枠で複勝率20%・要注目"],
+            matchFn: function(h){ return h.waku === 2; }, isGood: true },
+          { cells: ["3枠", "0-1-3-16", "20%",   "勝率0%！3着が多いがヒモ止まり"],
+            matchFn: function(h){ return h.waku === 3; }, isGood: false },
+          { cells: ["4枠", "0-0-1-19", "5%",    "勝率0%・連対率0%！完全消し"],
+            matchFn: function(h){ return h.waku === 4; }, isGood: false },
+          { cells: ["5枠", "0-3-3-14", "30%",   "勝率0%！複勝率30%もヒモ止まり"],
+            matchFn: function(h){ return h.waku === 5; }, isGood: false },
+          { cells: ["6枠", "4-0-0-15", "21.1%", "⭐4勝トップ！勝率21.1%の最注目枠"], highlight: true,
+            matchFn: function(h){ return h.waku === 6; }, isGood: true },
+          { cells: ["7枠", "1-2-0-27", "10%",   "複勝率10%。普通評価"],
+            matchFn: function(h){ return h.waku === 7; } },
+          { cells: ["8枠", "4-1-2-23", "23.3%", "⭐4勝・複勝率23.3%。外枠優勢"], highlight: true,
+            matchFn: function(h){ return h.waku === 8; }, isGood: true },
+        ],
+      },
+      {
+        type: "table",
+        title: "前走馬体重別 成績（過去10年）",
+        headers: ["体重帯","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["400〜419kg", "0-0-0-4",  "0%",    "複勝圏内ゼロ。消し体重帯"],
+            matchFn: function(h){ return h.bodyWeight >= 400 && h.bodyWeight <= 419; }, isGood: false },
+          { cells: ["420〜439kg", "0-0-3-6",  "33.3%", "3着が多い。ヒモ候補"],
+            matchFn: function(h){ return h.bodyWeight >= 420 && h.bodyWeight <= 439; }, isGood: true },
+          { cells: ["440〜459kg", "2-2-1-25", "16.7%", "標準的な成績"],
+            matchFn: function(h){ return h.bodyWeight >= 440 && h.bodyWeight <= 459; } },
+          { cells: ["460〜479kg", "1-4-3-46", "14.8%", "連対率高め。ヒモ評価"],
+            matchFn: function(h){ return h.bodyWeight >= 460 && h.bodyWeight <= 479; } },
+          { cells: ["480〜499kg", "9-3-0-34", "18.5%", "⭐5勝トップ！単回収率126・最強体重帯"], highlight: true,
+            matchFn: function(h){ return h.bodyWeight >= 480 && h.bodyWeight <= 499; }, isGood: true },
+          { cells: ["500〜519kg", "2-2-0-14", "22.2%", "複勝率22.2%と高水準"],
+            matchFn: function(h){ return h.bodyWeight >= 500 && h.bodyWeight <= 519; }, isGood: true },
+          { cells: ["520〜539kg", "0-0-0-6",  "0%",    "複勝圏内ゼロ。消し体重帯"],
+            matchFn: function(h){ return h.bodyWeight >= 520 && h.bodyWeight <= 539; }, isGood: false },
         ],
       },
       {
@@ -3651,8 +3692,8 @@ const BABA_PTS = {
 function maxScoreFor(score) {
   var hasSI = (score._siValue !== null && score._siValue !== undefined);
   var hasBaba = (score.baba !== null && score.baba !== undefined);
-  // ベース 100 + SI(10) + 馬場(15) + 距離経験(8) + 種牡馬(10) + 東京コース(10) + 牝馬(3)
-  return 100 + (hasSI ? 10 : 0) + (hasBaba ? 15 : 0) + 8 + 10 + 10 + 3;
+  // ベース 100 + SI(10) + 馬場(15) + 距離経験(8) + 種牡馬(10) + 東京コース(10) + 牝馬(3) + NHK特殊条件(18) + NHK馬体重(8)
+  return 100 + (hasSI ? 10 : 0) + (hasBaba ? 15 : 0) + 8 + 10 + 10 + 3 + 18 + 8;
 }
 
 // 馬場適性スコア（最大15点・最小-3点）
@@ -3680,6 +3721,43 @@ function calcTokyoExp(horse, raceVenue) {
   if (rank <= 3)       return { pts: 7,  label: '東京コース3着以内（' + raceLabel + ' ' + distLabel + ' ' + rank + '着）' };
   if (rank <= 6)       return { pts: 4,  label: '東京コース6着以内（' + raceLabel + ' ' + distLabel + ' ' + rank + '着）' };
   return { pts: 1, label: '東京コース出走経験あり' };
+}
+
+// NHKマイルC専用：特殊条件加減点（最大+18 / 最小-5）
+function calcSpecialCondition(horse, raceName) {
+  if (!raceName || raceName.indexOf('NHKマイル') === -1) return { pts: 0, label: '' };
+  if (!horse) return { pts: 0, label: '' };
+  var pts = 0;
+  var labels = [];
+  if (horse.restWeeks && horse.restWeeks >= 12) {
+    pts -= 5;
+    labels.push('休み明け3ヶ月以上【0-0-0-6】消し');
+  }
+  if (horse.hanshin1600Win) {
+    pts += 8;
+    labels.push('阪神芝1600m G1勝ち【3-2-1-1】特注');
+  }
+  if (horse.prevRace === '皐月賞' && horse.maileJusho) {
+    pts += 6;
+    labels.push('皐月賞組×マイル重賞勝利【2-1-0-0】');
+  }
+  if (horse.newmaWin && horse.secondWin) {
+    pts += 4;
+    labels.push('新馬→2戦目連勝（歴代勝ち馬パターン）');
+  }
+  return { pts: pts, label: labels.join(' / ') };
+}
+
+// NHKマイルC専用：当日馬体重スコア（前走馬体重ベース・最大+8/-3）
+function calcNhkBodyWeightScore(horse, raceName) {
+  if (!raceName || raceName.indexOf('NHKマイル') === -1) return { pts: 0, label: '' };
+  var bw = horse && horse.bodyWeight || 0;
+  if (!bw) return { pts: 0, label: '' };
+  if (bw >= 480 && bw <= 499) return { pts: 8,  label: '馬体重◎（480〜499kg・5勝ゾーン）' };
+  if (bw >= 500 && bw <= 519) return { pts: 4,  label: '馬体重○（500〜519kg・複勝率22.2%）' };
+  if (bw >= 420 && bw <= 439) return { pts: 3,  label: '馬体重△（420〜439kg・3着多い）' };
+  if (bw <= 419 || bw >= 520)  return { pts: -3, label: '馬体重×（複勝率0%帯）' };
+  return { pts: 0, label: '' };
 }
 
 // 牝馬加点（NHKマイルC限定）
@@ -3828,14 +3906,21 @@ function computeScore(h) {
   var tokyo = tokyoObj.pts;
   var sexB = sexObj.pts;
 
-  return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB,
+  // NHKマイルC 専用：特殊条件 + 当日馬体重ゾーン
+  var specialObj = calcSpecialCondition(h, currentRace);
+  var nhkBwObj = calcNhkBodyWeightScore(h, currentRace);
+  var special = specialObj.pts;
+  var nhkBw = nhkBwObj.pts;
+
+  return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB, special, nhkBw,
            _distLabel: distObj.label, _stallionLabel: stallionObj.label,
-           _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label, _siValue: si };
+           _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label,
+           _specialLabel: specialObj.label, _nhkBwLabel: nhkBwObj.label, _siValue: si };
 }
 function sumScore(s) {
   return s.ninki + s.waku + s.dataFit + s.ketto + s.jockey + s.course + s.chokyo + s.speed +
          (s.baba || 0) + (s.bw || 0) + (s.dist || 0) + (s.stallion || 0) +
-         (s.tokyo || 0) + (s.sexB || 0);
+         (s.tokyo || 0) + (s.sexB || 0) + (s.special || 0) + (s.nhkBw || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
