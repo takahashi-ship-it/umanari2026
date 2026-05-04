@@ -2560,6 +2560,7 @@ const HORSES_BY_RACE = {
     popEstimate: 2, training: "A",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
+    babaScore: { good:78, slightHeavy:72, heavy:55, veryHeavy:40 },
   },
   {
     name: "ダイヤモンドノット",
@@ -2578,6 +2579,7 @@ const HORSES_BY_RACE = {
     popEstimate: 1, training: "A",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
+    babaScore: { good:80, slightHeavy:73, heavy:55, veryHeavy:38 },
   },
   {
     name: "サンダーストラック",
@@ -2596,6 +2598,7 @@ const HORSES_BY_RACE = {
     popEstimate: 3, training: "A",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
+    babaScore: { good:74, slightHeavy:70, heavy:53, veryHeavy:38 },
   },
   {
     name: "アスクイキゴミ",
@@ -2614,6 +2617,7 @@ const HORSES_BY_RACE = {
     popEstimate: 4, training: "A",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
+    babaScore: { good:82, slightHeavy:75, heavy:58, veryHeavy:42 },
   },
   {
     name: "レザベーション",
@@ -2632,6 +2636,7 @@ const HORSES_BY_RACE = {
     popEstimate: 5, training: "A",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
+    babaScore: { good:75, slightHeavy:70, heavy:52, veryHeavy:38 },
   },
   {
     name: "アドマイヤクワッズ",
@@ -2650,6 +2655,7 @@ const HORSES_BY_RACE = {
     popEstimate: 6, training: "A",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
+    babaScore: { good:80, slightHeavy:74, heavy:58, veryHeavy:42 },
   },
   {
     name: "エコロアルバ",
@@ -2668,6 +2674,7 @@ const HORSES_BY_RACE = {
     popEstimate: 7, training: "B",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
+    babaScore: { good:76, slightHeavy:72, heavy:55, veryHeavy:40 },
   },
   {
     name: "ハッピーエンジェル",
@@ -2685,6 +2692,7 @@ const HORSES_BY_RACE = {
     popEstimate: 8, training: "A",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
+    babaScore: { good:73, slightHeavy:70, heavy:52, veryHeavy:38 },
   },
   {
     name: "バルセシート",
@@ -2702,6 +2710,7 @@ const HORSES_BY_RACE = {
     popEstimate: 9, training: "B",
     waku: null, umaban: null, odds: null,
     speedIndex: null, prevTime: null, prevCourse: null, prevBaba: "良",
+    babaScore: { good:72, slightHeavy:68, heavy:52, veryHeavy:38 },
   },
 ],
 
@@ -4109,6 +4118,7 @@ function updateFinishedBanner(raceName) {
 function setCurrentRace(name) {
   if (!HORSES_BY_RACE[name]) return;
   currentRace = name;
+  window.currentRaceName = name;
   HORSES = HORSES_BY_RACE[name];
   window.horses = HORSES;
 
@@ -4219,6 +4229,7 @@ renderCriteria();
  * 3.6) ANA-CHECK TAB (危険な人気馬・穴馬チェック)
  * ===================================================== */
 window.horses = HORSES;
+window.currentRaceName = currentRace;
 renderShutsubaTable();
 initBwGrid();
 renderPacePredict();
@@ -4962,38 +4973,24 @@ function setBaba(baba) {
     good:'良馬場', slightHeavy:'稍重', heavy:'重馬場', veryHeavy:'不良馬場'
   }[baba] || '良馬場';
 
-  // 現在のレースの馬データを取得（複数のアクセス方法を順に試す）
+  // 現在のレース名から正しい馬データを取得（HORSES_BY_RACE 優先で確実性UP）
+  var raceName = window.currentRaceName ||
+                 (typeof currentRace !== 'undefined' ? currentRace : '') ||
+                 '天皇賞（春）';
   var currentHorses = [];
 
-  // 方法1: window.horses を直接使用（最も確実）
-  if (window.horses && window.horses.length > 0) {
-    currentHorses = window.horses;
-    console.log('[setBaba] horses sourced from window.horses:', currentHorses.length);
+  // 方法1（最優先）: HORSES_BY_RACE[raceName] で確実に当該レースの馬を取得
+  if (window.HORSES_BY_RACE && window.HORSES_BY_RACE[raceName]) {
+    currentHorses = window.HORSES_BY_RACE[raceName];
+    console.log('[setBaba] sourced from HORSES_BY_RACE[' + raceName + ']:', currentHorses.length);
   }
-  // 方法2: HORSES_BY_RACE から現在のレース名で取得（部分一致対応）
-  else if (window.HORSES_BY_RACE) {
-    var raceKey = window.currentRaceName ||
-                  (typeof currentRace !== 'undefined' ? currentRace : '') || '';
-    if (window.HORSES_BY_RACE[raceKey]) {
-      currentHorses = window.HORSES_BY_RACE[raceKey];
-      console.log('[setBaba] exact-match key:', raceKey);
-    } else {
-      var keys = Object.keys(window.HORSES_BY_RACE);
-      for (var i = 0; i < keys.length; i++) {
-        if ((raceKey && raceKey.includes(keys[i])) || keys[i].includes(raceKey) || keys[i].includes('天皇賞')) {
-          currentHorses = window.HORSES_BY_RACE[keys[i]];
-          console.log('[setBaba] partial-match key:', keys[i]);
-          break;
-        }
-      }
-      if (!currentHorses.length && keys.length > 0) {
-        currentHorses = window.HORSES_BY_RACE[keys[0]];
-        console.log('[setBaba] fallback to first key:', keys[0]);
-      }
-    }
+  // 方法2: window.horses（setCurrentRace で最新レースに更新済み想定）
+  else if (window.horses && window.horses.length > 0) {
+    currentHorses = window.horses;
+    console.log('[setBaba] fallback to window.horses:', currentHorses.length);
   }
   // 方法3: グローバル HORSES へ最後のフォールバック
-  if (!currentHorses.length && typeof HORSES !== 'undefined' && HORSES.length) {
+  else if (typeof HORSES !== 'undefined' && HORSES.length) {
     currentHorses = HORSES;
     console.log('[setBaba] last-resort HORSES:', currentHorses.length);
   }
