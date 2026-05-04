@@ -1365,7 +1365,7 @@
   <!-- RACE PAGE: 天皇賞春2026 -->
   <section class="race-page" id="racePage">
     <div class="race-headline">
-      <div id="finished-banner" style="display:none"></div>
+      <div id="finished-banner" style="display:none;background:#555555;color:#ffffff;text-align:center;padding:8px 14px;border-radius:8px;margin-bottom:10px;font-size:11px;font-weight:600;line-height:1.6"></div>
       <div class="race-grade-line">G1 / 第173回</div>
       <h2 id="raceTitle">天皇賞（春）</h2>
       <div class="race-meta" id="raceMeta">
@@ -2187,8 +2187,7 @@ function renderCalendar() {
 
   filtered.forEach(r => {
     const isSupported = SUPPORTED_RACES.has(r.name);
-    const meta = (typeof RACE_META !== 'undefined' && RACE_META[r.name]) || null;
-    const isFinished = !!(meta && meta.isFinished);
+    const isFinished = (typeof FINISHED_RACES !== 'undefined' && FINISHED_RACES.indexOf(r.name) >= 0);
     let badge, cardCls;
     if (isFinished) {
       badge = { label: '終了', cls: 'done' };
@@ -2930,14 +2929,6 @@ const RACE_META = {
     pageTitle: "JRA重賞予想 2026 | 天皇賞・春",
     notice:    '<strong>⚠ 重要</strong>：スティンガーグラスは<strong>4/29追い切り後の歩様に違和感のため回避</strong>（宝塚記念を視野に在厩）。',
     babaPrediction: { status: "稍重〜重馬場の可能性大", icon: "🌧", color: "#378ADD", comment: "前日から雨。重馬場なら95年以来31年ぶり。シンエンペラー・ヴェルミセル急浮上" },
-    isFinished: true,
-    result: {
-      first:  { umaban: 7,  name: "クロワデュノール", jockey: "北村友一",   pop: 1 },
-      second: { umaban: 15, name: "ヴェルテンベルク", jockey: "松若風馬",   pop: 12 },
-      third:  { umaban: 3,  name: "アドマイヤテラ",   jockey: "武豊",        pop: 2 }
-    },
-    tan3: "70,630円",
-    hitInfo: "軸3番アドマイヤテラ3着・相手に15番なしで外れ"
   },
   "NHKマイルC": {
     gradeLine: "G1 / 第31回",
@@ -4101,61 +4092,18 @@ function renderCriteria() {
  *   - 選定基準・登録馬・チェックリスト
  *   - オッズ入力グリッドを再構築
  */
-// 終了レースバナー描画
-function renderFinishedBanner(raceKey) {
-  var banner = document.getElementById('finished-banner');
-  if (!banner) return;
-  var info = (typeof RACE_META !== 'undefined' && RACE_META[raceKey]) || null;
-  if (!info || !info.isFinished) {
-    banner.style.display = 'none';
-    banner.innerHTML = '';
-    return;
+// 終了レースのリスト（シンプル版）
+var FINISHED_RACES = ['天皇賞（春）'];
+
+function updateFinishedBanner(raceName) {
+  var el = document.getElementById('finished-banner');
+  if (!el) return;
+  if (FINISHED_RACES.indexOf(raceName) >= 0) {
+    el.innerHTML = '✅ このレースは終了しました | 1着：7番クロワデュノール　2着：15番ヴェルテンベルク　3着：3番アドマイヤテラ | 3連単 7-15-3：70,630円';
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'none';
   }
-  var r = info.result || {};
-  var places = [r.first, r.second, r.third];
-  var medals = ['🥇 1着','🥈 2着','🥉 3着'];
-
-  var html = '<div style="background:linear-gradient(135deg,#2d3a5e,#1a2744);' +
-             'border-radius:var(--border-radius-lg);padding:12px 16px;margin-bottom:12px;' +
-             'border:1px solid #3d4f7a">';
-  html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">' +
-          '<span style="background:#888;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px">レース終了</span>' +
-          '<span style="font-size:12px;color:rgba(255,255,255,0.7)">' + (info.date || '') + ' 開催済み</span>' +
-          '</div>';
-
-  if (places[0]) {
-    html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">';
-    places.forEach(function(p, i) {
-      if (!p) return;
-      html += '<div style="background:rgba(255,255,255,0.08);border-radius:var(--border-radius-md);padding:6px 8px;text-align:center">' +
-              '<div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:2px">' + medals[i] + '</div>' +
-              '<div style="font-size:13px;font-weight:700;color:#fff">' + (p.umaban != null ? p.umaban + '番 ' : '') + p.name + '</div>' +
-              '<div style="font-size:10px;color:rgba(255,255,255,0.6)">' + (p.jockey || '') + (p.pop != null ? '（' + p.pop + '番人気）' : '') + '</div>' +
-              '</div>';
-    });
-    html += '</div>';
-
-    html += '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">';
-    html += '<div style="font-size:11px;color:rgba(255,255,255,0.7)">3連単：' +
-            r.first.umaban + '-' + r.second.umaban + '-' + r.third.umaban +
-            ' → <strong style="color:#B8960C">' + (info.tan3 || '—') + '</strong></div>';
-    if (info.hitInfo) {
-      var isHit = info.hitInfo.indexOf('的中') !== -1;
-      html += '<span style="background:' + (isHit ? '#1D9E75' : '#888') +
-              ';color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:9px">' +
-              (isHit ? '✅ 的中' : '❌ 外れ') + '</span>';
-    }
-    html += '</div>';
-
-    if (info.hitInfo && info.hitInfo.indexOf('的中') === -1) {
-      html += '<div style="margin-top:6px;font-size:10px;color:rgba(255,255,255,0.5);' +
-              'border-top:0.5px solid rgba(255,255,255,0.1);padding-top:6px">' + info.hitInfo + '</div>';
-    }
-  }
-
-  html += '</div>';
-  banner.innerHTML = html;
-  banner.style.display = 'block';
 }
 
 function setCurrentRace(name) {
@@ -4164,8 +4112,8 @@ function setCurrentRace(name) {
   HORSES = HORSES_BY_RACE[name];
   window.horses = HORSES;
 
-  // 終了レースバナー
-  renderFinishedBanner(name);
+  // 終了レースバナー（シンプル版）
+  if (typeof updateFinishedBanner === 'function') updateFinishedBanner(name);
 
   var meta = RACE_META[name];
   if (meta) {
@@ -5551,7 +5499,7 @@ window.addEventListener('load', function() {
   setTimeout(function() {
     if (typeof renderShutsubaTable === 'function') renderShutsubaTable();
     if (typeof setBaba === 'function') setBaba(window.currentBaba || 'good');
-    if (typeof renderFinishedBanner === 'function') renderFinishedBanner(currentRace || '天皇賞（春）');
+    if (typeof updateFinishedBanner === 'function') updateFinishedBanner(currentRace || '天皇賞（春）');
   }, 50);
 });
 </script>
