@@ -4696,88 +4696,146 @@ const RACE_PAST_DATA = {
     ],
   },
 
-  "エプソムC": {
-    anaPoints: [
-      'キャリア10戦以内が7勝・好走率高い（2014年以降）',
-      '7歳以上は3着1回のみと明確な苦戦→エピファニー・マテンロウレオ・ジュンブロッサムは割引',
-      '8枠が4勝トップ。逆に1・2枠は各1連対のみと内枠不利',
-      '逃げ馬は海外G1馬エイシンヒカリ1頭のみ勝利→逃げ馬は基本割引',
-      '前走6番人気以内に支持された馬が好走（1〜2着馬24頭中23頭）',
-      '差し〜先行の中間脚質が最も有利。好位から長く脚を使えるタイプを評価',
-      '前走での馬体重が-9〜-4kgの馬が4勝と最多',
-      '4歳馬が成長途上で最も勢いがある。5〜6歳も悪くないが7歳以上は割引',
-      'キャロットファーム所有馬が4勝（13頭出走）と高い勝率',
-      'ルメール騎手が9騎乗で2勝・3着内5回と高実績',
-    ],
-    sections: [
-      {
-        type: "table",
-        title: "人気別 成績（過去10年）",
-        headers: ["人気","成績","複勝率","傾向"],
-        rows: [
-          { cells: ["1〜5番人気", "安定", "高", "上位人気から中穴まで幅広く好走"], highlight: true },
-          { cells: ["6〜10番人気", "毎年激走", "中", "中穴ゾーンが毎年馬券に絡む"], highlight: true },
-          { cells: ["10番人気以下", "勝利ゼロ", "低", "大穴は3着まで・勝利なし"] },
-        ],
-      },
-      {
-        type: "table",
-        title: "枠順別 傾向（過去10年）",
-        headers: ["枠","成績","複勝率","傾向"],
-        rows: [
-          { cells: ["1〜2枠", "各1連対のみ", "低", "内枠不利傾向"],
-            matchFn: function(h){ return h.waku === 1 || h.waku === 2; }, isGood: false },
-          { cells: ["8枠", "4勝・最多", "高", "⭐外枠8枠が最注目"], highlight: true,
-            matchFn: function(h){ return h.waku === 8; }, isGood: true },
-        ],
-      },
-      {
-        type: "table",
-        title: "年齢別 傾向（過去10年）",
-        headers: ["年齢","成績","傾向"],
-        rows: [
-          { cells: ["4歳馬", "好走率高い", "成長途上で最も勢いがある"], highlight: true,
-            matchFn: function(h){ return h.age === 4; }, isGood: true },
-          { cells: ["5〜6歳", "悪くない", "実績馬の好走多数"],
-            matchFn: function(h){ return h.age === 5 || h.age === 6; } },
-          { cells: ["7歳以上", "3着1回のみ", "明確な苦戦・割引"],
-            matchFn: function(h){ return h.age >= 7; }, isGood: false },
-        ],
-      },
-      {
-        type: "table",
-        title: "脚質別 傾向（過去10年）",
-        headers: ["脚質","成績","傾向"],
-        rows: [
-          { cells: ["差し", "6勝・最多", "直線が長い東京で末脚活かせる"], highlight: true,
-            matchFn: function(h){ return h.style === '差し'; }, isGood: true },
-          { cells: ["先行", "4勝", "先行も4勝と健闘"],
-            matchFn: function(h){ return h.style === '先行'; }, isGood: true },
-          { cells: ["逃げ", "1勝（エイシンヒカリのみ）", "逃げ馬は基本割引"],
-            matchFn: function(h){ return h.style === '逃げ'; }, isGood: false },
-          { cells: ["後方待機", "1勝のみ", "後方過ぎも届かないケース多い"],
-            matchFn: function(h){ return h.style === '追込'; }, isGood: false },
-        ],
-      },
-      {
-        type: "html",
-        title: "💡 穴馬情報（エプソムC 穴馬の10条件）",
-        renderFromAnaPoints: true,
-      },
-      {
-        type: "html",
-        html:
-          '<div class="trend-box">'
-        + '<h4>📈 エプソムカップ 攻略ポイント</h4>'
-        + '<p><strong>安田記念・宝塚記念への前哨戦。東京芝1800m左回り。</strong>'
-        + '差し有利・8枠が最注目枠。7歳以上は0勝で割引必須。'
-        + 'キャロットファーム所有馬が4勝（13頭出走）と高い勝率を誇る。'
-        + 'ルメール騎手は9騎乗で2勝・3着内5回と相性が良い。'
-        + '4歳馬の成長力＋外枠＋差し〜先行＝最強パターン。</p>'
-        + '</div>',
-      },
-    ],
-  },
+"エプソムC": {
+  anaPoints: [
+    '⭐先行馬が最も安定（勝率12%・複勝率30.7%・複回103.7%）。差し馬は中団から！極端な後方は割引',
+    '⭐1番人気複勝率70%・複回102.5%と最も信頼できる。軸として最有力',
+    '⭐オッズ3.0〜4.9倍が複勝率57.1%・単回117.6%と最優秀ゾーン',
+    '⭐8枠複勝回収率122.7%トップ。3枠も単回95.3%と優秀',
+    '7歳以上は過去10年（2014年以降）で馬券圏外ゼロ→エピファニー・マテンロウレオ・ジュンブロッサム・ビーアストニッシド・オニャンコポンは消し',
+    '4歳馬5勝（2014年以降）・キャリア10戦以内が7勝。若い馬を重視',
+    '前走単勝6番人気以内の馬が1〜2着馬24頭中23頭を占める。前走で人気薄だった馬は割引',
+    '⭐モーリス産駒（勝率16.8%・複回98%）・キズナ産駒（複勝率41.9%・複回102.8%）が東京1800mで最優秀血統',
+    'ドゥラメンテ・ロードカナロア・エピファネイア産駒も複勝率35%超え。今年はステレンボッシュ（エピファネイア）が注目',
+    '2025年から施行時期変更のため枠順傾向は過去データを過度に気にしなくてよい。レース当日の馬場コンディションが最重要',
+    '3連単最高配当4,219,320円（平均467,444円）。3連複最高739,440円。波乱含みのレースでもある',
+  ],
+  sections: [
+    {
+      type: "table",
+      title: "脚質別 成績（過去20年）",
+      headers: ["脚質","成績","複勝率","傾向"],
+      rows: [
+        { cells: ["逃げ", "1-2-3-15", "28.6%", "勝率4.8%・単回14.3%・複回227.6%。勝利はエイシンヒカリのみ"],
+          matchFn: function(h){ return h.style === '逃げ'; }, isGood: false },
+        { cells: ["先行", "9-7-7-52", "30.7%", "⭐勝率12%・複勝率30.7%・単回121.9%・複回103.7%。最も安定"], highlight: true,
+          matchFn: function(h){ return h.style === '先行'; }, isGood: true },
+        { cells: ["差し", "10-7-8-127", "16.4%", "10勝最多だが複勝率16.4%。中団ポジション必須"], highlight: true,
+          matchFn: function(h){ return h.style === '差し'; }, isGood: true },
+        { cells: ["追込", "0-4-2-82", "6.8%", "勝率0%・複回19.4%。極端な後方待機は届かない"],
+          matchFn: function(h){ return h.style === '追込'; }, isGood: false },
+      ],
+    },
+    {
+      type: "table",
+      title: "人気別 成績（過去20年）",
+      headers: ["人気","成績","複勝率","傾向"],
+      rows: [
+        { cells: ["1番人気", "6-5-3-6", "70%", "⭐複勝率70%・単回96.5%・複回102.5%。軸候補筆頭"], highlight: true,
+          matchFn: function(h){ return h.popEstimate === 1; }, isGood: true },
+        { cells: ["2番人気", "4-2-3-11", "45%", "複勝率45%・単回81%・複回79%"],
+          matchFn: function(h){ return h.popEstimate === 2; } },
+        { cells: ["3番人気", "1-4-1-14", "30%", "複勝率30%・3着が多い"],
+          matchFn: function(h){ return h.popEstimate === 3; } },
+        { cells: ["4番人気", "3-2-2-13", "35%", "複勝率35%・単回108%。単回収が高い"], highlight: true,
+          matchFn: function(h){ return h.popEstimate === 4; }, isGood: true },
+        { cells: ["5番人気", "3-1-1-15", "25%", "⭐単回146.5%と激熱"], highlight: true,
+          matchFn: function(h){ return h.popEstimate === 5; }, isGood: true },
+        { cells: ["6〜9番人気", "3-6-6-65", "18.8%", "2着・3着頻出。ヒモに積極的に"], highlight: true,
+          matchFn: function(h){ return h.popEstimate >= 6 && h.popEstimate <= 9; }, isGood: true },
+        { cells: ["10番人気以下", "0-0-4-152", "2.6%", "勝率0%・連対率0%。大穴は割引"],
+          matchFn: function(h){ return h.popEstimate >= 10; }, isGood: false },
+      ],
+    },
+    {
+      type: "table",
+      title: "単勝オッズ別 成績（過去20年）",
+      headers: ["オッズ","成績","複勝率","傾向"],
+      rows: [
+        { cells: ["1.9倍以下", "0-0-1-0", "100%", "勝率0%。頭固定は危険"],
+          matchFn: function(h){ return h.odds != null && h.odds <= 1.9; } },
+        { cells: ["2.0〜2.9倍", "2-4-0-2", "75%", "複勝率75%。安定感高い"], highlight: true,
+          matchFn: function(h){ return h.odds != null && h.odds >= 2.0 && h.odds <= 2.9; }, isGood: true },
+        { cells: ["3.0〜4.9倍", "7-2-3-9", "57.1%", "⭐複勝率57.1%・単回117.6%。最優秀オッズ帯！"], highlight: true,
+          matchFn: function(h){ return h.odds != null && h.odds >= 3.0 && h.odds <= 4.9; }, isGood: true },
+        { cells: ["5.0〜7.9倍", "5-5-5-26", "36.6%", "複勝率36.6%・単回82.9%"],
+          matchFn: function(h){ return h.odds != null && h.odds >= 5.0 && h.odds <= 7.9; } },
+        { cells: ["8.0〜14.9倍", "4-6-4-34", "29.2%", "複回95.6%。穴馬好走ゾーン"], highlight: true,
+          matchFn: function(h){ return h.odds != null && h.odds >= 8.0 && h.odds <= 14.9; }, isGood: true },
+        { cells: ["15.0〜19.9倍", "1-2-2-19", "20.8%", "複回87.9%。中穴狙い"],
+          matchFn: function(h){ return h.odds != null && h.odds >= 15.0 && h.odds <= 19.9; } },
+        { cells: ["20.0〜49.9倍", "1-1-2-71", "5.3%", "複勝率5.3%・大穴は不安定"],
+          matchFn: function(h){ return h.odds != null && h.odds >= 20.0 && h.odds <= 49.9; } },
+        { cells: ["50.0倍以上", "0-0-3-115", "2.5%", "勝率0%・3着のみ"],
+          matchFn: function(h){ return h.odds != null && h.odds >= 50.0; }, isGood: false },
+      ],
+    },
+    {
+      type: "table",
+      title: "枠順別 成績（過去20年）",
+      headers: ["枠","成績","複勝率","傾向"],
+      rows: [
+        { cells: ["1枠", "3-1-3-29", "19.4%", "勝率8.3%は悪くない"],
+          matchFn: function(h){ return h.waku === 1; } },
+        { cells: ["2枠", "1-2-3-30", "16.7%", "複回95%。連対率8.3%"],
+          matchFn: function(h){ return h.waku === 2; } },
+        { cells: ["3枠", "4-2-4-28", "26.3%", "⭐勝率10.5%・単回95.3%・複回78.7%"], highlight: true,
+          matchFn: function(h){ return h.waku === 3; }, isGood: true },
+        { cells: ["4枠", "1-4-2-32", "17.9%", "2着が多い"],
+          matchFn: function(h){ return h.waku === 4; } },
+        { cells: ["5枠", "2-1-2-35", "12.5%", "複勝率12.5%・複回25.3%。苦戦"],
+          matchFn: function(h){ return h.waku === 5; }, isGood: false },
+        { cells: ["6枠", "3-2-1-33", "15.4%", "標準的"],
+          matchFn: function(h){ return h.waku === 6; } },
+        { cells: ["7枠", "2-3-2-46", "13.2%", "やや苦戦"],
+          matchFn: function(h){ return h.waku === 7; } },
+        { cells: ["8枠", "4-5-3-43", "21.8%", "⭐複回122.7%！複勝回収率最高"], highlight: true,
+          matchFn: function(h){ return h.waku === 8; }, isGood: true },
+      ],
+    },
+    {
+      type: "table",
+      title: "血統データ（過去5年・東京芝1800m）",
+      headers: ["血統","成績","複勝率","傾向"],
+      rows: [
+        { cells: ["ドゥラメンテ産駒", "勝13.5%・複35.7%", "35.7%", "⭐複回71.6%・同コース5年で1位"], highlight: true,
+          matchFn: function(h){ return h.father === 'ドゥラメンテ'; }, isGood: true },
+        { cells: ["エピファネイア産駒", "勝10.8%・複31.6%", "31.6%", "複回65%・2位（ステレンボッシュ）"], highlight: true,
+          matchFn: function(h){ return h.father === 'エピファネイア'; }, isGood: true },
+        { cells: ["ロードカナロア産駒", "勝13.5%・複38.5%", "38.5%", "⭐複回83.1%・3位"], highlight: true,
+          matchFn: function(h){ return h.father === 'ロードカナロア'; }, isGood: true },
+        { cells: ["キズナ産駒", "勝14.5%・複41.9%", "41.9%", "⭐複回102.8%・東京巧者筆頭"], highlight: true,
+          matchFn: function(h){ return h.father === 'キズナ'; }, isGood: true },
+        { cells: ["モーリス産駒", "勝16.8%・複39.3%", "39.3%", "⭐勝率16.8%・複回98%（トロヴァトーレ）"], highlight: true,
+          matchFn: function(h){ return h.father === 'モーリス'; }, isGood: true },
+        { cells: ["ディープインパクト産駒", "勝8.9%・複29.8%", "29.8%", "複回72.2%・安定感高い"],
+          matchFn: function(h){ return h.father === 'ディープインパクト'; }, isGood: true },
+        { cells: ["キタサンブラック産駒", "勝16.9%・複33.7%", "33.7%", "勝率16.9%と高い"],
+          matchFn: function(h){ return h.father === 'キタサンブラック'; }, isGood: true },
+        { cells: ["リアルスティール産駒", "勝12.7%・複35.2%", "35.2%", "優勝馬輩出実績"],
+          matchFn: function(h){ return h.father === 'リアルスティール'; }, isGood: true },
+      ],
+    },
+    {
+      type: "html",
+      title: "💡 穴馬情報（エプソムカップ 攻略の11条件）",
+      renderFromAnaPoints: true,
+    },
+    {
+      type: "html",
+      html:
+        '<div class="trend-box">'
+      + '<h4>📈 エプソムカップ 攻略ポイント</h4>'
+      + '<p><strong>東京芝1800m左回り。先行馬中心・差し馬は中団から。逃げ切り・極端な後方は割引。</strong>'
+      + '1番人気複勝率70%・8枠複勝回収率122.7%。'
+      + '最優秀オッズ帯は3.0〜4.9倍（複勝率57.1%・単回117.6%）。'
+      + 'モーリス産駒（勝率16.8%・複回98%）・キズナ産駒（複回102.8%）・ロードカナロア産駒（複勝率38.5%）が東京1800mで最強血統。'
+      + '今年は <strong>トロヴァトーレ（モーリス）</strong>・<strong>ステレンボッシュ（エピファネイア）</strong> が血統データに該当。'
+      + '7歳以上は2014年以降馬券圏内ゼロ→マテンロウレオ・ジュンブロッサム・エピファニー・オニャンコポン・ビーアストニッシドは消し。</p>'
+      + '</div>',
+    },
+  ],
+},
 };
 
 function renderPastData() {
