@@ -2124,7 +2124,7 @@ const STATUS_BADGE = {
 };
 
 const TARGET_RACE_NAME = "天皇賞（春）";
-const SUPPORTED_RACES = new Set(["天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル"]);
+const SUPPORTED_RACES = new Set(["天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "京都新聞杯", "エプソムC"]);
 
 let currentMonth = 5;
 let currentGrade = "G1";
@@ -3144,6 +3144,126 @@ const HORSES_BY_RACE = {
   },
 ],
 
+"京都新聞杯": [
+  { name:"ベレシート",      sex:"牡", age:3, jockey:"北村友一", shozo:"栗東",
+    prevRank:1, prevRace:"毎日杯", prevGrade:"G3",
+    prev1r:1, prev1race:"毎日杯", prev1grade:"G3", career:3,
+    note:"毎日杯勝ち馬。3戦全てメンバー最速上がり。底を見せていない有力馬",
+    waku:null, umaban:null, odds:null, popEstimate:1, training:"A",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"エムズビギン",    sex:"牡", age:3, jockey:"川田将雅", shozo:"栗東",
+    prevRank:2, prevRace:"きさらぎ賞", prevGrade:"G3",
+    prev1r:2, prev1race:"きさらぎ賞", prev1grade:"G3", career:4,
+    note:"きさらぎ賞2着。川田将雅騎乗で上位評価。ダービーへの東上最終便",
+    waku:null, umaban:null, odds:null, popEstimate:2, training:"A",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"バドリナート",    sex:"牡", age:3, jockey:"坂井瑠星", shozo:"栗東",
+    prevRank:4, prevRace:"ホープフルS", prevGrade:"G1",
+    prev1r:4, prev1race:"ホープフルS", prev1grade:"G1", career:5,
+    note:"ホープフルS4着。G1経験済みで今回距離延長。坂井瑠星継続騎乗",
+    waku:null, umaban:null, odds:null, popEstimate:3, training:"B",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"カフジエメンタール", sex:"牡", age:3, jockey:"吉村誠之助", shozo:"栗東",
+    prevRank:3, prevRace:"若葉S", prevGrade:"OP",
+    prev1r:3, prev1race:"若葉S", prev1grade:"OP", career:4,
+    note:"若葉S3着から参戦",
+    waku:null, umaban:null, odds:null, popEstimate:6, training:"B",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"ブリガンティン",  sex:"牡", age:3, jockey:"原優介", shozo:"栗東",
+    prevRank:5, prevRace:"スプリングS", prevGrade:"G2",
+    prev1r:5, prev1race:"スプリングS", prev1grade:"G2", career:5,
+    note:"スプリングS5着から距離延長",
+    waku:null, umaban:null, odds:null, popEstimate:7, training:"B",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"アーレムアレス",  sex:"牡", age:3, jockey:"菱田裕二", shozo:"栗東",
+    prevRank:2, prevRace:"アザレア賞", prevGrade:"OP",
+    prev1r:2, prev1race:"アザレア賞", prev1grade:"OP", career:5,
+    note:"アザレア賞2着。中距離向きの血統",
+    waku:null, umaban:null, odds:null, popEstimate:5, training:"B",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"エチゴドラゴン",  sex:"牡", age:3, jockey:"幸英明", shozo:"栗東",
+    prevRank:1, prevRace:"1勝クラス", prevGrade:"1勝",
+    prev1r:1, prev1race:"1勝クラス", prev1grade:"1勝", career:4,
+    note:"1勝クラス勝ち上がり参戦",
+    waku:null, umaban:null, odds:null, popEstimate:8, training:"B",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"カムアップローゼス", sex:"牡", age:3, jockey:"鮫島駿", shozo:"栗東",
+    prevRank:3, prevRace:"スプリングS", prevGrade:"G2",
+    prev1r:3, prev1race:"スプリングS", prev1grade:"G2", career:5,
+    note:"スプリングS組",
+    waku:null, umaban:null, odds:null, popEstimate:4, training:"B",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"ニホンピロロジャー", sex:"牡", age:3, jockey:"国分恭介", shozo:"栗東",
+    prevRank:2, prevRace:"1勝クラス", prevGrade:"1勝",
+    prev1r:2, prev1race:"1勝クラス", prev1grade:"1勝", career:4,
+    note:"1勝クラス好走からの参戦",
+    waku:null, umaban:null, odds:null, popEstimate:9, training:"C",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+],
+
+"エプソムC": [
+  { name:"トロヴァトーレ",    sex:"牡", age:4, jockey:"C.ルメール", shozo:"美浦",
+    prevRank:1, prevRace:"東京新聞杯", prevGrade:"G3",
+    prev1r:1, prev1race:"東京新聞杯", prev1grade:"G3", career:8,
+    note:"東京新聞杯勝ち馬。東京芝2戦2勝の東京巧者。中心的存在",
+    waku:null, umaban:null, odds:null, popEstimate:1, training:"A",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"カラマティアノス",  sex:"牡", age:4, jockey:"川田将雅", shozo:"栗東",
+    prevRank:2, prevRace:"中山記念", prevGrade:"G2",
+    prev1r:2, prev1race:"中山記念", prev1grade:"G2", career:9,
+    note:"中山金杯勝ち・中山記念2着と上昇中。東京1800mは未勝利戦勝利実績あり",
+    waku:null, umaban:null, odds:null, popEstimate:2, training:"A",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"マジックサンズ",    sex:"牡", age:4, jockey:"横山和生", shozo:"美浦",
+    prevRank:2, prevRace:"NHKマイルC", prevGrade:"G1",
+    prev1r:2, prev1race:"NHKマイルC", prev1grade:"G1", career:7,
+    note:"昨年NHKマイルC2着。直線の長い東京は合う。末脚鋭い差し馬",
+    waku:null, umaban:null, odds:null, popEstimate:3, training:"A",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"ステレンボッシュ",  sex:"牝", age:4, jockey:"戸崎圭太", shozo:"美浦",
+    prevRank:4, prevRace:"ヴィクトリアマイル", prevGrade:"G1",
+    prev1r:4, prev1race:"ヴィクトリアマイル", prev1grade:"G1", career:10,
+    note:"昨年牝馬2冠馬。斤量55kgの牝馬割引が武器",
+    waku:null, umaban:null, odds:null, popEstimate:4, training:"A",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"シルトホルン",      sex:"牡", age:4, jockey:"松山弘平", shozo:"美浦",
+    prevRank:3, prevRace:"福島記念", prevGrade:"G3",
+    prev1r:3, prev1race:"福島記念", prev1grade:"G3", career:10,
+    note:"前走福島記念3着。東京への舞台替わりに期待",
+    waku:null, umaban:null, odds:null, popEstimate:6, training:"B",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"マテンロウレオ",    sex:"牡", age:7, jockey:"横山典弘", shozo:"美浦",
+    prevRank:6, prevRace:"前走", prevGrade:"OP",
+    prev1r:6, prev1race:"前走", prev1grade:"OP", career:22,
+    note:"7歳は過去10年で3着1回のみと苦戦データあり。割引",
+    waku:null, umaban:null, odds:null, popEstimate:9, training:"C",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"エピファニー",      sex:"牝", age:7, jockey:"杉原誠人", shozo:"栗東",
+    prevRank:11, prevRace:"小倉大賞典", prevGrade:"G3",
+    prev1r:11, prev1race:"小倉大賞典", prev1grade:"G3", career:20,
+    note:"7歳牝馬・小倉大賞典11着から大幅割引",
+    waku:null, umaban:null, odds:null, popEstimate:10, training:"C",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"レガーロデルシエロ", sex:"牡", age:4, jockey:"岩田康誠", shozo:"栗東",
+    prevRank:1, prevRace:"3勝クラス", prevGrade:"3勝",
+    prev1r:1, prev1race:"3勝クラス", prev1grade:"3勝", career:7,
+    note:"3勝クラス勝ち上がり。条件戦からの参戦は過去10年で3頭のみ馬券",
+    waku:null, umaban:null, odds:null, popEstimate:7, training:"B",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"ジュタ",            sex:"牡", age:4, jockey:"未定", shozo:"美浦",
+    prevRank:1, prevRace:"美浦S", prevGrade:"OP",
+    prev1r:1, prev1race:"美浦S", prev1grade:"OP", career:6,
+    note:"美浦S勝利から参戦。東京芝1800m2戦2勝の東京巧者",
+    waku:null, umaban:null, odds:null, popEstimate:5, training:"B",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+  { name:"ジュンブロッサム",  sex:"牡", age:7, jockey:"未定", shozo:"美浦",
+    prevRank:5, prevRace:"前走", prevGrade:"G3",
+    prev1r:5, prev1race:"前走", prev1grade:"G3", career:20,
+    note:"7歳は苦戦データあり",
+    waku:null, umaban:null, odds:null, popEstimate:8, training:"C",
+    speedIndex:null, prevTime:null, prevCourse:null, prevBaba:"良" },
+],
+
 };
 
 // 人気表示ヘルパー（出馬表・信頼度スコア・危険馬チェックで共通利用）
@@ -3218,6 +3338,26 @@ const RACE_META = {
     age:       "4歳上牝馬",
     pageTitle: "JRA重賞予想 2026 | ヴィクトリアマイル",
     notice:    '<strong>⚠ 重要</strong>：アスコリピチェーノは阪神牝馬S後に臀筋繊維の損傷による内出血が判明のため<strong>回避</strong>。<br>枠順・騎手は<strong>5月14日（木）確定予定</strong>。',
+  },
+  "京都新聞杯": {
+    gradeLine: "G2 / 第74回",
+    title:     "京都新聞杯",
+    date:      "2026-05-09 (土)",
+    venue:     "京都競馬場",
+    surface:   "芝2200m（右回り）",
+    age:       "3歳",
+    pageTitle: "JRA重賞予想 2026 | 京都新聞杯",
+    babaPrediction: { status: "良馬場", icon: "☀️", color: "#1D9E75", comment: "5月9日（土）京都・晴れ予報。良馬場想定" },
+  },
+  "エプソムC": {
+    gradeLine: "G3 / 第43回",
+    title:     "エプソムカップ",
+    date:      "2026-05-09 (土)",
+    venue:     "東京競馬場",
+    surface:   "芝1800m（左回り）",
+    age:       "4歳上",
+    pageTitle: "JRA重賞予想 2026 | エプソムカップ",
+    babaPrediction: { status: "良馬場", icon: "☀️", color: "#1D9E75", comment: "5月9日（土）東京・晴れ予報。良馬場想定" },
   },
 };
 
@@ -3900,6 +4040,165 @@ const RACE_PAST_DATA = {
         + '前走阪神牝馬S6着以内が最多輩出パターン、前走G1好走なら複勝率40%。'
         + '福島牝馬S組は【0-1-0-18】で消し対象。'
         + 'リピーター（過去好走馬）が連覇するレースで、ヴィルシーナ・ストレイトガール・アスコリピチェーノが連覇している。</p>'
+        + '</div>',
+      },
+    ],
+  },
+
+  "京都新聞杯": {
+    anaPoints: [
+      'キャリア3〜8戦の馬が主力（2戦以下・9戦以上は3着食い込みすらなし）',
+      'ノーザンファーム産が4勝・社台ファーム産が4勝と二大牧場が圧倒',
+      '差し馬が5勝と最多。京都外回り2200mは3コーナーの下り坂から末脚が活きる',
+      '7枠が3勝と最注目。1枠は20年で1勝のみ',
+      '前走「きさらぎ賞・毎日杯」組が好成績。マイル重賞→距離延長が好ローテ',
+      '近5年の勝ち馬は全員「直近にひらがなレース出走歴あり」',
+    ],
+    sections: [
+      {
+        type: "table",
+        title: "人気別 成績（過去10年）",
+        headers: ["人気","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["1番人気", "3-1-2-4", "60%", "比較的信頼できる"], highlight: true },
+          { cells: ["2番人気", "2-2-1-5", "50%", "ヒモには必要"], highlight: true },
+          { cells: ["3番人気以下", "波乱多数", "—", "荒れることも多い・穴馬に注意"] },
+        ],
+      },
+      {
+        type: "table",
+        title: "枠順別 傾向（過去20年）",
+        headers: ["枠","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["1枠", "20年で1勝のみ", "低", "最内枠は不利・消し候補"],
+            matchFn: function(h){ return h.waku === 1; }, isGood: false },
+          { cells: ["7枠", "3勝・最多", "高", "⭐7枠が最注目枠"], highlight: true,
+            matchFn: function(h){ return h.waku === 7; }, isGood: true },
+          { cells: ["8枠（多頭数）", "苦戦", "低", "多頭数での大外は評価控えめ"],
+            matchFn: function(h){ return h.waku === 8; }, isGood: false },
+        ],
+      },
+      {
+        type: "table",
+        title: "前走別 成績（過去10年）",
+        headers: ["前走","成績","複勝率","備考"],
+        rows: [
+          { cells: ["きさらぎ賞・毎日杯組", "好成績", "高", "マイル重賞→距離延長ローテが好成績"], highlight: true,
+            matchFn: function(h){ return h.prevRace === 'きさらぎ賞' || h.prevRace === '毎日杯'; }, isGood: true },
+          { cells: ["スプリングS組", "標準", "—", "中山1800mからの距離延長"],
+            matchFn: function(h){ return h.prevRace === 'スプリングS'; } },
+          { cells: ["ホープフルS組", "G1経験馬", "—", "G1経験は強み"],
+            matchFn: function(h){ return h.prevRace === 'ホープフルS'; }, isGood: true },
+        ],
+      },
+      {
+        type: "table",
+        title: "脚質別 傾向（過去10年）",
+        headers: ["脚質","成績","傾向"],
+        rows: [
+          { cells: ["差し馬", "5勝・最多", "京都の長い直線で末脚発揮"], highlight: true,
+            matchFn: function(h){ return h.style === '差し'; }, isGood: true },
+          { cells: ["先行馬", "複数勝利", "スタミナ型に有利"],
+            matchFn: function(h){ return h.style === '先行'; }, isGood: true },
+        ],
+      },
+      {
+        type: "html",
+        title: "💡 穴馬情報（京都新聞杯 穴馬の6条件）",
+        renderFromAnaPoints: true,
+      },
+      {
+        type: "html",
+        html:
+          '<div class="trend-box">'
+        + '<h4>📈 京都新聞杯 攻略ポイント</h4>'
+        + '<p><strong>ダービー前哨戦。京都芝2200m右回り。差し馬有利・7枠が最注目枠。</strong>'
+        + 'ノーザンファーム・社台ファーム産が圧倒的優勢。'
+        + 'キャリア3〜8戦の馬から勝ち馬が出るので、新興勢力も上位候補。'
+        + '近5年の勝ち馬は全員「直近にひらがなレース出走歴あり」というユニーク傾向も注目。</p>'
+        + '</div>',
+      },
+    ],
+  },
+
+  "エプソムC": {
+    anaPoints: [
+      'キャリア10戦以内が7勝・好走率高い（2014年以降）',
+      '7歳以上は3着1回のみと明確な苦戦→エピファニー・マテンロウレオ・ジュンブロッサムは割引',
+      '8枠が4勝トップ。逆に1・2枠は各1連対のみと内枠不利',
+      '逃げ馬は海外G1馬エイシンヒカリ1頭のみ勝利→逃げ馬は基本割引',
+      '前走6番人気以内に支持された馬が好走（1〜2着馬24頭中23頭）',
+      '差し〜先行の中間脚質が最も有利。好位から長く脚を使えるタイプを評価',
+      '前走での馬体重が-9〜-4kgの馬が4勝と最多',
+      '4歳馬が成長途上で最も勢いがある。5〜6歳も悪くないが7歳以上は割引',
+      'キャロットファーム所有馬が4勝（13頭出走）と高い勝率',
+      'ルメール騎手が9騎乗で2勝・3着内5回と高実績',
+    ],
+    sections: [
+      {
+        type: "table",
+        title: "人気別 成績（過去10年）",
+        headers: ["人気","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["1〜5番人気", "安定", "高", "上位人気から中穴まで幅広く好走"], highlight: true },
+          { cells: ["6〜10番人気", "毎年激走", "中", "中穴ゾーンが毎年馬券に絡む"], highlight: true },
+          { cells: ["10番人気以下", "勝利ゼロ", "低", "大穴は3着まで・勝利なし"] },
+        ],
+      },
+      {
+        type: "table",
+        title: "枠順別 傾向（過去10年）",
+        headers: ["枠","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["1〜2枠", "各1連対のみ", "低", "内枠不利傾向"],
+            matchFn: function(h){ return h.waku === 1 || h.waku === 2; }, isGood: false },
+          { cells: ["8枠", "4勝・最多", "高", "⭐外枠8枠が最注目"], highlight: true,
+            matchFn: function(h){ return h.waku === 8; }, isGood: true },
+        ],
+      },
+      {
+        type: "table",
+        title: "年齢別 傾向（過去10年）",
+        headers: ["年齢","成績","傾向"],
+        rows: [
+          { cells: ["4歳馬", "好走率高い", "成長途上で最も勢いがある"], highlight: true,
+            matchFn: function(h){ return h.age === 4; }, isGood: true },
+          { cells: ["5〜6歳", "悪くない", "実績馬の好走多数"],
+            matchFn: function(h){ return h.age === 5 || h.age === 6; } },
+          { cells: ["7歳以上", "3着1回のみ", "明確な苦戦・割引"],
+            matchFn: function(h){ return h.age >= 7; }, isGood: false },
+        ],
+      },
+      {
+        type: "table",
+        title: "脚質別 傾向（過去10年）",
+        headers: ["脚質","成績","傾向"],
+        rows: [
+          { cells: ["差し", "6勝・最多", "直線が長い東京で末脚活かせる"], highlight: true,
+            matchFn: function(h){ return h.style === '差し'; }, isGood: true },
+          { cells: ["先行", "4勝", "先行も4勝と健闘"],
+            matchFn: function(h){ return h.style === '先行'; }, isGood: true },
+          { cells: ["逃げ", "1勝（エイシンヒカリのみ）", "逃げ馬は基本割引"],
+            matchFn: function(h){ return h.style === '逃げ'; }, isGood: false },
+          { cells: ["後方待機", "1勝のみ", "後方過ぎも届かないケース多い"],
+            matchFn: function(h){ return h.style === '追込'; }, isGood: false },
+        ],
+      },
+      {
+        type: "html",
+        title: "💡 穴馬情報（エプソムC 穴馬の10条件）",
+        renderFromAnaPoints: true,
+      },
+      {
+        type: "html",
+        html:
+          '<div class="trend-box">'
+        + '<h4>📈 エプソムカップ 攻略ポイント</h4>'
+        + '<p><strong>安田記念・宝塚記念への前哨戦。東京芝1800m左回り。</strong>'
+        + '差し有利・8枠が最注目枠。7歳以上は0勝で割引必須。'
+        + 'キャロットファーム所有馬が4勝（13頭出走）と高い勝率を誇る。'
+        + 'ルメール騎手は9騎乗で2勝・3着内5回と相性が良い。'
+        + '4歳馬の成長力＋外枠＋差し〜先行＝最強パターン。</p>'
         + '</div>',
       },
     ],
@@ -4626,6 +4925,10 @@ function setCurrentRace(name) {
     normalized = '天皇賞（春）';
   } else if (name && (name.indexOf('ヴィクトリア') >= 0 || name === 'VM')) {
     normalized = 'ヴィクトリアマイル';
+  } else if (name && (name.indexOf('エプソム') >= 0)) {
+    normalized = 'エプソムC';
+  } else if (name && name.indexOf('京都新聞') >= 0) {
+    normalized = '京都新聞杯';
   }
 
   // 完全一致 → 部分一致 の順でキー解決
@@ -4844,6 +5147,24 @@ var RACE_SHUTSUBA_INFO = {
     note: '4歳以上牝馬限定戦。フルゲート18頭。枠順は5月14日（木）確定予定。',
     isFinished: false,
     result: null
+  },
+  '京都新聞杯': {
+    title: '第74回 京都新聞杯',
+    date: '2026年5月9日（土）',
+    venue: '京都11R',
+    surface: '芝2200m（右回り）',
+    note: '3歳牡牝・ダービー前哨戦。枠順は5月8日（木）確定予定。',
+    isFinished: false,
+    result: null
+  },
+  'エプソムC': {
+    title: '第43回 エプソムカップ',
+    date: '2026年5月9日（土）',
+    venue: '東京11R',
+    surface: '芝1800m（左回り）',
+    note: '4歳以上・別定戦。安田記念・宝塚記念への前哨戦。枠順は5月8日（木）確定予定。',
+    isFinished: false,
+    result: null
   }
 };
 
@@ -4856,12 +5177,16 @@ function renderShutsubaHeader() {
   var titles = {
     '天皇賞（春）':       '第173回 天皇賞（春） / 2026年5月3日（日）京都11R 芝3200m',
     'NHKマイルC':         '第31回 NHKマイルカップ / 2026年5月10日（日）東京11R 芝1600m',
-    'ヴィクトリアマイル': '第21回 ヴィクトリアマイル / 2026年5月17日（日）東京11R 芝1600m'
+    'ヴィクトリアマイル': '第21回 ヴィクトリアマイル / 2026年5月17日（日）東京11R 芝1600m',
+    '京都新聞杯':         '第74回 京都新聞杯 / 2026年5月9日（土）京都11R 芝2200m（右回り）',
+    'エプソムC':          '第43回 エプソムカップ / 2026年5月9日（土）東京11R 芝1800m（左回り）'
   };
   var notes = {
     '天皇賞（春）':       '✅ 終了：1着クロワデュノール・2着ヴェルテンベルク・3着アドマイヤテラ',
     'NHKマイルC':         '3歳牡牝混合・フルゲート18頭。枠順は5月8日（木）確定予定。',
-    'ヴィクトリアマイル': '4歳以上牝馬限定・フルゲート18頭。枠順は5月14日（木）確定予定。'
+    'ヴィクトリアマイル': '4歳以上牝馬限定・フルゲート18頭。枠順は5月14日（木）確定予定。',
+    '京都新聞杯':         '3歳牡牝・ダービー前哨戦。枠順は5月8日（木）確定予定。',
+    'エプソムC':          '4歳以上・別定戦。安田記念・宝塚記念への前哨戦。枠順は5月8日（木）確定予定。'
   };
 
   var title = titles[raceName] || raceName;
