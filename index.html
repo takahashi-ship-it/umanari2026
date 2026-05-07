@@ -1589,6 +1589,17 @@
           </div>
         </div>
 
+        <!-- 4-2. 穴馬候補スコアカード（NHKマイルC専用） -->
+        <div class="card" id="ana-scorecard">
+          <div class="ct">🎯 穴馬候補スコアカード</div>
+          <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:10px;
+                      background:#FAEEDA;border-radius:var(--border-radius-md);padding:8px 12px">
+            ⚙️ 以下の条件に多く当てはまる人気薄の馬が穴馬候補です。
+            外枠・差し脚質・小柄馬体重の3条件が揃えば最有力。
+          </div>
+          <div id="ana-scorecard-list"></div>
+        </div>
+
         <!-- 5. 推奨フォーメーション -->
         <div class="card" style="background:#E1F5EE;border:1px solid #639922">
           <div class="ct" style="color:#085041">推奨 3連単フォーメーション</div>
@@ -3336,7 +3347,10 @@ const RACE_DANGER_LOGIC = {
       okText: '✅ 2番人気【4-2-1-3】複勝率70%（最安定）<br>'
             + '✅ 前走桜花賞・皐月賞で一桁着順<br>'
             + '✅ 前走チャーチルダウンズC・NZT組<br>'
-            + '✅ 6〜8枠（外枠優勢・勝馬10頭中8頭）',
+            + '✅ 6〜8枠（外枠優勢・勝馬10頭中8頭）<br>'
+            + '✅ 小柄馬体重（420〜464kg）【二桁人気激走馬全員該当】<br>'
+            + '✅ 前走1番人気で好走→今回人気落ち【複勝率38.5%】<br>'
+            + '✅ 外枠（5〜8枠）の差し追込馬【穴馬の王道パターン】',
       ngText: '❌ 5番人気（1996年創設以来勝ち馬ゼロ）<br>'
             + '❌ 1番人気【1-2-1-6】複勝率40%（過信禁物）<br>'
             + '❌ 前走1着馬（勝率2.4%・頭固定厳禁）<br>'
@@ -3537,6 +3551,29 @@ const RACE_PAST_DATA = {
   },
 
   "NHKマイルC": {
+    anaPoints: [
+      // 馬体重
+      '🔥小柄な馬体重（420〜464kg）が穴馬の必須条件：二桁人気で馬券に絡んだ6頭が全てこの体重帯。差し・追込馬が多い',
+      '前走馬体重480kg未満は3着内ゼロ（当日馬体重で要確認・枠順発表時に更新）',
+      // 脚質
+      '差し・追込脚質が穴馬の共通点：二桁人気激走馬は全員後方から長い直線を使って差してくるパターン',
+      '4コーナー6番手以内が必須：馬券圏内30頭中28頭が好位追走（前走4角順位を確認）',
+      // 枠順
+      '外枠（5〜8枠）の穴馬が圧倒的優勢：4番人気以下の馬は外枠で8連対・内枠は2023年2着の1連対のみ',
+      '6枠・8枠は特に注目（各4勝・合計8勝）。穴馬なら外枠の馬を最優先',
+      // 前走
+      '前走1番人気→NHKマイルCで人気落ち：複勝率38.5%の好データ。前走重賞で1番人気だった馬が人気を落としたら狙い目',
+      '前走4着が最強データ【勝率27.3%・複勝率45.5%・複回収310%】→ 今年はエコロアルバが該当',
+      '前走2着組【複勝率34.4%・単回収144】→ 今年：ロデオドライブ・ローベルクランツ・ユウファラオ',
+      // 調教
+      '坂路追切組が3着内の3分の2を占める（栗東坂路・美浦南坂路）',
+      // 血統
+      'キングマンボ系（ロードカナロア・サートゥルナーリア・ドゥラメンテ系）が穴馬で毎年激走',
+      'Storm Cat血脈保有馬が人気薄で激走（18番人気・17番人気・14番人気での激走例あり）',
+      // 近年傾向
+      '2022年以降は上位人気が壊滅的：1番人気は4年で1勝、2番人気も近年は苦戦。2022年153万・2025年150万の超高額配当',
+      '9番人気が過去10年で3勝（勝率・複勝率ともに40%）。二桁人気の激走が毎年のように発生',
+    ],
     sections: [
       {
         type: "table",
@@ -3553,15 +3590,8 @@ const RACE_PAST_DATA = {
       },
       {
         type: "html",
-        title: "💡 穴馬情報（6番人気以下のヒント）",
-        html:
-          '<ul class="check-list" style="list-style:none;padding-left:4px">'
-        + '<li>📌 9番人気が過去10年で3勝（複勝率40%）— 二桁人気の激走多発</li>'
-        + '<li>📌 Storm Cat 血脈の人気薄が繰り返し激走（タガノブルグ17番人気・ケイデンスコール14番人気）</li>'
-        + '<li>📌 チャーチルダウンズC組の3着馬が人気薄で激走するパターン</li>'
-        + '<li>📌 前走1番人気だった馬【5-3-1-17】複勝率34%（実力馬の負け→巻き返し）</li>'
-        + '<li>📌 6番人気以下の3連単10万円超 = 半数以上のレースで発生</li>'
-        + '</ul>',
+        title: "💡 穴馬情報（NHKマイルC 穴馬の14条件）",
+        renderFromAnaPoints: true,
       },
       {
         type: "table",
@@ -3816,7 +3846,13 @@ function renderPastData() {
       });
       html += '</tbody></table></div>';
     } else if (sec.type === 'html') {
-      html += sec.html;
+      if (sec.renderFromAnaPoints && data.anaPoints && data.anaPoints.length) {
+        html += '<ul class="check-list" style="list-style:none;padding-left:4px;line-height:1.7">'
+          + data.anaPoints.map(function(p){ return '<li>📌 ' + p + '</li>'; }).join('')
+          + '</ul>';
+      } else if (sec.html) {
+        html += sec.html;
+      }
     }
     html += '</div>';
   });
@@ -5677,6 +5713,160 @@ function toggleHimo(name) {
   renderKaime();
 }
 
+/* NHKマイルC専用：穴馬フラグ判定 */
+function checkAnaFlags(horse, raceName) {
+  if (!raceName || !raceName.includes('NHKマイルC')) return [];
+  var flags = [];
+
+  // 1. 馬体重チェック
+  if (horse.bodyWeight && horse.bodyWeight >= 420 && horse.bodyWeight <= 464) {
+    flags.push({
+      label: '小柄馬体重(' + horse.bodyWeight + 'kg)【穴馬の必須条件】',
+      color: '#B8600C',
+      priority: 'high'
+    });
+  }
+
+  // 2. 前走1番人気→人気落ち
+  if (horse.prevPop === 1 && horse.prev1r <= 3) {
+    flags.push({
+      label: '前走1番人気' + horse.prev1r + '着→今回人気落ちなら特注',
+      color: '#0F6E56',
+      priority: 'high'
+    });
+  }
+
+  // 3. 外枠（5〜8枠）
+  if (horse.waku >= 5) {
+    var wakuNote = horse.waku === 6 ? '6枠（4勝・最注目）' :
+                   horse.waku === 8 ? '8枠（4勝・最注目）' :
+                   horse.waku + '枠（外枠優勢）';
+    flags.push({
+      label: wakuNote + '穴馬なら外枠を最優先',
+      color: '#185FA5',
+      priority: 'medium'
+    });
+  }
+
+  // 4. 前走4着
+  if (horse.prev1r === 4) {
+    flags.push({
+      label: '前走4着【最強データ：勝率27.3%・複回収310%】',
+      color: '#A32D2D',
+      priority: 'high'
+    });
+  }
+
+  // 5. キングマンボ系
+  if (horse.blood === 'KM系') {
+    flags.push({
+      label: 'KM系（キングマンボ系）穴馬パターン',
+      color: '#534AB7',
+      priority: 'medium'
+    });
+  }
+
+  return flags;
+}
+
+/* NHKマイルC専用：穴馬スコアカード描画 */
+function renderAnaScorecard() {
+  var div = document.getElementById('ana-scorecard-list');
+  if (!div || !window.horses) return;
+
+  var raceName = window.currentRaceName || '';
+  if (!raceName.includes('NHKマイルC')) {
+    div.innerHTML = '<div style="font-size:12px;color:var(--color-text-secondary)">このレースの穴馬スコアカードは準備中です</div>';
+    return;
+  }
+
+  // 穴馬スコアを計算
+  var scored = horses.map(function(h) {
+    var score = 0;
+    var reasons = [];
+
+    // 外枠
+    if (h.waku >= 5) { score += 2; reasons.push('外枠(' + h.waku + '枠)'); }
+    if (h.waku === 6 || h.waku === 8) { score += 1; reasons.push('最注目枠'); }
+
+    // 馬体重420〜464kg
+    if (h.bodyWeight && h.bodyWeight >= 420 && h.bodyWeight <= 464) {
+      score += 3; reasons.push('小柄馬体重(' + h.bodyWeight + 'kg)');
+    }
+
+    // 差し・追込
+    if (h.style === '差し' || h.style === '追込') {
+      score += 2; reasons.push('差し追込脚質');
+    }
+
+    // 前走1番人気
+    if (h.prevPop === 1 && h.prev1r <= 3) {
+      score += 2; reasons.push('前走1番人気' + h.prev1r + '着');
+    }
+
+    // 前走4着
+    if (h.prev1r === 4) { score += 3; reasons.push('前走4着(最強データ)'); }
+
+    // 前走2着
+    if (h.prev1r === 2) { score += 2; reasons.push('前走2着'); }
+
+    // KM系
+    if (h.blood === 'KM系') { score += 1; reasons.push('KM系血統'); }
+
+    // 坂路追切
+    if (h.training === 'S' || h.training === 'A') { score += 1; reasons.push('調教' + h.training); }
+
+    // 東京コース経験
+    if (h.tokyoExp && h.tokyoExpRank <= 3) { score += 1; reasons.push('東京好走実績'); }
+
+    return { h: h, score: score, reasons: reasons };
+  });
+
+  // 穴馬スコアでソート（スコア2以上 かつ 5番人気以下 or 人気未確定）
+  var candidates = scored
+    .filter(function(x) { return x.score >= 2 && (!x.h.popEstimate || x.h.popEstimate >= 5); })
+    .sort(function(a, b) { return b.score - a.score; });
+
+  if (!candidates.length) {
+    div.innerHTML = '<div style="font-size:12px;color:var(--color-text-secondary)">枠順・馬体重確定後に穴馬候補を表示します</div>';
+    return;
+  }
+
+  var html = '';
+  candidates.forEach(function(x) {
+    var h = x.h;
+    var barColor = x.score >= 6 ? '#A32D2D' : x.score >= 4 ? '#B8600C' : '#EF9F27';
+    var barWidth = Math.min(100, x.score * 12);
+
+    html += '<div style="padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary)">';
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">';
+    html += '<span style="font-size:13px;font-weight:600;color:var(--color-text-primary);flex:1">'
+      + (h.umaban ? h.umaban + '番 ' : (h.uma ? h.uma + '番 ' : '')) + h.name + '</span>';
+    html += '<span style="font-size:11px;color:var(--color-text-secondary)">'
+      + (h.odds ? h.odds.toFixed(1) + '倍' : '---') + '</span>';
+    html += '<span style="font-size:11px;font-weight:700;color:' + barColor + '">'
+      + x.score + 'pt</span>';
+    html += '</div>';
+
+    // プログレスバー
+    html += '<div style="height:6px;background:var(--color-background-secondary);border-radius:3px;margin-bottom:4px;overflow:hidden">';
+    html += '<div style="height:100%;width:' + barWidth + '%;background:' + barColor + ';border-radius:3px"></div>';
+    html += '</div>';
+
+    // 該当条件バッジ
+    html += '<div style="display:flex;flex-wrap:wrap;gap:3px">';
+    x.reasons.forEach(function(r) {
+      html += '<span style="background:' + barColor + '18;color:' + barColor
+        + ';font-size:9px;font-weight:500;padding:1px 5px;border-radius:var(--border-radius-md)">'
+        + r + '</span>';
+    });
+    html += '</div>';
+    html += '</div>';
+  });
+
+  div.innerHTML = html;
+}
+
 function sw(t) {
   if (t === 'ana') {
     if (typeof initOddsGrid === 'function') initOddsGrid();
@@ -5684,6 +5874,7 @@ function sw(t) {
     // 馬場パネルを初期表示（DOM 反映後）
     setTimeout(function() {
       setBaba(window.currentBaba || 'good');
+      if (typeof renderAnaScorecard === 'function') renderAnaScorecard();
     }, 100);
   } else if (t === 'kaime') {
     window.selectedJiku = null;
