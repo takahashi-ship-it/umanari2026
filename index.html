@@ -6974,6 +6974,17 @@ var KAIMOKU_DATA = {
     jikuScore: 89,
     jikuReason: 'SI82(B)+調教S(+10)+馬場適性82(+8)+左回り◎(+5)+前走4着データ+栗東所属',
     aite: ['ダイヤモンドノット', 'アスクイキゴミ', 'フクチャンショウ', 'アンドゥーリル', 'レザベーション'],
+    aiteAll: [
+      { name: 'ダイヤモンドノット', reason: 'SI96(S)・1番人気・左回り◎・調教A' },
+      { name: 'アスクイキゴミ',     reason: 'SI78・調教A・栗東・前走1着' },
+      { name: 'フクチャンショウ',   reason: '左回り◎・調教A・美浦' },
+      { name: 'アンドゥーリル',     reason: '左回り◎・調教A・栗東' },
+      { name: 'レザベーション',     reason: 'SI82(B)・NZT1着・調教A' },
+      { name: 'ロデオドライブ',     reason: 'SI80・D.レーン・調教B' },
+      { name: 'ジーネキング',       reason: '調教S・SI78・美浦W11.0' },
+      { name: 'カヴァレリッツォ',   reason: 'SI90(A)・朝日杯FS勝ち（調教Cで減点）' },
+    ],
+    _selectedN: 6,
     unitCost: 100,
   },
   '京都新聞杯': {
@@ -6996,85 +7007,122 @@ var KAIMOKU_DATA = {
 
 function renderKaimokuAI(raceName) {
   var container = document.getElementById('ai-kaimoku-container');
-  if (!container) return;
 
-  // レース名正規化（エプソムカップ等のエイリアス対応）
+  // レース名正規化
   var key = raceName;
   if (raceName && raceName.indexOf('エプソム') >= 0) key = 'エプソムC';
   if (raceName && raceName.indexOf('NHK') >= 0)    key = 'NHKマイルC';
 
-  var raceData = KAIMOKU_DATA[key];
-  if (!raceData) {
-    container.innerHTML = '<div class="card" style="background:#FAEEDA;border-left:3px solid #B8600C">'
+  var data = KAIMOKU_DATA[key];
+  if (!data) {
+    var emptyHtml = '<div class="card" style="background:#FAEEDA;border-left:3px solid #B8600C">'
       + '<div style="font-size:12px;color:#854F0B">🎯 AI予想買い目はこのレースでは準備中です</div></div>';
-    return;
+    if (container) container.innerHTML = emptyHtml;
+    return emptyHtml;
   }
 
-  var jiku = raceData.jiku;
-  var aite = raceData.aite;
-  var n = aite.length;
-  var points = calcSantanSingleAxis(n);
-  var unitCost = raceData.unitCost || 100;
+  var aiteAll = data.aiteAll || (data.aite || []).map(function(n){ return { name: n, reason: '' }; });
+  // セレクターは aiteAll が 4頭以上ある場合のみ表示
+  var hasSelector = aiteAll.length >= 4;
+  var defaultN = Math.min(6, aiteAll.length);
+  var currentN = data._selectedN || defaultN;
+  if (currentN > aiteAll.length) currentN = aiteAll.length;
+
+  var aiteSelected = aiteAll.slice(0, currentN);
+  var points = calcSantanSingleAxis(currentN);
+  var unitCost = data.unitCost || 100;
   var totalCost = points * unitCost;
 
   var html = '<div class="card" style="border:2px solid #1a2744">';
   html += '<div class="ct">🎯 AI予想買い目（3連単1頭軸マルチ）</div>';
 
-  // 軸馬表示
-  html += '<div style="background:#1a2744;color:#fff;border-radius:12px;padding:12px 16px;margin-bottom:12px">';
-  html += '<div style="font-size:11px;color:#8899CC;margin-bottom:4px">軸馬（3着以内確定的）</div>';
-  html += '<div style="font-size:18px;font-weight:700">◎ ' + jiku + '</div>';
-  if (raceData.jikuNote) {
-    html += '<div style="font-size:11px;color:#AAC;margin-top:4px">' + raceData.jikuNote + '</div>';
-  }
+  // 軸馬
+  html += '<div style="background:#1a2744;color:#fff;border-radius:12px;padding:12px 16px;margin-bottom:14px">';
+  html += '<div style="font-size:10px;color:#8899CC;margin-bottom:3px">◎ 軸馬（3着以内確定的）</div>';
+  html += '<div style="font-size:20px;font-weight:800">' + data.jiku + '</div>';
+  if (data.jikuNote) html += '<div style="font-size:10px;color:#AAC;margin-top:3px">' + data.jikuNote + '</div>';
   html += '</div>';
 
-  // 相手馬表示
-  html += '<div style="margin-bottom:12px">';
-  html += '<div style="font-size:11px;font-weight:600;color:var(--color-text-secondary);margin-bottom:8px">相手馬（' + n + '頭）</div>';
-  html += '<div style="display:flex;flex-wrap:wrap;gap:6px">';
-  aite.forEach(function(name, i) {
-    var colors = ['#0F6E56','#185FA5','#854F0B','#534AB7','#A32D2D','#5C6A22'];
-    var marks = ['○','▲','△','☆','✕','×'];
-    var c = colors[i % colors.length];
-    html += '<div style="background:' + c + ';color:#fff;padding:6px 12px;border-radius:8px;font-size:13px;font-weight:600">';
-    html += marks[i % marks.length] + ' ' + name;
+  // 相手頭数セレクター（aiteAll が十分な場合のみ）
+  if (hasSelector) {
+    html += '<div style="margin-bottom:14px">';
+    html += '<div style="font-size:11px;font-weight:600;color:var(--color-text-secondary);margin-bottom:8px">相手頭数を選択</div>';
+    html += '<div style="display:flex;gap:6px;flex-wrap:wrap">';
+    [4,5,6,7,8].forEach(function(n) {
+      if (n > aiteAll.length) return;
+      var isSelected = n === currentN;
+      var pts = n * (n - 1) * 3;
+      var bg = isSelected ? '#0F6E56' : 'var(--color-background-secondary)';
+      var color = isSelected ? '#fff' : 'var(--color-text-primary)';
+      var border = isSelected ? '#0F6E56' : 'var(--color-border)';
+      html += '<button onclick="selectAiteN(\'' + key + '\',' + n + ')" style="'
+        + 'background:' + bg + ';color:' + color + ';border:2px solid ' + border + ';'
+        + 'border-radius:10px;padding:6px 12px;font-size:12px;font-weight:' + (isSelected ? '700' : '400') + ';'
+        + 'cursor:pointer;transition:all 0.15s;min-width:52px;text-align:center">'
+        + n + '頭<br><span style="font-size:9px;opacity:0.8">' + pts + '点</span></button>';
+    });
+    html += '</div></div>';
+  }
+
+  // 相手馬リスト
+  var rankColors = ['#0F6E56','#185FA5','#854F0B','#534AB7','#A32D2D','#5C6A22','#1D9E75','#7B4F8C'];
+  var rankLabel  = ['○','▲','△','☆','✕','×','★','◇'];
+  html += '<div style="margin-bottom:14px">';
+  html += '<div style="font-size:11px;font-weight:600;color:var(--color-text-secondary);margin-bottom:8px">相手馬（上位' + currentN + '頭）</div>';
+  html += '<div style="display:flex;flex-direction:column;gap:4px">';
+  aiteSelected.forEach(function(h, i) {
+    var c = rankColors[i % rankColors.length];
+    html += '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;'
+      + 'background:var(--color-background-secondary);border-radius:8px;border-left:3px solid ' + c + '">';
+    html += '<span style="font-size:13px;font-weight:700;color:' + c + ';min-width:14px">' + rankLabel[i % rankLabel.length] + '</span>';
+    html += '<span style="font-size:13px;font-weight:600;flex:1">' + h.name + '</span>';
+    if (h.reason) html += '<span style="font-size:9px;color:var(--color-text-tertiary)">' + h.reason + '</span>';
     html += '</div>';
   });
+  if (currentN < aiteAll.length) {
+    html += '<div style="font-size:10px;color:var(--color-text-tertiary);padding:4px 8px;text-align:center">';
+    html += '▼ ' + (aiteAll.length - currentN) + '頭を除外中（頭数を増やすと追加）</div>';
+  }
   html += '</div></div>';
 
-  // 買い目詳細
-  html += '<div style="background:var(--color-background-secondary);border-radius:8px;padding:12px;margin-bottom:12px">';
-  html += '<div style="font-size:12px;font-weight:600;margin-bottom:8px">📋 買い目詳細</div>';
-  html += '<div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:6px">';
-  html += '3連単 ◎→相手→相手 & 相手→◎→相手 & 相手→相手→◎ のマルチ</div>';
-  html += '<div style="display:flex;justify-content:space-between;margin-bottom:4px">';
-  html += '<span style="font-size:12px">合計点数</span>';
-  html += '<span style="font-size:16px;font-weight:700;color:#185FA5">' + points + '点</span>';
+  // 点数・金額サマリー
+  html += '<div style="background:var(--color-background-secondary);border-radius:10px;padding:12px;margin-bottom:12px">';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
+  html += '<span style="font-size:12px;color:var(--color-text-secondary)">合計点数</span>';
+  html += '<span style="font-size:22px;font-weight:800;color:#185FA5">' + points + '点</span>';
   html += '</div>';
-  html += '<div style="display:flex;justify-content:space-between">';
-  html += '<span style="font-size:12px">' + unitCost + '円×' + points + '点</span>';
-  html += '<span style="font-size:16px;font-weight:700;color:#A32D2D">' + totalCost.toLocaleString() + '円</span>';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center">';
+  html += '<span style="font-size:12px;color:var(--color-text-secondary)">' + unitCost + '円 × ' + points + '点</span>';
+  html += '<span style="font-size:20px;font-weight:800;color:#A32D2D">' + totalCost.toLocaleString() + '円</span>';
   html += '</div></div>';
 
-  // 軸信頼度
-  if (raceData.jikuScore) {
-    html += '<div style="background:#E1F5EE;border-radius:8px;padding:10px 12px;margin-bottom:12px">';
-    html += '<div style="font-size:11px;font-weight:600;color:#0F6E56;margin-bottom:4px">軸馬の信頼度スコア</div>';
-    html += '<div style="font-size:20px;font-weight:800;color:#0F6E56">' + raceData.jikuScore + '<span style="font-size:11px;font-weight:400">/100点</span></div>';
-    html += '<div style="font-size:10px;color:#555;margin-top:4px">' + (raceData.jikuReason || '') + '</div>';
+  // 信頼度スコア
+  if (data.jikuScore) {
+    html += '<div style="background:#E1F5EE;border-radius:8px;padding:10px 12px;margin-bottom:10px">';
+    html += '<div style="font-size:10px;font-weight:600;color:#0F6E56;margin-bottom:2px">軸馬の信頼度スコア</div>';
+    html += '<div style="font-size:20px;font-weight:800;color:#0F6E56">' + data.jikuScore
+      + '<span style="font-size:11px;font-weight:400">/100点</span></div>';
+    if (data.jikuReason) html += '<div style="font-size:9px;color:#555;margin-top:2px">' + data.jikuReason + '</div>';
     html += '</div>';
   }
 
-  // 注意書き
   html += '<div style="font-size:10px;color:var(--color-text-tertiary);padding:8px;background:#F8F6EF;border-radius:6px">';
-  html += '※ 3連単マルチは軸馬が1〜3着どこでも来れば的中。軸馬は信頼度スコア最高の馬を推奨。';
-  html += '購入は自己責任でお願いします。';
+  html += '※ 3連単マルチ：軸馬が1〜3着どこでも来れば的中。購入は自己責任でお願いします。';
   html += '</div>';
 
   html += '</div>';
-  container.innerHTML = html;
+
+  if (container) container.innerHTML = html;
+  return html;
 }
+
+// 相手頭数変更ハンドラー
+function selectAiteN(raceName, n) {
+  if (!KAIMOKU_DATA[raceName]) return;
+  KAIMOKU_DATA[raceName]._selectedN = n;
+  renderKaimokuAI(raceName);
+}
+window.selectAiteN = selectAiteN;
 
 /* =====================================================
  * 軸馬3着内率トラッキング
