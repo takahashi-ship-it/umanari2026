@@ -1416,28 +1416,7 @@
           <div id="bw-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px"></div>
         </div>
 
-        <div class="shutsuba-scroll">
-          <table id="shutsuba-table">
-            <thead>
-              <tr style="background:#1a2744;color:#fff;font-size:11px">
-                <th style="padding:8px 6px;text-align:center;min-width:28px">枠</th>
-                <th style="padding:8px 6px;text-align:center;min-width:32px">馬番</th>
-                <th style="padding:8px 8px;text-align:left;min-width:110px">馬名</th>
-                <th style="padding:8px 6px;text-align:center;min-width:36px">性齢</th>
-                <th style="padding:8px 6px;text-align:center;min-width:36px">斤量</th>
-                <th style="padding:8px 8px;text-align:left;min-width:72px">騎手</th>
-                <th style="padding:8px 8px;text-align:left;min-width:72px">調教師</th>
-                <th style="padding:8px 6px;text-align:center;min-width:88px">前走</th>
-                <th style="padding:8px 6px;text-align:center;min-width:44px">前走着</th>
-                <th style="padding:8px 6px;text-align:center;min-width:72px">馬体重</th>
-                <th style="padding:8px 6px;text-align:center;min-width:64px">予想オッズ</th>
-                <th style="padding:8px 6px;text-align:center;min-width:48px">人気</th>
-                <th style="padding:8px 6px;text-align:center;min-width:36px">調教</th>
-              </tr>
-            </thead>
-            <tbody id="shutsuba-tbody"></tbody>
-          </table>
-        </div>
+        <div id="shutsuba-container"><!-- renderShutsubaTable() で動的生成 --></div>
       </div>
 
       <div class="section">
@@ -4295,7 +4274,7 @@ function setCurrentRace(name) {
   if (activeTab && activeTab.dataset.target === 'tab-check') initOddsGrid();
 
   // Refresh 出馬表 if shutsuba tab is active (or always — table is cheap)
-  if (document.getElementById('shutsuba-tbody')) renderShutsubaTable();
+  if (document.getElementById('shutsuba-container')) renderShutsubaTable();
   if (document.getElementById('bw-grid')) initBwGrid();
   if (document.getElementById('pace-predict')) renderPacePredict();
 
@@ -4426,22 +4405,35 @@ function renderShutsubaHeader() {
 }
 
 function renderShutsubaTable() {
-  // レース別ヘッダーテキストを更新
+  // 1. レース別ヘッダーテキストを更新
   renderShutsubaHeader();
-  var tbody = document.getElementById('shutsuba-tbody');
-  var horses = window.horses || (typeof HORSES !== 'undefined' ? HORSES : null);
-  if (!tbody || !horses) return;
 
-  // 登録順（netkeiba順）
-  var order = [
-    'アクアヴァーナル','アドマイヤテラ','エヒト','クロワデュノール',
-    'ケイアイサンデラ','サンライズソレイユ','シンエンペラー','タガノデュード',
-    'プレシャスデイ','ヘデントール','ホーエリート','マイネルカンパーナ',
-    'ミステリーウェイ','ヴェルテンベルク','ヴェルミセル'
-  ];
+  // 2. 出馬表テーブル本体を shutsuba-container に動的生成
+  var container = document.getElementById('shutsuba-container');
+  if (!container) return;
 
-  // umaban が設定済みなら馬番順、未設定なら登録順
-  var sorted = horses.slice().sort(function(a, b) {
+  var raceName = window.currentRaceName || (typeof currentRace !== 'undefined' ? currentRace : '天皇賞（春）');
+  var currentHorses = [];
+  if (window.HORSES_BY_RACE && window.HORSES_BY_RACE[raceName]) {
+    currentHorses = window.HORSES_BY_RACE[raceName];
+  } else if (window.horses && window.horses.length) {
+    currentHorses = window.horses;
+  } else if (typeof HORSES !== 'undefined') {
+    currentHorses = HORSES;
+  }
+  if (!currentHorses.length) {
+    container.innerHTML = '<div style="font-size:12px;color:var(--text-sub);padding:20px;text-align:center">出走馬データを読み込み中...</div>';
+    return;
+  }
+
+  // 登録順（netkeiba順）— レース別マップ
+  var ORDER_BY_RACE = {
+    '天皇賞（春）': ['アクアヴァーナル','アドマイヤテラ','エヒト','クロワデュノール','ケイアイサンデラ','サンライズソレイユ','シンエンペラー','タガノデュード','プレシャスデイ','ヘデントール','ホーエリート','マイネルカンパーナ','ミステリーウェイ','ヴェルテンベルク','ヴェルミセル'],
+    'NHKマイルC':  ['アスクイキゴミ','ユウファラオ','バルセシート','レザベーション','ロデオドライブ','ジーネキング','ダイヤモンドノット','カヴァレリッツォ','ギリーズボール','サンダーストラック','アドマイヤクワッズ','エコロアルバ','オルネーロ','リゾートアイランド','アンドゥーリル','ローベルクランツ','ハッピーエンジェル']
+  };
+  var order = ORDER_BY_RACE[raceName] || [];
+
+  var sorted = currentHorses.slice().sort(function(a, b) {
     if (a.umaban != null && b.umaban != null) return a.umaban - b.umaban;
     if (a.umaban != null) return -1;
     if (b.umaban != null) return 1;
@@ -4450,98 +4442,76 @@ function renderShutsubaTable() {
     return ai - bi;
   });
 
-  function getWakuBg(w) {
-    var colors = { 1:'#fff', 2:'#111', 3:'#e22', 4:'#55f', 5:'#ee0', 6:'#4c4', 7:'#f80', 8:'#f9c' };
-    return colors[w] || '#888';
-  }
-  function getWakuFg(w) {
-    return (w === 1 || w === 5 || w === 6 || w === 8) ? '#111' : '#fff';
-  }
+  function getWakuBg(w) { return ({1:'#fff',2:'#111',3:'#e22',4:'#55f',5:'#ee0',6:'#4c4',7:'#f80',8:'#f9c'})[w] || '#888'; }
+  function getWakuFg(w) { return (w===1||w===5||w===6||w===8) ? '#111' : '#fff'; }
 
-  var html = '';
+  var rows = '';
   sorted.forEach(function(h, idx) {
     var bg = idx % 2 === 0 ? '#fff' : '#f8f8f8';
-    var trainingColor = h.training === 'S' ? '#E24B4A' :
-                        h.training === 'A' ? '#1D9E75' :
-                        h.training === 'B' ? '#EF9F27' : '#888';
+    var tc = h.training === 'S' ? '#E24B4A' : h.training === 'A' ? '#1D9E75' : h.training === 'B' ? '#EF9F27' : '#888';
     var rank = h.prevRank;
-    var prevColor = rank > 0 && rank <= 3 ? '#0F6E56' :
-                    rank > 0 && rank <= 5 ? '#EF9F27' : '#A32D2D';
-    var oddsColor = h.odds && h.odds <= 5 ? '#A32D2D' :
-                    h.odds && h.odds <= 10 ? '#EF9F27' : '#555';
+    var pc = rank > 0 && rank <= 3 ? '#0F6E56' : rank > 0 && rank <= 5 ? '#EF9F27' : '#A32D2D';
+    var oc = h.odds && h.odds <= 5 ? '#A32D2D' : h.odds && h.odds <= 10 ? '#EF9F27' : '#555';
 
-    html += '<tr style="background:' + bg + ';border-bottom:1px solid #eee">';
-
-    // 枠番
-    html += '<td style="text-align:center;padding:8px 6px">';
+    rows += '<tr style="background:' + bg + ';border-bottom:1px solid #eee">';
+    // 枠
+    rows += '<td style="text-align:center;padding:7px 4px;min-width:26px">';
     if (h.waku) {
-      html += '<div style="width:22px;height:22px;border-radius:3px;margin:0 auto;'
-           + 'background:' + getWakuBg(h.waku) + ';color:' + getWakuFg(h.waku) + ';'
-           + 'font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;'
-           + 'border:1px solid #ccc">' + h.waku + '</div>';
+      rows += '<div style="width:20px;height:20px;border-radius:3px;margin:0 auto;background:' + getWakuBg(h.waku) + ';color:' + getWakuFg(h.waku) + ';font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:1px solid #ccc">' + h.waku + '</div>';
     } else {
-      html += '<span style="color:#ccc;font-size:10px">-</span>';
+      rows += '<span style="color:#ccc;font-size:10px">-</span>';
     }
-    html += '</td>';
-
+    rows += '</td>';
     // 馬番
-    html += '<td style="text-align:center;padding:8px 6px;font-weight:600;color:#333">'
-         + (h.umaban != null ? h.umaban : '<span style="color:#ccc">-</span>') + '</td>';
-
+    rows += '<td style="text-align:center;padding:7px 4px;min-width:30px;font-weight:600">' + (h.umaban != null ? h.umaban : '<span style="color:#ccc">-</span>') + '</td>';
     // 馬名
-    html += '<td style="padding:8px 8px;font-weight:600;color:#1a2744;font-size:13px">'
-         + h.name + '</td>';
-
+    rows += '<td style="padding:7px 6px;min-width:110px;font-weight:600;color:#1a2744;white-space:nowrap">' + h.name + '</td>';
     // 性齢
-    html += '<td style="text-align:center;padding:8px 6px;color:#555">'
-         + (h.sex || '') + (h.age || '') + '</td>';
-
-    // 斤量（天皇賞春は定量：牡58.0kg / 牝・セ56.0kg）
+    rows += '<td style="text-align:center;padding:7px 4px;min-width:36px;color:#555">' + (h.sex || '') + (h.age || '') + '</td>';
+    // 斤量
     var kinryo = (h.sex === '牝' || h.sex === 'セ') ? '56.0' : '58.0';
-    html += '<td style="text-align:center;padding:8px 6px;color:#555">' + kinryo + '</td>';
-
-    // 騎手（乗り替わり警告バッジ付き）
-    html += '<td style="padding:8px 8px;color:#333;white-space:nowrap">' + (h.jockey || '未定') + getJockeyChangeHTML(h) + '</td>';
-
+    rows += '<td style="text-align:center;padding:7px 4px;min-width:36px;color:#555">' + kinryo + '</td>';
+    // 騎手
+    rows += '<td style="padding:7px 6px;min-width:72px;color:#333;white-space:nowrap">' + (h.jockey || '未定') + getJockeyChangeHTML(h) + '</td>';
     // 調教師
-    html += '<td style="padding:8px 8px;color:#555;font-size:11px">' + (h.trainer || '-') + '</td>';
-
+    rows += '<td style="padding:7px 6px;min-width:72px;color:#555;font-size:11px;white-space:nowrap">' + (h.trainer || '-') + '</td>';
     // 前走
-    html += '<td style="text-align:center;padding:8px 8px;color:#555;font-size:11px">'
-         + (h.prevRace || '-') + '</td>';
-
-    // 前走着順
-    html += '<td style="text-align:center;padding:8px 6px;font-weight:600;color:' + prevColor + '">'
-         + (rank ? rank + '着' : '-') + '</td>';
-
+    rows += '<td style="text-align:center;padding:7px 6px;min-width:88px;color:#555;font-size:11px;white-space:nowrap">' + (h.prevRace || '-') + '</td>';
+    // 前走着
+    rows += '<td style="text-align:center;padding:7px 4px;min-width:44px;font-weight:600;color:' + pc + '">' + (rank ? rank + '着' : '-') + '</td>';
     // 馬体重
     var bwDiff = (h.bodyWeightDiff != null) ? h.bodyWeightDiff : null;
-    var bwColor = bwDiff === null ? '#888' :
-                  Math.abs(bwDiff) <= 6 ? '#555' :
-                  bwDiff >= 14 ? '#A32D2D' :
-                  bwDiff <= -8 ? '#EF9F27' : '#1D9E75';
+    var bwColor = bwDiff === null ? '#888' : Math.abs(bwDiff) <= 6 ? '#555' : bwDiff >= 14 ? '#A32D2D' : bwDiff <= -8 ? '#EF9F27' : '#1D9E75';
     var bwStr = h.bodyWeight ? h.bodyWeight + 'kg' : '-';
     var diffStr = bwDiff !== null ? '(' + (bwDiff >= 0 ? '+' : '') + bwDiff + ')' : '';
-    html += '<td style="text-align:center;padding:7px 4px;white-space:nowrap">' +
-            '<span style="font-size:12px;font-weight:500">' + bwStr + '</span> ' +
-            '<span style="font-size:10px;color:' + bwColor + '">' + diffStr + '</span></td>';
-
+    rows += '<td style="text-align:center;padding:7px 4px;min-width:72px;white-space:nowrap"><span style="font-size:12px;font-weight:500">' + bwStr + '</span> <span style="font-size:10px;color:' + bwColor + '">' + diffStr + '</span></td>';
     // 予想オッズ
-    html += '<td style="text-align:center;padding:8px 6px;font-weight:700;color:' + oddsColor + '">'
-         + (h.odds ? (+h.odds).toFixed(1) + '倍' : '---') + '</td>';
-
+    rows += '<td style="text-align:center;padding:7px 4px;min-width:64px;font-weight:700;color:' + oc + '">' + (h.odds ? (+h.odds).toFixed(1) + '倍' : '---') + '</td>';
     // 人気
-    html += '<td style="text-align:center;padding:8px 4px;font-weight:600;color:' + getPopColor(h.popEstimate) + ';white-space:nowrap">'
-         + getPopLabel(h.popEstimate) + '</td>';
-
-    // 調教評価
-    html += '<td style="text-align:center;padding:8px 6px;font-weight:700;color:' + trainingColor + '">'
-         + (h.training || '-') + '</td>';
-
-    html += '</tr>';
+    rows += '<td style="text-align:center;padding:7px 4px;min-width:48px;font-weight:600;color:' + getPopColor(h.popEstimate) + ';white-space:nowrap">' + getPopLabel(h.popEstimate) + '</td>';
+    // 調教
+    rows += '<td style="text-align:center;padding:7px 4px;min-width:36px;font-weight:700;color:' + tc + '">' + (h.training || '-') + '</td>';
+    rows += '</tr>';
   });
 
-  tbody.innerHTML = html;
+  container.innerHTML =
+    '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;border:0.5px solid var(--border);border-radius:var(--border-radius-md)">' +
+    '<table style="border-collapse:collapse;font-size:12px;min-width:720px;width:100%;white-space:nowrap">' +
+    '<thead><tr style="background:#1a2744;color:#fff;font-size:11px">' +
+      '<th style="padding:7px 4px;text-align:center;min-width:26px">枠</th>' +
+      '<th style="padding:7px 4px;text-align:center;min-width:30px">馬番</th>' +
+      '<th style="padding:7px 6px;text-align:left;min-width:110px">馬名</th>' +
+      '<th style="padding:7px 4px;text-align:center;min-width:36px">性齢</th>' +
+      '<th style="padding:7px 4px;text-align:center;min-width:36px">斤量</th>' +
+      '<th style="padding:7px 6px;text-align:left;min-width:72px">騎手</th>' +
+      '<th style="padding:7px 6px;text-align:left;min-width:72px">調教師</th>' +
+      '<th style="padding:7px 6px;text-align:center;min-width:88px">前走</th>' +
+      '<th style="padding:7px 4px;text-align:center;min-width:44px">前走着</th>' +
+      '<th style="padding:7px 4px;text-align:center;min-width:72px">馬体重</th>' +
+      '<th style="padding:7px 4px;text-align:center;min-width:64px">予想オッズ</th>' +
+      '<th style="padding:7px 4px;text-align:center;min-width:48px">人気</th>' +
+      '<th style="padding:7px 4px;text-align:center;min-width:36px">調教</th>' +
+    '</tr></thead><tbody>' + rows + '</tbody></table></div>';
 }
 
 /* ==== 機能1: 展開予想パネル ==== */
