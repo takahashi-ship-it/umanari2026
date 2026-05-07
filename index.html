@@ -2960,7 +2960,9 @@ const HORSES_BY_RACE = {
     babaNotes: { good: "父ダノンプレミアム×良馬場向き" },
     waku: null, umaban: null, odds: null,
     speedIndex: 82, prevTime: 95.8, prevCourse: "中山芝1600m", prevBaba: "良",
-    prevComment: "NZT勝ち馬。ただしNZT1着馬は過去10年3着以内なし！頭固定厳禁。父ダノンプレミアム（エアシャカール系）",
+    danger: true,
+    dangerReason: "前走NZT1着馬【0-0-0-9】複勝率0%の消しデータに該当",
+    prevComment: "NZT勝ち馬のNHKマイルCは過去10年で1頭も馬券圏内なし。SI82・調教Aの好材料があるが最重要データが消し",
     leftCourse: "未経験",
     leftCourseNote: "左回り未経験",
     leftCourseScore: 3,
@@ -4362,6 +4364,10 @@ const RACE_PAST_DATA = {
       // 近年傾向
       '2022年以降は上位人気が壊滅的：1番人気は4年で1勝、2番人気も近年は苦戦。2022年153万・2025年150万の超高額配当',
       '9番人気が過去10年で3勝（勝率・複勝率ともに40%）。二桁人気の激走が毎年のように発生',
+      '⚠️前走NZT1着馬は過去10年【0-0-0-9】複勝率0%！レザベーションは要注意の消しデータ該当。NZT組は2着以下の馬が好走',
+      '前走1着馬全体の3着内率わずか5.3%（JRA公式2026データ）。前走勝ち馬は全体的に過信禁物',
+      '前走2着以下かつ勝ち馬とのタイム差0.4秒以内の馬が最も好成績（JRA2026公式）',
+      '過去10年の優勝馬は全員デビュー戦勝利・7頭がデビュー2戦目も勝利',
     ],
     leftCourseRanking: {
       title: '🔄 左回りコース適性ランキング（東京・中京・新潟）',
@@ -4479,8 +4485,10 @@ const RACE_PAST_DATA = {
             matchFn: function(h){ return h.prevRace === '毎日杯'; }, isGood: true },
           { cells: ["前走重賞以外（OP以下）", "0-0-1", "1%未満", "好走は10年でわずか1頭のみ・ほぼ消し"],
             matchFn: function(h){ return h.prevGrade !== 'G1' && h.prevGrade !== 'G2' && h.prevGrade !== 'G3'; }, isGood: false },
-          { cells: ["⚠️ NZT1着馬", "0-0-0-9", "0%", "NZTで勝った馬は3着以内なし！頭固定厳禁"],
+          { cells: ["⚠️ 前走NZT1着馬", "0-0-0-9", "0%", "⚠️過去10年で1頭も馬券に絡まず！前走NZT1着は完全消し（レザベーション該当）"],
             matchFn: function(h){ return h.prevRace === 'ニュージーランドT' && h.prevRank === 1; }, isGood: false },
+          { cells: ["前走NZT組（2着以下）", "2勝・3着以内多数", "高", "NZT組は勝った馬以外は好走あり。2着以下は割引不要"], highlight: true,
+            matchFn: function(h){ return h.prevRace === 'ニュージーランドT' && h.prevRank >= 2; }, isGood: true },
         ],
       },
       {
@@ -5217,6 +5225,16 @@ function calcPrevRankBonusNHK(horse, raceName) {
   return { pts: 0, label: '' };
 }
 
+// NHKマイルC専用：前走NZT1着馬の消しペナルティ（過去10年【0-0-0-9】複勝率0%）
+function calcNztPenalty(horse, raceName) {
+  if (!raceName || raceName.indexOf('NHKマイル') === -1) return { pts: 0, label: '' };
+  if (!horse) return { pts: 0, label: '' };
+  if (horse.prevRace === 'ニュージーランドT' && horse.prevRank === 1) {
+    return { pts: -15, label: '⚠️前走NZT1着【0-0-0-9】複勝率0%・過去10年消しデータ' };
+  }
+  return { pts: 0, label: '' };
+}
+
 // NHKマイルC専用：特殊条件加減点（最大+18 / 最小-5）
 function calcSpecialCondition(horse, raceName) {
   if (!raceName || raceName.indexOf('NHKマイル') === -1) return { pts: 0, label: '' };
@@ -5439,21 +5457,25 @@ function computeScore(h) {
   var leftObj = calcLeftCourseBonus(h);
   var leftPts = leftObj.pts;
 
+  // NHKマイルC：前走NZT1着馬の消しペナルティ（-15）
+  var nztObj = calcNztPenalty(h, currentRace);
+  var nztPts = nztObj.pts;
+
   return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB, special, nhkBw,
-           shozoP, jockeyN, careerP, prevR, leftPts,
+           shozoP, jockeyN, careerP, prevR, leftPts, nztPts,
            _distLabel: distObj.label, _stallionLabel: stallionObj.label,
            _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label,
            _specialLabel: specialObj.label, _nhkBwLabel: nhkBwObj.label,
            _shozoLabel: shozoObj.label, _jockeyNLabel: jockeyNObj.label,
            _careerLabel: careerObj.label, _prevRLabel: prevRObj.label,
-           _leftLabel: leftObj.label, _siValue: si };
+           _leftLabel: leftObj.label, _nztLabel: nztObj.label, _siValue: si };
 }
 function sumScore(s) {
   return s.ninki + s.waku + s.dataFit + s.ketto + s.jockey + s.course + s.chokyo + s.speed +
          (s.baba || 0) + (s.bw || 0) + (s.dist || 0) + (s.stallion || 0) +
          (s.tokyo || 0) + (s.sexB || 0) + (s.special || 0) + (s.nhkBw || 0) +
          (s.shozoP || 0) + (s.jockeyN || 0) + (s.careerP || 0) + (s.prevR || 0) +
-         (s.leftPts || 0);
+         (s.leftPts || 0) + (s.nztPts || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
