@@ -4193,7 +4193,35 @@ function updateFinishedBanner(raceName) {
 }
 
 function setCurrentRace(name) {
-  if (!HORSES_BY_RACE[name]) return;
+  // レース名の正規化（揺らぎがあっても確実に解決）
+  var normalized = name;
+  if (name && (name.indexOf('NHK') >= 0 || name.indexOf('マイルカップ') >= 0)) {
+    normalized = 'NHKマイルC';
+  } else if (name && name.indexOf('天皇賞') >= 0 && name.indexOf('春') >= 0) {
+    normalized = '天皇賞（春）';
+  } else if (name && (name.indexOf('ヴィクトリア') >= 0 || name === 'VM')) {
+    normalized = 'ヴィクトリアマイル';
+  }
+
+  // 完全一致 → 部分一致 の順でキー解決
+  if (!HORSES_BY_RACE[normalized]) {
+    var keys = Object.keys(HORSES_BY_RACE);
+    var found = null;
+    for (var i = 0; i < keys.length; i++) {
+      if ((normalized && keys[i].indexOf(normalized) >= 0) || (normalized && normalized.indexOf(keys[i]) >= 0)) {
+        found = keys[i]; break;
+      }
+    }
+    if (found) {
+      console.log('[setCurrentRace] 部分一致 fallback:', name, '→', found);
+      normalized = found;
+    } else {
+      console.warn('[setCurrentRace] HORSES_BY_RACE にキーなし:', name);
+      return;
+    }
+  }
+  name = normalized;
+
   currentRace = name;
   window.currentRaceName = name;
   HORSES = HORSES_BY_RACE[name];
