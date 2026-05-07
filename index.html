@@ -4318,6 +4318,16 @@ function setCurrentRace(name) {
   window.selectedJiku = null;
   window.excludedHimo = [];
   if (activeTab && activeTab.dataset.target === 'tab-kaime' && typeof renderKaime === 'function') renderKaime();
+
+  // post-render 検証ログ（描画反映後にコンテナを確認）
+  setTimeout(function() {
+    var container = document.getElementById('shutsuba-container');
+    console.log('[setCurrentRace後100ms]');
+    console.log('  shutsuba-container:', container ? '存在' : 'なし');
+    console.log('  container内容長:', container ? container.innerHTML.length : 0);
+    console.log('  window.horses:', window.horses ? window.horses.length + '頭' : 'なし');
+    console.log('  currentRaceName:', window.currentRaceName);
+  }, 100);
 }
 
 renderPastData();
@@ -5657,10 +5667,21 @@ document.addEventListener('DOMContentLoaded', updateHeaderStats);
 
 // スマホ・PC両対応：ページ読み込み完了後に出馬表データ + ヘッダー馬場ボタン + 終了バナーを確実に初期化
 window.addEventListener('load', function() {
+  // デフォルトはレース未選択状態（racePage 非表示・プレースホルダー表示）
+  var racePageEl = document.getElementById('racePage');
+  var noRaceEl = document.getElementById('no-race-selected');
+  if (racePageEl) racePageEl.style.display = 'none';
+  if (noRaceEl) noRaceEl.style.display = 'block';
+
+  // デバッグ
+  console.log('[LOAD] HORSES_BY_RACE keys:', Object.keys(window.HORSES_BY_RACE || {}));
+  console.log('[LOAD] NHKマイルC 馬数:',
+    (window.HORSES_BY_RACE || {})['NHKマイルC']
+      ? window.HORSES_BY_RACE['NHKマイルC'].length + '頭' : 'なし');
+
+  // 馬場ボタンの初期化のみ実行（出馬表は選択時まで描画しない）
   setTimeout(function() {
-    if (typeof renderShutsubaTable === 'function') renderShutsubaTable();
     if (typeof setBaba === 'function') setBaba(window.currentBaba || 'good');
-    if (typeof updateFinishedBanner === 'function') updateFinishedBanner(currentRace || '天皇賞（春）');
   }, 50);
 });
 </script>
