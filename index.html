@@ -4364,9 +4364,12 @@ const RACE_PAST_DATA = {
       // 近年傾向
       '2022年以降は上位人気が壊滅的：1番人気は4年で1勝、2番人気も近年は苦戦。2022年153万・2025年150万の超高額配当',
       '9番人気が過去10年で3勝（勝率・複勝率ともに40%）。二桁人気の激走が毎年のように発生',
-      '⚠️前走NZT1着馬は過去10年【0-0-0-9】複勝率0%！レザベーションは要注意の消しデータ該当。NZT組は2着以下の馬が好走',
-      '前走1着馬全体の3着内率わずか5.3%（JRA公式2026データ）。前走勝ち馬は全体的に過信禁物',
-      '前走2着以下かつ勝ち馬とのタイム差0.4秒以内の馬が最も好成績（JRA2026公式）',
+      '⚠️前走NZT1着馬【0-0-0-9】複勝率0%！レザベーションは最重要消しデータ該当',
+      '⚠️キャリア2戦以下【0-0-0-4】複勝率0%。キャリア7戦以上も【0-0-3-39】で割引',
+      '⚠️内枠（1〜4枠）は勝率1.3%・連対率6.3%と大幅不利。外枠（5〜8枠）が9勝！',
+      '⭐6枠・8枠が各4勝トップ。2017年以降は外枠馬が8連続で優勝',
+      '⚠️前走1着馬の3着内率わずか5.3%（JRA公式2026）。前走勝ち馬は全体的に割引',
+      '⭐前走2着以下かつ勝ち馬とタイム差0.4秒以内の馬が最好成績（JRA公式2026）',
       '過去10年の優勝馬は全員デビュー戦勝利・7頭がデビュー2戦目も勝利',
     ],
     leftCourseRanking: {
@@ -4510,6 +4513,34 @@ const RACE_PAST_DATA = {
             matchFn: function(h){ return h.prevRank >= 6 && h.prevRank <= 9; }, isGood: false },
           { cells: ["前走10着以下", "勝率0%", "6.1%", "ほぼ消し"],
             matchFn: function(h){ return h.prevRank >= 10; }, isGood: false },
+        ],
+      },
+      {
+        type: "table",
+        title: "キャリア別 成績（過去10年）",
+        headers: ["キャリア","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["3〜6戦", "勝ち馬全員該当", "高", "⭐勝ち馬は全員キャリア3〜6戦。この範囲を最重視"], highlight: true,
+            matchFn: function(h){ var c=h.career||0; return c>=3 && c<=6; }, isGood: true },
+          { cells: ["2戦以下", "0-0-0-4", "0%", "⚠️複勝率0%・キャリア2戦以下は完全消し"],
+            matchFn: function(h){ return (h.career||0) <= 2 && (h.career||0) > 0; }, isGood: false },
+          { cells: ["7戦以上", "0-0-3-39", "7.1%", "⚠️勝利ゼロ・複勝率7.1%。基本割引"],
+            matchFn: function(h){ return (h.career||0) >= 7; }, isGood: false },
+        ],
+      },
+      {
+        type: "table",
+        title: "枠順別 内外枠データ（過去10年・JRA公式2026）",
+        headers: ["枠区分","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["5〜8枠（外枠）", "9-6-5-79", "高", "⭐勝率9.1%・連対率15.2%。2017年以降8連続で外枠馬が優勝"], highlight: true,
+            matchFn: function(h){ return (h.waku||0) >= 5; }, isGood: true },
+          { cells: ["1〜4枠（内枠）", "1-4-5-70", "12.5%", "⚠️勝率1.3%・連対率6.3%。内枠は大幅不利"],
+            matchFn: function(h){ return (h.waku||0) >= 1 && (h.waku||0) <= 4; }, isGood: false },
+          { cells: ["6枠（最多4勝タイ）", "4勝", "高", "⭐6枠4勝最多タイ。枠確定後最優先"], highlight: true,
+            matchFn: function(h){ return h.waku === 6; }, isGood: true },
+          { cells: ["8枠（最多4勝タイ）", "4勝", "高", "⭐8枠4勝最多タイ。2017年以降8連続外枠馬優勝"], highlight: true,
+            matchFn: function(h){ return h.waku === 8; }, isGood: true },
         ],
       },
       {
@@ -5200,13 +5231,14 @@ function calcJockeyBonusNHK(horse, raceName) {
   return { pts: 0, label: '' };
 }
 
-// NHKマイルC専用：キャリア戦数（3〜6戦が最強・2戦以内/7戦以上は減点）
+// NHKマイルC専用：キャリア戦数（3〜6戦が最強・2戦以下は -15・7戦以上は -8）
 function calcCareerBonusNHK(horse, raceName) {
   if (!raceName || raceName.indexOf('NHKマイル') === -1) return { pts: 0, label: '' };
   var c = (horse && horse.career) || 0;
   if (!c) return { pts: 0, label: '' };
-  if (c >= 3 && c <= 6) return { pts: 3,  label: 'キャリア' + c + '戦（3〜6戦が勝ち馬の条件）' };
-  if (c <= 2 || c >= 7) return { pts: -5, label: 'キャリア' + c + '戦（2戦以内・7戦以上は0勝）' };
+  if (c >= 3 && c <= 6) return { pts: 3,   label: 'キャリア' + c + '戦（3〜6戦が勝ち馬の条件）' };
+  if (c <= 2)           return { pts: -15, label: '⚠️キャリア' + c + '戦【0-0-0-4】複勝率0%・完全消し' };
+  if (c >= 7)           return { pts: -8,  label: '⚠️キャリア' + c + '戦【0-0-3-39】複勝率7.1%・割引' };
   return { pts: 0, label: '' };
 }
 
@@ -5219,7 +5251,7 @@ function calcPrevRankBonusNHK(horse, raceName) {
   if (r === 2)  return { pts: 5,  label: '前走2着【複勝率34.4%・単回収144】' };
   if (r === 5)  return { pts: 3,  label: '前走5着【複勝率25.0%】' };
   if (r === 3)  return { pts: 2,  label: '前走3着【複勝率17.4%】' };
-  if (r === 1)  return { pts: -3, label: '前走1着【複勝率5.3%・最悪の前走着順】' };
+  if (r === 1)  return { pts: -8, label: '⚠️前走1着【3着内率5.3%・JRA公式2026】' };
   if (r >= 10)  return { pts: -5, label: '前走10着以下【複勝率6.1%・消し】' };
   if (r >= 6)   return { pts: -2, label: '前走6〜9着【勝率0%】' };
   return { pts: 0, label: '' };
@@ -5233,6 +5265,27 @@ function calcNztPenalty(horse, raceName) {
     return { pts: -15, label: '⚠️前走NZT1着【0-0-0-9】複勝率0%・過去10年消しデータ' };
   }
   return { pts: 0, label: '' };
+}
+
+// NHKマイルC専用：内枠ペナルティ・外枠ボーナス（calcWakuScoreNHK に追加で重ねる層）
+function calcFrameNHK(horse, raceName) {
+  if (!raceName || raceName.indexOf('NHKマイル') === -1) return { pts: 0, label: '' };
+  if (!horse || !horse.waku) return { pts: 0, label: '' };
+  var w = horse.waku;
+  var pts = 0;
+  var labels = [];
+  if (w >= 1 && w <= 4) {
+    pts -= 8;
+    labels.push('⚠️1〜4枠（内枠）勝率1.3%・連対率6.3%');
+  } else if (w >= 5 && w <= 8) {
+    pts += 5;
+    labels.push('✅5〜8枠（外枠）勝率9.1%・連対率15.2%');
+    if (w === 6 || w === 8) {
+      pts += 10;
+      labels.push('⭐' + w + '枠・最多4勝！最高枠ボーナス');
+    }
+  }
+  return { pts: pts, label: labels.join(' / ') };
 }
 
 // NHKマイルC専用：特殊条件加減点（最大+18 / 最小-5）
@@ -5461,21 +5514,26 @@ function computeScore(h) {
   var nztObj = calcNztPenalty(h, currentRace);
   var nztPts = nztObj.pts;
 
+  // NHKマイルC：内枠/外枠 追加レイヤー（最大+15・最小-8）
+  var frameObj = calcFrameNHK(h, currentRace);
+  var framePts = frameObj.pts;
+
   return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB, special, nhkBw,
-           shozoP, jockeyN, careerP, prevR, leftPts, nztPts,
+           shozoP, jockeyN, careerP, prevR, leftPts, nztPts, framePts,
            _distLabel: distObj.label, _stallionLabel: stallionObj.label,
            _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label,
            _specialLabel: specialObj.label, _nhkBwLabel: nhkBwObj.label,
            _shozoLabel: shozoObj.label, _jockeyNLabel: jockeyNObj.label,
            _careerLabel: careerObj.label, _prevRLabel: prevRObj.label,
-           _leftLabel: leftObj.label, _nztLabel: nztObj.label, _siValue: si };
+           _leftLabel: leftObj.label, _nztLabel: nztObj.label,
+           _frameLabel: frameObj.label, _siValue: si };
 }
 function sumScore(s) {
   return s.ninki + s.waku + s.dataFit + s.ketto + s.jockey + s.course + s.chokyo + s.speed +
          (s.baba || 0) + (s.bw || 0) + (s.dist || 0) + (s.stallion || 0) +
          (s.tokyo || 0) + (s.sexB || 0) + (s.special || 0) + (s.nhkBw || 0) +
          (s.shozoP || 0) + (s.jockeyN || 0) + (s.careerP || 0) + (s.prevR || 0) +
-         (s.leftPts || 0) + (s.nztPts || 0);
+         (s.leftPts || 0) + (s.nztPts || 0) + (s.framePts || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
