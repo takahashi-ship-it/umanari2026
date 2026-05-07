@@ -1407,12 +1407,7 @@
     <!-- TAB: 出馬表 -->
     <div class="panel active" id="tab-shutsuba">
       <div class="section">
-        <div style="background:#E6F1FB;border-radius:var(--border-radius-md);
-                    padding:10px 14px;margin-bottom:14px;font-size:12px;color:#185FA5;line-height:1.7">
-          📋 出馬表（第173回 天皇賞（春）/ 2026年5月3日（日）京都11R 芝3200m）<br>
-          ⚠️ 枠番・馬番は本日4/30（木）16時以降に確定予定です。確定後に更新されます。<br>
-          ※スティンガーグラスは4/29追い切り後の歩様違和感のため回避。15頭立て。
-        </div>
+        <div id="shutsuba-race-header"><!-- renderShutsubaTable() で動的生成 --></div>
 
         <!-- 馬体重入力パネル -->
         <div style="background:#F8F8F8;border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:14px">
@@ -4378,7 +4373,61 @@ function initOddsGrid() {
   grid.dataset.initialized = '1';
 }
 
+// レース別の出馬表ヘッダー情報
+var RACE_SHUTSUBA_INFO = {
+  '天皇賞（春）': {
+    title: '第173回 天皇賞（春）',
+    date: '2026年5月3日（日）',
+    venue: '京都11R',
+    surface: '芝3200m',
+    note: 'スティンガーグラスは4/29追い切り後の歩様違和感のため回避。15頭立て。',
+    isFinished: true,
+    result: '1着：7番クロワデュノール　2着：15番ヴェルテンベルク　3着：3番アドマイヤテラ　3連単 7-15-3：70,630円'
+  },
+  'NHKマイルC': {
+    title: '第31回 NHKマイルカップ',
+    date: '2026年5月10日（日）',
+    venue: '東京11R',
+    surface: '芝1600m',
+    note: '3歳牡牝混合戦。フルゲート18頭。枠順は5月8日（木）確定予定。',
+    isFinished: false,
+    result: null
+  },
+  'ヴィクトリアマイル': {
+    title: '第21回 ヴィクトリアマイル',
+    date: '2026年5月17日（日）',
+    venue: '東京11R',
+    surface: '芝1600m',
+    note: '4歳以上牝馬限定戦。フルゲート18頭。枠順は5月14日（木）確定予定。',
+    isFinished: false,
+    result: null
+  }
+};
+
+function renderShutsubaHeader() {
+  var headerEl = document.getElementById('shutsuba-race-header');
+  if (!headerEl) return;
+  var raceName = window.currentRaceName || (typeof currentRace !== 'undefined' ? currentRace : '天皇賞（春）');
+  var info = RACE_SHUTSUBA_INFO[raceName];
+  if (!info) {
+    headerEl.innerHTML = '';
+    return;
+  }
+  var html = '<div style="background:#EFF6FF;border-radius:var(--border-radius-md);' +
+             'padding:10px 14px;margin-bottom:14px;font-size:12px;color:#185FA5;line-height:1.8">';
+  html += '📋 出馬表（' + info.title + ' / ' + info.date + ' ' + info.venue + ' ' + info.surface + '）<br>';
+  if (info.isFinished && info.result) {
+    html += '<span style="color:#0F6E56;font-weight:600">✅ レース終了：' + info.result + '</span>';
+  } else {
+    html += '<span style="color:#B8600C">⚠️ ' + info.note + '</span>';
+  }
+  html += '</div>';
+  headerEl.innerHTML = html;
+}
+
 function renderShutsubaTable() {
+  // レース別ヘッダーテキストを更新
+  renderShutsubaHeader();
   var tbody = document.getElementById('shutsuba-tbody');
   var horses = window.horses || (typeof HORSES !== 'undefined' ? HORSES : null);
   if (!tbody || !horses) return;
