@@ -1421,19 +1421,7 @@
 
       <div class="section">
         <h3>当日馬場予報</h3>
-        <div style="background:#E6F1FB;border-left:3px solid #378ADD;
-                    border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:12px">
-          <div style="font-size:12px;font-weight:600;color:#185FA5;margin-bottom:6px">
-            🌤 5月3日（日）京都 天気予報（4/30時点）
-          </div>
-          <div style="font-size:12px;color:#185FA5;line-height:1.9">
-            <strong>予想馬場：良馬場〜稍重</strong><br>
-            5月1日（木）近畿で警報級大雨予報。5月2〜3日は回復傾向。<br>
-            GW後半は「短い周期で雨」の予報あり。<br>
-            → 発走時刻（15:40）には<strong>良〜稍重の可能性が高い</strong><br>
-            <span style="font-size:10px;color:#378ADD">※馬場状態は当日朝に最終確認してください</span>
-          </div>
-        </div>
+        <div id="shutsuba-baba-weather"><!-- renderShutsubaTable() で動的生成 --></div>
       </div>
 
       <div class="section">
@@ -4457,6 +4445,18 @@ function renderShutsubaHeader() {
 function renderShutsubaTable() {
   // 1. レース別ヘッダーテキストを更新
   renderShutsubaHeader();
+
+  // 1.5 馬場予報を動的に更新（レース別）
+  var weatherEl = document.getElementById('shutsuba-baba-weather');
+  if (weatherEl) {
+    var weatherMap = {
+      '天皇賞（春）': '<div style="background:#E6F1FB;border-left:3px solid #378ADD;border-radius:var(--border-radius-md);padding:12px 14px;font-size:12px;color:#185FA5;line-height:1.9"><strong>🌤 当日馬場予報（終了）</strong><br>開催日：2026年5月3日（日）京都<br>結果馬場：稍重〜良（予想通り回復）</div>',
+      'NHKマイルC':   '<div style="background:#E6F1FB;border-left:3px solid #378ADD;border-radius:var(--border-radius-md);padding:12px 14px;font-size:12px;color:#185FA5;line-height:1.9"><strong>☀️ 当日馬場予報</strong><br>2026年5月10日（日）東京競馬場<br>予想馬場：<strong>良馬場</strong>（東京開催・晴れ予報）<br><span style="font-size:10px;color:#378ADD">※馬場状態は当日朝に最終確認してください</span></div>',
+      'ヴィクトリアマイル': '<div style="background:#E6F1FB;border-left:3px solid #378ADD;border-radius:var(--border-radius-md);padding:12px 14px;font-size:12px;color:#185FA5;line-height:1.9"><strong>☀️ 当日馬場予報</strong><br>2026年5月17日（日）東京競馬場<br>予想馬場：<strong>良馬場</strong>（東京開催・晴れ予報）<br><span style="font-size:10px;color:#378ADD">※馬場状態は当日朝に最終確認してください</span></div>'
+    };
+    var rn = window.currentRaceName || 'NHKマイルC';
+    weatherEl.innerHTML = weatherMap[rn] || '';
+  }
 
   // 2. 出馬表テーブル本体を shutsuba-container に動的生成
   var container = document.getElementById('shutsuba-container');
