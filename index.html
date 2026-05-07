@@ -1362,8 +1362,13 @@
     <div id="raceLists"></div>
   </section>
 
-  <!-- RACE PAGE: 天皇賞春2026 -->
-  <section class="race-page" id="racePage">
+  <!-- レース未選択時のプレースホルダー -->
+  <div id="no-race-selected" style="text-align:center;padding:40px 20px;color:var(--text-mute);font-size:13px">
+    ☝️ 上のカレンダーからレースを選択してください
+  </div>
+
+  <!-- RACE PAGE: レースコンテンツ（選択時のみ表示） -->
+  <section class="race-page" id="racePage" style="display:none">
     <div class="race-headline">
       <div id="finished-banner" style="display:none;background:#555555;color:#ffffff;text-align:center;padding:8px 14px;border-radius:8px;margin-bottom:10px;font-size:11px;font-weight:600;line-height:1.6"></div>
       <div class="race-grade-line">G1 / 第173回</div>
@@ -2210,10 +2215,15 @@ function renderCalendar() {
       </div>`;
     card.addEventListener('click', () => {
       if (SUPPORTED_RACES.has(r.name)) {
-        if (typeof setCurrentRace === 'function' && r.name !== currentRace) {
+        if (typeof setCurrentRace === 'function') {
           setCurrentRace(r.name);
         }
-        document.getElementById('racePage').scrollIntoView({ behavior: 'smooth' });
+        // 必ず racePage を表示（レース未選択状態 → 同じレース再クリックでも反映）
+        var rp = document.getElementById('racePage');
+        var ph = document.getElementById('no-race-selected');
+        if (rp) rp.style.display = '';
+        if (ph) ph.style.display = 'none';
+        if (rp) rp.scrollIntoView({ behavior: 'smooth' });
       } else {
         showRaceModal(r.name);
       }
@@ -4119,6 +4129,12 @@ function setCurrentRace(name) {
   currentRace = name;
   window.currentRaceName = name;
   HORSES = HORSES_BY_RACE[name];
+
+  // レースコンテンツを表示・プレースホルダーを非表示
+  var racePageEl = document.getElementById('racePage');
+  if (racePageEl) racePageEl.style.display = '';
+  var placeholderEl = document.getElementById('no-race-selected');
+  if (placeholderEl) placeholderEl.style.display = 'none';
   window.horses = HORSES;
 
   // 終了レースバナー（シンプル版）
