@@ -4426,39 +4426,32 @@ var RACE_SHUTSUBA_INFO = {
   }
 };
 
-// レースヘッダー用の表示文字列マップ（nullsafe フォールバック付き）
-var raceInfoMap = {
-  '天皇賞（春）': {
-    title: '第173回 天皇賞（春）',
-    date: '2026年5月3日（日）京都11R 芝3200m',
-    note: '✅ 終了：1着クロワデュノール・2着ヴェルテンベルク・3着アドマイヤテラ'
-  },
-  'NHKマイルC': {
-    title: '第31回 NHKマイルカップ',
-    date: '2026年5月10日（日）東京11R 芝1600m',
-    note: '3歳牡牝混合・フルゲート18頭。枠順は5月8日（木）確定予定。'
-  },
-  'ヴィクトリアマイル': {
-    title: '第21回 ヴィクトリアマイル',
-    date: '2026年5月17日（日）東京11R 芝1600m',
-    note: '4歳以上牝馬限定・フルゲート18頭。枠順は5月14日（木）確定予定。'
-  }
-};
-
 function renderShutsubaHeader() {
   var el = document.getElementById('shutsuba-race-header');
   if (!el) return;
+  var raceName = window.currentRaceName || 'NHKマイルC';
 
-  var raceName = window.currentRaceName || (typeof currentRace !== 'undefined' ? currentRace : 'NHKマイルC');
-  var info = raceInfoMap[raceName] || raceInfoMap['NHKマイルC'];
-  if (!info) { el.innerHTML = ''; return; }
+  // インライン定義（外部変数に依存しない）
+  var titles = {
+    '天皇賞（春）':       '第173回 天皇賞（春） / 2026年5月3日（日）京都11R 芝3200m',
+    'NHKマイルC':         '第31回 NHKマイルカップ / 2026年5月10日（日）東京11R 芝1600m',
+    'ヴィクトリアマイル': '第21回 ヴィクトリアマイル / 2026年5月17日（日）東京11R 芝1600m'
+  };
+  var notes = {
+    '天皇賞（春）':       '✅ 終了：1着クロワデュノール・2着ヴェルテンベルク・3着アドマイヤテラ',
+    'NHKマイルC':         '3歳牡牝混合・フルゲート18頭。枠順は5月8日（木）確定予定。',
+    'ヴィクトリアマイル': '4歳以上牝馬限定・フルゲート18頭。枠順は5月14日（木）確定予定。'
+  };
 
+  var title = titles[raceName] || raceName;
+  var note  = notes[raceName] || '';
   var isFinished = (typeof FINISHED_RACES !== 'undefined') && FINISHED_RACES.indexOf(raceName) >= 0;
-  el.innerHTML = '<div style="background:#EFF6FF;border-radius:var(--border-radius-md);' +
-                 'padding:10px 14px;margin-bottom:14px;font-size:12px;color:#185FA5;line-height:1.8">' +
-                 '📋 出馬表（' + info.title + ' / ' + info.date + '）<br>' +
+
+  el.innerHTML = '<div style="background:#EFF6FF;border-radius:8px;' +
+                 'padding:10px 14px;margin-bottom:12px;font-size:12px;color:#185FA5;line-height:1.8">' +
+                 '📋 出馬表（' + title + '）<br>' +
                  '<span style="color:' + (isFinished ? '#0F6E56' : '#B8600C') + '">' +
-                 (isFinished ? '✅ ' : '⚠️ ') + info.note + '</span></div>';
+                 (isFinished ? '✅ ' : '⚠️ ') + note + '</span></div>';
 }
 
 function renderShutsubaTable() {
