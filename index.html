@@ -2520,7 +2520,7 @@ const HORSES_BY_RACE = {
   {
     name: "カヴァレリッツォ",
     age: 3, sex: "牡",
-    father: "サートゥルナーリア", blood: "サンデー系",
+    father: "サートゥルナーリア", blood: "KM系", bloodForeign: false,
     trainer: "未定", stable: "",
     jockey: "西村淳也", style: "差し",
     prevRace: "皐月賞", prevGrade: "G1", prevRank: 13,
@@ -2540,7 +2540,7 @@ const HORSES_BY_RACE = {
   {
     name: "ダイヤモンドノット",
     age: 3, sex: "牡",
-    father: "ブリックスアンドモルタル", blood: "MP系",
+    father: "ブリックスアンドモルタル", blood: "MP系", bloodForeign: true,
     trainer: "未定", stable: "",
     jockey: "川田将雅", style: "先行",
     prevRace: "ファルコンS", prevGrade: "G3", prevRank: 1,
@@ -2560,7 +2560,7 @@ const HORSES_BY_RACE = {
   {
     name: "サンダーストラック",
     age: 3, sex: "牡",
-    father: "不明", blood: "不明",
+    father: "不明", blood: "サンデー系", bloodForeign: false,
     trainer: "未定", stable: "",
     jockey: "C.ルメール", style: "差し",
     prevRace: "チャーチルダウンズC", prevGrade: "G3", prevRank: 6,
@@ -2580,7 +2580,7 @@ const HORSES_BY_RACE = {
   {
     name: "アスクイキゴミ",
     age: 3, sex: "牡",
-    father: "ロードカナロア", blood: "KM系",
+    father: "ロードカナロア", blood: "KM系", bloodForeign: false,
     trainer: "藤原英昭", stable: "栗東",
     jockey: "戸崎圭太", style: "先行",
     prevRace: "チャーチルダウンズC", prevGrade: "G3", prevRank: 1,
@@ -2600,7 +2600,7 @@ const HORSES_BY_RACE = {
   {
     name: "レザベーション",
     age: 3, sex: "牡",
-    father: "不明", blood: "不明",
+    father: "ヘニーヒューズ", blood: "MP系", bloodForeign: true,
     trainer: "未定", stable: "",
     jockey: "原優介", style: "先行",
     prevRace: "ニュージーランドT", prevGrade: "G2", prevRank: 1,
@@ -2620,7 +2620,7 @@ const HORSES_BY_RACE = {
   {
     name: "アドマイヤクワッズ",
     age: 3, sex: "牡",
-    father: "不明", blood: "不明",
+    father: "ダイワメジャー", blood: "サンデー系", bloodForeign: false,
     trainer: "未定", stable: "",
     jockey: "坂井瑠星", style: "差し",
     prevRace: "皐月賞", prevGrade: "G1", prevRank: 15,
@@ -2640,7 +2640,7 @@ const HORSES_BY_RACE = {
   {
     name: "エコロアルバ",
     age: 3, sex: "牡",
-    father: "不明", blood: "不明",
+    father: "ドゥラメンテ", blood: "KM系", bloodForeign: false,
     trainer: "未定", stable: "",
     jockey: "横山和生", style: "差し",
     prevRace: "朝日杯FS", prevGrade: "G1", prevRank: 4,
@@ -2660,7 +2660,7 @@ const HORSES_BY_RACE = {
   {
     name: "ハッピーエンジェル",
     age: 3, sex: "牝",
-    father: "不明", blood: "不明",
+    father: "不明", blood: "サンデー系", bloodForeign: false,
     trainer: "未定", stable: "",
     jockey: "三浦皇成", style: "差し",
     prevRace: "ファルコンS", prevGrade: "G3", prevRank: 1,
@@ -2679,7 +2679,7 @@ const HORSES_BY_RACE = {
   {
     name: "バルセシート",
     age: 3, sex: "牡",
-    father: "不明", blood: "不明",
+    father: "不明", blood: "サンデー系", bloodForeign: false,
     trainer: "未定", stable: "",
     jockey: "北村友一", style: "差し",
     prevRace: "チャーチルダウンズC", prevGrade: "G3", prevRank: 3,
@@ -3461,19 +3461,21 @@ const RACE_PAST_DATA = {
       },
       {
         type: "table",
-        title: "血統別 傾向（過去10年）",
+        title: "血統別 傾向（過去10年・重複排除）",
         headers: ["血統タイプ","成績","傾向"],
         rows: [
-          { cells: ["ダイワメジャー産駒", "3-2-1-3 (連対率45.5%)", "マイル王道血統・出走したら必ず評価"], highlight: true,
+          { cells: ["ダイワメジャー産駒（サンデー系マイル特化）", "3-2-1-3", "連対率45.5%・最強血統。複勝率67%は全血統トップ"], highlight: true,
             matchFn: function(h){ return h.father === 'ダイワメジャー'; }, isGood: true },
-          { cells: ["ロードカナロア産駒", "1-0-0-8 (11%)", "1600m以下で種牡馬+10点加点"], highlight: true,
+          { cells: ["ロードカナロア産駒（キングマンボ系）", "2-1-1-8", "33%・2022年ダノンスコーピオン優勝。種牡馬+10点加点"], highlight: true,
             matchFn: function(h){ return h.father === 'ロードカナロア'; }, isGood: true },
-          { cells: ["ディープインパクト系", "2勝", "瞬発力タイプ・東京の長い直線向き"],
-            matchFn: function(h){ return h.blood === 'ディープ系' || h.father === 'ディープインパクト'; }, isGood: true },
-          { cells: ["Storm Cat 血脈保有馬", "1-4-1-10 (38%)", "人気薄の激走多数（タガノブルグ17人気・ケイデンスコール14人気）"],
-            matchFn: function(h){ return h.blood && (h.blood.indexOf('StormCat') !== -1 || h.blood.indexOf('Storm Cat') !== -1 || h.blood === 'MP系'); }, isGood: true },
-          { cells: ["ミスタープロスペクター系・KM系", "穴で激走多数", "近年穴馬輩出。KM系・MP系は要注意"],
-            matchFn: function(h){ return h.blood === 'MP系' || h.blood === 'KM系'; }, isGood: true },
+          { cells: ["🔥キングマンボ系全体（穴馬で激走）", "穴で複数激走", "母父にキングマンボ系が入る馬も要注目（ロードカナロア除く）"], highlight: true,
+            matchFn: function(h){ return h.blood === 'KM系' && h.father !== 'ロードカナロア'; }, isGood: true },
+          { cells: ["サンデー系・ディープ系（王道配合）", "3-2-1-14", "30%・最多勝ち血統パターン"],
+            matchFn: function(h){ return h.blood === 'サンデー系' || h.blood === 'ディープ系'; }, isGood: true },
+          { cells: ["MP系・Storm Cat 血脈（穴で激走）", "1-4-1-10", "38%・タガノブルグ17人気・ケイデンスコール14人気で激走"],
+            matchFn: function(h){ return h.blood === 'MP系' || h.blood === 'ND系' || h.blood === 'StormCat系' || (h.blood && h.blood.indexOf('Storm') !== -1); }, isGood: true },
+          { cells: ["母父・母母父が海外種牡馬（近年7連勝中）", "7連勝中", "母父海外種牡馬は7連勝・母母父海外種牡馬は11連勝中"], highlight: true,
+            matchFn: function(h){ return h.bloodForeign === true; }, isGood: true },
         ],
       },
       {
@@ -3926,6 +3928,19 @@ function calcStallionScore(horse, raceDistance) {
       return { pts: 10, label: '🔥種牡馬特注：ロードカナロア産駒（1200m〜1600mで抜群の成績）' };
     }
     return { pts: 0, label: '' };
+  }
+
+  // サートゥルナーリア産駒（=ロードカナロア孫）：1400-2000m で +5
+  if (father === 'サートゥルナーリア') {
+    if (raceD >= 1400 && raceD <= 2000) {
+      return { pts: 5, label: '種牡馬加点：サートゥルナーリア産駒（ロードカナロア孫・マイル中距離）' };
+    }
+    return { pts: 0, label: '' };
+  }
+
+  // キングマンボ系全体（KM系 blood 持ち、上記対象種牡馬以外）：1200-1600m で +7
+  if (horse.blood === 'KM系' && raceD >= 1200 && raceD <= 1600) {
+    return { pts: 7, label: 'キングマンボ系（穴で激走多数・KM系全体加点）' };
   }
 
   var b = STALLION_BONUS[father];
