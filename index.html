@@ -6983,6 +6983,8 @@ var KAIMOKU_DATA = {
       { name: 'ロデオドライブ',     reason: 'SI80・D.レーン・調教B' },
       { name: 'ジーネキング',       reason: '調教S・SI78・美浦W11.0' },
       { name: 'カヴァレリッツォ',   reason: 'SI90(A)・朝日杯FS勝ち（調教Cで減点）' },
+      { name: 'アドマイヤクワッズ', reason: '坂井瑠星・左回り経験・調教B' },
+      { name: 'バルセシート',       reason: '北村友一・前走チャーチルC3着・調教C' },
     ],
     _selectedN: 6,
     unitCost: 100,
@@ -7048,7 +7050,7 @@ function renderKaimokuAI(raceName) {
     html += '<div style="margin-bottom:14px">';
     html += '<div style="font-size:11px;font-weight:600;color:var(--color-text-secondary);margin-bottom:8px">相手頭数を選択</div>';
     html += '<div style="display:flex;gap:6px;flex-wrap:wrap">';
-    [4,5,6,7,8].forEach(function(n) {
+    [4,5,6,7,8,9,10].forEach(function(n) {
       if (n > aiteAll.length) return;
       var isSelected = n === currentN;
       var pts = n * (n - 1) * 3;
