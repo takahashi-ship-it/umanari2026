@@ -5400,6 +5400,12 @@ function sw(t) {
     window.selectedJiku = null;
     window.excludedHimo = [];
     if (typeof renderKaime === 'function') renderKaime();
+  } else if (t === 'shutsuba') {
+    setTimeout(function() {
+      if (typeof renderShutsubaTable === 'function') renderShutsubaTable();
+      if (typeof initBwGrid === 'function') initBwGrid();
+      if (typeof renderPacePredict === 'function') renderPacePredict();
+    }, 100);
   }
 }
 
