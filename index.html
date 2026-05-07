@@ -7080,14 +7080,16 @@ function renderKaimokuAI(raceName) {
  * 軸馬3着内率トラッキング
  * ===================================================== */
 var JIKU_TRACKING = [
-  { race: '皐月賞',       jiku: 'ロブチェン',     result: '1着', hit: true,
+  { race: '皐月賞',       jiku: 'ロブチェン',         result: '1着', hit: true,
     note: '信頼度スコア最高値→1着✅ 3連単マルチ的中' },
-  { race: 'マイラーズC',  jiku: 'アドマイヤズーム', result: '1着', hit: true,
-    note: 'アイラーズカップ→1着✅ 3連単マルチ的中' },
-  { race: '天皇賞（春）', jiku: 'アドマイヤテラ', result: '3着', hit: true,
+  { race: 'フローラS',    jiku: 'ラベルセーヌ',       result: '着外', hit: false,
+    note: '軸選定→着外❌' },
+  { race: 'マイラーズC',  jiku: 'アドマイヤズーム',   result: '1着', hit: true,
+    note: '→1着✅ 3連単マルチ的中' },
+  { race: '青葉賞',       jiku: 'ノーブルサヴェージ', result: '着外', hit: false,
+    note: '軸選定→着外❌' },
+  { race: '天皇賞（春）', jiku: 'アドマイヤテラ',     result: '3着', hit: true,
     note: 'G2勝ち・調教A・馬場82で推奨→3着✅ 3連単マルチ的中' },
-  { race: '青葉賞',       jiku: '（未選定）',     result: '—', hit: false, note: '' },
-  { race: 'フローラS',    jiku: '（未選定）',     result: '—', hit: false, note: '' },
 ];
 
 function renderJikuTracking() {
