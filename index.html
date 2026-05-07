@@ -1999,6 +1999,9 @@
 </div>
 
 <script>
+/* 終了レースのリスト（カレンダー初回レンダリング前に定義必須） */
+var FINISHED_RACES = ['天皇賞（春）'];
+
 /* =====================================================
  * 1) RACE CALENDAR
  * ===================================================== */
@@ -4110,9 +4113,6 @@ function renderCriteria() {
  *   - 選定基準・登録馬・チェックリスト
  *   - オッズ入力グリッドを再構築
  */
-// 終了レースのリスト（シンプル版）
-var FINISHED_RACES = ['天皇賞（春）'];
-
 function updateFinishedBanner(raceName) {
   var el = document.getElementById('finished-banner');
   if (!el) return;
