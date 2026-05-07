@@ -3648,6 +3648,40 @@ const RACE_PAST_DATA = {
       '2022年以降は上位人気が壊滅的：1番人気は4年で1勝、2番人気も近年は苦戦。2022年153万・2025年150万の超高額配当',
       '9番人気が過去10年で3勝（勝率・複勝率ともに40%）。二桁人気の激走が毎年のように発生',
     ],
+    leftCourseRanking: {
+      title: '🔄 左回りコース適性ランキング（東京・中京・新潟）',
+      note: '東京競馬場（左回り）での経験・実績は直結する重要指標',
+      ranks: [
+        {
+          grade: '◎ 左回り複数勝利・掲示板安定',
+          color: '#0F6E56',
+          bg: '#E1F5EE',
+          horses: ['フクチャンショウ','エコロアルバ','アンドゥーリル','ダイヤモンドノット'],
+          detail: 'フクチャンショウ(東京3回+中京1回・全て掲示板以内)・エコロアルバ(東京+新潟2勝)・アンドゥーリル(東京+中京2勝)・ダイヤモンドノット(東京+中京2勝)'
+        },
+        {
+          grade: '○ 左回り1勝・東京実績あり',
+          color: '#185FA5',
+          bg: '#E6F1FB',
+          horses: ['オルネーロ','ハッピーエンジェル'],
+          detail: 'オルネーロ(東京1400m勝利)・ハッピーエンジェル(東京掲示板落ちなし・中京経験あり)'
+        },
+        {
+          grade: '△ 左回り経験あり',
+          color: '#854F0B',
+          bg: '#FAEEDA',
+          horses: ['カヴァレリッツォ','ユウファラオ','ローベルクランツ','アスクイキゴミ','アドマイヤクワッズ'],
+          detail: 'カヴァレリッツォ(中京1勝・東京未経験)・ユウファラオ(左回り複数経験)・ローベルクランツ(左回り2回)・アスクイキゴミ/アドマイヤクワッズ(東京新馬戦1勝)'
+        },
+        {
+          grade: '-- 左回り未経験',
+          color: '#888',
+          bg: '#F1EFE8',
+          horses: ['レザベーション','ロデオドライブ','ジーネキング','バルセシート','サンダーストラック','ギリーズボール','リゾートアイランド'],
+          detail: 'NZT(中山・右回り)出走馬・チャーチルC(阪神・右回り)出走馬は東京コース未経験'
+        }
+      ]
+    },
     sections: [
       {
         type: "table",
@@ -3930,7 +3964,38 @@ function renderPastData() {
     }
     html += '</div>';
   });
+  // 左回りコース適性ランキング（leftCourseRanking が定義されている場合のみ表示）
+  if (data.leftCourseRanking) {
+    html += renderLeftCourseRanking(data.leftCourseRanking);
+  }
   root.innerHTML = html;
+}
+
+function renderLeftCourseRanking(data) {
+  if (!data || !data.ranks) return '';
+  var html = '<div class="card" style="margin-top:12px">';
+  html += '<div class="ct">' + data.title + '</div>';
+  html += '<div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:10px">'
+    + data.note + '</div>';
+
+  data.ranks.forEach(function(rank) {
+    html += '<div style="background:' + rank.bg + ';border-left:3px solid '
+      + rank.color + ';border-radius:var(--border-radius-md);padding:8px 12px;margin-bottom:8px">';
+    html += '<div style="font-size:11px;font-weight:600;color:' + rank.color
+      + ';margin-bottom:4px">' + rank.grade + '</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px">';
+    rank.horses.forEach(function(name) {
+      html += '<span style="background:' + rank.color + ';color:#fff;font-size:10px;'
+        + 'font-weight:500;padding:2px 7px;border-radius:9px">' + name + '</span>';
+    });
+    html += '</div>';
+    html += '<div style="font-size:10px;color:var(--color-text-tertiary)">'
+      + rank.detail + '</div>';
+    html += '</div>';
+  });
+
+  html += '</div>';
+  return html;
 }
 
 /* スピード指数の計算
@@ -4023,8 +4088,8 @@ function maxScoreFor(score) {
   var hasSI = (score._siValue !== null && score._siValue !== undefined);
   var hasBaba = (score.baba !== null && score.baba !== undefined);
   // ベース 100 + SI 10 + 馬場 15 + 距離 8 + 種牡馬 10 + 東京 10 + 牝 3 + NHK特殊 18 + NHK馬体重 8
-  // + NHK所属 5 + NHK騎手 4 + NHKキャリア 3 + NHK前走着順 8
-  return 100 + (hasSI ? 10 : 0) + (hasBaba ? 15 : 0) + 8 + 10 + 10 + 3 + 18 + 8 + 5 + 4 + 3 + 8;
+  // + NHK所属 5 + NHK騎手 4 + NHKキャリア 3 + NHK前走着順 8 + 左回り 5
+  return 100 + (hasSI ? 10 : 0) + (hasBaba ? 15 : 0) + 8 + 10 + 10 + 3 + 18 + 8 + 5 + 4 + 3 + 8 + 5;
 }
 
 // 馬場適性スコア（最大15点・最小-3点）
@@ -4052,6 +4117,18 @@ function calcTokyoExp(horse, raceVenue) {
   if (rank <= 3)       return { pts: 7,  label: '東京コース3着以内（' + raceLabel + ' ' + distLabel + ' ' + rank + '着）' };
   if (rank <= 6)       return { pts: 4,  label: '東京コース6着以内（' + raceLabel + ' ' + distLabel + ' ' + rank + '着）' };
   return { pts: 1, label: '東京コース出走経験あり' };
+}
+
+// 左回りコース適性スコア（東京・中京・新潟／最大+5点・最小-2点）
+function calcLeftCourseBonus(horse) {
+  if (!horse) return { pts: 0, label: '' };
+  var score = horse.leftCourseScore || 0;
+  var lc = horse.leftCourse || '';
+  if (score >= 10) return { pts: 5, label: '左回り◎（' + lc + '）' };
+  if (score >= 7)  return { pts: 3, label: '左回り○（' + lc + '）' };
+  if (score >= 5)  return { pts: 1, label: '左回り△（' + lc + '）' };
+  if (score <= 1)  return { pts: -2, label: '左回り×（' + (lc || '未経験') + '）' };
+  return { pts: 0, label: '' };
 }
 
 // NHKマイルC専用：枠順スコア（過去10年データから差別化、最大+10/-8）
@@ -4347,19 +4424,25 @@ function computeScore(h) {
   var prevRObj = calcPrevRankBonusNHK(h, currentRace);
   var shozoP = shozoObj.pts, jockeyN = jockeyNObj.pts, careerP = careerObj.pts, prevR = prevRObj.pts;
 
+  // 左回りコース適性（東京・中京・新潟／最大+5/-2）
+  var leftObj = calcLeftCourseBonus(h);
+  var leftPts = leftObj.pts;
+
   return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB, special, nhkBw,
-           shozoP, jockeyN, careerP, prevR,
+           shozoP, jockeyN, careerP, prevR, leftPts,
            _distLabel: distObj.label, _stallionLabel: stallionObj.label,
            _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label,
            _specialLabel: specialObj.label, _nhkBwLabel: nhkBwObj.label,
            _shozoLabel: shozoObj.label, _jockeyNLabel: jockeyNObj.label,
-           _careerLabel: careerObj.label, _prevRLabel: prevRObj.label, _siValue: si };
+           _careerLabel: careerObj.label, _prevRLabel: prevRObj.label,
+           _leftLabel: leftObj.label, _siValue: si };
 }
 function sumScore(s) {
   return s.ninki + s.waku + s.dataFit + s.ketto + s.jockey + s.course + s.chokyo + s.speed +
          (s.baba || 0) + (s.bw || 0) + (s.dist || 0) + (s.stallion || 0) +
          (s.tokyo || 0) + (s.sexB || 0) + (s.special || 0) + (s.nhkBw || 0) +
-         (s.shozoP || 0) + (s.jockeyN || 0) + (s.careerP || 0) + (s.prevR || 0);
+         (s.shozoP || 0) + (s.jockeyN || 0) + (s.careerP || 0) + (s.prevR || 0) +
+         (s.leftPts || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
@@ -4474,6 +4557,7 @@ function renderHorses() {
           <div class="score-item"><div class="si-label">馬体重</div><div class="si-val" style="color:${score.bw > 0 ? '#0F6E56' : score.bw < 0 ? '#A32D2D' : '#888'}">${h.bodyWeightDiff != null ? (h.bodyWeightDiff >= 0 ? '+' : '') + h.bodyWeightDiff + 'kg' : '--'} (${score.bw >= 0 ? '+' : ''}${score.bw||0})</div></div>
           <div class="score-item" title="${score._distLabel || ''}"><div class="si-label">距離経験</div><div class="si-val" style="color:${score.dist >= 8 ? '#0F6E56' : score.dist >= 4 ? '#2563eb' : score.dist > 0 ? '#888' : '#bbb'}">${(score.dist || 0) > 0 ? '+' + score.dist : '0'}/8</div></div>
           <div class="score-item" title="${score._stallionLabel || ''}"><div class="si-label">種牡馬</div><div class="si-val" style="color:${score.stallion >= 8 ? '#A32D2D' : score.stallion >= 4 ? '#0F6E56' : '#888'}">${(score.stallion || 0) > 0 ? '+' + score.stallion : '0'}/10</div></div>
+          <div class="score-item" title="${score._leftLabel || ''}"><div class="si-label">左回り</div><div class="si-val" style="color:${score.leftPts >= 5 ? '#A32D2D' : score.leftPts >= 3 ? '#0F6E56' : score.leftPts > 0 ? '#2563eb' : score.leftPts < 0 ? '#A32D2D' : '#888'}">${score.leftPts > 0 ? '+' + score.leftPts : (score.leftPts || 0)}/5</div></div>
           <div class="score-item"><div class="si-label">合計</div><div class="si-val">${total}/${maxS}</div></div>
         </div>
       </div>
@@ -5892,6 +5976,15 @@ function renderAnaScorecard() {
 
     // 東京コース経験
     if (h.tokyoExp && h.tokyoExpRank <= 3) { score += 1; reasons.push('東京好走実績'); }
+
+    // 左回り適性スコア
+    if (h.leftCourseScore >= 10) {
+      score += 3; reasons.push('左回り◎(' + h.leftCourse + ')');
+    } else if (h.leftCourseScore >= 7) {
+      score += 2; reasons.push('左回り○(' + h.leftCourse + ')');
+    } else if (h.leftCourseScore >= 5) {
+      score += 1; reasons.push('左回り△(' + h.leftCourse + ')');
+    }
 
     return { h: h, score: score, reasons: reasons };
   });
