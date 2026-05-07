@@ -2566,6 +2566,7 @@ const HORSES_BY_RACE = {
     note: "朝日杯FS覇者→皐月賞13着。距離短縮のマイル戻りは歓迎。東スポ杯2歳S（東京1800m）勝利実績で東京コース適性+10点。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    career: 4,
     hanshin1600Win: true, maileJusho: true, newmaWin: true, secondWin: true, restWeeks: 3,
     prevCorner4: 8, prevHeadCount: 18,
     tokyoExp: true, tokyoExpRank: 1, tokyoExpRace: "東京スポーツ杯2歳S", tokyoExpDist: 1800,
@@ -2585,6 +2586,7 @@ const HORSES_BY_RACE = {
     note: "ファルコンS快勝。京王杯2歳S（東京1400m）勝利実績で東京コース適性+10点。川田将雅騎乗。前走1着馬の頭固定は禁物データあり。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    career: 5,
     hanshin1600Win: false, newmaWin: true, secondWin: true, restWeeks: 4,
     prevCorner4: 3, prevHeadCount: 16,
     tokyoExp: true, tokyoExpRank: 1, tokyoExpRace: "京王杯2歳S", tokyoExpDist: 1400,
@@ -2604,6 +2606,7 @@ const HORSES_BY_RACE = {
     note: "シンザン記念勝ちからチャーチルダウンズC参戦。C.ルメール騎乗。東京1600mは初だが、マイルの切れ者。チャーチルダウンズC組の3着が多い穴ステップに注目",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    career: 4,
     hanshin1600Win: false, newmaWin: true, secondWin: false, restWeeks: 6,
     prevCorner4: 12, prevHeadCount: 18,
     tokyoExp: false,
@@ -2623,6 +2626,7 @@ const HORSES_BY_RACE = {
     note: "🔥ロードカナロア産駒（1600m以下で+10点自動加点）。キャリア2戦2勝で重賞初V。チャーチルダウンズC快勝からの参戦。東京コース経験はないが、父ロードカナロアの血が1600mで爆発する可能性。ノーザンファーム生産・藤原英昭厩舎の強力タッグ",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    career: 2,
     hanshin1600Win: false, newmaWin: true, secondWin: true, restWeeks: 4,
     prevCorner4: 5, prevHeadCount: 16,
     tokyoExp: false,
@@ -2642,6 +2646,7 @@ const HORSES_BY_RACE = {
     note: "NZT（東京1600m）勝利！東京コース適性+10点。原優介騎乗で前哨戦組のトップ。",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    career: 4,
     hanshin1600Win: false, newmaWin: true, secondWin: true, restWeeks: 3,
     prevCorner4: 4, prevHeadCount: 16,
     tokyoExp: true, tokyoExpRank: 1, tokyoExpRace: "NZT", tokyoExpDist: 1600,
@@ -2661,6 +2666,7 @@ const HORSES_BY_RACE = {
     note: "朝日杯FS3着・弥生賞2着から皐月賞15着と大敗。しかし距離短縮のマイル戻りは歓迎。坂井瑠星騎乗。皐月賞大敗からのNHKマイルC組は巻き返しデータあり",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    career: 6,
     hanshin1600Win: false, maileJusho: true, newmaWin: true, secondWin: true, restWeeks: 3,
     prevCorner4: 6, prevHeadCount: 16,
     tokyoExp: false,
@@ -2680,6 +2686,7 @@ const HORSES_BY_RACE = {
     note: "朝日杯FS4着→初戦からG1好走の実力馬。サウジアラビアRC勝ちの東京1600m実績【重要】。横山和生騎乗。東京コース適性は出走馬中トップクラス（+10点）",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    career: 4,
     hanshin1600Win: false, newmaWin: true, secondWin: false, restWeeks: 20,
     prevCorner4: 10, prevHeadCount: 18,
     tokyoExp: true, tokyoExpRank: 1, tokyoExpRace: "サウジアラビアRC", tokyoExpDist: 1600,
@@ -2699,6 +2706,7 @@ const HORSES_BY_RACE = {
     note: "ファルコンS勝ち馬の牝馬。前走1着は頭固定禁物のデータあり。ただし牝馬の複勝率20.9%は加点材料。抽選対象のため出走未確定",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    career: 3,
     prevCorner4: 7, prevHeadCount: 18,
     tokyoExp: false,
     popEstimate: 8, training: "A",
@@ -2717,6 +2725,7 @@ const HORSES_BY_RACE = {
     note: "チャーチルダウンズC3着で優先出走権獲得。同組は3着が多い穴ステップ。北村友一騎乗。3番人気候補だが複勝率10%の危険な人気馬の可能性も",
     longDist: false, repeater: false, age45: false,
     bodyWeight: 0, kyoto: false,
+    career: 4,
     prevCorner4: 14, prevHeadCount: 18,
     tokyoExp: false,
     popEstimate: 9, training: "B",
@@ -3449,18 +3458,43 @@ const RACE_PAST_DATA = {
         title: "前走別 成績（過去10年）",
         headers: ["前走","成績","複勝率","備考"],
         rows: [
-          { cells: ["桜花賞・皐月賞組（G1）", "4-5-1-27", "27%", "一桁着順なら期待大"], highlight: true,
-            matchFn: function(h){ return (h.prevRace === '皐月賞' || h.prevRace === '桜花賞') && h.prevRank <= 9; }, isGood: true },
-          { cells: ["チャーチルダウンズC（旧アーリントンC）", "1-0-3-20", "17%", "穴ステップ・3着が多い"], highlight: true,
+          { cells: ["皐月賞組", "2-2-0", "皐月賞連対率40%", "皐月賞組4頭が連対。5着以内なら期待大"], highlight: true,
+            matchFn: function(h){ return h.prevRace === '皐月賞' && h.prevRank <= 9; }, isGood: true },
+          { cells: ["桜花賞組", "2-3-1", "29%", "桜花賞組も3着多い好ステップ"], highlight: true,
+            matchFn: function(h){ return h.prevRace === '桜花賞' && h.prevRank <= 9; }, isGood: true },
+          { cells: ["チャーチルダウンズC（旧アーリントンC）", "1-0-5", "3着最多", "穴ステップ・3着が多い"], highlight: true,
             matchFn: function(h){ return h.prevRace === 'チャーチルダウンズC'; }, isGood: true },
-          { cells: ["ニュージーランドT", "2-2-2-28", "18%", "好走多数"], highlight: true,
+          { cells: ["ニュージーランドT", "2-2-2", "6頭好走", "NZTで勝った馬は3着以内なし！2〜3着馬を評価"], highlight: true,
             matchFn: function(h){ return h.prevRace === 'ニュージーランドT'; }, isGood: true },
-          { cells: ["前走G2組（その他）", "3-2-2-47", "13%", "上位人気限定で評価"],
-            matchFn: function(h){ return h.prevGrade === 'G2' && h.prevRace !== 'ニュージーランドT'; }, isGood: true },
-          { cells: ["前走1着馬（頭固定禁物）", "0-2-3-25", "17%", "勝率ゼロ・頭固定厳禁"],
+          { cells: ["ファルコンS", "2-0-2", "2勝", "ファルコンS好走馬は要注目"],
+            matchFn: function(h){ return h.prevRace === 'ファルコンS'; }, isGood: true },
+          { cells: ["毎日杯", "0-2-0", "2着最多", "勝ちゼロだが2着2回・ヒモとして有力"],
+            matchFn: function(h){ return h.prevRace === '毎日杯'; }, isGood: true },
+          { cells: ["前走重賞以外（OP以下）", "0-0-1", "1%未満", "好走は10年でわずか1頭のみ・ほぼ消し"],
+            matchFn: function(h){ return h.prevGrade !== 'G1' && h.prevGrade !== 'G2' && h.prevGrade !== 'G3'; }, isGood: false },
+          { cells: ["⚠️ NZT1着馬", "0-0-0-9", "0%", "NZTで勝った馬は3着以内なし！頭固定厳禁"],
+            matchFn: function(h){ return h.prevRace === 'ニュージーランドT' && h.prevRank === 1; }, isGood: false },
+        ],
+      },
+      {
+        type: "table",
+        title: "前走着順別 成績（過去10年・最重要データ）",
+        headers: ["前走着順","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["前走1着", "勝率2.6%", "5.3%", "⚠️ 最も成績が悪い・頭固定厳禁"],
             matchFn: function(h){ return h.prevRank === 1; }, isGood: false },
-          { cells: ["前走6着以下", "0-1-0-38", "3%", "大敗からの巻き返しはほぼ不可能"],
-            matchFn: function(h){ return h.prevRank >= 6; }, isGood: false },
+          { cells: ["前走2着", "勝率9.4%", "34.4%", "単回収144・信頼できる"], highlight: true,
+            matchFn: function(h){ return h.prevRank === 2; }, isGood: true },
+          { cells: ["前走3着", "勝率8.7%", "17.4%", "標準的な成績"],
+            matchFn: function(h){ return h.prevRank === 3; } },
+          { cells: ["🔥 前走4着", "勝率27.3%", "45.5%", "最強！複回収率310・前走4着馬を重視"], highlight: true,
+            matchFn: function(h){ return h.prevRank === 4; }, isGood: true },
+          { cells: ["前走5着", "勝率8.3%", "25.0%", "複勝率25%と高水準"],
+            matchFn: function(h){ return h.prevRank === 5; }, isGood: true },
+          { cells: ["前走6〜9着", "勝率0%", "10.3%", "勝ちゼロ・ヒモ止まり"],
+            matchFn: function(h){ return h.prevRank >= 6 && h.prevRank <= 9; }, isGood: false },
+          { cells: ["前走10着以下", "勝率0%", "6.1%", "ほぼ消し"],
+            matchFn: function(h){ return h.prevRank >= 10; }, isGood: false },
         ],
       },
       {
@@ -3722,8 +3756,9 @@ const BABA_PTS = {
 function maxScoreFor(score) {
   var hasSI = (score._siValue !== null && score._siValue !== undefined);
   var hasBaba = (score.baba !== null && score.baba !== undefined);
-  // ベース 100 + SI(10) + 馬場(15) + 距離経験(8) + 種牡馬(10) + 東京コース(10) + 牝馬(3) + NHK特殊条件(18) + NHK馬体重(8)
-  return 100 + (hasSI ? 10 : 0) + (hasBaba ? 15 : 0) + 8 + 10 + 10 + 3 + 18 + 8;
+  // ベース 100 + SI 10 + 馬場 15 + 距離 8 + 種牡馬 10 + 東京 10 + 牝 3 + NHK特殊 18 + NHK馬体重 8
+  // + NHK所属 5 + NHK騎手 4 + NHKキャリア 3 + NHK前走着順 8
+  return 100 + (hasSI ? 10 : 0) + (hasBaba ? 15 : 0) + 8 + 10 + 10 + 3 + 18 + 8 + 5 + 4 + 3 + 8;
 }
 
 // 馬場適性スコア（最大15点・最小-3点）
@@ -3751,6 +3786,54 @@ function calcTokyoExp(horse, raceVenue) {
   if (rank <= 3)       return { pts: 7,  label: '東京コース3着以内（' + raceLabel + ' ' + distLabel + ' ' + rank + '着）' };
   if (rank <= 6)       return { pts: 4,  label: '東京コース6着以内（' + raceLabel + ' ' + distLabel + ' ' + rank + '着）' };
   return { pts: 1, label: '東京コース出走経験あり' };
+}
+
+// NHKマイルC専用：所属（栗東+5 / 美浦-5）
+function calcShozoNHK(horse, raceName) {
+  if (!raceName || raceName.indexOf('NHKマイル') === -1) return { pts: 0, label: '' };
+  if (!horse) return { pts: 0, label: '' };
+  if (horse.stable === '栗東' || horse.shozo === '栗東') {
+    return { pts: 5, label: '栗東所属（過去10年9勝・複勝率54%）' };
+  }
+  if (horse.stable === '美浦' || horse.shozo === '美浦') {
+    return { pts: -5, label: '美浦所属（勝率0%・大幅割引）' };
+  }
+  return { pts: 0, label: '' };
+}
+
+// NHKマイルC専用：騎手加点（ルメール・川田・松山）
+function calcJockeyBonusNHK(horse, raceName) {
+  if (!raceName || raceName.indexOf('NHKマイル') === -1) return { pts: 0, label: '' };
+  var top = ['C.ルメール', '川田将雅', '松山弘平'];
+  if (horse && top.indexOf(horse.jockey) >= 0) {
+    return { pts: 4, label: '複勝率上位騎手（ルメール・川田・松山）' };
+  }
+  return { pts: 0, label: '' };
+}
+
+// NHKマイルC専用：キャリア戦数（3〜6戦が最強・2戦以内/7戦以上は減点）
+function calcCareerBonusNHK(horse, raceName) {
+  if (!raceName || raceName.indexOf('NHKマイル') === -1) return { pts: 0, label: '' };
+  var c = (horse && horse.career) || 0;
+  if (!c) return { pts: 0, label: '' };
+  if (c >= 3 && c <= 6) return { pts: 3,  label: 'キャリア' + c + '戦（3〜6戦が勝ち馬の条件）' };
+  if (c <= 2 || c >= 7) return { pts: -5, label: 'キャリア' + c + '戦（2戦以内・7戦以上は0勝）' };
+  return { pts: 0, label: '' };
+}
+
+// NHKマイルC専用：前走着順加点（4着が最強・1着/10着以下は減点）
+function calcPrevRankBonusNHK(horse, raceName) {
+  if (!raceName || raceName.indexOf('NHKマイル') === -1) return { pts: 0, label: '' };
+  var r = horse && horse.prevRank;
+  if (!r) return { pts: 0, label: '' };
+  if (r === 4)  return { pts: 8,  label: '前走4着【勝率27.3%・複勝率45.5%・複回収310】最強前走' };
+  if (r === 2)  return { pts: 5,  label: '前走2着【複勝率34.4%・単回収144】' };
+  if (r === 5)  return { pts: 3,  label: '前走5着【複勝率25.0%】' };
+  if (r === 3)  return { pts: 2,  label: '前走3着【複勝率17.4%】' };
+  if (r === 1)  return { pts: -3, label: '前走1着【複勝率5.3%・最悪の前走着順】' };
+  if (r >= 10)  return { pts: -5, label: '前走10着以下【複勝率6.1%・消し】' };
+  if (r >= 6)   return { pts: -2, label: '前走6〜9着【勝率0%】' };
+  return { pts: 0, label: '' };
 }
 
 // NHKマイルC専用：特殊条件加減点（最大+18 / 最小-5）
@@ -3947,15 +4030,26 @@ function computeScore(h) {
   var special = specialObj.pts;
   var nhkBw = nhkBwObj.pts;
 
+  // NHKマイルC 専用：所属・騎手・キャリア・前走着順
+  var shozoObj = calcShozoNHK(h, currentRace);
+  var jockeyNObj = calcJockeyBonusNHK(h, currentRace);
+  var careerObj = calcCareerBonusNHK(h, currentRace);
+  var prevRObj = calcPrevRankBonusNHK(h, currentRace);
+  var shozoP = shozoObj.pts, jockeyN = jockeyNObj.pts, careerP = careerObj.pts, prevR = prevRObj.pts;
+
   return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB, special, nhkBw,
+           shozoP, jockeyN, careerP, prevR,
            _distLabel: distObj.label, _stallionLabel: stallionObj.label,
            _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label,
-           _specialLabel: specialObj.label, _nhkBwLabel: nhkBwObj.label, _siValue: si };
+           _specialLabel: specialObj.label, _nhkBwLabel: nhkBwObj.label,
+           _shozoLabel: shozoObj.label, _jockeyNLabel: jockeyNObj.label,
+           _careerLabel: careerObj.label, _prevRLabel: prevRObj.label, _siValue: si };
 }
 function sumScore(s) {
   return s.ninki + s.waku + s.dataFit + s.ketto + s.jockey + s.course + s.chokyo + s.speed +
          (s.baba || 0) + (s.bw || 0) + (s.dist || 0) + (s.stallion || 0) +
-         (s.tokyo || 0) + (s.sexB || 0) + (s.special || 0) + (s.nhkBw || 0);
+         (s.tokyo || 0) + (s.sexB || 0) + (s.special || 0) + (s.nhkBw || 0) +
+         (s.shozoP || 0) + (s.jockeyN || 0) + (s.careerP || 0) + (s.prevR || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
