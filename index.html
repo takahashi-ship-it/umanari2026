@@ -5546,9 +5546,11 @@ function computeScore(h) {
 
   // 枠順スコア：NHKマイルC は専用テーブル、その他は汎用テーブル
   var wakuObjN = calcWakuScoreNHK(h, currentRace);
-  const waku = (wakuObjN.pts !== 0)
-    ? (10 + wakuObjN.pts) // ベース10 + NHK独自加減点（最大20 / 最小2）
+  let waku = (wakuObjN.pts !== 0)
+    ? (10 + wakuObjN.pts) // ベース10 + NHK独自加減点
     : (h.waku ? ({1:15,2:11,3:9,4:13,5:10,6:7,7:5,8:4})[h.waku] ?? 10 : 10);
+  // 表示用の上限・下限制限：max 15 / min 0
+  waku = Math.min(15, Math.max(0, waku));
 
   const goodList = getActiveConditions().good;
   const matched = goodList.filter(c => c.match(h)).length;
@@ -5558,7 +5560,8 @@ function computeScore(h) {
   if (nhkData !== null) dataFit = nhkData;
 
   const kettoMap = { "KK系孫":10, "キタサンブラック系":9, "欧州長距離":8, "ステイゴールド系":7, "ディープ系":6 };
-  const ketto = kettoMap[h.blood] ?? 5;
+  let ketto = kettoMap[h.blood] ?? 5;
+  ketto = Math.min(10, Math.max(0, ketto));
 
   const eliteJockeys = ["武豊","C.ルメール","D.レーン"];
   const goodJockeys  = ["北村友一","岩田望来","戸崎圭太","松山弘平","鮫島克駿"];
@@ -5598,8 +5601,8 @@ function computeScore(h) {
   var raceD = getCurrentRaceDistance();
   var distObj = calcDistanceExpScore(h, raceD);
   var stallionObj = calcStallionScore(h, raceD);
-  var dist = distObj.pts;
-  var stallion = stallionObj.pts;
+  var dist = Math.min(8, Math.max(0, distObj.pts));
+  var stallion = Math.min(10, Math.max(0, stallionObj.pts));
 
   // 東京コース適性 + 牝馬加点（NHKマイルC等）
   var raceVenue = (typeof RACE_META !== 'undefined' && currentRace && RACE_META[currentRace] && RACE_META[currentRace].venue) || '';
