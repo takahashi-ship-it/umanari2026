@@ -7362,52 +7362,213 @@ var KAIMOKU_DATA = {
   },
 };
 
-// 軸馬の信頼度スコアを動的計算（jikuScore のハードコードを上書き）
+// レース距離・方向ヘルパー
+function getRaceDistance(raceName) {
+  try {
+    var meta = (typeof RACE_META !== 'undefined') ? RACE_META[raceName] : null;
+    if (!meta || !meta.surface) return 1600;
+    var m = meta.surface.match(/(\d+)/);
+    return m ? parseInt(m[1], 10) : 1600;
+  } catch(e) { return 1600; }
+}
+function getRaceDirection(raceName) {
+  try {
+    var meta = (typeof RACE_META !== 'undefined') ? RACE_META[raceName] : null;
+    if (!meta) return 'right';
+    var venue = (meta.venue || '') + (meta.surface || '');
+    if (venue.indexOf('東京') >= 0 || venue.indexOf('新潟') >= 0 || venue.indexOf('中京') >= 0 || venue.indexOf('左') >= 0) return 'left';
+    return 'right';
+  } catch(e) { return 'right'; }
+}
+
+// 右回り適性スコア（左回り経験馬は逆に減点候補）
+function calcRightCourseBonus(horse) {
+  if (!horse) return { pts: 0, label: '' };
+  // 京都・中山・阪神・小倉等の右回りは default = 0、右回り好走実績は別途未実装
+  return { pts: 0, label: '' };
+}
+
+/* =====================================================
+ * 統一スコアシステム computeScoreBreakdown(horse, raceName)
+ *   - 全レース対応・各項目max値を厳格に制御
+ *   - 加点項目とペナルティを分離
+ *   - getJikuScore など UI 表示用に使用
+ * ===================================================== */
+function computeScoreBreakdown(horse, raceName) {
+  if (!horse) return { total: 0, max: 113, pct: 0, items: {}, penalty: 0 };
+  var raceInfo = (typeof RACE_META !== 'undefined' && RACE_META[raceName]) || {};
+  var raceDist = getRaceDistance(raceName);
+  var raceDir  = getRaceDirection(raceName);
+  var baba = (typeof window !== 'undefined' && window.currentBaba) || 'good';
+  var isNHK = !!(raceName && raceName.indexOf('NHKマイル') !== -1);
+
+  // 1. 人気 (max:20)
+  var pop = horse.popEstimate || 99;
+  var popScore = 0;
+  if      (pop === 1)  popScore = 8;
+  else if (pop === 2)  popScore = 15;
+  else if (pop === 3)  popScore = 12;
+  else if (pop === 4)  popScore = 8;
+  else if (pop === 5)  popScore = 6;
+  else if (pop <= 9)   popScore = 3;
+
+  // 2. 枠順 (max:15)
+  var waku = horse.waku || 0;
+  var wakuScore = 0;
+  if (isNHK) {
+    if (waku === 6 || waku === 8)      wakuScore = 15;
+    else if (waku === 5 || waku === 7) wakuScore = 10;
+    else if (waku >= 1 && waku <= 4)   wakuScore = 3;
+  } else {
+    wakuScore = (waku >= 5) ? 10 : (waku >= 1 ? 5 : 0);
+  }
+
+  // 3. データ (max:20) ※加点のみ
+  var dataScore = 0;
+  if (isNHK) {
+    var c = horse.career || 0;
+    if (c >= 3 && c <= 6) dataScore += 8;
+    if (waku === 6 || waku === 8)      dataScore += 8;
+    else if (waku === 5 || waku === 7) dataScore += 5;
+    var r = horse.prev1r || horse.prevRank || 99;
+    if      (r === 4) dataScore += 8;
+    else if (r === 2) dataScore += 5;
+    else if (r === 3) dataScore += 3;
+    dataScore = Math.min(20, dataScore);
+  } else {
+    dataScore = 10;
+  }
+
+  // 4. 血統 (max:10)
+  var stallionBonus = (typeof calcStallionScore === 'function')
+    ? calcStallionScore(horse, raceDist) : { pts: 3, label: '' };
+  var bloodScore = Math.min(10, Math.max(0, stallionBonus ? stallionBonus.pts : 3));
+
+  // 5. 騎手 (max:10)
+  var jockeyScores = {
+    'C.ルメール':8,'川田将雅':8,'D.レーン':7,'横山武史':7,
+    '横山和生':6,'戸崎圭太':6,'坂井瑠星':6,'松山弘平':5,
+    '西村淳也':5,'岩田望来':4,'北村友一':4,'津村明秀':3,
+    '三浦皇成':3,'原優介':3,'松若風馬':3,'西塚洸二':3,
+    '斎藤新':3,'佐々木大輔':2,'武豊':8
+  };
+  var jockeyScore = jockeyScores[horse.jockey] || 3;
+
+  // 6. コース (max:10) ※左回りスコア+東京経験
+  var courseScore = 0;
+  var lcs = horse.leftCourseScore || 0;
+  if      (lcs >= 10) courseScore = 10;
+  else if (lcs >= 7)  courseScore = 7;
+  else if (lcs >= 5)  courseScore = 5;
+  else if (lcs >= 3)  courseScore = 3;
+  else if (raceDir === 'left') courseScore = 2;
+  else courseScore = 5;
+  courseScore = Math.min(10, courseScore);
+
+  // 7. 調教 (max:10)
+  var trainMap = {S:10, A:8, B:5, C:2};
+  var trainingScore = trainMap[horse.training] || 5;
+
+  // 8. SI (max:10)
+  var si = horse.speedIndex || 0;
+  var speedScore = 0;
+  if      (si >= 95) speedScore = 10;
+  else if (si >= 88) speedScore = 8;
+  else if (si >= 82) speedScore = 6;
+  else if (si >= 75) speedScore = 4;
+  else if (si >= 1)  speedScore = 2;
+
+  // 9. 馬場 (max:15)
+  var babaScore = 6;
+  if (horse.babaScore && horse.babaScore[baba] != null) {
+    var bs = horse.babaScore[baba];
+    if      (bs >= 85) babaScore = 15;
+    else if (bs >= 75) babaScore = 10;
+    else if (bs >= 60) babaScore = 6;
+    else if (bs >= 50) babaScore = 3;
+    else               babaScore = 0;
+  }
+
+  // 10. 距離経験 (max:8)
+  var distBonus = (typeof calcDistanceExpScore === 'function')
+    ? calcDistanceExpScore(horse, raceDist) : { pts: 0, label: '' };
+  var distScore = Math.min(8, Math.max(0, distBonus ? distBonus.pts : 0));
+
+  // 11. 左/右回り (max:5)
+  var dirBonus = (raceDir === 'left' && typeof calcLeftCourseBonus === 'function')
+    ? calcLeftCourseBonus(horse)
+    : calcRightCourseBonus(horse);
+  var dirScore = Math.min(5, Math.max(0, dirBonus ? dirBonus.pts : 0));
+
+  // ペナルティ（合計から減算）
+  var penalty = 0;
+  if (isNHK) {
+    if (horse.prevRace === 'ニュージーランドT' && horse.prevRank === 1) penalty -= 23;
+    else if (horse.prevRank === 1) penalty -= 8;
+    if ((horse.career||0) <= 2 && (horse.career||0) > 0) penalty -= 15;
+    if ((horse.career||0) >= 7) penalty -= 8;
+    if (waku >= 1 && waku <= 4)  penalty -= 8;
+    if (!horse.tokyoExp && (horse.leftCourseScore||0) <= 3) penalty -= 5;
+  }
+
+  var MAX = 113; // 20+15+20+10+10+10+10+10+15+8+5 = 133 → ペナルティ考慮で113
+  var raw = popScore + wakuScore + dataScore + bloodScore + jockeyScore
+          + courseScore + trainingScore + speedScore + babaScore
+          + distScore + dirScore + penalty;
+  var total = Math.max(0, raw);
+  var pct = Math.max(0, Math.min(100, Math.round(total / MAX * 100)));
+
+  return {
+    total: total,
+    max: MAX,
+    pct: pct,
+    items: {
+      popularity: { score: popScore,      max: 20, label: '人気' },
+      waku:       { score: wakuScore,     max: 15, label: '枠順' },
+      data:       { score: dataScore,     max: 20, label: 'データ' },
+      blood:      { score: bloodScore,    max: 10, label: '血統' },
+      jockey:     { score: jockeyScore,   max: 10, label: '騎手' },
+      course:     { score: courseScore,   max: 10, label: 'コース' },
+      training:   { score: trainingScore, max: 10, label: '調教' },
+      speed:      { score: speedScore,    max: 10, label: 'スピード' },
+      baba:       { score: babaScore,     max: 15, label: '馬場適性' },
+      distance:   { score: distScore,     max: 8,  label: '距離経験' },
+      direction:  { score: dirScore,      max: 5,  label: raceDir === 'left' ? '左回り' : '右回り' }
+    },
+    penalty: penalty,
+    stallionLabel: stallionBonus ? stallionBonus.label : '',
+    distLabel:     distBonus ? distBonus.label : '',
+    dirLabel:      dirBonus ? dirBonus.label : ''
+  };
+}
+
+// 軸馬の信頼度スコアを動的計算（computeScoreBreakdown 統合版）
 function getJikuScore(raceName) {
   var data = KAIMOKU_DATA[raceName];
   if (!data) return 0;
   var horses = (window.HORSES_BY_RACE || HORSES_BY_RACE || {})[raceName] || [];
   var jiku = horses.find(function(h){ return h.name === data.jiku; });
   if (!jiku) return data.jikuScore || 0;
-  if (typeof computeScore !== 'function' || typeof sumScore !== 'function') return data.jikuScore || 0;
-
-  var savedRace = (typeof currentRace !== 'undefined') ? currentRace : null;
-  try { currentRace = raceName; } catch(e) {}
-
-  var total = 0, max = 222;
-  try {
-    var s = computeScore(jiku);
-    total = sumScore(s);
-    if (typeof maxScoreFor === 'function') max = maxScoreFor(s);
-  } catch(e) { total = 0; }
-
-  if (savedRace !== null) { try { currentRace = savedRace; } catch(e) {} }
-
-  // 100点満点に正規化
-  return Math.max(0, Math.min(100, Math.round(total * 100 / max)));
+  if (typeof computeScoreBreakdown !== 'function') return data.jikuScore || 0;
+  var bd = computeScoreBreakdown(jiku, raceName);
+  return bd.pct;
 }
 
-// 信頼度スコア順に相手馬を動的ソート（KAIMOKU_DATA.aiteAll を再ランキング）
+// 信頼度スコア順に相手馬を動的ソート（computeScoreBreakdown 統合版）
 function getAiteRanked(raceName) {
   var data = KAIMOKU_DATA[raceName];
   if (!data || !data.aiteAll) return [];
   var horses = (window.HORSES_BY_RACE || HORSES_BY_RACE || {})[raceName] || [];
   if (!horses.length) return data.aiteAll.slice();
 
-  // computeScore は currentRace グローバルを参照するため一時的に切替
-  var savedRace = (typeof currentRace !== 'undefined') ? currentRace : null;
-  try { currentRace = raceName; } catch(e) {}
-
   var ranked = data.aiteAll.map(function(aite) {
     var horse = horses.find(function(h){ return h.name === aite.name; });
     var score = 0;
-    if (horse && typeof computeScore === 'function' && typeof sumScore === 'function') {
-      try { score = sumScore(computeScore(horse)); } catch(e) { score = 0; }
+    if (horse && typeof computeScoreBreakdown === 'function') {
+      try { score = computeScoreBreakdown(horse, raceName).total; } catch(e) { score = 0; }
     }
     return { name: aite.name, reason: aite.reason || '', score: score };
   });
-
-  if (savedRace !== null) { try { currentRace = savedRace; } catch(e) {} }
 
   ranked.sort(function(a, b) { return b.score - a.score; });
   return ranked;
