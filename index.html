@@ -7706,6 +7706,33 @@ function computeScoreBreakdown(horse, raceName) {
   };
 }
 
+// 軸馬の全馬中の信頼度スコア順位を動的計算
+function getJikuRank(raceName) {
+  var data = KAIMOKU_DATA[raceName];
+  if (!data) return null;
+  var horses = (window.HORSES_BY_RACE || HORSES_BY_RACE || {})[raceName] || [];
+  if (!horses.length || typeof computeScoreBreakdown !== 'function') return null;
+
+  var scored = horses.map(function(h) {
+    var pct = 0;
+    try { pct = computeScoreBreakdown(h, raceName).pct; } catch(e) { pct = 0; }
+    return { name: h.name, score: pct };
+  }).sort(function(a, b) { return b.score - a.score; });
+
+  var rank = -1;
+  for (var i = 0; i < scored.length; i++) {
+    if (scored[i].name === data.jiku) { rank = i + 1; break; }
+  }
+  if (rank < 0) return null;
+
+  return {
+    rank: rank,
+    total: scored.length,
+    top: scored[0],
+    jikuScore: scored[rank - 1]
+  };
+}
+
 // 軸馬の信頼度スコアを動的計算（computeScoreBreakdown 統合版）
 function getJikuScore(raceName) {
   var data = KAIMOKU_DATA[raceName];
@@ -7774,11 +7801,27 @@ function renderKaimokuAI(raceName) {
   var html = '<div class="card" style="border:2px solid #1a2744">';
   html += '<div class="ct">🎯 AI予想買い目（3連単1頭軸マルチ）</div>';
 
-  // 軸馬
+  // 軸馬カード（信頼度スコア順位バッジ付き）
+  var jikuRankInfo = (typeof getJikuRank === 'function') ? getJikuRank(key) : null;
+  var rankBadge = '';
+  if (jikuRankInfo) {
+    var _r = jikuRankInfo.rank;
+    var _rankColor = _r === 1 ? '#0F6E56' : _r <= 3 ? '#185FA5' : '#EF9F27';
+    var _rankText = _r === 1 ? '🏆 信頼度スコア1位' : _r + '位 / ' + jikuRankInfo.total + '頭中';
+    rankBadge = '<div style="margin-top:6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
+      + '<span style="background:' + _rankColor + ';color:#fff;font-size:10px;font-weight:700;'
+      + 'padding:2px 8px;border-radius:10px">' + _rankText + '</span>';
+    if (_r > 1 && jikuRankInfo.top) {
+      rankBadge += '<span style="font-size:10px;color:#AAC">'
+        + '1位: ' + jikuRankInfo.top.name + '(' + jikuRankInfo.top.score + '%)</span>';
+    }
+    rankBadge += '</div>';
+  }
   html += '<div style="background:#1a2744;color:#fff;border-radius:12px;padding:12px 16px;margin-bottom:14px">';
   html += '<div style="font-size:10px;color:#8899CC;margin-bottom:3px">◎ 軸馬（3着以内確定的）</div>';
   html += '<div style="font-size:20px;font-weight:800">' + data.jiku + '</div>';
   if (data.jikuNote) html += '<div style="font-size:10px;color:#AAC;margin-top:3px">' + data.jikuNote + '</div>';
+  html += rankBadge;
   html += '</div>';
 
   // 相手頭数セレクター（aiteAll が十分な場合のみ）
