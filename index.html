@@ -7458,6 +7458,15 @@ var KAIMOKU_DATA = {
     jikuNote: '5枠10番・外枠ボーナス+5pt・調教S・馬場82・左回り◎・前走4着特注・消しデータ非該当',
     jikuScore: 89,
     jikuReason: '5枠+5pt・調教S+10・馬場82+8・左回り◎+5・前走4着特注・前走1着ペナルティなし',
+    jikuMemo: [
+      '✅ 調教S評価（最高評価・美浦W36.2-11.1先着）',
+      '✅ 前走4着【複勝率最高データ・過去10年特注】',
+      '✅ 馬場適性スコア82(最高タイ)',
+      '✅ 左回り◎(東京・新潟2勝)',
+      '✅ 消しデータ非該当(前走1着ペナルティなし)',
+      '✅ 5枠10番(外枠ボーナス)',
+      '⚠️ 信頼度スコア競争でフクチャンショウ・ダイヤモンドノットと争う',
+    ],
     aite: ['フクチャンショウ', 'アスクイキゴミ', 'ロデオドライブ', 'アンドゥーリル', 'アドマイヤクワッズ'],
     aiteAll: [
       { name: 'フクチャンショウ',   reason: '8枠18番+15pt・左回り◎・調教A・前走1着ペナルティなし' },
@@ -7479,6 +7488,16 @@ var KAIMOKU_DATA = {
     jikuNote: '4枠8番・坂井瑠星継続・3番人気8.3倍・京都萩S勝ち・ホープフルS5着・G1経験',
     jikuScore: 75,
     jikuReason: '4枠(中枠)・坂井瑠星+6・京都実績(rcs:7)・距離経験+8・キタサンブラック産駒',
+    jikuMemo: [
+      '✅ 坂井瑠星継続騎乗(7/10・安定評価)',
+      '✅ 京都萩S勝ち(京都コース実績◎)',
+      '✅ ホープフルS5着(G1経験・格を経験済み)',
+      '✅ 4枠8番(中枠・枠順ペナルティなし)',
+      '✅ キタサンブラック産駒(京都2200m複回111%)',
+      '⚠️ エムズビギンが信頼度上位だが1枠2番で内枠ペナルティ',
+      '⚠️ ベレシートが1番人気だが8枠で大外ペナルティ',
+      '→ 枠順ペナルティのない3番人気馬として軸選定',
+    ],
     aite: ['エムズビギン', 'コンジェスタス', 'ベレシート', 'キンググローリー', 'サヴォアフェール'],
     aiteAll: [
       { name: 'エムズビギン',       reason: 'SI78・川田+8・2番人気・きさらぎ賞2着・1枠割引あり' },
@@ -7500,6 +7519,15 @@ var KAIMOKU_DATA = {
     jikuNote: '1番人気4.0倍・7枠14番・D.レーン騎乗・4歳馬（好走率最高）・東京2戦2勝',
     jikuScore: 78,
     jikuReason: '4歳好走データ+D.レーン+東京実績+前走1着の上昇馬',
+    jikuMemo: [
+      '✅ 1番人気4.0倍(同率1位・最上位評価)',
+      '✅ D.レーン騎乗(8/10・トップ騎手)',
+      '✅ 4歳馬(好走率最高・複勝率34%)',
+      '✅ 東京2戦2勝(コース適性10/10)',
+      '✅ 7枠14番(外枠・エプソムC好データ枠)',
+      '⚠️ トロヴァトーレも同率1人気4.0倍・信頼度争いに注意',
+      '→ 4歳馬好走データ×D.レーン×東京実績の三拍子が決め手',
+    ],
     aite: ['トロヴァトーレ', 'カラマティアノス', 'マジックサンズ', 'ステレンボッシュ', 'サブマリーナ'],
     aiteAll: [
       { name: 'トロヴァトーレ',     reason: 'SI86・ルメール・6枠11番・東京新聞杯V・モーリス産駒' },
@@ -7834,11 +7862,28 @@ function renderKaimokuAI(raceName) {
     }
     rankBadge += '</div>';
   }
+  // 軸馬選定理由メモ
+  var memoHtml = '';
+  if (data.jikuMemo && data.jikuMemo.length > 0) {
+    memoHtml += '<div style="margin-top:10px;padding:10px;background:rgba(255,255,255,0.08);border-radius:8px">';
+    memoHtml += '<div style="font-size:10px;color:#8899CC;margin-bottom:6px;font-weight:600">📝 軸馬選定理由</div>';
+    data.jikuMemo.forEach(function(memo) {
+      var color = memo.indexOf('✅') === 0 ? '#7AE6B5'
+                : memo.indexOf('⚠️') === 0 ? '#F5C842'
+                : memo.indexOf('→')  === 0 ? '#F5C842'
+                : '#AAC';
+      memoHtml += '<div style="font-size:10px;color:' + color + ';margin-bottom:3px;line-height:1.5">'
+               + memo + '</div>';
+    });
+    memoHtml += '</div>';
+  }
+
   html += '<div style="background:#1a2744;color:#fff;border-radius:12px;padding:12px 16px;margin-bottom:14px">';
   html += '<div style="font-size:10px;color:#8899CC;margin-bottom:3px">◎ 軸馬（3着以内確定的）</div>';
   html += '<div style="font-size:20px;font-weight:800">' + data.jiku + '</div>';
   if (data.jikuNote) html += '<div style="font-size:10px;color:#AAC;margin-top:3px">' + data.jikuNote + '</div>';
   html += rankBadge;
+  html += memoHtml;
   html += '</div>';
 
   // 相手頭数セレクター（aiteAll が十分な場合のみ）
