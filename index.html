@@ -5060,6 +5060,10 @@ function renderPastData() {
   if (data.leftCourseRanking) {
     html += renderLeftCourseRanking(data.leftCourseRanking);
   }
+  // 穴馬条件・該当馬バッジ（NHKマイルC のみ）
+  if (typeof renderAnaBadges === 'function') {
+    html += renderAnaBadges(currentRace);
+  }
   root.innerHTML = html;
 }
 
@@ -5378,6 +5382,102 @@ function calcNztPenalty(horse, raceName) {
     return { pts: -15, label: '⚠️前走NZT1着【0-0-0-9】複勝率0%・過去10年消しデータ' };
   }
   return { pts: 0, label: '' };
+}
+
+// NHKマイルC：穴馬21条件・該当馬バッジ判定データ
+var ANA_CONDITIONS_NHK = [
+  { id:'ana1',  label:'🔥小柄な馬体重（420〜464kg）が穴馬必須条件', detail:'二桁人気で馬券に絡んだ6頭が全てこの体重帯。差し・追込馬が多い', type:'plus',
+    matchFn: function(h){ var bw = h.bodyWeight||0; return bw >= 420 && bw <= 464; } },
+  { id:'ana2',  label:'⚠️前走馬体重480kg未満は3着内ゼロ', detail:'当日馬体重で要確認', type:'minus',
+    matchFn: function(h){ var bw = h.prevBodyWeight||h.bodyWeightPrev||h.bodyWeight||0; return bw > 0 && bw < 480; } },
+  { id:'ana3',  label:'差し・追込脚質が穴馬の共通点', detail:'二桁人気激走馬は全員後方から長い直線を使って差してくるパターン', type:'plus',
+    matchFn: function(h){ return h.style === '差し' || h.style === '追込' || h.pace === '差し' || h.pace === '追込'; } },
+  { id:'ana4',  label:'4コーナー6番手以内が必須', detail:'馬券圏内30頭中28頭が好位追走', type:'plus',
+    matchFn: function(h){ return h.style === '先行' || h.style === '好位' || h.pace === '先行' || h.pace === '好位'; } },
+  { id:'ana5',  label:'外枠（5〜8枠）の穴馬が圧倒的優勢', detail:'4番人気以下の馬は外枠で8連対・内枠は2023年2着の1連対のみ', type:'plus',
+    matchFn: function(h){ return (h.waku||0) >= 5; } },
+  { id:'ana6',  label:'⭐6枠・8枠は特に注目（各4勝）', detail:'穴馬なら外枠の馬を最優先', type:'plus',
+    matchFn: function(h){ return h.waku === 6 || h.waku === 8; } },
+  { id:'ana7',  label:'前走1番人気→NHKマイルCで人気落ち', detail:'複勝率38.5%の好データ', type:'plus',
+    matchFn: function(h){ return (h.prev1pop === 1 || h.prevPop === 1) && (h.popEstimate||99) >= 4; } },
+  { id:'ana8',  label:'⭐前走4着が最強データ【勝率27.3%・複回収310%】', detail:'今年はエコロアルバが該当', type:'plus',
+    matchFn: function(h){ return h.prev1r === 4; } },
+  { id:'ana9',  label:'前走2着組【複勝率34.4%・単回収144】', detail:'今年：ロデオドライブ・ローベルクランツ・ユウファラオ', type:'plus',
+    matchFn: function(h){ return h.prev1r === 2; } },
+  { id:'ana10', label:'坂路追切組が3着内の3分の2を占める', detail:'栗東坂路・美浦南坂路', type:'plus',
+    matchFn: function(h){
+      var t = (h.trainingTime||'') + (h.trainingNote||'');
+      return t.indexOf('坂路') !== -1;
+    } },
+  { id:'ana11', label:'キングマンボ系が穴馬で毎年激走', detail:'ロードカナロア・サートゥルナーリア・ドゥラメンテ系', type:'plus',
+    matchFn: function(h){
+      var f = h.father||'';
+      return ['ロードカナロア','サートゥルナーリア','ドゥラメンテ','キングカメハメハ','ルーラーシップ'].indexOf(f) >= 0;
+    } },
+  { id:'ana12', label:'Storm Cat血脈保有馬が人気薄で激走', detail:'18番人気・17番人気・14番人気での激走例あり', type:'plus',
+    matchFn: function(h){
+      var f = h.father||''; var m = h.motherFather||'';
+      return ['Into Mischief','Hinchinbrook','Frankel','スニッツェル'].indexOf(f) >= 0
+          || ['Into Mischief','Hinchinbrook'].indexOf(m) >= 0;
+    } },
+  { id:'ana13', label:'⭐9番人気が過去10年で3勝（勝率・複勝率ともに40%）', detail:'二桁人気の激走が毎年のように発生', type:'plus',
+    matchFn: function(h){ return h.popEstimate === 9; } },
+  { id:'ana14', label:'⚠️2022年以降は上位人気が壊滅的', detail:'1番人気は4年で1勝・2番人気も近年苦戦。2022年153万・2025年150万の超高額配当', type:'warning',
+    matchFn: function(h){ return (h.popEstimate||99) <= 2; } },
+  { id:'ana15', label:'⚠️前走NZT1着馬【0-0-0-9 複勝率0%】消し', detail:'レザベーションは最重要消しデータ該当', type:'minus',
+    matchFn: function(h){ var n = (h.prev1race === 'NZT' || (h.prev1race && h.prev1race.indexOf('ニュージーランド') !== -1)); return n && h.prev1r === 1; } },
+  { id:'ana16', label:'⚠️キャリア2戦以下【0-0-0-4 複勝率0%】消し', detail:'キャリア7戦以上も【0-0-3-39】で割引', type:'minus',
+    matchFn: function(h){ return (h.career||0) <= 2 && (h.career||0) > 0; } },
+  { id:'ana17', label:'⚠️内枠（1〜4枠）は勝率1.3%・連対率6.3%と大幅不利', detail:'外枠（5〜8枠）が9勝！', type:'minus',
+    matchFn: function(h){ return (h.waku||0) >= 1 && (h.waku||0) <= 4; } },
+  { id:'ana18', label:'⭐6枠・8枠が各4勝トップ。2017年以降外枠馬が8連続優勝', detail:'', type:'plus',
+    matchFn: function(h){ return h.waku === 6 || h.waku === 8; } },
+  { id:'ana19', label:'⚠️前走1着馬の3着内率わずか5.3%', detail:'前走勝ち馬は全体的に割引', type:'minus',
+    matchFn: function(h){ return h.prev1r === 1; } },
+  { id:'ana20', label:'⭐前走2着以下かつ勝ち馬とタイム差0.4秒以内が最好成績', detail:'JRA公式2026', type:'plus',
+    matchFn: function(h){ return h.prev1r >= 2 && h.prev1r <= 5; } },
+  { id:'ana21', label:'過去10年の優勝馬は全員デビュー戦勝利', detail:'7頭がデビュー2戦目も勝利', type:'plus',
+    matchFn: function(h){ return h.debutWin === true || h.newmaWin === true; } },
+];
+
+// 穴馬条件・該当馬バッジレンダラー
+function renderAnaBadges(raceName) {
+  var conditions = (raceName && raceName.indexOf('NHKマイル') !== -1)
+    ? ANA_CONDITIONS_NHK : null;
+  if (!conditions) return '';
+  var horses = (window.HORSES_BY_RACE || HORSES_BY_RACE || {})[raceName] || [];
+  if (!horses.length) return '';
+
+  var html = '<div class="section">';
+  html += '<h3>🎯 穴馬条件・該当馬バッジ</h3>';
+
+  conditions.forEach(function(cond) {
+    var matched = horses.filter(function(h) {
+      try { return cond.matchFn(h); } catch(e) { return false; }
+    });
+    if (!matched.length) return;
+
+    var bgColor    = cond.type === 'plus' ? '#E1F5EE' : cond.type === 'minus' ? '#FDECEA' : '#FFF8E1';
+    var borderColor= cond.type === 'plus' ? '#0F6E56' : cond.type === 'minus' ? '#C62828' : '#F57F17';
+    var badgeBg    = cond.type === 'plus' ? '#0F6E56' : cond.type === 'minus' ? '#C62828' : '#F57F17';
+
+    html += '<div style="background:' + bgColor + ';border-left:3px solid ' + borderColor
+          + ';border-radius:8px;padding:8px 12px;margin-bottom:6px">';
+    html += '<div style="font-size:11px;font-weight:600;color:' + borderColor
+          + ';margin-bottom:5px">' + cond.label + '</div>';
+    if (cond.detail) {
+      html += '<div style="font-size:10px;color:var(--color-text-secondary);margin-bottom:5px">'
+            + cond.detail + '</div>';
+    }
+    html += '<div style="display:flex;flex-wrap:wrap;gap:4px">';
+    matched.forEach(function(h) {
+      html += '<span style="background:' + badgeBg + ';color:#fff;font-size:10px;'
+            + 'font-weight:600;padding:2px 8px;border-radius:10px">' + h.name + '</span>';
+    });
+    html += '</div></div>';
+  });
+  html += '</div>';
+  return html;
 }
 
 // NHKマイルC：穴馬条件のうちスコア未反映分（チャーチルC・NZT2-3着・5-9番人気）
