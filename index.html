@@ -5303,6 +5303,24 @@ function calcNztPenalty(horse, raceName) {
   return { pts: 0, label: '' };
 }
 
+// NHKマイルC専用：データ項目スコア（加点のみ・最大20pt）
+// 消しデータは別途 calcCareerBonusNHK / calcPrevRankBonusNHK / calcNztPenalty / calcFrameNHK で減点
+function calcDataScoreNHK(horse, raceName) {
+  if (!raceName || raceName.indexOf('NHKマイル') === -1) return null;
+  if (!horse) return null;
+  var pts = 0;
+  // キャリア3〜6戦（勝ち馬全員該当）
+  if (horse.career >= 3 && horse.career <= 6) pts += 8;
+  // 枠順（最多勝利枠）
+  if (horse.waku === 6 || horse.waku === 8) pts += 8;
+  else if (horse.waku === 5 || horse.waku === 7) pts += 5;
+  // 前走着順（特注データ）
+  if (horse.prev1r === 4)      pts += 8;
+  else if (horse.prev1r === 2) pts += 5;
+  else if (horse.prev1r === 3) pts += 3;
+  return Math.min(20, pts);
+}
+
 // NHKマイルC専用：東京コース未経験ペナルティ（過去10年優勝馬10頭中8頭が東京経験済み）
 function calcTokyoExpPenaltyNHK(horse, raceName) {
   if (!raceName || raceName.indexOf('NHKマイル') === -1) return { pts: 0, label: '' };
@@ -5536,7 +5554,10 @@ function computeScore(h) {
 
   const goodList = getActiveConditions().good;
   const matched = goodList.filter(c => c.match(h)).length;
-  const dataFit = Math.min(20, Math.round(matched * 2.5));
+  let dataFit = Math.min(20, Math.round(matched * 2.5));
+  // NHKマイルC: 加点データ専用ロジックで上書き（消しデータは別途計上のため除外）
+  const nhkData = calcDataScoreNHK(h, currentRace);
+  if (nhkData !== null) dataFit = nhkData;
 
   const kettoMap = { "KK系孫":15, "キタサンブラック系":13, "欧州長距離":12, "ステイゴールド系":10, "ディープ系":8 };
   const ketto = kettoMap[h.blood] ?? 6;
