@@ -4719,6 +4719,10 @@ const RACE_PAST_DATA = {
 
 "京都新聞杯": {
   anaPoints: [
+    '⭐前走1勝クラス（芝2200〜2400m）が3着内率40.9%・最強ステップ！今年：ティラーノが該当',
+    '⭐過去10年3着以内30頭中16頭が前走1勝クラス。条件戦組を軽視厳禁',
+    '⚠️前走皐月賞組はディープボンド(2020年)以外0勝。G1組は割引',
+    '重賞組はG2・G3経由が中心。G1直行組は基本割引',
     '⭐差し馬が最多12勝・勝率12.2%・単回122.7%・複回93%。5項目全て2位以内と圧倒的優位。差し馬を重視！',
     '⭐2番人気複勝率60%・複回108.5%が最安定。3番人気は単回201%の激熱ゾーン。1番人気は複勝率45%で過信禁物',
     '⭐オッズ8.0〜14.9倍が単回139.4%・複回114.5%と最高収益ゾーン。6勝最多で穴馬の宝庫',
@@ -4812,6 +4816,23 @@ const RACE_PAST_DATA = {
           matchFn: function(h){ return h.waku === 7; }, isGood: true },
         { cells: ["8枠", "2-1-3-37", "14.0%", "複勝率14%・複回36.5%。多頭数の8枠は評価控えめ"],
           matchFn: function(h){ return h.waku === 8; }, isGood: false },
+      ],
+    },
+    {
+      type: "table",
+      title: "前走クラス別 成績（過去10年）",
+      headers: ["前走","成績","複勝率","傾向"],
+      rows: [
+        { cells: ["前走1勝C(芝2200〜2400m)", "3-2-4-13", "40.9%", "⭐3着内率40.9%！最強ステップ"], highlight: true,
+          matchFn: function(h){ return (h.prev1grade === '1勝' || h.prev1grade === '1勝クラス') && (h.maxDistExp||0) >= 2200; }, isGood: true },
+        { cells: ["前走1勝クラス(全体)", "16/30頭", "高", "⭐過去10年3着内30頭中16頭が前走1勝C"], highlight: true,
+          matchFn: function(h){ return h.prev1grade === '1勝' || h.prev1grade === '1勝クラス'; }, isGood: true },
+        { cells: ["前走G2・G3組", "10頭3着内", "中", "G2・G3経由が中心"],
+          matchFn: function(h){ return h.prev1grade === 'G2' || h.prev1grade === 'G3'; } },
+        { cells: ["前走皐月賞(G1)", "1勝(2020年)", "低", "⚠️ディープボンドのみ・G1組は割引"],
+          matchFn: function(h){ return h.prev1race === '皐月賞'; }, isGood: false },
+        { cells: ["きさらぎ賞組", "複勝率75%", "75%", "⭐最重要ステップ"], highlight: true,
+          matchFn: function(h){ return h.prev1race === 'きさらぎ賞'; }, isGood: true },
       ],
     },
     {
@@ -5482,6 +5503,27 @@ function renderAnaBadges(raceName) {
   return html;
 }
 
+// 京都新聞杯：前走クラス・距離スコア（前走1勝C×2200m+で最強ステップ）
+function calcPrevClassKyoto(horse, raceName) {
+  if (!raceName || raceName.indexOf('京都新聞') === -1) return { pts: 0, label: '' };
+  if (!horse) return { pts: 0, label: '' };
+  var g = horse.prev1grade || '';
+  var md = horse.maxDistExp || 0;
+  if ((g === '1勝' || g === '1勝クラス') && md >= 2200) {
+    return { pts: 12, label: '前走1勝C(2200〜2400m)【3着内率40.9%・最強ステップ+12pt】' };
+  }
+  if (g === '1勝' || g === '1勝クラス') {
+    return { pts: 6, label: '前走1勝クラス【30頭中16頭が3着以内+6pt】' };
+  }
+  if (g === 'G2' || g === 'G3') {
+    return { pts: 4, label: '前走G2/G3重賞【3着内10頭+4pt】' };
+  }
+  if (horse.prev1race === '皐月賞') {
+    return { pts: -8, label: '⚠️前走皐月賞【ディープボンド以外0勝・割引-8pt】' };
+  }
+  return { pts: 0, label: '' };
+}
+
 // エプソムC：7歳以上ペナルティ（過去10年馬券圏内ゼロ・完全消し）
 function calcAgePenaltyEpsom(horse, raceName) {
   if (!raceName || raceName.indexOf('エプソム') === -1) return { pts: 0, label: '' };
@@ -6035,8 +6077,12 @@ function computeScore(h) {
   var agePenaltyObj = calcAgePenaltyEpsom(h, currentRace);
   var agePenalty = agePenaltyObj.pts;
 
+  // 京都新聞杯：前走クラス・距離スコア
+  var prevClassKyotoObj = calcPrevClassKyoto(h, currentRace);
+  var prevClassKyoto = prevClassKyotoObj.pts;
+
   return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB, special, nhkBw,
-           shozoP, jockeyN, careerP, prevR, leftPts, nztPts, framePts, tokyoExpPenalty, anaBonus, agePenalty,
+           shozoP, jockeyN, careerP, prevR, leftPts, nztPts, framePts, tokyoExpPenalty, anaBonus, agePenalty, prevClassKyoto,
            _distLabel: distObj.label, _stallionLabel: stallionObj.label,
            _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label,
            _specialLabel: specialObj.label, _nhkBwLabel: nhkBwObj.label,
@@ -6052,7 +6098,8 @@ function sumScore(s) {
          (s.tokyo || 0) + (s.sexB || 0) + (s.special || 0) + (s.nhkBw || 0) +
          (s.shozoP || 0) + (s.jockeyN || 0) + (s.careerP || 0) + (s.prevR || 0) +
          (s.leftPts || 0) + (s.nztPts || 0) + (s.framePts || 0) +
-         (s.tokyoExpPenalty || 0) + (s.anaBonus || 0) + (s.agePenalty || 0);
+         (s.tokyoExpPenalty || 0) + (s.anaBonus || 0) + (s.agePenalty || 0) +
+         (s.prevClassKyoto || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
