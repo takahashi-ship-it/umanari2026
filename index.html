@@ -7915,11 +7915,22 @@ function renderKaimokuAI(raceName) {
   html += '<div style="display:flex;flex-direction:column;gap:4px">';
   aiteSelected.forEach(function(h, i) {
     var c = rankColors[i % rankColors.length];
-    html += '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;'
-      + 'background:var(--color-background-secondary);border-radius:8px;border-left:3px solid ' + c + '">';
-    html += '<span style="font-size:13px;font-weight:700;color:' + c + ';min-width:14px">' + rankLabel[i % rankLabel.length] + '</span>';
-    html += '<span style="font-size:13px;font-weight:600;flex:1">' + h.name + '</span>';
-    if (h.reason) html += '<span style="font-size:9px;color:var(--color-text-tertiary)">' + h.reason + '</span>';
+    // 2列グリッド：左=ランク記号+馬名（折り返さない） / 右=reason（折り返し可）
+    html += '<div style="display:grid;grid-template-columns:auto 1fr;align-items:center;gap:8px;'
+      + 'padding:7px 10px;background:var(--color-background-secondary);'
+      + 'border-radius:8px;border-left:3px solid ' + c + '">';
+    // 左列：ランク記号＋馬名
+    html += '<div style="display:flex;align-items:center;gap:4px;white-space:nowrap">';
+    html += '<span style="font-size:13px;font-weight:700;color:' + c + '">' + rankLabel[i % rankLabel.length] + '</span>';
+    html += '<span style="font-size:13px;font-weight:600;color:var(--color-text-primary)">' + h.name + '</span>';
+    html += '</div>';
+    // 右列：reason
+    if (h.reason) {
+      html += '<span style="font-size:9px;color:var(--color-text-tertiary);line-height:1.3;word-break:break-all">'
+            + h.reason + '</span>';
+    } else {
+      html += '<span></span>';
+    }
     html += '</div>';
   });
   if (currentN < aiteAll.length) {
