@@ -3550,7 +3550,7 @@ const HORSES_BY_RACE = {
     babaScore: { good:48, slightHeavy:48, heavy:48, veryHeavy:48 },
     babaNotes: { good: "7歳。過去10年馬券圏外ゼロ" },
     danger: true,
-        speedIndex: 48, prevTime: 97.0, prevCourse: "中山芝1600m", prevBaba: "良", prevBodyWeight: 492 , maxDistExp: 2000, distExpRace: "前走", distExpRank: 5 },
+        speedIndex: 48, prevTime: 97.0, prevCourse: "中山芝1600m", prevBaba: "良", prevBodyWeight: 492 , maxDistExp: 2000, distExpRace: "前走", distExpRank: 5 , leftCourseScore: 3 },
   { name:"シルトホルン", father:"キタサンブラック", shozo:"美浦",      sex:"牡", age:4, jockey: "大野拓弥",
     prevRank:3, prevRace:"福島記念", prevGrade:"G3",
     prev1r:3, prev1race:"福島記念", prev1grade:"G3", career:10,
@@ -3607,7 +3607,7 @@ const HORSES_BY_RACE = {
     babaScore: { good:42, slightHeavy:42, heavy:42, veryHeavy:42 },
     babaNotes: { good: "7歳牝馬。消し" },
     danger: true,
-        speedIndex: 42, prevTime: 112.0, prevCourse: "小倉芝1800m", prevBaba: "良" , maxDistExp: 1800, distExpRace: "小倉大賞典", distExpRank: 11 },
+        speedIndex: 42, prevTime: 112.0, prevCourse: "小倉芝1800m", prevBaba: "良" , maxDistExp: 1800, distExpRace: "小倉大賞典", distExpRank: 11 , leftCourseScore: 3 },
   { name:"オニャンコポン", father:"エイシンヒカリ", shozo:"美浦",    sex:"牡", age:7, jockey: "菅原明良",
     prevRank:11, prevRace:"前走", prevGrade:"G3",
     prev1r:11, prev1race:"前走", prev1grade:"G3", career:18,
@@ -3619,7 +3619,7 @@ const HORSES_BY_RACE = {
     babaScore: { good:42, slightHeavy:42, heavy:42, veryHeavy:42 },
     babaNotes: { good: "7歳。消し" },
     danger: true,
-        speedIndex: 42, prevTime: 97.0, prevCourse: "阪神芝1600m", prevBaba: "良" , maxDistExp: 2000, distExpRace: "前走", distExpRank: 11 },
+        speedIndex: 42, prevTime: 97.0, prevCourse: "阪神芝1600m", prevBaba: "良" , maxDistExp: 2000, distExpRace: "前走", distExpRank: 11 , leftCourseScore: 3 },
   { name:"ビーアストニッシド", sex:"牡", age:7, jockey:"未定", shozo:"美浦",
     prevRank:6, prevRace:"前走", prevGrade:"G3",
     prev1r:6, prev1race:"前走", prev1grade:"G3", career:22,
@@ -3631,7 +3631,7 @@ const HORSES_BY_RACE = {
     babaScore: { good:40, slightHeavy:40, heavy:40, veryHeavy:40 },
     babaNotes: { good: "7歳。消し" },
     danger: true,
-        speedIndex: 40, prevTime: 124.0, prevCourse: "阪神芝2000m", prevBaba: "良" },
+        speedIndex: 40, prevTime: 124.0, prevCourse: "阪神芝2000m", prevBaba: "良" , leftCourseScore: 3 },
 ],
 
 };
@@ -5715,6 +5715,14 @@ function computeScore(h) {
 
   // 距離経験 + 種牡馬特性
   var raceD = getCurrentRaceDistance();
+  // 防御的フォールバック：currentRace から距離を明示
+  if (currentRace) {
+    if      (currentRace.indexOf('エプソム') !== -1)     raceD = 1800;
+    else if (currentRace.indexOf('京都新聞') !== -1)     raceD = 2200;
+    else if (currentRace.indexOf('NHKマイル') !== -1)    raceD = 1600;
+    else if (currentRace.indexOf('ヴィクトリア') !== -1) raceD = 1600;
+    else if (currentRace.indexOf('天皇賞') !== -1 && currentRace.indexOf('春') !== -1) raceD = 3200;
+  }
   var distObj = calcDistanceExpScore(h, raceD);
   var stallionObj = calcStallionScore(h, raceD);
   var dist = Math.min(8, Math.max(0, distObj.pts));
