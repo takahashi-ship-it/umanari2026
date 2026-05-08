@@ -4368,6 +4368,36 @@ const RACE_PAST_DATA = {
   },
 
   "NHKマイルC": {
+    anaConditions: [
+      { label: '前走4着【複回収310%・最強データ】', type: 'plus',
+        matchFn: function(h){ return h.prev1r === 4; } },
+      { label: '前走2着【複勝率34.4%】', type: 'plus',
+        matchFn: function(h){ return h.prev1r === 2; } },
+      { label: '5〜9番人気【穴馬狙い目ゾーン】', type: 'plus',
+        matchFn: function(h){ return h.popEstimate >= 5 && h.popEstimate <= 9; } },
+      { label: 'キャリア3〜6戦【勝ち馬全員該当】', type: 'plus',
+        matchFn: function(h){ return (h.career||0) >= 3 && (h.career||0) <= 6; } },
+      { label: '6枠・8枠【各4勝・最多】', type: 'plus',
+        matchFn: function(h){ return h.waku === 6 || h.waku === 8; } },
+      { label: '前走チャーチルC出走【穴馬多数輩出】', type: 'plus',
+        matchFn: function(h){ return h.prev1race && h.prev1race.indexOf('チャーチル') !== -1; } },
+      { label: 'NZT2〜3着【好ステップ】', type: 'plus',
+        matchFn: function(h){ var n = (h.prev1race === 'NZT' || h.prev1race === 'ニュージーランドT'); return n && h.prev1r >= 2 && h.prev1r <= 3; } },
+      { label: '美浦所属【過去10年9勝・圧倒的優勢】', type: 'plus',
+        matchFn: function(h){ return h.shozo === '美浦'; } },
+      { label: '馬体重480〜499kg【5勝ゾーン】', type: 'plus',
+        matchFn: function(h){ return (h.bodyWeight||0) >= 480 && (h.bodyWeight||0) <= 499; } },
+      { label: '左回り経験◎【東京コース実績】', type: 'plus',
+        matchFn: function(h){ return (h.leftCourseScore||0) >= 5; } },
+      { label: '前走NZT1着【0-0-0-9 複勝率0%・消し】', type: 'minus',
+        matchFn: function(h){ var n = (h.prev1race === 'NZT' || h.prev1race === 'ニュージーランドT'); return n && h.prev1r === 1; } },
+      { label: 'キャリア2戦以下【0-0-0-4 複勝率0%・消し】', type: 'minus',
+        matchFn: function(h){ var c = h.career || 0; return c <= 2 && c > 0; } },
+      { label: '前走1着（NZT以外）【3着内率5.3%・割引】', type: 'minus',
+        matchFn: function(h){ var n = (h.prev1race === 'NZT' || h.prev1race === 'ニュージーランドT'); return h.prev1r === 1 && !n; } },
+      { label: '内枠1〜4枠【勝率1.3%・大幅不利】', type: 'minus',
+        matchFn: function(h){ return h.waku >= 1 && h.waku <= 4; } },
+    ],
     anaPoints: [
       // 馬体重
       '🔥小柄な馬体重（420〜464kg）が穴馬の必須条件：二桁人気で馬券に絡んだ6頭が全てこの体重帯。差し・追込馬が多い',
@@ -5348,6 +5378,65 @@ function calcNztPenalty(horse, raceName) {
     return { pts: -15, label: '⚠️前走NZT1着【0-0-0-9】複勝率0%・過去10年消しデータ' };
   }
   return { pts: 0, label: '' };
+}
+
+// NHKマイルC：穴馬14条件スコア（診断用ラベル生成・既存スコア体系に二重加算しない）
+function calcNHKAnaScore(horse) {
+  if (!horse) return { score: 0, labels: [] };
+  var score = 0;
+  var labels = [];
+  var pop = horse.popEstimate || 99;
+  var career = horse.career || 0;
+  var bw = horse.bodyWeight || 0;
+  var isNZT = horse.prev1race === 'NZT' || horse.prev1race === 'ニュージーランドT';
+
+  // プラス条件
+  if (horse.prev1r === 4) {
+    score += 10; labels.push({ text:'前走4着【複回収310%・最強データ】', type:'plus' });
+  }
+  if (horse.prev1r === 2) {
+    score += 6;  labels.push({ text:'前走2着【複勝率34.4%】', type:'plus' });
+  }
+  if (pop >= 5 && pop <= 9) {
+    score += 8;  labels.push({ text: pop + '番人気【穴馬狙い目ゾーン】', type:'plus' });
+  }
+  if (career >= 3 && career <= 6) {
+    score += 5;  labels.push({ text: 'キャリア' + career + '戦【3〜6戦が勝ち馬条件】', type:'plus' });
+  }
+  if (horse.waku === 6 || horse.waku === 8) {
+    score += 8;  labels.push({ text: horse.waku + '枠【最多4勝・最注目枠】', type:'plus' });
+  }
+  if (horse.prev1race && horse.prev1race.indexOf('チャーチル') !== -1) {
+    score += 4;  labels.push({ text:'チャーチルC出走【穴馬多数輩出】', type:'plus' });
+  }
+  if (isNZT && horse.prev1r >= 2 && horse.prev1r <= 3) {
+    score += 6;  labels.push({ text:'NZT' + horse.prev1r + '着【好ステップ】', type:'plus' });
+  }
+  if (horse.shozo === '美浦') {
+    score += 8;  labels.push({ text:'美浦所属【過去10年9勝・圧倒的優勢】', type:'plus' });
+  }
+  if (bw >= 480 && bw <= 499) {
+    score += 8;  labels.push({ text:'馬体重' + bw + 'kg【480〜499kg5勝ゾーン】', type:'plus' });
+  }
+  if ((horse.leftCourseScore || 0) >= 5) {
+    score += 4;  labels.push({ text:'左回り経験◎【東京コース実績】', type:'plus' });
+  }
+
+  // マイナス条件
+  if (isNZT && horse.prev1r === 1) {
+    score -= 15; labels.push({ text:'前走NZT1着【0-0-0-9 複勝率0%・消し】', type:'minus' });
+  }
+  if (career <= 2 && career > 0) {
+    score -= 15; labels.push({ text:'キャリア' + career + '戦以下【複勝率0%・消し】', type:'minus' });
+  }
+  if (horse.prev1r === 1 && !isNZT) {
+    score -= 8;  labels.push({ text:'前走1着【3着内率5.3%・割引】', type:'minus' });
+  }
+  if (horse.waku >= 1 && horse.waku <= 4) {
+    score -= 8;  labels.push({ text: horse.waku + '枠【内枠・勝率1.3%・割引】', type:'minus' });
+  }
+
+  return { score: score, labels: labels };
 }
 
 // NHK/エプソム/京都新聞杯：データ項目スコア（加点のみ・最大20pt）
