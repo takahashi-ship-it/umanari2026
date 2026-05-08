@@ -5549,6 +5549,13 @@ function computeScore(h) {
   let waku = (wakuObjN.pts !== 0)
     ? (10 + wakuObjN.pts) // ベース10 + NHK独自加減点
     : (h.waku ? ({1:15,2:11,3:9,4:13,5:10,6:7,7:5,8:4})[h.waku] ?? 10 : 10);
+  // NHKマイルC専用：過去データ準拠の枠順スコアで直接上書き
+  if (currentRace && currentRace.indexOf('NHKマイル') !== -1 && h.waku) {
+    if (h.waku === 6 || h.waku === 8)      waku = 15; // 各4勝・最多
+    else if (h.waku === 5 || h.waku === 7) waku = 10; // 外枠
+    else if (h.waku === 3 || h.waku === 4) waku = 5;  // 中枠
+    else if (h.waku === 1 || h.waku === 2) waku = 3;  // 内枠
+  }
   // 表示用の上限・下限制限：max 15 / min 0
   waku = Math.min(15, Math.max(0, waku));
 
@@ -7419,9 +7426,10 @@ function computeScoreBreakdown(horse, raceName) {
   var waku = horse.waku || 0;
   var wakuScore = 0;
   if (isNHK) {
-    if (waku === 6 || waku === 8)      wakuScore = 15;
-    else if (waku === 5 || waku === 7) wakuScore = 10;
-    else if (waku >= 1 && waku <= 4)   wakuScore = 3;
+    if (waku === 6 || waku === 8)      wakuScore = 15; // 各4勝・最多
+    else if (waku === 5 || waku === 7) wakuScore = 10; // 外枠
+    else if (waku === 3 || waku === 4) wakuScore = 5;  // 中枠
+    else if (waku === 1 || waku === 2) wakuScore = 3;  // 内枠
   } else {
     wakuScore = (waku >= 5) ? 10 : (waku >= 1 ? 5 : 0);
   }
