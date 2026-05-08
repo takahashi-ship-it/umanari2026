@@ -3013,7 +3013,7 @@ const HORSES_BY_RACE = {
     distExpRace: "中山1600m", distExpRank: 2,
     career: 4,
     prevCorner4: 4, prevHeadCount: 16,
-    tokyoExp: true, tokyoExpRace: "ニュージーランドT", tokyoExpRank: 2, tokyoExpDist: 1600,
+    tokyoExp: false,
     babaScore: { good:74, slightHeavy:70, heavy:58, veryHeavy:40 },
     popEstimate: 12, training: "B",
     trainingNote: "美浦W82.0-52.3-11.7 併せ同入。左回りに好感触とのコメント",
@@ -5303,6 +5303,18 @@ function calcNztPenalty(horse, raceName) {
   return { pts: 0, label: '' };
 }
 
+// NHKマイルC専用：東京コース未経験ペナルティ（過去10年優勝馬10頭中8頭が東京経験済み）
+function calcTokyoExpPenaltyNHK(horse, raceName) {
+  if (!raceName || raceName.indexOf('NHKマイル') === -1) return { pts: 0, label: '' };
+  if (!horse) return { pts: 0, label: '' };
+  if (horse.tokyoExp) return { pts: 0, label: '' };
+  // tokyoExp が false かつ leftCourseScore も低い（左回り未経験）→ 大幅割引
+  if ((horse.leftCourseScore || 0) <= 3) {
+    return { pts: -5, label: '⚠️東京コース未経験（過去10年優勝馬8/10が東京経験済み）' };
+  }
+  return { pts: 0, label: '' };
+}
+
 // NHKマイルC専用：内枠ペナルティ・外枠ボーナス（calcWakuScoreNHK に追加で重ねる層）
 function calcFrameNHK(horse, raceName) {
   if (!raceName || raceName.indexOf('NHKマイル') === -1) return { pts: 0, label: '' };
@@ -5592,22 +5604,28 @@ function computeScore(h) {
   var frameObj = calcFrameNHK(h, currentRace);
   var framePts = frameObj.pts;
 
+  // NHKマイルC：東京コース未経験ペナルティ（最小-5）
+  var tokyoExpPenaltyObj = calcTokyoExpPenaltyNHK(h, currentRace);
+  var tokyoExpPenalty = tokyoExpPenaltyObj.pts;
+
   return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB, special, nhkBw,
-           shozoP, jockeyN, careerP, prevR, leftPts, nztPts, framePts,
+           shozoP, jockeyN, careerP, prevR, leftPts, nztPts, framePts, tokyoExpPenalty,
            _distLabel: distObj.label, _stallionLabel: stallionObj.label,
            _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label,
            _specialLabel: specialObj.label, _nhkBwLabel: nhkBwObj.label,
            _shozoLabel: shozoObj.label, _jockeyNLabel: jockeyNObj.label,
            _careerLabel: careerObj.label, _prevRLabel: prevRObj.label,
            _leftLabel: leftObj.label, _nztLabel: nztObj.label,
-           _frameLabel: frameObj.label, _siValue: si };
+           _frameLabel: frameObj.label, _tokyoExpPenaltyLabel: tokyoExpPenaltyObj.label,
+           _siValue: si };
 }
 function sumScore(s) {
   return s.ninki + s.waku + s.dataFit + s.ketto + s.jockey + s.course + s.chokyo + s.speed +
          (s.baba || 0) + (s.bw || 0) + (s.dist || 0) + (s.stallion || 0) +
          (s.tokyo || 0) + (s.sexB || 0) + (s.special || 0) + (s.nhkBw || 0) +
          (s.shozoP || 0) + (s.jockeyN || 0) + (s.careerP || 0) + (s.prevR || 0) +
-         (s.leftPts || 0) + (s.nztPts || 0) + (s.framePts || 0);
+         (s.leftPts || 0) + (s.nztPts || 0) + (s.framePts || 0) +
+         (s.tokyoExpPenalty || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
@@ -7310,6 +7328,31 @@ var KAIMOKU_DATA = {
   },
 };
 
+// 軸馬の信頼度スコアを動的計算（jikuScore のハードコードを上書き）
+function getJikuScore(raceName) {
+  var data = KAIMOKU_DATA[raceName];
+  if (!data) return 0;
+  var horses = (window.HORSES_BY_RACE || HORSES_BY_RACE || {})[raceName] || [];
+  var jiku = horses.find(function(h){ return h.name === data.jiku; });
+  if (!jiku) return data.jikuScore || 0;
+  if (typeof computeScore !== 'function' || typeof sumScore !== 'function') return data.jikuScore || 0;
+
+  var savedRace = (typeof currentRace !== 'undefined') ? currentRace : null;
+  try { currentRace = raceName; } catch(e) {}
+
+  var total = 0, max = 222;
+  try {
+    var s = computeScore(jiku);
+    total = sumScore(s);
+    if (typeof maxScoreFor === 'function') max = maxScoreFor(s);
+  } catch(e) { total = 0; }
+
+  if (savedRace !== null) { try { currentRace = savedRace; } catch(e) {} }
+
+  // 100点満点に正規化
+  return Math.max(0, Math.min(100, Math.round(total * 100 / max)));
+}
+
 // 信頼度スコア順に相手馬を動的ソート（KAIMOKU_DATA.aiteAll を再ランキング）
 function getAiteRanked(raceName) {
   var data = KAIMOKU_DATA[raceName];
@@ -7432,11 +7475,13 @@ function renderKaimokuAI(raceName) {
   html += '<span style="font-size:20px;font-weight:800;color:#A32D2D">' + totalCost.toLocaleString() + '円</span>';
   html += '</div></div>';
 
-  // 信頼度スコア
-  if (data.jikuScore) {
+  // 信頼度スコア（動的計算で上書き／フォールバック: data.jikuScore）
+  var dynamicScore = (typeof getJikuScore === 'function') ? getJikuScore(key) : 0;
+  var displayScore = dynamicScore || data.jikuScore;
+  if (displayScore) {
     html += '<div style="background:#E1F5EE;border-radius:8px;padding:10px 12px;margin-bottom:10px">';
-    html += '<div style="font-size:10px;font-weight:600;color:#0F6E56;margin-bottom:2px">軸馬の信頼度スコア</div>';
-    html += '<div style="font-size:20px;font-weight:800;color:#0F6E56">' + data.jikuScore
+    html += '<div style="font-size:10px;font-weight:600;color:#0F6E56;margin-bottom:2px">軸馬の信頼度スコア（動的）</div>';
+    html += '<div style="font-size:20px;font-weight:800;color:#0F6E56">' + displayScore
       + '<span style="font-size:11px;font-weight:400">/100点</span></div>';
     if (data.jikuReason) html += '<div style="font-size:9px;color:#555;margin-top:2px">' + data.jikuReason + '</div>';
     html += '</div>';
