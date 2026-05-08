@@ -5689,17 +5689,36 @@ function computeScore(h) {
     if (epcJockeyScores[h.jockey] != null) jockey = epcJockeyScores[h.jockey];
   }
 
-  let course;
-  if (h.repeater) course = 10;
-  else if (h.kyoto) course = 6;
-  else course = 2;
-  // 全レース対応：calcCourseScoreByRace が高評価ならそちらを採用
-  if (typeof calcCourseScoreByRace === 'function' && currentRace) {
-    var _ri = (typeof RACE_META !== 'undefined' && RACE_META[currentRace]) || {};
-    var _dir = (typeof getRaceDirection === 'function') ? getRaceDirection(currentRace) : null;
-    var _csr = calcCourseScoreByRace(h, currentRace, { direction: _dir });
-    if (_csr > course) course = _csr;
+  // コーススコア計算（全レース共通・直接ロジック）
+  var raceInfoForCourse = (typeof RACE_META !== 'undefined' && RACE_META[currentRace]) || {};
+  var courseDirection = (typeof getRaceDirection === 'function')
+    ? getRaceDirection(currentRace || '')
+    : (raceInfoForCourse.direction || 'right');
+  let course = 0;
+  if (courseDirection === 'left') {
+    var lcs = h.leftCourseScore;
+    if      (lcs >= 10) course = 10;
+    else if (lcs >= 7)  course = 7;
+    else if (lcs >= 5)  course = 5;
+    else if (lcs >= 3)  course = 3;
+    else if (lcs >= 1)  course = 1;
+    else if (lcs === 0) course = 0;
+    else                course = 3; // 未設定デフォルト
+  } else if (courseDirection === 'right') {
+    var rcs = h.rightCourseScore;
+    if      (rcs >= 10) course = 10;
+    else if (rcs >= 7)  course = 7;
+    else if (rcs >= 5)  course = 5;
+    else if (rcs >= 3)  course = 3;
+    else if (rcs >= 1)  course = 1;
+    else                course = 5; // 未設定デフォルト
+  } else {
+    course = 5;
   }
+  // リピーター・京都経験の従来加点（高評価の場合のみ採用）
+  var legacyCourse = h.repeater ? 10 : (h.kyoto ? 6 : 0);
+  if (legacyCourse > course) course = legacyCourse;
+  course = Math.min(10, Math.max(0, course));
 
   const chokyo = ({S:10,A:8,B:5,C:2})[h.training] ?? 5;
 
