@@ -3825,8 +3825,10 @@ const RACE_META = {
 },
 "エプソムC": {
   anaPoints: [
+    '⭐4歳馬が5勝・複勝率34%で最注目。馬券の軸は4歳馬から選ぶべき（昨年苦戦も例外的）',
+    '⚠️7歳以上は過去10年で馬券圏内ゼロ！エピファニー・マテンロウレオ・ジュンブロッサム・オニャンコポン・ビーアストニッシドは完全消し',
+    '6歳以下の馬のみ馬券対象。5〜6歳も複勝率15%以上と馬券に絡む',
     '⭐8枠が4勝トップ。1・2枠は連対1回ずつと内枠不利。枠確定後は8枠馬を最優先',
-    '7歳以上は過去10年で馬券圏内ゼロ→エピファニー・マテンロウレオ・ジュンブロッサム・ビーアストニッシドは消し',
     '4歳馬が5勝・複勝率34%と突出。今年の4歳馬を重視：カラマティアノス・サクラファレル・ジュタ・ストレイトトーカー',
     '前走比-9〜-4kgの馬が4勝トップ。絞ってきた馬に注目',
     '美浦所属が6勝と関東馬優勢。東京開催のホームアドバンテージ',
@@ -3880,13 +3882,13 @@ const RACE_META = {
       title: "年齢別 成績（過去10年）",
       headers: ["年齢","成績","複勝率","傾向"],
       rows: [
-        { cells: ["4歳", "5-4-5-27", "34.1%", "⭐5勝トップ！複勝率34%・最注目年齢"], highlight: true,
+        { cells: ["4歳", "5-4-5-27", "34.1%", "⭐5勝トップ！複勝率34%・最注目年齢。馬券の軸は4歳馬から（昨年苦戦も例外）"], highlight: true,
           matchFn: function(h){ return h.age === 4; }, isGood: true },
-        { cells: ["5歳", "3-3-2-42", "16%", "3勝。標準的"],
+        { cells: ["5歳", "3-3-2-42", "16%", "3勝・複勝率16%。馬券対象内"],
           matchFn: function(h){ return h.age === 5; } },
-        { cells: ["6歳", "2-3-3-28", "22.2%", "2勝・複勝率22%。まだ戦える"],
+        { cells: ["6歳", "2-3-3-28", "22.2%", "2勝・複勝率22%。まだ馬券に絡む。6歳以下で絞るべき"],
           matchFn: function(h){ return h.age === 6; } },
-        { cells: ["7歳以上", "0-0-0-39", "0%", "過去10年で馬券圏内ゼロ！完全消し"],
+        { cells: ["7歳以上", "0-0-0-39", "0%", "⚠️過去10年馬券圏内ゼロ！完全消し・馬券対象外"],
           matchFn: function(h){ return h.age >= 7; }, isGood: false },
       ],
     },
@@ -5480,6 +5482,16 @@ function renderAnaBadges(raceName) {
   return html;
 }
 
+// エプソムC：7歳以上ペナルティ（過去10年馬券圏内ゼロ・完全消し）
+function calcAgePenaltyEpsom(horse, raceName) {
+  if (!raceName || raceName.indexOf('エプソム') === -1) return { pts: 0, label: '' };
+  if (!horse) return { pts: 0, label: '' };
+  if ((horse.age || 0) >= 7) {
+    return { pts: -20, label: '⚠️7歳以上【過去10年馬券圏内ゼロ・完全消し】' };
+  }
+  return { pts: 0, label: '' };
+}
+
 // NHKマイルC：穴馬条件のうちスコア未反映分（チャーチルC・NZT2-3着・5-9番人気）
 function calcAnaBonusNHK(horse, raceName) {
   if (!raceName || raceName.indexOf('NHKマイル') === -1) return { pts: 0, label: '' };
@@ -5581,10 +5593,12 @@ function calcDataScoreNHK(horse, raceName) {
   if (raceName.indexOf('エプソム') !== -1) {
     var pts = 0;
     if (horse.age === 4)      pts += 10;
-    else if (horse.age <= 6)  pts += 5;
+    else if (horse.age === 5) pts += 5;
+    else if (horse.age === 6) pts += 3;
+    else if (horse.age >= 7)  return 0; // 7歳以上は完全消し
     if ((horse.popEstimate||99) <= 6) pts += 5;
     if (horse.waku === 8)     pts += 5;
-    return Math.min(20, pts);
+    return Math.max(0, Math.min(20, pts));
   }
   if (raceName.indexOf('京都新聞') !== -1) {
     var pts = 0;
@@ -6017,8 +6031,12 @@ function computeScore(h) {
   var anaBonusObj = calcAnaBonusNHK(h, currentRace);
   var anaBonus = anaBonusObj.pts;
 
+  // エプソムC：7歳以上ペナルティ
+  var agePenaltyObj = calcAgePenaltyEpsom(h, currentRace);
+  var agePenalty = agePenaltyObj.pts;
+
   return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB, special, nhkBw,
-           shozoP, jockeyN, careerP, prevR, leftPts, nztPts, framePts, tokyoExpPenalty, anaBonus,
+           shozoP, jockeyN, careerP, prevR, leftPts, nztPts, framePts, tokyoExpPenalty, anaBonus, agePenalty,
            _distLabel: distObj.label, _stallionLabel: stallionObj.label,
            _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label,
            _specialLabel: specialObj.label, _nhkBwLabel: nhkBwObj.label,
@@ -6034,7 +6052,7 @@ function sumScore(s) {
          (s.tokyo || 0) + (s.sexB || 0) + (s.special || 0) + (s.nhkBw || 0) +
          (s.shozoP || 0) + (s.jockeyN || 0) + (s.careerP || 0) + (s.prevR || 0) +
          (s.leftPts || 0) + (s.nztPts || 0) + (s.framePts || 0) +
-         (s.tokyoExpPenalty || 0) + (s.anaBonus || 0);
+         (s.tokyoExpPenalty || 0) + (s.anaBonus || 0) + (s.agePenalty || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
@@ -7841,11 +7859,13 @@ function computeScoreBreakdown(horse, raceName) {
   } else if (raceName && raceName.indexOf('エプソム') !== -1) {
     var age = horse.age || 0;
     var pop2 = horse.popEstimate || 99;
-    if (age === 4)     dataScore += 10; // 4歳馬5勝・複勝率34%
-    else if (age <= 6) dataScore += 5;
-    if (pop2 <= 6)     dataScore += 5;  // 前走人気6番以内
-    if (waku === 8)    dataScore += 5;  // 8枠4勝
-    dataScore = Math.min(20, dataScore);
+    if (age === 4)      dataScore += 10; // 4歳馬5勝・複勝率34%
+    else if (age === 5) dataScore += 5;
+    else if (age === 6) dataScore += 3;
+    else if (age >= 7)  dataScore = 0;   // 7歳以上は完全消し・データスコアゼロ
+    if (pop2 <= 6)     dataScore += 5;
+    if (waku === 8)    dataScore += 5;
+    dataScore = Math.max(0, Math.min(20, dataScore));
   } else if (raceName && raceName.indexOf('京都新聞') !== -1) {
     var pr = horse.prev1r || horse.prevRank || 99;
     if      (pr === 1) dataScore += 8;
@@ -7924,6 +7944,10 @@ function computeScoreBreakdown(horse, raceName) {
     if ((horse.career||0) >= 7) penalty -= 8;
     if (waku >= 1 && waku <= 4)  penalty -= 8;
     if (!horse.tokyoExp && (horse.leftCourseScore||0) <= 3) penalty -= 5;
+  }
+  // エプソムC：7歳以上ペナルティ
+  if (raceName && raceName.indexOf('エプソム') !== -1) {
+    if ((horse.age || 0) >= 7) penalty -= 20;
   }
 
   // 各項目の上限・下限を強制
