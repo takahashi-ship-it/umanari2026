@@ -5545,7 +5545,13 @@ function calcStallionScore(horse, raceDistance) {
     if (f === 'ドゥラメンテ')       return { pts:  9, label: 'ドゥラメンテ産駒（東京1800m複勝率35.7%）' };
     if (f === 'エピファネイア')     return { pts:  8, label: 'エピファネイア産駒（東京1800m複勝率31.6%）' };
     if (f === 'ロードカナロア' && d <= 1800) return { pts: 9, label: 'ロードカナロア産駒（東京1800m複回83.1%）' };
+    if (f === 'レイデオロ')         return { pts:  8, label: 'レイデオロ産駒（ダービー馬後継・東京中距離実績）' };
+    if (f === 'サートゥルナーリア') return { pts:  8, label: 'サートゥルナーリア産駒（東京1800m向き）' };
+    if (f === 'キタサンブラック')   return { pts:  7, label: 'キタサンブラック産駒（東京1800m対応）' };
+    if (f === 'ルーラーシップ')     return { pts:  6, label: 'ルーラーシップ産駒（中距離万能型）' };
   }
+  // 全レース共通：レイデオロ産駒は中距離万能で +6
+  if (f === 'レイデオロ') return { pts: 6, label: 'レイデオロ産駒（中距離万能型）' };
 
   // S級：1600m専用最強種牡馬
   if (f === 'ロードカナロア' && d <= 1600)
@@ -5687,6 +5693,13 @@ function computeScore(h) {
   if (h.repeater) course = 10;
   else if (h.kyoto) course = 6;
   else course = 2;
+  // 全レース対応：calcCourseScoreByRace が高評価ならそちらを採用
+  if (typeof calcCourseScoreByRace === 'function' && currentRace) {
+    var _ri = (typeof RACE_META !== 'undefined' && RACE_META[currentRace]) || {};
+    var _dir = (typeof getRaceDirection === 'function') ? getRaceDirection(currentRace) : null;
+    var _csr = calcCourseScoreByRace(h, currentRace, { direction: _dir });
+    if (_csr > course) course = _csr;
+  }
 
   const chokyo = ({S:10,A:8,B:5,C:2})[h.training] ?? 5;
 
@@ -5863,8 +5876,8 @@ function renderHorses() {
         <span class="badge ${h.odds ? '' : 'tbd'}" data-field="odds">オッズ: ${h.odds ?? '--'}</span>
         <span class="badge-speed${siAvailable ? '' : ' tbd'}" title="${siBadgeTitle}">${siLabelText}</span>
         <span class="badge">${h.age}歳${h.sex}</span>
-        <span class="badge">${h.stable}</span>
-        <span class="badge">父: ${h.father}</span>
+        <span class="badge">${h.stable || h.shozo || '不明'}</span>
+        <span class="badge">父: ${h.father || '不明'}</span>
         <span class="badge">前走: ${h.prevRace} ${prevRankText}</span>
       </div>
 
