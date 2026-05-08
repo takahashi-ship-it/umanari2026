@@ -5171,11 +5171,9 @@ const BABA_PTS = {
 };
 
 function maxScoreFor(score) {
-  var hasSI = (score._siValue !== null && score._siValue !== undefined);
-  var hasBaba = (score.baba !== null && score.baba !== undefined);
-  // ベース 100 + SI 10 + 馬場 15 + 距離 8 + 種牡馬 10 + 東京 10 + 牝 3 + NHK特殊 18 + NHK馬体重 8
-  // + NHK所属 5 + NHK騎手 4 + NHKキャリア 3 + NHK前走着順 8 + 左回り 5
-  return 100 + (hasSI ? 10 : 0) + (hasBaba ? 15 : 0) + 8 + 10 + 10 + 3 + 18 + 8 + 5 + 4 + 3 + 8 + 5;
+  // 表示満点を 143pt に統一（人気20+枠15+データ20+血統10+騎手10+コース10+調教10+SI10+馬場15+距離8+種牡馬10+左回り5）
+  // 馬体重・NHK特殊ボーナス等は合計値に含まれるが分母には算入しない（高評価馬は100%キャップ）
+  return 143;
 }
 
 // 馬場適性スコア（最大15点・最小-3点）
@@ -5559,8 +5557,8 @@ function computeScore(h) {
   const nhkData = calcDataScoreNHK(h, currentRace);
   if (nhkData !== null) dataFit = nhkData;
 
-  const kettoMap = { "KK系孫":15, "キタサンブラック系":13, "欧州長距離":12, "ステイゴールド系":10, "ディープ系":8 };
-  const ketto = kettoMap[h.blood] ?? 6;
+  const kettoMap = { "KK系孫":10, "キタサンブラック系":9, "欧州長距離":8, "ステイゴールド系":7, "ディープ系":6 };
+  const ketto = kettoMap[h.blood] ?? 5;
 
   const eliteJockeys = ["武豊","C.ルメール","D.レーン"];
   const goodJockeys  = ["北村友一","岩田望来","戸崎圭太","松山弘平","鮫島克駿"];
@@ -5568,6 +5566,16 @@ function computeScore(h) {
   if (eliteJockeys.includes(h.jockey)) jockey = 10;
   else if (goodJockeys.includes(h.jockey)) jockey = 6;
   else jockey = 4;
+  // NHKマイルC専用：騎手スコアを詳細テーブルで上書き
+  if (currentRace && currentRace.indexOf('NHKマイル') !== -1) {
+    var nhkJockeyScores = {
+      'C.ルメール':8,'川田将雅':8,'横山武史':7,'横山和生':6,'戸崎圭太':6,
+      'D.レーン':7,'坂井瑠星':6,'松山弘平':5,'西村淳也':5,'岩田望来':4,
+      '津村明秀':3,'三浦皇成':3,'北村友一':4,'原優介':3,'松若風馬':3,
+      '西塚洸二':3,'斎藤新':3,'佐々木大輔':2
+    };
+    if (nhkJockeyScores[h.jockey] != null) jockey = nhkJockeyScores[h.jockey];
+  }
 
   let course;
   if (h.repeater) course = 10;
@@ -5599,6 +5607,11 @@ function computeScore(h) {
   var sexObj = calcSexBonus(h, currentRace);
   var tokyo = tokyoObj.pts;
   var sexB = sexObj.pts;
+  // NHKマイルC：「コース」項目に東京経験スコアを統合（重複防止のため tokyo は 0 化）
+  if (currentRace && currentRace.indexOf('NHKマイル') !== -1) {
+    course = tokyo;
+    tokyo = 0;
+  }
 
   // NHKマイルC 専用：特殊条件 + 当日馬体重ゾーン
   var specialObj = calcSpecialCondition(h, currentRace);
@@ -5761,7 +5774,7 @@ function renderHorses() {
           <div class="score-item"><div class="si-label">人気</div><div class="si-val">${score.ninki}/20</div></div>
           <div class="score-item"><div class="si-label">枠順</div><div class="si-val">${score.waku}/15</div></div>
           <div class="score-item"><div class="si-label">データ</div><div class="si-val">${score.dataFit}/20</div></div>
-          <div class="score-item"><div class="si-label">血統</div><div class="si-val">${score.ketto}/15</div></div>
+          <div class="score-item"><div class="si-label">血統</div><div class="si-val">${score.ketto}/10</div></div>
           <div class="score-item"><div class="si-label">騎手</div><div class="si-val">${score.jockey}/10</div></div>
           <div class="score-item"><div class="si-label">コース</div><div class="si-val">${score.course}/10</div></div>
           <div class="score-item" title="${(h.trainingNote || '').replace(/"/g,'&quot;')}"><div class="si-label">調教</div><div class="si-val">${h.trainingBadge ? '<span style="color:#A32D2D;font-weight:700">'+h.trainingBadge+'</span> ' : ''}${score.chokyo}/10</div></div>
