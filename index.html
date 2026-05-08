@@ -2563,7 +2563,7 @@ const HORSES_BY_RACE = {
     leftCourseRank: 1,
     leftCourseRace: "東京新馬戦",
     leftCourseNote: "東京で勝利実績あり（新馬戦）。重賞での左回り実績は未知",
-    leftCourseScore: 5,
+    leftCourseScore: 3,
   },
   {
     name: "アドマイヤクワッズ", sex: "牡", age: 3,
@@ -2593,7 +2593,7 @@ const HORSES_BY_RACE = {
     leftCourseRank: 1,
     leftCourseRace: "東京新馬戦",
     leftCourseNote: "東京で勝利実績あり（新馬戦）。重賞での左回り実績は未知",
-    leftCourseScore: 5,
+    leftCourseScore: 3,
   },
   {
     name: "アンドゥーリル", sex: "牡", age: 3,
@@ -2712,7 +2712,7 @@ const HORSES_BY_RACE = {
     leftCourseRank: 1,
     leftCourseRace: "中京（左回り）勝利",
     leftCourseNote: "東京は未経験だが中京で勝利実績。東京初コースに注意",
-    leftCourseScore: 6,
+    leftCourseScore: 7,
   },
   {
     name: "ギリーズボール", sex: "牝", age: 3,
@@ -2795,7 +2795,7 @@ const HORSES_BY_RACE = {
     prevComment: "父コントレイル（ディープ系）×母父Into Mischief（海外）。NZT3着・東京1600m経験。美浦所属が割引",
     leftCourse: "未経験",
     leftCourseNote: "左回り未経験",
-    leftCourseScore: 3,
+    leftCourseScore: 5,
   },
   {
     name: "ダイヤモンドノット", sex: "牡", age: 3,
@@ -2854,7 +2854,7 @@ const HORSES_BY_RACE = {
     leftCourseRank: 2,
     leftCourseRace: "東京・中京で出走実績",
     leftCourseNote: "東京掲示板落ちなし・左回り適性あり",
-    leftCourseScore: 7,
+    leftCourseScore: 5,
   },
   {
     name: "バルセシート", sex: "牡", age: 3,
@@ -2939,7 +2939,7 @@ const HORSES_BY_RACE = {
     leftCourse: "左回り複数経験",
     leftCourseRank: 3,
     leftCourseNote: "左回りで複数回経験済み",
-    leftCourseScore: 6,
+    leftCourseScore: 3,
   },
   {
     name: "リゾートアイランド", sex: "牡", age: 3,
@@ -2967,7 +2967,7 @@ const HORSES_BY_RACE = {
     prevComment: "父イスラボニータ×母父Frankel（欧州名種牡馬）。美浦所属・前走1着が消しデータ",
     leftCourse: "未経験",
     leftCourseNote: "左回り未経験",
-    leftCourseScore: 3,
+    leftCourseScore: 5,
   },
   {
     name: "レザベーション", sex: "牡", age: 3,
@@ -3024,7 +3024,7 @@ const HORSES_BY_RACE = {
     prevComment: "D.レーン騎手「皐月賞はマイルの方が合う」コメント後、2番人気に急上昇。ただし東京コース初参戦・過去10年で東京経験なしの馬は割引データあり",
     leftCourse: "未経験",
     leftCourseNote: "左回り未経験",
-    leftCourseScore: 3,
+    leftCourseScore: 0,
   },
   {
     name: "ローベルクランツ", sex: "牡", age: 3,
@@ -3052,7 +3052,7 @@ const HORSES_BY_RACE = {
     leftCourse: "左回り2回経験",
     leftCourseRank: 3,
     leftCourseNote: "左回り2戦の経験あり",
-    leftCourseScore: 5,
+    leftCourseScore: 3,
   },
 ],
 
@@ -5459,7 +5459,7 @@ function calcStallionScore(horse, raceDistance) {
 
   // S級：1600m専用最強種牡馬
   if (f === 'ロードカナロア' && d <= 1600)
-    return { pts: 12, label: '🔥ロードカナロア産駒（マイル最強血統）' };
+    return { pts: 10, label: '🔥ロードカナロア産駒（マイル最強血統）' };
   if (f === 'ダイワメジャー' && d <= 1600)
     return { pts: 10, label: 'ダイワメジャー産駒（マイル特化）' };
   if (f === 'モズアスコット' && d <= 1600)
@@ -7454,16 +7454,25 @@ function computeScoreBreakdown(horse, raceName) {
   };
   var jockeyScore = jockeyScores[horse.jockey] || 3;
 
-  // 6. コース (max:10) ※左回りスコア+東京経験
+  // 6. コース (max:10) ※左回り or 右回りコース適性
   var courseScore = 0;
-  var lcs = horse.leftCourseScore || 0;
-  if      (lcs >= 10) courseScore = 10;
-  else if (lcs >= 7)  courseScore = 7;
-  else if (lcs >= 5)  courseScore = 5;
-  else if (lcs >= 3)  courseScore = 3;
-  else if (raceDir === 'left') courseScore = 2;
-  else courseScore = 5;
-  courseScore = Math.min(10, courseScore);
+  if (raceDir === 'left') {
+    var lcs = horse.leftCourseScore;
+    if      (lcs >= 10) courseScore = 10;
+    else if (lcs >= 7)  courseScore = 7;
+    else if (lcs >= 5)  courseScore = 5;
+    else if (lcs >= 3)  courseScore = 3;
+    else if (lcs >= 1)  courseScore = 1;
+    else if (lcs === 0) courseScore = 0;  // 右回り専門馬
+    else                courseScore = 3;  // 未設定はデフォルト3
+  } else {
+    var rcs = horse.rightCourseScore;
+    if      (rcs >= 10) courseScore = 10;
+    else if (rcs >= 7)  courseScore = 7;
+    else if (rcs >= 5)  courseScore = 5;
+    else if (rcs >= 3)  courseScore = 3;
+    else                courseScore = 5;  // 未設定はデフォルト5
+  }
 
   // 7. 調教 (max:10)
   var trainMap = {S:10, A:8, B:5, C:2};
@@ -7510,6 +7519,19 @@ function computeScoreBreakdown(horse, raceName) {
     if (waku >= 1 && waku <= 4)  penalty -= 8;
     if (!horse.tokyoExp && (horse.leftCourseScore||0) <= 3) penalty -= 5;
   }
+
+  // 各項目の上限・下限を強制
+  popScore      = Math.min(20, Math.max(0, popScore));
+  wakuScore     = Math.min(15, Math.max(0, wakuScore));
+  dataScore     = Math.min(20, Math.max(0, dataScore));
+  bloodScore    = Math.min(10, Math.max(0, bloodScore));
+  jockeyScore   = Math.min(10, Math.max(0, jockeyScore));
+  courseScore   = Math.min(10, Math.max(0, courseScore));
+  trainingScore = Math.min(10, Math.max(0, trainingScore));
+  speedScore    = Math.min(10, Math.max(0, speedScore));
+  babaScore     = Math.min(15, Math.max(0, babaScore));
+  distScore     = Math.min(8,  Math.max(0, distScore));
+  dirScore      = Math.min(5,  Math.max(0, dirScore));
 
   var MAX = 113; // 20+15+20+10+10+10+10+10+15+8+5 = 133 → ペナルティ考慮で113
   var raw = popScore + wakuScore + dataScore + bloodScore + jockeyScore
