@@ -5380,6 +5380,32 @@ function calcNztPenalty(horse, raceName) {
   return { pts: 0, label: '' };
 }
 
+// NHKマイルC：穴馬条件のうちスコア未反映分（チャーチルC・NZT2-3着・5-9番人気）
+function calcAnaBonusNHK(horse, raceName) {
+  if (!raceName || raceName.indexOf('NHKマイル') === -1) return { pts: 0, label: '' };
+  if (!horse) return { pts: 0, label: '' };
+  var pts = 0;
+  var labels = [];
+  // チャーチルC出走 +4
+  if (horse.prev1race && horse.prev1race.indexOf('チャーチル') !== -1) {
+    pts += 4;
+    labels.push('チャーチルC出走+4pt');
+  }
+  // NZT2〜3着 +6
+  var isNZT = horse.prev1race === 'NZT' || (horse.prev1race && horse.prev1race.indexOf('ニュージーランド') !== -1);
+  if (isNZT && horse.prev1r >= 2 && horse.prev1r <= 3) {
+    pts += 6;
+    labels.push('NZT' + horse.prev1r + '着+6pt');
+  }
+  // 5〜9番人気 +5
+  var pop = horse.popEstimate || 99;
+  if (pop >= 5 && pop <= 9) {
+    pts += 5;
+    labels.push(pop + '番人気【穴馬狙い目+5pt】');
+  }
+  return { pts: pts, label: labels.join(' / ') };
+}
+
 // NHKマイルC：穴馬14条件スコア（診断用ラベル生成・既存スコア体系に二重加算しない）
 function calcNHKAnaScore(horse) {
   if (!horse) return { score: 0, labels: [] };
@@ -5887,8 +5913,12 @@ function computeScore(h) {
   var tokyoExpPenaltyObj = calcTokyoExpPenaltyNHK(h, currentRace);
   var tokyoExpPenalty = tokyoExpPenaltyObj.pts;
 
+  // NHKマイルC：穴馬条件未反映分（チャーチルC・NZT2-3着・5-9番人気）
+  var anaBonusObj = calcAnaBonusNHK(h, currentRace);
+  var anaBonus = anaBonusObj.pts;
+
   return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB, special, nhkBw,
-           shozoP, jockeyN, careerP, prevR, leftPts, nztPts, framePts, tokyoExpPenalty,
+           shozoP, jockeyN, careerP, prevR, leftPts, nztPts, framePts, tokyoExpPenalty, anaBonus,
            _distLabel: distObj.label, _stallionLabel: stallionObj.label,
            _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label,
            _specialLabel: specialObj.label, _nhkBwLabel: nhkBwObj.label,
@@ -5904,7 +5934,7 @@ function sumScore(s) {
          (s.tokyo || 0) + (s.sexB || 0) + (s.special || 0) + (s.nhkBw || 0) +
          (s.shozoP || 0) + (s.jockeyN || 0) + (s.careerP || 0) + (s.prevR || 0) +
          (s.leftPts || 0) + (s.nztPts || 0) + (s.framePts || 0) +
-         (s.tokyoExpPenalty || 0);
+         (s.tokyoExpPenalty || 0) + (s.anaBonus || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
