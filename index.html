@@ -5685,6 +5685,16 @@ function computeScore(h) {
     };
     if (epcJockeyScores[h.jockey] != null) jockey = epcJockeyScores[h.jockey];
   }
+  // 京都新聞杯専用：騎手スコアを詳細テーブルで上書き
+  if (currentRace && currentRace.indexOf('京都新聞') !== -1) {
+    var kyotoJockeyScores = {
+      '川田将雅':8,'坂井瑠星':7,'松山弘平':7,'西村淳也':6,
+      '池添謙一':5,'岩田望来':5,'北村友一':5,'幸英明':4,
+      '菱田裕二':4,'鮫島駿':4,'団野大成':4,'吉村誠之助':3,
+      '国分恭介':3,'原優介':3,'武藤雅':3,'田山真人':2
+    };
+    if (kyotoJockeyScores[h.jockey] != null) jockey = kyotoJockeyScores[h.jockey];
+  }
 
   // コーススコア計算（全レース共通・直接ロジック）
   var raceInfoForCourse = (typeof RACE_META !== 'undefined' && RACE_META[currentRace]) || {};
@@ -7527,10 +7537,15 @@ function getRaceDirection(raceName) {
   } catch(e) { return 'right'; }
 }
 
-// 右回り適性スコア（左回り経験馬は逆に減点候補）
+// 右回り適性スコア（rightCourseScore に応じて加減点・最大+5・最小-2）
 function calcRightCourseBonus(horse) {
   if (!horse) return { pts: 0, label: '' };
-  // 京都・中山・阪神・小倉等の右回りは default = 0、右回り好走実績は別途未実装
+  var score = horse.rightCourseScore;
+  if (score === undefined || score === null) return { pts: 0, label: '' };
+  if (score >= 10) return { pts: 5,  label: '右回り◎（' + (horse.rightCourse || '') + '）' };
+  if (score >= 7)  return { pts: 3,  label: '右回り○（' + (horse.rightCourse || '') + '）' };
+  if (score >= 5)  return { pts: 1,  label: '右回り△（' + (horse.rightCourse || '') + '）' };
+  if (score <= 1)  return { pts: -2, label: '右回り×（' + (horse.rightCourse || '') + '）' };
   return { pts: 0, label: '' };
 }
 
