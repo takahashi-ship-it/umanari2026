@@ -5374,10 +5374,12 @@ function calcDataScoreNHK(horse, raceName) {
   if (raceName.indexOf('京都新聞') !== -1) {
     var pts = 0;
     var pr = horse.prev1r || horse.prevRank || 99;
-    if (pr === 1) pts += 8;
+    if      (pr === 1) pts += 8;
     else if (pr === 2) pts += 5;
-    if (horse.waku === 7) pts += 8;
+    else if (pr === 3) pts += 3;
+    if      (horse.waku === 7) pts += 8;
     else if (horse.waku === 3) pts += 5;
+    if (horse.prev1race && horse.prev1race.indexOf('きさらぎ') !== -1) pts += 5;
     if (horse.bodyWeightDiff != null && Math.abs(horse.bodyWeightDiff) <= 3) pts += 5;
     return Math.min(20, pts);
   }
@@ -5767,8 +5769,11 @@ function computeScore(h) {
   var prevRObj = calcPrevRankBonusNHK(h, currentRace);
   var shozoP = shozoObj.pts, jockeyN = jockeyNObj.pts, careerP = careerObj.pts, prevR = prevRObj.pts;
 
-  // 左回りコース適性（東京・中京・新潟／最大+5/-2）
-  var leftObj = calcLeftCourseBonus(h);
+  // 左/右回りコース適性（レース方向に応じて切替・最大+5/-2）
+  var _curDir = (typeof getRaceDirection === 'function') ? getRaceDirection(currentRace || '') : 'right';
+  var leftObj = (_curDir === 'left')
+    ? calcLeftCourseBonus(h)
+    : (typeof calcRightCourseBonus === 'function' ? calcRightCourseBonus(h) : { pts: 0, label: '' });
   var leftPts = leftObj.pts;
 
   // NHKマイルC：前走NZT1着馬の消しペナルティ（-15）
@@ -5924,7 +5929,7 @@ function renderHorses() {
           <div class="score-item"><div class="si-label">馬体重</div><div class="si-val" style="color:${score.bw > 0 ? '#0F6E56' : score.bw < 0 ? '#A32D2D' : '#888'}">${h.bodyWeightDiff != null ? (h.bodyWeightDiff >= 0 ? '+' : '') + h.bodyWeightDiff + 'kg' : '--'} (${score.bw >= 0 ? '+' : ''}${score.bw||0})</div></div>
           <div class="score-item" title="${score._distLabel || ''}"><div class="si-label">距離経験</div><div class="si-val" style="color:${score.dist >= 8 ? '#0F6E56' : score.dist >= 4 ? '#2563eb' : score.dist > 0 ? '#888' : '#bbb'}">${(score.dist || 0) > 0 ? '+' + score.dist : '0'}/8</div></div>
           <div class="score-item" title="${score._stallionLabel || ''}"><div class="si-label">種牡馬</div><div class="si-val" style="color:${score.stallion >= 8 ? '#A32D2D' : score.stallion >= 4 ? '#0F6E56' : '#888'}">${(score.stallion || 0) > 0 ? '+' + score.stallion : '0'}/10</div></div>
-          <div class="score-item" title="${score._leftLabel || ''}"><div class="si-label">左回り</div><div class="si-val" style="color:${score.leftPts >= 5 ? '#A32D2D' : score.leftPts >= 3 ? '#0F6E56' : score.leftPts > 0 ? '#2563eb' : score.leftPts < 0 ? '#A32D2D' : '#888'}">${score.leftPts > 0 ? '+' + score.leftPts : (score.leftPts || 0)}/5</div></div>
+          <div class="score-item" title="${score._leftLabel || ''}"><div class="si-label">${(typeof getRaceDirection === 'function' && getRaceDirection(currentRace||'') === 'right') ? '右回り' : '左回り'}</div><div class="si-val" style="color:${score.leftPts >= 5 ? '#A32D2D' : score.leftPts >= 3 ? '#0F6E56' : score.leftPts > 0 ? '#2563eb' : score.leftPts < 0 ? '#A32D2D' : '#888'}">${score.leftPts > 0 ? '+' + score.leftPts : (score.leftPts || 0)}/5</div></div>
           <div class="score-item"><div class="si-label">合計</div><div class="si-val">${total}/${maxS}</div></div>
         </div>
       </div>
@@ -7581,10 +7586,12 @@ function computeScoreBreakdown(horse, raceName) {
     dataScore = Math.min(20, dataScore);
   } else if (raceName && raceName.indexOf('京都新聞') !== -1) {
     var pr = horse.prev1r || horse.prevRank || 99;
-    if (pr === 1) dataScore += 8;       // 前走1着4勝
+    if      (pr === 1) dataScore += 8;
     else if (pr === 2) dataScore += 5;
-    if (waku === 7) dataScore += 8;     // 7枠単回141.7%
+    else if (pr === 3) dataScore += 3;
+    if      (waku === 7) dataScore += 8;
     else if (waku === 3) dataScore += 5;
+    if (horse.prev1race && horse.prev1race.indexOf('きさらぎ') !== -1) dataScore += 5;
     if (horse.bodyWeightDiff != null && Math.abs(horse.bodyWeightDiff) <= 3) dataScore += 5;
     dataScore = Math.min(20, dataScore);
   } else {
