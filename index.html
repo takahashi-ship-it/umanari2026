@@ -6912,11 +6912,13 @@ function setManualMark(horseName, mark) {
 
 /* ==== 機能5: 年間収支グラフ ==== */
 const SEISEKI_DATA = [
-  { race:'皐月賞',     date:'4/19', invest:55000, payout:200550, grade:'G1' },
-  { race:'青葉賞',     date:'4/25', invest:4800,  payout:0,      grade:'G2' },
-  { race:'フローラS',  date:'4/26', invest:9000,  payout:0,      grade:'G2' },
-  { race:'マイラーズC', date:'4/26', invest:9000,  payout:70140,  grade:'G2' },
-  { race:'天皇賞春',    date:'5/3',  invest:63000, payout:0,      grade:'G1' },
+  { race:'皐月賞',       date:'4/19', invest:55000, payout:200550, grade:'G1' },
+  { race:'青葉賞',       date:'4/25', invest:4800,  payout:0,      grade:'G2' },
+  { race:'フローラS',    date:'4/26', invest:9000,  payout:0,      grade:'G2' },
+  { race:'マイラーズC',  date:'4/26', invest:9000,  payout:70140,  grade:'G2' },
+  { race:'天皇賞春',     date:'5/3',  invest:63000, payout:0,      grade:'G1' },
+  { race:'京都新聞杯',   date:'5/9',  invest:16800, payout:74860,  grade:'G2' },
+  { race:'エプソムC',    date:'5/9',  invest:16800, payout:0,      grade:'G3' },
 ];
 
 function renderSeisekiGraph() {
@@ -6924,11 +6926,13 @@ function renderSeisekiGraph() {
   if (!div) { console.warn('[renderSeisekiGraph] seiseki-graph div not found'); return; }
 
   var data = [
-    { race:'皐月賞',     date:'4/19', invest:55000, payout:200550, grade:'G1', hit:true  },
-    { race:'青葉賞',     date:'4/25', invest:4800,  payout:0,      grade:'G2', hit:false },
-    { race:'フローラS',  date:'4/26', invest:9000,  payout:0,      grade:'G2', hit:false },
-    { race:'マイラーズC', date:'4/26', invest:9000,  payout:70140,  grade:'G2', hit:true  },
-    { race:'天皇賞春',    date:'5/3',  invest:63000, payout:0,      grade:'G1', hit:false }
+    { race:'皐月賞',       date:'4/19', invest:55000, payout:200550, grade:'G1', hit:true  },
+    { race:'青葉賞',       date:'4/25', invest:4800,  payout:0,      grade:'G2', hit:false },
+    { race:'フローラS',    date:'4/26', invest:9000,  payout:0,      grade:'G2', hit:false },
+    { race:'マイラーズC',  date:'4/26', invest:9000,  payout:70140,  grade:'G2', hit:true  },
+    { race:'天皇賞春',     date:'5/3',  invest:63000, payout:0,      grade:'G1', hit:false },
+    { race:'京都新聞杯',   date:'5/9',  invest:16800, payout:74860,  grade:'G2', hit:true  },
+    { race:'エプソムC',    date:'5/9',  invest:16800, payout:0,      grade:'G3', hit:false }
   ];
 
   var totalInvest = data.reduce(function(s,r){ return s + r.invest; }, 0);
@@ -8425,9 +8429,8 @@ function renderJikuTracking() {
   html += '<div style="margin-top:12px;padding:10px;background:#E6F1FB;border-radius:8px;border-left:3px solid #185FA5">';
   html += '<div style="font-size:11px;font-weight:600;color:#185FA5;margin-bottom:4px">📅 次回軸馬（予定）</div>';
   var nextRaces = [
-    { race: '京都新聞杯',   jiku: 'エムズビギン' },
-    { race: 'エプソムカップ', jiku: 'カラマティアノス' },
-    { race: 'NHKマイルC',   jiku: 'エコロアルバ' },
+    { race: 'NHKマイルC',         jiku: 'エコロアルバ' },
+    { race: 'ヴィクトリアマイル', jiku: '未定' },
   ];
   nextRaces.forEach(function(nr) {
     html += '<div style="font-size:12px;margin-bottom:2px">▶ ' + nr.race + '：<strong>' + nr.jiku + '</strong></div>';
@@ -8643,6 +8646,8 @@ function updateHeaderStats() {
     { invest: 9000,  payout: 0,      name: 'フローラS' },
     { invest: 9000,  payout: 70140,  name: 'マイラーズC' },
     { invest: 63000, payout: 0,      name: '天皇賞春' },
+    { invest: 16800, payout: 74860,  name: '京都新聞杯' },
+    { invest: 16800, payout: 0,      name: 'エプソムC' },
   ];
 
   const totalInvest = seisekiData.reduce((s,r) => s + r.invest, 0);
