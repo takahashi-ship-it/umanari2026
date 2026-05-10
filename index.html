@@ -6483,6 +6483,30 @@ function calcBodyWeightScore(h) {
   if (diff <= -8) return -1;                     // 絞りすぎ
   return 0;
 }
+
+// 乗り替わりペナルティ（継続騎乗との比較）
+function calcJockeyChangePenalty(horse) {
+  if (horse.continuousJockey === true) return { pts: 3,  label: '継続騎乗ボーナス+3pt' };
+  if (horse.jockeyChanged === true)    return { pts: -5, label: '⚠️乗り替わり-5pt' };
+  return { pts: 0, label: '' };
+}
+
+// NHKマイルC：朝日杯直行ローテのペナルティ・チューリップ賞経由ボーナス
+function calcRouteNHK(horse, raceName) {
+  if (!raceName || raceName.indexOf('NHKマイル') === -1) return { pts: 0, label: '' };
+  var prev = horse.prev1race || horse.prevRace || '';
+  if (prev.indexOf('朝日杯') >= 0)         return { pts: -8, label: '⚠️朝日杯直行ローテ【過去データ不振-8pt】' };
+  if (prev.indexOf('チューリップ') >= 0)   return { pts: 3,  label: 'チューリップ賞経由ボーナス+3pt' };
+  return { pts: 0, label: '' };
+}
+
+// 陣営コメントフラグ（trainerPositive）
+function calcTrainerComment(horse) {
+  if (horse.trainerPositive === true)  return { pts: 3,  label: '陣営ポジティブコメント+3pt' };
+  if (horse.trainerPositive === false) return { pts: -3, label: '⚠️陣営懸念コメント-3pt' };
+  return { pts: 0, label: '' };
+}
+
 function computeScore(h) {
   // 人気ボーナス（最新オッズ反映・最大+12 / 最小-3）
   let ninki;
@@ -6668,8 +6692,17 @@ function computeScore(h) {
   var prevClassKyotoObj = calcPrevClassKyoto(h, currentRace);
   var prevClassKyoto = prevClassKyotoObj.pts;
 
+  // 乗り替わり/継続騎乗・陣営コメント・ローテーション
+  var jockeyChgObj = calcJockeyChangePenalty(h);
+  var routeNhkObj  = calcRouteNHK(h, currentRace);
+  var trainerObj   = calcTrainerComment(h);
+  var jockeyChgPts = jockeyChgObj.pts;
+  var routeNhkPts  = routeNhkObj.pts;
+  var trainerPts   = trainerObj.pts;
+
   return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB, special, nhkBw,
            shozoP, jockeyN, careerP, prevR, leftPts, nztPts, framePts, tokyoExpPenalty, anaBonus, agePenalty, prevClassKyoto,
+           jockeyChgPts, routeNhkPts, trainerPts,
            _distLabel: distObj.label, _stallionLabel: stallionObj.label,
            _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label,
            _specialLabel: specialObj.label, _nhkBwLabel: nhkBwObj.label,
@@ -6677,6 +6710,8 @@ function computeScore(h) {
            _careerLabel: careerObj.label, _prevRLabel: prevRObj.label,
            _leftLabel: leftObj.label, _nztLabel: nztObj.label,
            _frameLabel: frameObj.label, _tokyoExpPenaltyLabel: tokyoExpPenaltyObj.label,
+           _jockeyChgLabel: jockeyChgObj.label, _routeNhkLabel: routeNhkObj.label,
+           _trainerLabel: trainerObj.label,
            _siValue: si };
 }
 function sumScore(s) {
@@ -6686,7 +6721,8 @@ function sumScore(s) {
          (s.shozoP || 0) + (s.jockeyN || 0) + (s.careerP || 0) + (s.prevR || 0) +
          (s.leftPts || 0) + (s.nztPts || 0) + (s.framePts || 0) +
          (s.tokyoExpPenalty || 0) + (s.anaBonus || 0) + (s.agePenalty || 0) +
-         (s.prevClassKyoto || 0);
+         (s.prevClassKyoto || 0) +
+         (s.jockeyChgPts || 0) + (s.routeNhkPts || 0) + (s.trainerPts || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
@@ -8959,7 +8995,13 @@ var JIKU_TRACKING = [
   { race: 'エプソムカップ', jiku: 'サクラファレル',       result: '着外', hit: false,
     note: '1番人気5.8倍・D.レーン→着外❌ 1着トロヴァトーレ・2着ステレンボッシュ' },
   { race: 'NHKマイルC',     jiku: 'エコロアルバ',         result: '着外（BOX的中）', hit: true,
-    note: '軸エコロアルバは着外だがBOX購入で3連単17→16→11 26,150円的中！52,300円払戻' },
+    note: '軸エコロアルバは着外だがBOX購入で3連単17→16→11 26,150円的中！52,300円払戻',
+    failReason: [
+      '乗り替わり（継続騎乗でなかった）→次回乗り替わりには-5pt適用',
+      '朝日杯直行ローテ（過去データ不振）→次回このローテには-8pt適用',
+      '1着ロデオドライブ：陣営「左回りの方が合う」コメントを見落とし→trainerPositiveフラグ追加',
+      '1着ロデオドライブ：8枠+D.レーン+前走NZT2着+差し脚質の4条件が揃っていた',
+    ] },
 ];
 
 function renderJikuTracking() {
@@ -8992,13 +9034,23 @@ function renderJikuTracking() {
   JIKU_TRACKING.forEach(function(r) {
     var hitColor = r.hit ? '#0F6E56' : (r.result === '—' ? '#999' : '#A32D2D');
     var hitIcon = r.hit ? '✅' : (r.result === '—' ? '⏳' : '❌');
-    html += '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--border)">';
+    html += '<div style="padding:8px 0;border-bottom:0.5px solid var(--border)">';
+    html += '<div style="display:flex;align-items:center;gap:8px">';
     html += '<span style="font-size:13px">' + hitIcon + '</span>';
     html += '<div style="flex:1">';
     html += '<div style="font-size:12px;font-weight:500">' + r.race + '</div>';
     html += '<div style="font-size:10px;color:var(--color-text-secondary)">軸：' + r.jiku + (r.note ? '　' + r.note : '') + '</div>';
     html += '</div>';
     html += '<div style="font-size:13px;font-weight:700;color:' + hitColor + '">' + r.result + '</div>';
+    html += '</div>';
+    if (r.failReason && r.failReason.length > 0) {
+      html += '<div style="margin-top:6px;padding:6px 8px;background:rgba(239,159,39,0.1);border-radius:6px">';
+      html += '<div style="font-size:9px;color:#EF9F27;font-weight:700;margin-bottom:3px">📝 振り返り・改善点</div>';
+      r.failReason.forEach(function(reason) {
+        html += '<div style="font-size:9px;color:#666;margin-bottom:2px;line-height:1.5">• ' + reason + '</div>';
+      });
+      html += '</div>';
+    }
     html += '</div>';
   });
 
