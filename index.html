@@ -7035,7 +7035,7 @@ function renderSeisekiGraph() {
   html += '<div style="margin-bottom:6px">';
   html += '<div style="font-size:11px;font-weight:500;color:#555;margin-bottom:6px">累積収支推移</div>';
 
-  var W = 300, H = 100, PL = 40, PR = 16, PT = 16, PB = 24;
+  var W = 300, H = 115, PL = 40, PR = 16, PT = 16, PB = 36;
   var iW = W - PL - PR, iH = H - PT - PB;
   var n = cumData.length;
   var minV = Math.min(0, Math.min.apply(null, cumData));
@@ -7076,11 +7076,13 @@ function renderSeisekiGraph() {
          + '" font-size="9" fill="'+pc+'" font-weight="600">'+lbl+'</text>';
   });
 
-  // X軸ラベル
+  // X軸ラベル（日付・レース名を2行表示）
   data.forEach(function(r,i){
     var anchor = i === 0 ? 'start' : i === n-1 ? 'end' : 'middle';
-    html += '<text x="'+tx(i)+'" y="'+(H-4)+'" text-anchor="'+anchor
-         + '" font-size="8" fill="#888">'+r.date+' '+r.race+'</text>';
+    html += '<text x="'+tx(i)+'" y="'+(H-16)+'" text-anchor="'+anchor
+         + '" font-size="8" fill="#888">'+r.date+'</text>';
+    html += '<text x="'+tx(i)+'" y="'+(H-5)+'" text-anchor="'+anchor
+         + '" font-size="8" fill="#666" font-weight="500">'+r.race+'</text>';
   });
 
   html += '</svg>';
