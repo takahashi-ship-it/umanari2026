@@ -4342,6 +4342,27 @@ const RACE_CONDITIONS = {
     ],
   },
 
+  "新潟大賞典": {
+    good: [
+      { label: "関西馬・栗東所属（過去10年9勝）",                                 match: h => h.shozo === "栗東" || h.stable === "栗東" },
+      { label: "ドゥラメンテ産駒（トニービン内包・新潟長直線で強力）",           match: h => h.father === "ドゥラメンテ" },
+      { label: "ロードカナロア産駒（KM直系・2018〜2024年で4勝）",                match: h => h.father === "ロードカナロア" },
+      { label: "キタサンブラック産駒（KM直系）",                                  match: h => h.father === "キタサンブラック" },
+      { label: "ルーラーシップ産駒（KM直系・トニービン内包）",                    match: h => h.father === "ルーラーシップ" },
+      { label: "6〜9番人気（4勝含む3着以内9回・中穴の宝庫）",                    match: h => h.popEstimate >= 6 && h.popEstimate <= 9 },
+      { label: "10番人気以下（2勝含む3着以内8回・大穴台頭）",                    match: h => h.popEstimate >= 10 },
+      { label: "差し脚質（3着以内36頭中22頭が4角6番手以下）",                    match: h => h.pace === "差し" || h.style === "差し" },
+      { label: "5枠（すべての項目でトップ）",                                     match: h => h.waku === 5 },
+    ],
+    bad: [
+      { label: "1番人気【0-2-3-7】2014年以降勝利ゼロ",                            match: h => h.popEstimate === 1 },
+      { label: "牝馬（過去10年馬券圏外）",                                        match: h => h.sex === "牝" },
+      { label: "ハービンジャー産駒（新潟2000mで不振）",                           match: h => h.father === "ハービンジャー" },
+      { label: "8歳以上（好走例少ない）",                                         match: h => h.age >= 8 },
+      { label: "53kg以下の軽ハンデ（過去10年馬券圏外）",                          match: h => h.hande != null && h.hande > 0 && h.hande <= 53 },
+    ],
+  },
+
   /* 未定義のレースは COMMON のみ適用される */
 };
 
@@ -4517,6 +4538,68 @@ const RACE_DANGER_LOGIC = {
             + '❌ 前走福島牝馬S組【0-1-0-18】複勝率5.3%<br>'
             + '❌ 6歳以上の高齢馬（複勝率低め）<br>'
             + '❌ 前走1着馬（優勝歴なし）',
+    },
+  },
+
+  "新潟大賞典": {
+    dangerReasons: function(h) {
+      var r = [];
+      if (h.popEstimate === 1)                                r.push('1番人気は2014年以降【0-2-3-7】勝利ゼロ。ハンデ戦で信頼できない');
+      if (h.sex === '牝')                                     r.push('牝馬は過去10年で馬券圏外ゼロのデータ');
+      if (h.father === 'ハービンジャー')                      r.push('ハービンジャー産駒は新潟芝2000mで不振');
+      if ((h.age || 0) >= 8)                                  r.push('8歳以上は好走例が極端に少ない（1勝のみ）');
+      if (h.hande != null && h.hande > 0 && h.hande <= 53)    r.push('53kg以下の軽ハンデ馬は過去10年で馬券圏外');
+      if (h.popEstimate >= 2 && h.popEstimate <= 4)           r.push('2〜4番人気【3-6-1-26】複勝率28%と人気サイドが信頼できない');
+      return r;
+    },
+    isAna: function(h, odds) {
+      var KMlinea = ['ロードカナロア','キタサンブラック','ルーラーシップ','レイデオロ','キングカメハメハ'];
+      var toniBin = ['ハーツクライ','ジャングルポケット','ルーラーシップ','ドゥラメンテ'];
+      return odds > 10
+        && (h.shozo === '栗東' || h.stable === '栗東')
+        && (KMlinea.indexOf(h.father) >= 0 || toniBin.indexOf(h.father) >= 0)
+        && h.father !== 'ハービンジャー'
+        && (h.age || 0) <= 7
+        && h.sex !== '牝';
+    },
+    anaReasons: function(h) {
+      var s = '';
+      if (h.shozo === '栗東' || h.stable === '栗東') s += '✅ 関西馬（過去10年9勝の主役）<br>';
+      if (h.father === 'ドゥラメンテ')               s += '✅ ドゥラメンテ産駒（トニービン内包・新潟長直線◎）<br>';
+      if (['ロードカナロア','キタサンブラック','ルーラーシップ'].indexOf(h.father) >= 0)
+                                                     s += '✅ ' + h.father + '（KM直系・2018〜2024年で4勝）<br>';
+      if (h.popEstimate >= 6)                        s += '✅ 中穴〜大穴（6〜9番人気4勝・10番人気以下も2勝）<br>';
+      if (h.pace === '差し' || h.style === '差し')   s += '✅ 差し脚質（3着以内36頭中22頭が4角6番手以下）<br>';
+      return s;
+    },
+    checklist: {
+      ok: function(h) {
+        var KMlinea = ['ロードカナロア','キタサンブラック','ルーラーシップ','キングカメハメハ','レイデオロ'];
+        var toniBin = ['ハーツクライ','ジャングルポケット','ルーラーシップ','ドゥラメンテ'];
+        return (h.shozo === '栗東' || h.stable === '栗東')
+          && (KMlinea.indexOf(h.father) >= 0 || toniBin.indexOf(h.father) >= 0)
+          && h.father !== 'ハービンジャー'
+          && (h.age || 0) <= 7
+          && h.sex !== '牝';
+      },
+      ng: function(h) {
+        return h.popEstimate === 1
+          || h.sex === '牝'
+          || h.father === 'ハービンジャー'
+          || (h.age || 0) >= 8
+          || (h.hande != null && h.hande > 0 && h.hande <= 53);
+      },
+      okText: '✅ 関西馬（栗東所属・過去10年9勝の主役）<br>'
+            + '✅ KM直系産駒（ロードカナロア・キタサンブラック・ルーラーシップ）<br>'
+            + '✅ トニービン内包馬（ドゥラメンテ・ハーツクライ等）×新潟長直線<br>'
+            + '✅ 6〜9番人気（4勝・3着以内9回の中穴の宝庫）<br>'
+            + '✅ 差し脚質（4角6番手以下が3着以内22頭）<br>'
+            + '✅ 7歳まで（高齢でも割引不要）',
+      ngText: '❌ 1番人気は2014年以降【0-2-3-7】勝利ゼロ<br>'
+            + '❌ 牝馬（過去10年馬券圏外）<br>'
+            + '❌ ハービンジャー産駒（新潟芝2000mで不振）<br>'
+            + '❌ 8歳以上（好走例極少・1勝のみ）<br>'
+            + '❌ 53kg以下の軽ハンデ（過去10年馬券圏外）',
     },
   },
 };
