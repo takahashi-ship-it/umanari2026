@@ -6507,6 +6507,13 @@ function calcTrainerComment(horse) {
   return { pts: 0, label: '' };
 }
 
+// 義英真（元JRA騎手・馬体/パドック専門家）の評価
+function calcYoshiEishin(horse) {
+  if (horse.yoshiEishinPick === true)  return { pts: 8,  label: '⭐義英真注目馬（馬体・パドック評価）+8pt' };
+  if (horse.yoshiEishinMinus === true) return { pts: -8, label: '⚠️義英真消し馬（馬体・パドック評価マイナス）-8pt' };
+  return { pts: 0, label: '' };
+}
+
 function computeScore(h) {
   // 人気ボーナス（最新オッズ反映・最大+12 / 最小-3）
   let ninki;
@@ -6692,17 +6699,19 @@ function computeScore(h) {
   var prevClassKyotoObj = calcPrevClassKyoto(h, currentRace);
   var prevClassKyoto = prevClassKyotoObj.pts;
 
-  // 乗り替わり/継続騎乗・陣営コメント・ローテーション
-  var jockeyChgObj = calcJockeyChangePenalty(h);
-  var routeNhkObj  = calcRouteNHK(h, currentRace);
-  var trainerObj   = calcTrainerComment(h);
-  var jockeyChgPts = jockeyChgObj.pts;
-  var routeNhkPts  = routeNhkObj.pts;
-  var trainerPts   = trainerObj.pts;
+  // 乗り替わり/継続騎乗・陣営コメント・ローテーション・義英真評価
+  var jockeyChgObj  = calcJockeyChangePenalty(h);
+  var routeNhkObj   = calcRouteNHK(h, currentRace);
+  var trainerObj    = calcTrainerComment(h);
+  var yoshiEishinObj = calcYoshiEishin(h);
+  var jockeyChgPts   = jockeyChgObj.pts;
+  var routeNhkPts    = routeNhkObj.pts;
+  var trainerPts     = trainerObj.pts;
+  var yoshiEishinPts = yoshiEishinObj.pts;
 
   return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB, special, nhkBw,
            shozoP, jockeyN, careerP, prevR, leftPts, nztPts, framePts, tokyoExpPenalty, anaBonus, agePenalty, prevClassKyoto,
-           jockeyChgPts, routeNhkPts, trainerPts,
+           jockeyChgPts, routeNhkPts, trainerPts, yoshiEishinPts,
            _distLabel: distObj.label, _stallionLabel: stallionObj.label,
            _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label,
            _specialLabel: specialObj.label, _nhkBwLabel: nhkBwObj.label,
@@ -6711,7 +6720,7 @@ function computeScore(h) {
            _leftLabel: leftObj.label, _nztLabel: nztObj.label,
            _frameLabel: frameObj.label, _tokyoExpPenaltyLabel: tokyoExpPenaltyObj.label,
            _jockeyChgLabel: jockeyChgObj.label, _routeNhkLabel: routeNhkObj.label,
-           _trainerLabel: trainerObj.label,
+           _trainerLabel: trainerObj.label, _yoshiEishinLabel: yoshiEishinObj.label,
            _siValue: si };
 }
 function sumScore(s) {
@@ -6722,7 +6731,8 @@ function sumScore(s) {
          (s.leftPts || 0) + (s.nztPts || 0) + (s.framePts || 0) +
          (s.tokyoExpPenalty || 0) + (s.anaBonus || 0) + (s.agePenalty || 0) +
          (s.prevClassKyoto || 0) +
-         (s.jockeyChgPts || 0) + (s.routeNhkPts || 0) + (s.trainerPts || 0);
+         (s.jockeyChgPts || 0) + (s.routeNhkPts || 0) + (s.trainerPts || 0) +
+         (s.yoshiEishinPts || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
@@ -6856,6 +6866,18 @@ function renderHorses() {
 
       <div class="horse-comment">${h.prevComment}</div>
       ${h.note ? `<div class="horse-comment" style="background:#fbf6e3;border-left:3px solid var(--gold);margin-top:8px">${h.note}</div>` : ''}
+      ${(h.yoshiEishinPick || h.yoshiEishinMinus || h.yoshiEishinNote) ? (function(){
+        var pos = h.yoshiEishinPick === true;
+        var neg = h.yoshiEishinMinus === true;
+        var color = pos ? '#0F6E56' : (neg ? '#C62828' : '#185FA5');
+        var bg = pos ? 'rgba(15,110,86,0.1)' : (neg ? 'rgba(198,40,40,0.1)' : 'rgba(24,95,165,0.1)');
+        var icon = pos ? '⭐' : (neg ? '⚠️' : '👁️');
+        var ptsLabel = pos ? '+8pt' : (neg ? '-8pt' : '');
+        return '<div style="margin-top:6px;padding:6px 8px;background:' + bg + ';border-left:3px solid ' + color + ';border-radius:6px">'
+             + '<div style="font-size:10px;color:' + color + ';font-weight:700;margin-bottom:2px">' + icon + ' 義英真（元JRA騎手・パドック専門家）の見解 ' + ptsLabel + '</div>'
+             + (h.yoshiEishinNote ? '<div style="font-size:10px;color:var(--text-sub);line-height:1.5">' + h.yoshiEishinNote + '</div>' : '')
+             + '</div>';
+      })() : ''}
       ${manualMarkUI}
       <div style="margin-top:8px">
         <textarea id="memo_${escName.replace(/\s/g,'')}" rows="2" placeholder="✍️ ${h.name} のメモ（パドック所見・展開予想など）" oninput="saveHorseMemo('${escName}',this.value)" style="width:100%;padding:6px 8px;border:0.5px solid var(--border);border-radius:var(--border-radius-md);font-size:11px;color:var(--text);background:var(--bg-soft);resize:vertical;box-sizing:border-box;font-family:inherit;line-height:1.5">${(window.horseMemos||{})[h.name] || ''}</textarea>
