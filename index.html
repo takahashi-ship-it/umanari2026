@@ -5508,8 +5508,21 @@ function renderPastData() {
   var root = document.getElementById('pastDataRoot');
   if (!root) return;
   var data = RACE_PAST_DATA[currentRace];
-  if (!data) {
-    root.innerHTML = '<div class="section"><p style="color:var(--text-mute);font-size:13px;">このレースの過去10年データはまだ準備中です。</p></div>';
+  if (!data || !Array.isArray(data.sections)) {
+    if (data && data.anaPoints && data.anaPoints.length) {
+      var html = '';
+      if (data.summary) {
+        html += '<div class="section"><p style="font-size:12px;line-height:1.7;color:var(--text-sub)">' + data.summary + '</p></div>';
+      }
+      html += '<div class="section"><h3>💡 攻略ポイント</h3><ul class="check-list" style="list-style:none;padding-left:4px;line-height:1.7">';
+      data.anaPoints.forEach(function(pt){
+        html += '<li style="font-size:12px;margin-bottom:6px;padding-left:14px;text-indent:-14px">▶ ' + pt + '</li>';
+      });
+      html += '</ul></div>';
+      root.innerHTML = html;
+    } else {
+      root.innerHTML = '<div class="section"><p style="color:var(--text-mute);font-size:13px;">このレースの過去10年データはまだ準備中です。</p></div>';
+    }
     return;
   }
   var horsesArr = window.horses || (typeof HORSES !== 'undefined' ? HORSES : []);
