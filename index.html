@@ -6857,11 +6857,18 @@ function renderCriteria() {
  *   - 選定基準・登録馬・チェックリスト
  *   - オッズ入力グリッドを再構築
  */
+var FINISHED_RACE_RESULTS = {
+  '天皇賞（春）': '✅ このレースは終了しました | 1着：7番クロワデュノール　2着：15番ヴェルテンベルク　3着：3番アドマイヤテラ | 3連単 7-15-3：70,630円 | 軸アドマイヤテラ3着✅的中',
+  '京都新聞杯':   '✅ このレースは終了しました | 1着：5番コンジェスタス（軸馬）　2着：15番ベレシート　3着：6番ラディアントスター | 3連単 5→15→6：74,860円 🎉大的中！',
+  'エプソムC':    '✅ このレースは終了しました | 1着：11番トロヴァトーレ　2着：16番ステレンボッシュ　3着：17番レガーロデルシエロ | 3連単：108,330円 | 軸サクラファレル着外❌',
+  'NHKマイルC':  '✅ このレースは終了しました | 1着：17番ロデオドライブ　2着：16番アスクイキゴミ　3着：11番アドマイヤクワッズ | 3連単 17→16→11：26,150円 | BOXで52,300円払戻✅',
+};
+
 function updateFinishedBanner(raceName) {
   var el = document.getElementById('finished-banner');
   if (!el) return;
   if (FINISHED_RACES.indexOf(raceName) >= 0) {
-    el.innerHTML = '✅ このレースは終了しました | 1着：7番クロワデュノール　2着：15番ヴェルテンベルク　3着：3番アドマイヤテラ | 3連単 7-15-3：70,630円';
+    el.innerHTML = FINISHED_RACE_RESULTS[raceName] || '✅ このレースは終了しました';
     el.style.display = 'block';
   } else {
     el.style.display = 'none';
