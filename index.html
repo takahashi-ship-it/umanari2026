@@ -9055,13 +9055,37 @@ function renderJikuTracking() {
   });
 
   html += '<div style="margin-top:12px;padding:10px;background:#E6F1FB;border-radius:8px;border-left:3px solid #185FA5">';
-  html += '<div style="font-size:11px;font-weight:600;color:#185FA5;margin-bottom:4px">📅 次回軸馬（予定）</div>';
+  html += '<div style="font-size:11px;font-weight:600;color:#185FA5;margin-bottom:6px">📅 次回軸馬（予告）</div>';
   var nextRaces = [
-    { race: 'NHKマイルC',         jiku: 'エコロアルバ' },
-    { race: 'ヴィクトリアマイル', jiku: '未定' },
+    {
+      date: '5/16（土）', race: '新潟大賞典', grade: 'G3',
+      jiku: 'ドゥラドーレス', odds: 3.0, pop: 1, jockey: 'C.ルメール',
+      note: 'ドゥラメンテ産駒（トニービン内包）×ルメール×ここ5戦重賞2着4度。⚠️ハンデ戦1番人気0勝データに注意',
+      confidence: 65,
+    },
+    {
+      date: '5/17（日）', race: 'ヴィクトリアマイル', grade: 'G1',
+      jiku: 'エンブロイダリー', odds: 2.3, pop: 1, jockey: 'C.ルメール',
+      note: '桜花賞・秋華賞二冠牝馬×ルメール（過去10年4勝・勝率44%）×前走阪神牝馬S1着（最強ステップ）×1番人気複勝率70%',
+      confidence: 80,
+    },
   ];
   nextRaces.forEach(function(nr) {
-    html += '<div style="font-size:12px;margin-bottom:2px">▶ ' + nr.race + '：<strong>' + nr.jiku + '</strong></div>';
+    var conf = nr.confidence || 0;
+    var confColor = conf >= 75 ? '#0F6E56' : (conf >= 60 ? '#EF9F27' : '#A32D2D');
+    html += '<div style="margin-bottom:8px;padding:8px;background:#fff;border-radius:6px;border:0.5px solid #B5D2EA">';
+    html += '<div style="font-size:11px;color:#185FA5;font-weight:600;margin-bottom:2px">📅 ' + nr.date + ' ' + nr.race + '（' + nr.grade + '）</div>';
+    html += '<div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:2px">◎ ' + nr.jiku
+         + '<span style="font-size:10px;font-weight:500;color:#666;margin-left:6px">' + nr.odds + '倍・' + nr.pop + '番人気・' + nr.jockey + '</span></div>';
+    if (nr.note) html += '<div style="font-size:10px;color:#555;line-height:1.5;margin-bottom:4px">' + nr.note + '</div>';
+    html += '<div style="display:flex;align-items:center;gap:6px">';
+    html += '<span style="font-size:10px;color:#666">信頼度</span>';
+    html += '<div style="flex:1;height:5px;background:#E5E5E5;border-radius:3px;overflow:hidden">';
+    html += '<div style="width:' + conf + '%;height:100%;background:' + confColor + '"></div>';
+    html += '</div>';
+    html += '<span style="font-size:11px;font-weight:700;color:' + confColor + '">' + conf + '%</span>';
+    html += '</div>';
+    html += '</div>';
   });
   html += '</div>';
 
