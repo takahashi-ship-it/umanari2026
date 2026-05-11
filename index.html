@@ -3258,9 +3258,10 @@ const HORSES_BY_RACE = {
     father:'ロードカナロア', motherFather:'ディープインパクト', blood:'KM系',
     shozo:'美浦', stable:'美浦', jockey:'津村明秀', odds:19.0, popEstimate:7,
     pace:'差し', style:'差し', leftCourseScore:7,
-    prev1race:'前走', prev1grade:'G2', prev1r:5,
-    prevRace:'前走', prevGrade:'G2', prevRank:5,
-    note:'ロードカナロア産駒×母父ディープインパクト。東京マイル適性あり',
+    prev1race:'中山牝馬S', prev1grade:'G3', prev1r:5,
+    prevRace:'中山牝馬S', prevGrade:'G3', prevRank:5,
+    prev2race:'福島記念', prev2grade:'G3', prev2r:1,
+    note:'ロードカナロア産駒×母父ディープインパクト。東京マイル適性あり。前走中山牝馬S5着・前々走福島記念1着',
     training:'B' },
 
   { name:'カナテープ',          age:7, sex:'牝', waku:null, umaban:null,
@@ -5493,8 +5494,8 @@ const RACE_PAST_DATA = {
 
   anaPoints: [
     '⭐前走1着馬は勝率0%！このレースは前走着順だけで判断するのは危険。前走6着以下からの巻き返しが6勝最多',
-    '⭐Bコース替わり週で内枠有利！2〜3枠が最注目（過去8年で5勝）',
-    '⚠️7枠は22頭走って馬券圏内ゼロ！完全消し。ニシノティアモ・ドロップオブライトは消し',
+    '⭐2〜3枠が最注目（過去8年で5勝）。枠順確定後に2〜3枠の馬は評価UP',
+    '⚠️7枠は22頭走って馬券圏内ゼロ！完全消し。枠順確定後に7枠の馬は消し',
     '⭐東京芝1600m重賞で3着以内経験が必須！過去6年の勝ち馬全員が該当。クイーンズウォーク（昨年2着）・エンブロイダリー（NHKマイルC2着等）が該当',
     '⚠️前走重賞以外（OP・条件戦）からの参戦馬は過去10年複勝率0%！完全消し',
     '⚠️2〜3番人気は過去10年0勝。カムニャック（2番人気）・クイーンズウォーク（3番人気）は過信禁物',
@@ -6527,10 +6528,12 @@ function calcVictoriaMile(horse, raceName) {
   if (pr === 1)                              { pts -= 10; labels.push('⚠️前走1着【勝率0%・-10pt】'); }
   else if ((pr || 0) >= 6)                   { pts +=  8; labels.push('前走6着以下【6勝最多・巻き返し+8pt】'); }
   else if (pr === 4 || pr === 5)             { pts +=  5; labels.push('前走4〜5着【好走率高い+5pt】'); }
-  if (horse.waku === 7)                      { pts -= 15; labels.push('⚠️7枠【0-0-0-22・-15pt】'); }
-  else if (horse.waku === 3)                 { pts += 10; labels.push('3枠【過去8年5勝+10pt】'); }
-  else if (horse.waku === 2)                 { pts +=  8; labels.push('2枠【Bコース内枠+8pt】'); }
-  else if (horse.waku >= 4 && horse.waku <= 6) { pts += 5; labels.push('4〜6枠【単回376%・穴Zone+5pt】'); }
+  if (horse.waku != null) {
+    if (horse.waku === 7)                      { pts -= 15; labels.push('⚠️7枠【0-0-0-22・-15pt】'); }
+    else if (horse.waku === 3)                 { pts += 10; labels.push('3枠【過去8年5勝+10pt】'); }
+    else if (horse.waku === 2)                 { pts +=  8; labels.push('2枠【Bコース内枠+8pt】'); }
+    else if (horse.waku >= 4 && horse.waku <= 6) { pts += 5; labels.push('4〜6枠【単回376%・穴Zone+5pt】'); }
+  }
   if (horse.popEstimate === 2 || horse.popEstimate === 3) {
     pts -= 8; labels.push('⚠️2〜3番人気【過去10年0勝・-8pt】');
   }
