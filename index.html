@@ -5601,19 +5601,65 @@ const RACE_PAST_DATA = {
       matchFn: function(h){ return (h.age||0) >= 8; } },
   ],
 
+  anaConditions: [
+    { label:'⭐前走G1・G2経由（着順不問）→勝率25%', type:'plus',
+      detail:'前走G1だった馬は勝率25%と非常に高い。人気を落としたG1・G2経験馬は要注意',
+      matchFn: function(h){ return h.prev1grade === 'G1' || h.prev1grade === 'G2'; } },
+    { label:'⭐前走G3・OP特別で4着以内', type:'plus',
+      detail:'非重賞組は1着必須。G3・OP特別なら4着以内が目安',
+      matchFn: function(h){ return (h.prev1grade === 'G3' || h.prev1grade === 'OP') && (h.prev1r||99) <= 4; } },
+    { label:'⭐乗り替わり騎手（過去10年8勝）', type:'plus',
+      detail:'勝ち馬8頭が乗り替わり！ハンデ戦で鞍上強化が激走を呼ぶ',
+      matchFn: function(h){ return h.jockeyChanged === true; } },
+    { label:'⭐馬体重500kg以上', type:'plus',
+      detail:'勝ち馬5頭が500kg以上。大型馬が新潟長直線の持続力に向く',
+      matchFn: function(h){ return (h.bodyWeight||0) >= 500; } },
+    { label:'⭐関西馬（栗東）9勝', type:'plus',
+      detail:'2014年以降関西馬9勝・関東馬3勝。1着は関西馬から',
+      matchFn: function(h){ return h.shozo === '栗東' || h.stable === '栗東'; } },
+    { label:'⭐54kg以上のハンデ', type:'plus',
+      detail:'ハンデキャッパーから適切な評価を受けている馬。重すぎず軽すぎず',
+      matchFn: function(h){ return (h.hande||0) >= 54; } },
+    { label:'⭐差し脚質（4角6〜11番手）', type:'plus',
+      detail:'3着以内36頭中22頭が4角6番手以下。ある程度の位置から長く脚を使えるタイプ',
+      matchFn: function(h){ return h.pace === '差し' || h.style === '差し'; } },
+    { label:'⭐6〜9番人気（4勝含む9回）', type:'plus',
+      detail:'中穴ゾーンが最も回収率高い。積極的に狙いたい',
+      matchFn: function(h){ return h.popEstimate >= 6 && h.popEstimate <= 9; } },
+    { label:'⭐10番人気以下（2勝含む8回）', type:'plus',
+      detail:'大穴が毎年のように発生。2桁人気を侮るな',
+      matchFn: function(h){ return (h.popEstimate||99) >= 10; } },
+    { label:'⚠️1番人気（2014年以降0勝）', type:'minus',
+      detail:'18年連続で1番人気は馬券圏外。ハンデ戦の1番人気は完全消し',
+      matchFn: function(h){ return h.popEstimate === 1; } },
+    { label:'⚠️53kg以下の軽ハンデ（複勝圏外ゼロ）', type:'minus',
+      detail:'ハンデキャッパーの評価が低い馬は手を出さない',
+      matchFn: function(h){ return (h.hande||0) > 0 && (h.hande||0) <= 53; } },
+    { label:'⚠️牝馬（過去10年馬券圏外）', type:'minus',
+      detail:'牝馬は過去10年で馬券圏外ゼロ。消し',
+      matchFn: function(h){ return h.sex === '牝'; } },
+    { label:'⚠️ハービンジャー産駒（新潟2000m不振）', type:'minus',
+      detail:'ハービンジャー産駒は新潟2000mで不振',
+      matchFn: function(h){ return h.father === 'ハービンジャー'; } },
+    { label:'⚠️前走G3・OP特別で5着以下（非重賞は1着必須）', type:'minus',
+      detail:'G3・OP特別で5着以下の馬は好走例なし。条件戦なら1着が必須',
+      matchFn: function(h){ return (h.prev1grade === 'G3' || h.prev1grade === 'OP') && (h.prev1r||0) >= 5; } },
+    { label:'⚠️後方一気（4角12番手以下）0勝', type:'minus',
+      detail:'4角最後方からの直線一気は届かない。後方追込馬は割引',
+      matchFn: function(h){ return h.pace === '追込' || h.style === '追込'; } },
+  ],
+
   anaPoints: [
-    '⭐1番人気は2014年以降0勝！ハンデ戦らしく人気薄が多数台頭。中穴〜大穴から積極的に狙う',
+    '⭐人気薄激走の共通点：関西馬×前走G2以上（着順不問）×差し脚質×馬体重500kg以上×54kg以上のハンデ',
+    '⭐乗り替わり騎手が過去10年8勝！鞍上強化の馬は要注目（今年：シュガークン武豊・トーセンリョウ斎藤新）',
+    '⭐3連単平均27万3046円・10万馬券超えが6回発生。積極的に中穴〜大穴を狙う',
+    '⭐前走G1経由の馬は勝率25%！大敗してきたG1組を人気薄で狙うのが新潟大賞典攻略の鍵',
     '⭐6〜9番人気が4勝・10番人気以下が2勝。過去10年で2桁人気が馬券になった年が6回',
     '⭐関西馬（栗東）が9勝で圧倒。1着は関西馬から・相手に関東馬が基本戦略',
-    '⭐4角6番手以下の差し馬が22頭3着以内。ただし4角12番手以下は0勝で後方一気は届かない',
-    '⭐キングカメハメハ直系（ロードカナロア・ルーラーシップ）が2018〜2024年で4勝',
-    '⭐トニービン内包馬（ハーツクライ・ルーラーシップ・ドゥラメンテ）が新潟長直線で強力',
-    '⭐5枠がすべての項目でトップ。7枠・8枠も単回収率が高い',
-    '⭐馬体重480〜519kgが複勝率突出のホットゾーン',
-    '⚠️53kg以下の軽ハンデ馬はいずれも複勝圏外。ハンデキャッパーの評価が低い馬は手を出さない',
-    '⚠️ハービンジャー産駒は新潟2000mで不振',
-    '⚠️8歳以上は好走例が少ない。7歳までが狙い目',
-    '53秒台の末脚勝負になることも多い。近走の上がり時計と持ち時計に注目',
+    '⭐4角6〜11番手の差し馬が優勢。ただし4角12番手以下の後方一気は0勝',
+    '⚠️1番人気は18年連続で馬券圏外ゼロ！ドゥラドーレスが1番人気なら過信禁物',
+    '⚠️53kg以下の軽ハンデ馬は複勝圏外ゼロ。ハンデキャッパーの評価が低い馬は消し',
+    '⚠️牝馬・ハービンジャー産駒は消し（セキトバイースト・サフィラ・ラインベック・ホールネス）',
   ],
 },
 };
@@ -5696,6 +5742,10 @@ function renderPastData() {
           html += '<li style="font-size:12px;margin-bottom:6px;padding-left:14px;text-indent:-14px">▶ ' + pt + '</li>';
         });
         html += '</ul></div>';
+      }
+      // 穴馬条件・該当馬バッジ（anaConditions があれば全レース共通）
+      if (typeof renderAnaBadges === 'function') {
+        html += renderAnaBadges(currentRace);
       }
       root.innerHTML = html || '<div class="section"><p style="color:var(--text-mute);font-size:13px;">このレースの過去10年データはまだ準備中です。</p></div>';
     } else {
@@ -6139,8 +6189,12 @@ var ANA_CONDITIONS_NHK = [
 
 // 穴馬条件・該当馬バッジレンダラー
 function renderAnaBadges(raceName) {
-  var conditions = (raceName && raceName.indexOf('NHKマイル') !== -1)
-    ? ANA_CONDITIONS_NHK : null;
+  var conditions = null;
+  if (raceName && raceName.indexOf('NHKマイル') !== -1) {
+    conditions = ANA_CONDITIONS_NHK;
+  } else if (raceName && typeof RACE_PAST_DATA !== 'undefined' && RACE_PAST_DATA[raceName] && RACE_PAST_DATA[raceName].anaConditions) {
+    conditions = RACE_PAST_DATA[raceName].anaConditions;
+  }
   if (!conditions) return '';
   var horses = (window.HORSES_BY_RACE || HORSES_BY_RACE || {})[raceName] || [];
   if (!horses.length) return '';
