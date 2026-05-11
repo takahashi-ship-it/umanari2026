@@ -3202,7 +3202,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:8,
     prev1race:'阪神牝馬S', prev1grade:'G2', prev1r:1,
     prevRace:'阪神牝馬S', prevGrade:'G2', prevRank:1,
-    tokyoMileG:true,
+    tokyoMileG:true, hasWonMiddleDistance:true, fastFinish:true, miileG1Exp:true,
     note:'昨年桜花賞・秋華賞二冠馬。阪神牝馬Sレースレコードで快勝。ルメール×前走阪神牝馬S1着の最強データ',
     training:'S', hot:true,
     trainingNote:'1週前：栗東CW（良）17.9-15.5-15.1-13.1-11.1-11.1。相手をぶっ千切るド派手な動き！折り合い考慮での内容でこれだけ弾けるなら既に9割仕上がり。最終はサラっと流す程度で十分',
@@ -3214,7 +3214,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:7,
     prev1race:'阪神牝馬S', prev1grade:'G2', prev1r:2,
     prevRace:'阪神牝馬S', prevGrade:'G2', prevRank:2,
-    tokyoMileG:true,
+    tokyoMileG:true, hasWonMiddleDistance:true, fastFinish:true, miileG1Exp:false,
     note:'昨年オークス馬。阪神牝馬S上がり最速で2着。ブラックタイド産駒（ディープ系）×差し馬',
     training:'A', hot:true,
     trainingNote:'1週前：栗東CW（良）14.8-14.4-14.5-14.3-11.3-11.3。1頭と併入・1頭に先着。いつものように気持ちは入るがうるさくはなく折り合いOK。本番でも面白い',
@@ -3226,7 +3226,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:9,
     prev1race:'金鯱賞', prev1grade:'G2', prev1r:3,
     prevRace:'金鯱賞', prevGrade:'G2', prevRank:3,
-    repeater:true, tokyoMileG:true,
+    repeater:true, tokyoMileG:true, hasWonMiddleDistance:true, fastFinish:true, miileG1Exp:false,
     note:'昨年ヴィクトリアマイル2着。キズナ産駒(ディープ系)×東京巧者。充実の5歳馬',
     training:'A', hot:true,
     trainingNote:'1週前：栗東CW（良）6F82.5-11秒8を馬なり。3頭併せで中と外の2頭に先着。福永助手「よく動けていた。暖かくなって体調が上がってきた」と順調ぶりを伝える',
@@ -3238,7 +3238,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:7,
     prev1race:'マイルCS', prev1grade:'G1', prev1r:8,
     prevRace:'マイルCS', prevGrade:'G1', prevRank:8,
-    tokyoMileG:true,
+    tokyoMileG:true, hasWonMiddleDistance:true, fastFinish:true, miileG1Exp:false,
     note:'24年牝馬二冠馬。ただしマイルではスピード不足の懸念あり。左回りは好成績',
     training:'B' },
 
@@ -3248,6 +3248,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:7,
     prev1race:'小倉牝馬S', prev1grade:'G3', prev1r:1,
     prevRace:'小倉牝馬S', prevGrade:'G3', prevRank:1,
+    hasWonMiddleDistance:true, fastFinish:false, tokyoMileG:false, miileG1Exp:false,
     note:'小倉牝馬S勝ち。東京マイルへの適性は未知数だが前走1着と勢いあり',
     training:'A' },
 
@@ -3257,6 +3258,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:6,
     prev1race:'前走', prev1grade:'G2', prev1r:4,
     prevRace:'前走', prevGrade:'G2', prevRank:4,
+    hasWonMiddleDistance:false, fastFinish:false, tokyoMileG:false, miileG1Exp:false,
     note:'武豊騎乗。エピファネイア×ディープインパクト（母父）',
     training:'B' },
 
@@ -3267,6 +3269,7 @@ const HORSES_BY_RACE = {
     prev1race:'中山牝馬S', prev1grade:'G3', prev1r:5,
     prevRace:'中山牝馬S', prevGrade:'G3', prevRank:5,
     prev2race:'福島記念', prev2grade:'G3', prev2r:1,
+    hasWonMiddleDistance:true, fastFinish:false, tokyoMileG:false, miileG1Exp:false,
     note:'ロードカナロア産駒×母父ディープインパクト。東京マイル適性あり。前走中山牝馬S5着・前々走福島記念1着',
     training:'B',
     trainingNote:'中山牝馬S5着から参戦。前々走福島記念1着と好調維持',
@@ -3278,6 +3281,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:8,
     prev1race:'阪神牝馬S', prev1grade:'G2', prev1r:6,
     prevRace:'阪神牝馬S', prevGrade:'G2', prevRank:6,
+    hasWonMiddleDistance:false, fastFinish:true, tokyoMileG:true, miileG1Exp:false,
     note:'ディープインパクト産駒×東京コース経験豊富。7歳でも堅実',
     training:'B' },
 
@@ -3287,6 +3291,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:6,
     prev1race:'エリザベス女王杯', prev1grade:'G1', prev1r:2,
     prevRace:'エリザベス女王杯', prevGrade:'G1', prevRank:2,
+    hasWonMiddleDistance:false, fastFinish:false, tokyoMileG:false, miileG1Exp:false,
     note:'昨年エリザベス女王杯2着。坂井瑠星騎乗。4番人気データ（連対率60%）に該当',
     training:'A', hot:true,
     trainingNote:'1週前：坂路 4F55.8-13.0。坂井騎手騎乗で感触確認。「気を緩めたらもっと時計が出そう」と坂井コメント。千田師「3走目だし、具合はいいですよ」とべた褒め',
@@ -3298,6 +3303,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:6,
     prev1race:'前走', prev1grade:'G3', prev1r:4,
     prevRace:'前走', prevGrade:'G3', prevRank:4,
+    hasWonMiddleDistance:true, fastFinish:true, tokyoMileG:false, miileG1Exp:false,
     note:'ロードカナロア産駒。東京マイルは適性あり',
     training:'C' },
 
@@ -3307,6 +3313,7 @@ const HORSES_BY_RACE = {
     pace:'先行', style:'先行', leftCourseScore:5,
     prev1race:'愛知杯', prev1grade:'G3', prev1r:1,
     prevRace:'愛知杯', prevGrade:'G3', prevRank:1,
+    hasWonMiddleDistance:false, fastFinish:false, tokyoMileG:false, miileG1Exp:false, dangerFlag:true,
     note:'愛知杯で重賞初制覇（転厩初戦）。エピファネイア産駒',
     training:'B' },
 
@@ -3316,7 +3323,8 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:5,
     prev1race:'愛知杯', prev1grade:'G3', prev1r:5,
     prevRace:'愛知杯', prevGrade:'G3', prevRank:5,
-    note:'エピファネイア産駒。愛知杯5着から参戦',
+    hasWonMiddleDistance:false, fastFinish:false, tokyoMileG:false, miileG1Exp:false,
+    note:'エピファネイア産駒。愛知杯5着から参戦。NHKマイル3着の経験はあり',
     training:'C' },
 
   { name:'マピュース',          age:4, sex:'牝', waku:null, umaban:null,
@@ -3325,6 +3333,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:5,
     prev1race:'前走', prev1grade:'G2', prev1r:6,
     prevRace:'前走', prevGrade:'G2', prevRank:6,
+    hasWonMiddleDistance:false, fastFinish:false, tokyoMileG:false, miileG1Exp:false, dangerFlag:true,
     note:'外国産馬。欧州系血統のスタミナ型',
     training:'C' },
 
@@ -3334,6 +3343,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:6,
     prev1race:'前走', prev1grade:'G3', prev1r:5,
     prevRace:'前走', prevGrade:'G3', prevRank:5,
+    hasWonMiddleDistance:false, fastFinish:false, tokyoMileG:false, miileG1Exp:false, dangerFlag:true,
     note:'キズナ産駒（ディープ系）。東京マイル適性は未知数',
     training:'C' },
 
@@ -3343,7 +3353,8 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:5,
     prev1race:'福島牝馬S', prev1grade:'G3', prev1r:4,
     prevRace:'福島牝馬S', prevGrade:'G3', prevRank:4,
-    note:'ドゥラメンテ産駒×母父ロードカナロア（KM直系）',
+    hasWonMiddleDistance:true, fastFinish:false, tokyoMileG:false, miileG1Exp:false,
+    note:'ドゥラメンテ産駒×母父ロードカナロア（KM直系）。紫苑SG2勝ち',
     training:'C' },
 
   { name:'カピリナ',            age:5, sex:'牝', waku:null, umaban:null,
@@ -3352,7 +3363,8 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:6,
     prev1race:'阪神牝馬S', prev1grade:'G2', prev1r:9,
     prevRace:'阪神牝馬S', prevGrade:'G2', prevRank:9,
-    note:'阪神牝馬S9着から参戦',
+    hasWonMiddleDistance:false, fastFinish:true, tokyoMileG:false, miileG1Exp:false,
+    note:'阪神牝馬S9着から参戦。函館SS上がり実績あり',
     training:'C' },
 
   { name:'ボンドガール',        age:5, sex:'牝', waku:null, umaban:null,
@@ -3361,7 +3373,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:8,
     prev1race:'前走', prev1grade:'G2', prev1r:7,
     prevRace:'前走', prevGrade:'G2', prevRank:7,
-    tokyoMileG:true,
+    tokyoMileG:true, hasWonMiddleDistance:false, fastFinish:false, miileG1Exp:false,
     note:'悲願のタイトルへ。ダイワメジャー産駒×東京マイル経験',
     training:'B' },
 
@@ -3371,6 +3383,7 @@ const HORSES_BY_RACE = {
     pace:'先行', style:'先行', leftCourseScore:7,
     prev1race:'前走', prev1grade:'G2', prev1r:8,
     prevRace:'前走', prevGrade:'G2', prevRank:8,
+    hasWonMiddleDistance:false, fastFinish:false, tokyoMileG:false, miileG1Exp:false, dangerFlag:true,
     note:'ルーラーシップ産駒（トニービン内包）×7歳牝馬',
     training:'B',
     trainingNote:'1週前：栗東CW（良）6F83.8-11.0。馬なりでコーラルクラウンに半馬身先着。松若騎手「雰囲気は変わらず動きもよかった」',
@@ -3380,6 +3393,7 @@ const HORSES_BY_RACE = {
     father:'エピファネイア', motherFather:'ダイワメジャー', blood:'サンデー系',
     shozo:'栗東', stable:'栗東', jockey:'池添謙一', odds:81.8, popEstimate:20,
     pace:'差し', style:'差し', leftCourseScore:5,
+    hasWonMiddleDistance:false, fastFinish:true, tokyoMileG:false, miileG1Exp:false,
     prev1race:'金鯱賞', prev1grade:'G2', prev1r:9,
     prevRace:'金鯱賞', prevGrade:'G2', prevRank:9,
     note:'エピファネイア産駒。金鯱賞9着から参戦',
@@ -5477,6 +5491,24 @@ const RACE_PAST_DATA = {
       } },
   ],
 
+  courseInfo: [
+    { label:'1800〜2000m重賞勝ち馬', record:'過去10年馬券内30頭中22頭', fukusho:'高',
+      comment:'⭐実質1800m以上のスタミナが必要。1800〜2000m重賞勝ち鞍のある馬が圧倒的に好走', hot:true,
+      matchFn: function(h){ return h.hasWonMiddleDistance === true; } },
+    { label:'上がり3F32〜33秒前半の実績', record:'東京長直線で末脚炸裂', fukusho:'高',
+      comment:'⭐過去に芝1600〜2400mで上がり最速or33秒前半の脚を使って勝ち負けした馬を評価UP', hot:true,
+      matchFn: function(h){ return h.fastFinish === true; } },
+    { label:'Bコース替わり→内枠有利', record:'2〜3枠が最も有利', fukusho:'高',
+      comment:'⭐Bコース替わり週は内馬場がフレッシュで内枠が一気に有利。2〜3枠を最優先', hot:true,
+      matchFn: function(h){ return (h.waku||0) <= 3 && (h.waku||0) >= 1; } },
+  ],
+
+  dangerTypes: [
+    { label:'マイルG1未勝利×距離延長組', record:'複勝率0%に近い', fukusho:'0%',
+      comment:'⚠️マイルG1未勝利かつ前走1400m以下からの距離延長組は大苦戦。アイサンサン・チェルビアット・ドロップオブライト・マピュース・ワイドラトゥール', danger:true,
+      matchFn: function(h){ return h.miileG1Exp === false && (h.maxDistExp||0) > 0 && (h.maxDistExp||0) <= 1400; } },
+  ],
+
   popularity: [
     { label:'1番人気', record:'複勝率70%・回収率108%', fukusho:'70.0%',
       comment:'⭐1番人気は複勝率70%・単回収率108%で信頼の軸', hot:true,
@@ -5529,6 +5561,11 @@ const RACE_PAST_DATA = {
   ],
 
   anaPoints: [
+    '⭐1800〜2000mの重賞勝ち馬が圧倒的に好走！過去10年馬券内30頭中22頭が1800m勝ち鞍あり。スタミナが必須条件',
+    '⭐上がり3F32〜33秒前半の実績馬を評価UP。カナテープ・カムニャック・クイーンズウォーク・チェルヴィニア・ラヴァンダが該当',
+    '⭐Bコース替わり週で内枠（2〜3枠）が有利。2〜3枠に入った馬は無条件で評価UP',
+    '⚠️マイルG1未勝利×距離延長組は大苦戦。アイサンサン・チェルビアット・ドロップオブライト・マピュース・ワイドラトゥールは消し',
+    '⚠️前走1400m以下→距離延長組は【2-0-2-23】で苦戦。マイルG1勝ち経験のある馬以外は割引',
     '⭐前走1着馬は勝率0%！このレースは前走着順だけで判断するのは危険。前走6着以下からの巻き返しが6勝最多',
     '⭐2〜3枠が最注目（過去8年で5勝）。枠順確定後に2〜3枠の馬は評価UP',
     '⚠️7枠は22頭走って馬券圏内ゼロ！完全消し。枠順確定後に7枠の馬は消し',
@@ -5741,6 +5778,8 @@ function renderPastData() {
       if (data.summary) {
         html += '<div class="section"><p style="font-size:12px;line-height:1.7;color:var(--text-sub)">' + data.summary + '</p></div>';
       }
+      // コース特性（最優先表示）
+      if (data.courseInfo)  html += renderPastSection('コース特性・買いたいタイプ', '🏟', data.courseInfo, horsesNew);
       // 必須4項目（順序固定）
       html += renderPastSection('人気別成績',   '📊', data.popularity, horsesNew);
       html += renderPastSection('枠順別成績',   '🔢', data.waku,       horsesNew);
@@ -5750,6 +5789,7 @@ function renderPastData() {
       if (data.prevRank) html += renderPastSection('前走着順別成績', '📋', data.prevRank, horsesNew);
       if (data.prevRace) html += renderPastSection('前走レース別',   '🏆', data.prevRace, horsesNew);
       if (data.tokyoMileExperience) html += renderPastSection('東京1600m重賞経験', '🗼', data.tokyoMileExperience, horsesNew);
+      if (data.dangerTypes) html += renderPastSection('消したいタイプ', '⛔', data.dangerTypes, horsesNew);
       if (data.jockey)   html += renderPastSection('騎手別成績',     '🧑‍🦱', data.jockey, horsesNew);
       if (data.age)      html += renderPastSection('年齢別成績',     '📅', data.age,     horsesNew);
       if (data.shozo)    html += renderPastSection('所属別成績',     '🏠', data.shozo,   horsesNew);
@@ -6699,6 +6739,15 @@ function calcVictoriaMile(horse, raceName) {
   }
   if ((horse.age || 0) === 5) {
     pts += 5; labels.push('5歳馬【勝率6.9%・単回110%+5pt】');
+  }
+  if (horse.hasWonMiddleDistance === true) {
+    pts += 8; labels.push('1800〜2000m重賞勝ち鞍【30頭中22頭該当+8pt】');
+  }
+  if (horse.fastFinish === true) {
+    pts += 5; labels.push('上がり32〜33秒前半の実績【末脚炸裂+5pt】');
+  }
+  if (horse.dangerFlag === true) {
+    pts -= 10; labels.push('⚠️マイルG1未勝利×距離延長【大苦戦-10pt】');
   }
   return { pts: pts, labels: labels, label: labels.join(' / ') };
 }
