@@ -8696,6 +8696,33 @@ var KAIMOKU_DATA = {
       { name:'グランディア',      reason:'10番人気21.0倍・大阪城S3着・栗東所属' },
       { name:'フクノブルーレイク', reason:'16番人気192.3倍・ジャスタウェイ産駒（トニービン内包）' },
     ],
+    anaHorses: [
+      { name:'トーセンリョウ', pop:7, odds:12.9, confidence:68,
+        reasons:[
+          '✅ ドゥラメンテ×ハーツクライ（トニービン2重内包）で新潟長直線に最適血統',
+          '✅ 前走大阪杯4着（G1・前走着順不問データ該当）',
+          '✅ 栗東所属（関西馬9勝のデータ）',
+          '✅ 差し脚質（3着以内22頭が4角6番手以下）',
+          '✅ 乗り替わり騎手（斎藤新・鞍上強化で8勝のデータ）',
+          '⚠️ 重賞実績が薄い点は割引',
+        ] },
+      { name:'ヤマニンブークリエ', pop:6, odds:12.9, confidence:62,
+        reasons:[
+          '✅ キタサンブラック産駒（KM直系・2018〜2024年4勝）',
+          '✅ 4歳馬（若い年齢帯で成長期）',
+          '✅ セントライト記念2着のG2実績',
+          '✅ 栗東所属（関西馬9勝）',
+          '⚠️ 新潟コース初参戦の可能性あり',
+        ] },
+      { name:'シュガークン', pop:2, odds:4.4, confidence:55,
+        reasons:[
+          '✅ ドゥラメンテ産駒(トニービン内包)',
+          '✅ 武豊騎乗（乗り替わりで8勝のデータ）',
+          '✅ 青葉賞G2勝ち馬・復帰戦で狙い目',
+          '✅ 前走ダービー（G1・着順不問）',
+          '⚠️ 休み明けの仕上がり確認が必要',
+        ] },
+    ],
     _selectedN: 6,
     unitCost: 100,
   },
@@ -8724,6 +8751,33 @@ var KAIMOKU_DATA = {
       { name:'ボンドガール',        reason:'18番人気69.8倍・東京マイル経験・差し馬' },
       { name:'カナテープ',          reason:'8番人気22.4倍・ディープ産駒・7歳も堅実' },
       { name:'ラヴァンダ',          reason:'10番人気32.2倍・ロードカナロア産駒' },
+    ],
+    anaHorses: [
+      { name:'パラディレーヌ', pop:9, odds:24.9, confidence:65,
+        reasons:[
+          '✅ 4番人気帯（連対率60%・単回133%・複回148%の最高回収率帯に近い）',
+          '✅ 昨年エリザベス女王杯2着（G1実績）',
+          '✅ 坂井瑠星騎乗（鞍上強化）',
+          '✅ 前走2着以下＋G2以上経由（好走ローテ該当）',
+          '✅ 東京芝経験あり',
+          '⚠️ 東京芝1600m重賞3着以内経験の確認が必要',
+        ] },
+      { name:'ニシノティアモ', pop:7, odds:19.0, confidence:58,
+        reasons:[
+          '✅ ロードカナロア産駒（キングマンボ系・複回142%）',
+          '✅ 前走中山牝馬S5着（前走6着以下組6勝のデータに近い）',
+          '✅ 5歳馬（勝率6.9%・単回110%）',
+          '✅ 前々走福島記念1着と好調',
+          '⚠️ 7枠確定後に枠順ペナルティ適用の可能性あり',
+        ] },
+      { name:'ボンドガール', pop:18, odds:69.8, confidence:45,
+        reasons:[
+          '✅ 前走大敗からの巻き返し（前走6着以下組6勝最多データ）',
+          '✅ 東京マイル経験豊富',
+          '✅ 差し脚質（7勝最多脚質）',
+          '✅ 10番人気以下の単勝回収率421%の超激熱帯',
+          '⚠️ 前走重賞以外の場合は複勝率0%データに注意',
+        ] },
     ],
     _selectedN: 6,
     unitCost: 100,
@@ -9002,6 +9056,42 @@ function getAiteRanked(raceName) {
   return ranked;
 }
 
+function renderAnaHorses(raceName) {
+  var data = (typeof KAIMOKU_DATA !== 'undefined') ? KAIMOKU_DATA[raceName] : null;
+  if (!data || !Array.isArray(data.anaHorses) || data.anaHorses.length === 0) return '';
+
+  var html = '<div style="margin-bottom:16px">';
+  html += '<div style="font-size:13px;font-weight:700;color:var(--color-text-primary);margin-bottom:6px;display:flex;align-items:center;gap:6px">🎯 AIの推奨穴馬</div>';
+  html += '<div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:10px">データから紐解く穴馬候補と推奨理由</div>';
+
+  data.anaHorses.forEach(function(horse) {
+    var conf = horse.confidence || 0;
+    var confColor = conf >= 70 ? '#0F6E56' : conf >= 55 ? '#185FA5' : '#EF9F27';
+    html += '<div style="background:var(--color-background-secondary);border-radius:12px;padding:12px 14px;margin-bottom:10px;border-left:4px solid ' + confColor + '">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px">';
+    html += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
+    html += '<span style="font-size:16px;font-weight:800;color:var(--color-text-primary)">' + horse.name + '</span>';
+    html += '<span style="font-size:10px;background:rgba(239,159,39,0.15);color:#EF9F27;padding:2px 6px;border-radius:6px;font-weight:600">' + horse.pop + '番人気</span>';
+    html += '<span style="font-size:10px;color:var(--color-text-tertiary)">' + horse.odds + '倍</span>';
+    html += '</div>';
+    html += '<div style="text-align:right;flex-shrink:0">';
+    html += '<div style="font-size:11px;font-weight:700;color:' + confColor + '">' + conf + '%</div>';
+    html += '<div style="width:60px;height:4px;background:var(--color-border);border-radius:2px;margin-top:2px">'
+         +  '<div style="width:' + conf + '%;height:100%;background:' + confColor + ';border-radius:2px"></div></div>';
+    html += '</div></div>';
+    html += '<div style="display:flex;flex-direction:column;gap:3px">';
+    (horse.reasons || []).forEach(function(reason) {
+      var isPlus  = reason.indexOf('✅') === 0;
+      var isMinus = reason.indexOf('⚠️') === 0;
+      var color = isPlus ? '#0F6E56' : isMinus ? '#B8600C' : 'var(--color-text-secondary)';
+      html += '<div style="font-size:10px;color:' + color + ';line-height:1.5">' + reason + '</div>';
+    });
+    html += '</div></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
 function renderKaimokuAI(raceName) {
   var container = document.getElementById('ai-kaimoku-container');
 
@@ -9077,6 +9167,9 @@ function renderKaimokuAI(raceName) {
   html += rankBadge;
   html += memoHtml;
   html += '</div>';
+
+  // AIの推奨穴馬（KAIMOKU_DATA[key].anaHorses があれば表示）
+  html += renderAnaHorses(key);
 
   // 相手頭数セレクター（aiteAll が十分な場合のみ）
   if (hasSelector) {
