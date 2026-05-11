@@ -3202,6 +3202,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:8,
     prev1race:'阪神牝馬S', prev1grade:'G2', prev1r:1,
     prevRace:'阪神牝馬S', prevGrade:'G2', prevRank:1,
+    tokyoMileG:true,
     note:'昨年桜花賞・秋華賞二冠馬。阪神牝馬Sレースレコードで快勝。ルメール×前走阪神牝馬S1着の最強データ',
     training:'S', hot:true },
 
@@ -3211,6 +3212,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:7,
     prev1race:'阪神牝馬S', prev1grade:'G2', prev1r:2,
     prevRace:'阪神牝馬S', prevGrade:'G2', prevRank:2,
+    tokyoMileG:true,
     note:'昨年オークス馬。阪神牝馬S上がり最速で2着。ブラックタイド産駒（ディープ系）×差し馬',
     training:'A', hot:true },
 
@@ -3220,7 +3222,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:9,
     prev1race:'金鯱賞', prev1grade:'G2', prev1r:3,
     prevRace:'金鯱賞', prevGrade:'G2', prevRank:3,
-    repeater:true,
+    repeater:true, tokyoMileG:true,
     note:'昨年ヴィクトリアマイル2着。キズナ産駒(ディープ系)×東京巧者。充実の5歳馬',
     training:'A', hot:true },
 
@@ -3230,6 +3232,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:7,
     prev1race:'マイルCS', prev1grade:'G1', prev1r:8,
     prevRace:'マイルCS', prevGrade:'G1', prevRank:8,
+    tokyoMileG:true,
     note:'24年牝馬二冠馬。ただしマイルではスピード不足の懸念あり。左回りは好成績',
     training:'B' },
 
@@ -3347,6 +3350,7 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:8,
     prev1race:'前走', prev1grade:'G2', prev1r:7,
     prevRace:'前走', prevGrade:'G2', prevRank:7,
+    tokyoMileG:true,
     note:'悲願のタイトルへ。ダイワメジャー産駒×東京マイル経験',
     training:'B' },
 
@@ -5402,103 +5406,103 @@ const RACE_PAST_DATA = {
   ],
 },
 'ヴィクトリアマイル': {
-  summary: '東京芝1600m左回り。差し馬が7勝で最強脚質（単回360%）。3枠4勝トップ・2枠も好成績。1番人気複勝率70%と信頼できるが2番人気は大不振。ルメール騎手が過去10年4勝・勝率44.4%で断トツ。',
+  summary: '東京芝1600m左回り・牝馬G1。前走1着馬は0勝・前走6着以下が6勝の逆転データ。Bコース替わり週で内枠（2〜3枠）が有利・7枠は0-0-0-22で完全消し。東京芝1600m重賞3着以内経験が必須条件。',
 
-  pace: [
-    { label:'差し', record:'【7-6-5-59】勝率9.1%', fukusho:'23.4%',
-      comment:'⭐7勝最多！単回収率360%・複回収率115%でともにプラス収支。東京の長い直線を活かす差し馬が最高の期待値', hot:true,
-      matchFn: function(h){ return h.pace === '差し'; } },
-    { label:'先行', record:'【2-3-3-32】勝率5.0%', fukusho:'20.0%',
-      comment:'2勝・複勝率20%だが単回収率17%・複回収率47%と回収率は低調。相手候補どまり',
-      matchFn: function(h){ return h.pace === '先行'; } },
-    { label:'追込', record:'【1-1-2-40】勝率2.3%', fukusho:'9.1%',
-      comment:'⚠️複勝率9.1%・単回収率5%・複回収率19%と期待値非常に低い', danger:true,
-      matchFn: function(h){ return h.pace === '追込'; } },
-    { label:'逃げ', record:'【0-0-0-10】勝率0.0%', fukusho:'0%',
-      comment:'⚠️過去10年で3着以内ゼロ！完全消し', danger:true,
-      matchFn: function(h){ return h.pace === '逃げ'; } },
-  ],
-
-  popularity: [
-    { label:'1番人気', record:'【3-2-2-3】', fukusho:'70.0%',
-      comment:'⭐複勝率70%・軸として信頼できる。3着を外したのは10回中3回のみ', hot:true,
-      matchFn: function(h){ return h.popEstimate === 1; } },
-    { label:'2番人気', record:'【0-0-1-9】', fukusho:'10.0%',
-      comment:'⚠️未勝利・連対率0%・単回収率0%・複回収率17%と大不振。2番人気を過信は危険', danger:true,
-      matchFn: function(h){ return h.popEstimate === 2; } },
-    { label:'3番人気', record:'【0-2-0-8】', fukusho:'20.0%',
-      comment:'未勝利だが2着2回。複勝率20%',
-      matchFn: function(h){ return h.popEstimate === 3; } },
-    { label:'4番人気', record:'【2-4-0-4】', fukusho:'60.0%',
-      comment:'⭐連対率60%・単回収率133%・複回収率148%ともにプラス！最注目人気帯', hot:true,
-      matchFn: function(h){ return h.popEstimate === 4; } },
-    { label:'5〜9番人気', record:'複数好走あり', fukusho:'中',
-      comment:'5枠に入った場合は単回収率1097%の超激熱データ（2024年大穴の影響）',
-      matchFn: function(h){ return h.popEstimate >= 5 && h.popEstimate <= 9; } },
-    { label:'10番人気以下', record:'【1-2-1-77】', fukusho:'4.9%',
-      comment:'14番人気での1勝あり。波乱含みのレースだが基本は割引',
-      matchFn: function(h){ return h.popEstimate >= 10; } },
+  prevRank: [
+    { label:'前走1着', record:'【0-3-1-33】', fukusho:'10.8%',
+      comment:'⚠️勝率0%！前走1着馬は優勝なし。好走率も低い。前走勝ち馬は割引', danger:true,
+      matchFn: function(h){ return h.prev1r === 1; } },
+    { label:'前走2着', record:'【1-3-3-23】', fukusho:'23.3%',
+      comment:'複勝率23.3%・標準的',
+      matchFn: function(h){ return h.prev1r === 2; } },
+    { label:'前走3着', record:'【1-2-2-9】', fukusho:'35.7%',
+      comment:'⭐複勝率35.7%・3着以内率が高い', hot:true,
+      matchFn: function(h){ return h.prev1r === 3; } },
+    { label:'前走4着', record:'【1-1-0-5】', fukusho:'28.6%',
+      comment:'⭐勝率14.3%・連対率28.6%・好成績帯', hot:true,
+      matchFn: function(h){ return h.prev1r === 4; } },
+    { label:'前走5着', record:'【1-0-2-8】', fukusho:'27.3%',
+      comment:'⭐勝率9.1%・複勝率27.3%・穴馬候補', hot:true,
+      matchFn: function(h){ return h.prev1r === 5; } },
+    { label:'前走6着以下', record:'【6-1-2-64】', fukusho:'12.3%',
+      comment:'⭐6勝！前走大敗からの巻き返しが最多勝利。このレースは前走着順だけで判断は危険！', hot:true,
+      matchFn: function(h){ return (h.prev1r||0) >= 6; } },
   ],
 
   waku: [
-    { label:'3枠', record:'【4-0-1-14】', fukusho:'26.3%',
-      comment:'⭐4勝で最多！勝率21.1%・単回収率147%。最注目枠', hot:true,
-      matchFn: function(h){ return h.waku === 3; } },
-    { label:'2枠', record:'【2-1-2-15】', fukusho:'25.0%',
-      comment:'⭐2勝・単回収率144%・複回収率111%ともにプラス', hot:true,
+    { label:'2枠', record:'勝率12.5%・複勝率25.0%', fukusho:'25.0%',
+      comment:'⭐Bコース替わり週で内枠有利！2枠は勝率12.5%・複勝率25.0%', hot:true,
       matchFn: function(h){ return h.waku === 2; } },
-    { label:'5枠', record:'【1-3-0-15】', fukusho:'21.1%',
-      comment:'⭐単回収率1097%・複回収率206%(2024年大穴激走が影響)。2着が3頭と連対率高め',
-      matchFn: function(h){ return h.waku === 5; } },
-    { label:'8枠', record:'【1-4-1-22】', fukusho:'',
-      comment:'2着4頭と連対多数。連下候補として有効',
-      matchFn: function(h){ return h.waku === 8; } },
-    { label:'1枠', record:'低調', fukusho:'低',
-      comment:'⚠️1枠は好走率低い。割引', danger:true,
-      matchFn: function(h){ return h.waku === 1; } },
+    { label:'3枠', record:'勝率20.0%・複勝率26.7%', fukusho:'26.7%',
+      comment:'⭐3枠は過去8年で5勝！勝率20%・複勝率26.7%で最注目枠', hot:true,
+      matchFn: function(h){ return h.waku === 3; } },
+    { label:'7枠', record:'【0-0-0-22】', fukusho:'0%',
+      comment:'⚠️7枠は22頭走って馬券圏内ゼロ！勝率0%・複勝率0%。完全消し', danger:true,
+      matchFn: function(h){ return h.waku === 7; } },
+    { label:'4〜6枠（激走Zone）', record:'単回収率376%', fukusho:'18.3%',
+      comment:'⭐4〜6枠の単勝回収率376%！穴馬はここから出る', hot:true,
+      matchFn: function(h){ return (h.waku||0) >= 4 && (h.waku||0) <= 6; } },
+    { label:'7〜8枠（外枠）', record:'複勝率8.8%', fukusho:'8.8%',
+      comment:'⚠️7〜8枠は複勝率8.8%・過去10年1勝のみ。外枠は基本割引', danger:true,
+      matchFn: function(h){ return (h.waku||0) >= 7; } },
   ],
 
-  prevRace: [
-    { label:'前走阪神牝馬S組', record:'4勝・最多輩出', fukusho:'高',
-      comment:'⭐過去10年最多の4勝。3着以内12頭輩出の最重要ステップ', hot:true,
-      matchFn: function(h){ return h.prev1race && h.prev1race.includes('阪神牝馬'); } },
-    { label:'前走1600m組', record:'複勝率最高', fukusho:'高',
-      comment:'前走距離1600mからの馬が複勝率最高', hot:true,
-      matchFn: function(h){ return h.maxDistExp === 1600 && h.distExpRank <= 3; } },
-    { label:'前走1番人気→当日人気落ち', record:'複勝率38.5%', fukusho:'38.5%',
-      comment:'⭐前走重賞で1番人気だった馬が人気を落としたら狙い目（複勝率38.5%）', hot:true,
-      matchFn: function(h){ return (h.prev1pop === 1) && (h.popEstimate || 99) >= 4; } },
+  tokyoMileExperience: [
+    { label:'東京芝1600m重賞3着以内経験あり', record:'過去6年全勝ち馬が該当', fukusho:'必須',
+      comment:'⭐過去6年の勝ち馬6頭全員が「東京・芝1600mの重賞で3着以内経験あり」。例外なし！必須条件', hot:true,
+      matchFn: function(h){ return h.tokyoMileG === true; } },
+    { label:'前走重賞以外（OP・条件戦）', record:'過去10年11頭で馬券0頭', fukusho:'0%',
+      comment:'⚠️前走が重賞以外だった馬は過去10年11頭走って複勝率0%！完全消し', danger:true,
+      matchFn: function(h){
+        return h.prev1grade && h.prev1grade !== 'G1' && h.prev1grade !== 'G2' && h.prev1grade !== 'G3';
+      } },
+  ],
+
+  popularity: [
+    { label:'1番人気', record:'複勝率70%・回収率108%', fukusho:'70.0%',
+      comment:'⭐1番人気は複勝率70%・単回収率108%で信頼の軸', hot:true,
+      matchFn: function(h){ return h.popEstimate === 1; } },
+    { label:'2〜3番人気', record:'過去10年0勝', fukusho:'低',
+      comment:'⚠️2〜3番人気は過去10年0勝！人気馬トラップ。2〜3番人気は割引', danger:true,
+      matchFn: function(h){ return h.popEstimate === 2 || h.popEstimate === 3; } },
+    { label:'4番人気', record:'勝率14.3%・連対率28.6%', fukusho:'28.6%',
+      comment:'⭐4番人気が最も回収率高い人気帯（単回133%・複回148%）', hot:true,
+      matchFn: function(h){ return h.popEstimate === 4; } },
+    { label:'5歳馬', record:'勝率6.9%・単回110%', fukusho:'高',
+      comment:'⭐5歳馬が優勢（勝率6.9%・単回収率110%）。栗東所属5歳馬は特に注目', hot:true,
+      matchFn: function(h){ return (h.age||0) === 5; } },
+    { label:'10番人気以下', record:'単回収率421%', fukusho:'低',
+      comment:'⭐10番人気以下の単勝回収率421%！2024年テンハッピーローズが10番人気で激走', hot:true,
+      matchFn: function(h){ return (h.popEstimate||99) >= 10; } },
   ],
 
   blood: [
-    { label:'ディープインパクト系', record:'6勝で最多', fukusho:'高',
-      comment:'⭐過去10年6勝で最多。キズナ産駒が近年も上位を賑わす', hot:true,
-      matchFn: function(h){ var f = h.father||''; return ['ディープインパクト','キズナ','コントレイル','サトノダイヤモンド','エピファネイア'].indexOf(f) >= 0; } },
-    { label:'母父Roberto系', record:'2年連続勝利', fukusho:'高',
-      comment:'⭐母父シンボリクリスエス・タニノギムレットが2年連続勝利（2023・2024）。Roberto系に注目', hot:true,
-      matchFn: function(h){ var m = h.motherFather||''; return ['シンボリクリスエス','タニノギムレット','ジャングルポケット'].indexOf(m) >= 0; } },
-    { label:'ノーザンファーム生産馬', record:'圧倒的優勢', fukusho:'高',
-      comment:'⭐ノーザンF生産馬が圧倒的に強い。生産牧場を確認',
-      matchFn: function(h){ return h.farm === 'ノーザンF'; } },
+    { label:'キングマンボ系', record:'複勝回収率142%', fukusho:'高',
+      comment:'⭐キングマンボ系の複勝回収率142%（サンデー系より上回る）。ロードカナロア・キングカメハメハ産駒に注目', hot:true,
+      matchFn: function(h){
+        var f = h.father||'';
+        return ['ロードカナロア','キングカメハメハ','ルーラーシップ','アドマイヤマーズ'].indexOf(f) >= 0;
+      } },
   ],
 
   jockey: [
-    { label:'C.ルメール', record:'【4-2-1-2】過去10年', fukusho:'77.8%',
-      comment:'⭐勝率44.4%・連対率66.7%・単回207%・複回157%で断トツ1位！ルメール騎乗馬は最優先', hot:true,
+    { label:'C.ルメール×ノーザンF', record:'コース勝率62.1%', fukusho:'高',
+      comment:'⭐ルメール騎手のコース勝率62.1%（任意）・ノーザンF生産馬との組み合わせは複勝率33.3%と最高値', hot:true,
       matchFn: function(h){ return h.jockey === 'C.ルメール'; } },
   ],
 
   anaPoints: [
-    '⭐差し馬が7勝・単回収率360%で最強脚質。逃げ馬は過去10年3着以内ゼロで完全消し',
-    '⭐1番人気複勝率70%・軸として信頼できる。ただし2番人気は複勝率10%・未勝利で大不振',
-    '⭐4番人気が連対率60%・単回133%・複回148%で最も回収率が高い人気帯',
-    '⭐3枠4勝で最多・単回147%。2枠も単回144%・複回111%でプラス収支',
-    '⭐ルメール騎手が勝率44.4%・単回207%で断トツ。ルメール騎乗馬は最優先候補',
-    '⭐前走阪神牝馬S組が過去10年最多の4勝。最重要ステップ',
-    '⭐ディープインパクト系が6勝。近年はキズナ産駒が上位を賑わす',
-    '⭐母父Roberto系（シンボリクリスエス・タニノギムレット）が2年連続勝利（2023・2024）',
-    '⚠️追込馬は複勝率9.1%・単回5%で期待値非常に低い',
-    '5枠は単回収率1097%（2024年大穴激走の影響）。穴狙いなら5枠馬に注目',
+    '⭐前走1着馬は勝率0%！このレースは前走着順だけで判断するのは危険。前走6着以下からの巻き返しが6勝最多',
+    '⭐Bコース替わり週で内枠有利！2〜3枠が最注目（過去8年で5勝）',
+    '⚠️7枠は22頭走って馬券圏内ゼロ！完全消し。ニシノティアモ・ドロップオブライトは消し',
+    '⭐東京芝1600m重賞で3着以内経験が必須！過去6年の勝ち馬全員が該当。クイーンズウォーク（昨年2着）・エンブロイダリー（NHKマイルC2着等）が該当',
+    '⚠️前走重賞以外（OP・条件戦）からの参戦馬は過去10年複勝率0%！完全消し',
+    '⚠️2〜3番人気は過去10年0勝。カムニャック（2番人気）・クイーンズウォーク（3番人気）は過信禁物',
+    '⭐4〜6枠の単勝回収率376%！穴馬はこのゾーンから',
+    '⭐5歳馬・栗東所属が優勢（勝率6.9%・単回110%）',
+    '⭐キングマンボ系の複勝回収率142%（サンデー系より上）',
+    '⭐10番人気以下の単勝回収率421%！大穴が毎年のように発生',
+    '⭐1番人気は複勝率70%・回収率108%で信頼できる軸',
   ],
 },
 '新潟大賞典': {
@@ -6514,6 +6518,34 @@ function calcYoshiEishin(horse) {
   return { pts: 0, label: '' };
 }
 
+// ヴィクトリアマイル専用：前走着順・枠順・人気・東京1600m重賞経験を加算
+function calcVictoriaMile(horse, raceName) {
+  if (!raceName || raceName.indexOf('ヴィクトリアマイル') === -1) return { pts: 0, labels: [] };
+  var pts = 0;
+  var labels = [];
+  var pr = horse.prev1r || horse.prevRank;
+  if (pr === 1)                              { pts -= 10; labels.push('⚠️前走1着【勝率0%・-10pt】'); }
+  else if ((pr || 0) >= 6)                   { pts +=  8; labels.push('前走6着以下【6勝最多・巻き返し+8pt】'); }
+  else if (pr === 4 || pr === 5)             { pts +=  5; labels.push('前走4〜5着【好走率高い+5pt】'); }
+  if (horse.waku === 7)                      { pts -= 15; labels.push('⚠️7枠【0-0-0-22・-15pt】'); }
+  else if (horse.waku === 3)                 { pts += 10; labels.push('3枠【過去8年5勝+10pt】'); }
+  else if (horse.waku === 2)                 { pts +=  8; labels.push('2枠【Bコース内枠+8pt】'); }
+  else if (horse.waku >= 4 && horse.waku <= 6) { pts += 5; labels.push('4〜6枠【単回376%・穴Zone+5pt】'); }
+  if (horse.popEstimate === 2 || horse.popEstimate === 3) {
+    pts -= 8; labels.push('⚠️2〜3番人気【過去10年0勝・-8pt】');
+  }
+  if (horse.prev1grade && ['G1','G2','G3'].indexOf(horse.prev1grade) < 0) {
+    pts -= 12; labels.push('⚠️前走重賞以外【複勝0%・-12pt】');
+  }
+  if (horse.tokyoMileG === true) {
+    pts += 10; labels.push('東京1600m重賞3着内経験【勝ち馬必須条件+10pt】');
+  }
+  if ((horse.age || 0) === 5) {
+    pts += 5; labels.push('5歳馬【勝率6.9%・単回110%+5pt】');
+  }
+  return { pts: pts, labels: labels, label: labels.join(' / ') };
+}
+
 function computeScore(h) {
   // 人気ボーナス（最新オッズ反映・最大+12 / 最小-3）
   let ninki;
@@ -6699,19 +6731,21 @@ function computeScore(h) {
   var prevClassKyotoObj = calcPrevClassKyoto(h, currentRace);
   var prevClassKyoto = prevClassKyotoObj.pts;
 
-  // 乗り替わり/継続騎乗・陣営コメント・ローテーション・義英真評価
+  // 乗り替わり/継続騎乗・陣営コメント・ローテーション・義英真評価・VM専用
   var jockeyChgObj  = calcJockeyChangePenalty(h);
   var routeNhkObj   = calcRouteNHK(h, currentRace);
   var trainerObj    = calcTrainerComment(h);
   var yoshiEishinObj = calcYoshiEishin(h);
+  var vmObj         = calcVictoriaMile(h, currentRace);
   var jockeyChgPts   = jockeyChgObj.pts;
   var routeNhkPts    = routeNhkObj.pts;
   var trainerPts     = trainerObj.pts;
   var yoshiEishinPts = yoshiEishinObj.pts;
+  var vmPts          = vmObj.pts;
 
   return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB, special, nhkBw,
            shozoP, jockeyN, careerP, prevR, leftPts, nztPts, framePts, tokyoExpPenalty, anaBonus, agePenalty, prevClassKyoto,
-           jockeyChgPts, routeNhkPts, trainerPts, yoshiEishinPts,
+           jockeyChgPts, routeNhkPts, trainerPts, yoshiEishinPts, vmPts,
            _distLabel: distObj.label, _stallionLabel: stallionObj.label,
            _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label,
            _specialLabel: specialObj.label, _nhkBwLabel: nhkBwObj.label,
@@ -6721,6 +6755,7 @@ function computeScore(h) {
            _frameLabel: frameObj.label, _tokyoExpPenaltyLabel: tokyoExpPenaltyObj.label,
            _jockeyChgLabel: jockeyChgObj.label, _routeNhkLabel: routeNhkObj.label,
            _trainerLabel: trainerObj.label, _yoshiEishinLabel: yoshiEishinObj.label,
+           _vmLabel: vmObj.label,
            _siValue: si };
 }
 function sumScore(s) {
@@ -6732,7 +6767,7 @@ function sumScore(s) {
          (s.tokyoExpPenalty || 0) + (s.anaBonus || 0) + (s.agePenalty || 0) +
          (s.prevClassKyoto || 0) +
          (s.jockeyChgPts || 0) + (s.routeNhkPts || 0) + (s.trainerPts || 0) +
-         (s.yoshiEishinPts || 0);
+         (s.yoshiEishinPts || 0) + (s.vmPts || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
