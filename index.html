@@ -5477,13 +5477,31 @@ const RACE_PAST_DATA = {
       matchFn: function(h){ return (h.popEstimate||99) >= 10; } },
   ],
 
+  pace: [
+    { label:'差し', record:'7勝（最多）', fukusho:'23.4%',
+      comment:'⭐7勝で最強脚質！単回収率360%・複回収率115%。東京長直線を活かす差し馬が最高の期待値', hot:true,
+      matchFn: function(h){ return h.pace === '差し' || h.style === '差し'; } },
+    { label:'先行', record:'2勝', fukusho:'20.0%',
+      comment:'2勝・複勝率20%だが単回収率17%と回収率低調。相手候補どまり',
+      matchFn: function(h){ return h.pace === '先行' || h.style === '先行'; } },
+    { label:'追込', record:'1勝', fukusho:'9.1%',
+      comment:'⚠️複勝率9.1%・単回収率5%で期待値非常に低い', danger:true,
+      matchFn: function(h){ return h.pace === '追込' || h.style === '追込'; } },
+    { label:'逃げ', record:'0勝', fukusho:'0%',
+      comment:'⚠️過去10年で3着以内ゼロ！完全消し', danger:true,
+      matchFn: function(h){ return h.pace === '逃げ' || h.style === '逃げ'; } },
+  ],
+
   blood: [
+    { label:'ディープインパクト系', record:'6勝・最多', fukusho:'高',
+      comment:'⭐過去10年6勝で最多。キズナ・コントレイル・エピファネイア産駒が活躍', hot:true,
+      matchFn: function(h){ return ['ディープインパクト','キズナ','コントレイル','エピファネイア','サトノダイヤモンド'].indexOf(h.father||'') >= 0; } },
     { label:'キングマンボ系', record:'複勝回収率142%', fukusho:'高',
-      comment:'⭐キングマンボ系の複勝回収率142%（サンデー系より上回る）。ロードカナロア・キングカメハメハ産駒に注目', hot:true,
-      matchFn: function(h){
-        var f = h.father||'';
-        return ['ロードカナロア','キングカメハメハ','ルーラーシップ','アドマイヤマーズ'].indexOf(f) >= 0;
-      } },
+      comment:'⭐キングマンボ系の複勝回収率142%！サンデー系より上回る。アドマイヤマーズ産駒も注目', hot:true,
+      matchFn: function(h){ return ['ロードカナロア','キングカメハメハ','アドマイヤマーズ','ルーラーシップ'].indexOf(h.father||'') >= 0; } },
+    { label:'ハービンジャー産駒', record:'苦戦傾向', fukusho:'低',
+      comment:'⚠️ヴィクトリアマイルではハービンジャー産駒は苦戦傾向', danger:true,
+      matchFn: function(h){ return h.father === 'ハービンジャー'; } },
   ],
 
   jockey: [
@@ -5600,22 +5618,86 @@ const RACE_PAST_DATA = {
 },
 };
 
+function renderPastSection(title, icon, items, horses) {
+  if (!items || items.length === 0) return '';
+  var html = '<div class="section" style="margin-bottom:16px">';
+  html += '<h3 style="display:flex;align-items:center;gap:6px">' + icon + ' ' + title + '</h3>';
+  items.forEach(function(item) {
+    var matched = [];
+    if (item.matchFn && horses && horses.length) {
+      matched = horses.filter(function(h){
+        try { return item.matchFn(h); } catch(e) { return false; }
+      });
+    }
+    var isHot    = item.hot    === true;
+    var isDanger = item.danger === true;
+    var bgColor     = isDanger ? 'rgba(198,40,40,0.08)' : isHot ? 'rgba(15,110,86,0.08)' : 'var(--bg-soft)';
+    var borderColor = isDanger ? '#C62828' : isHot ? '#0F6E56' : 'var(--border)';
+    var labelColor  = isDanger ? '#C62828' : isHot ? '#0F6E56' : 'var(--text)';
+    var badgeBg     = isDanger ? '#C62828' : isHot ? '#0F6E56' : '#555';
+    html += '<div style="background:' + bgColor + ';border-left:3px solid ' + borderColor
+          + ';border-radius:8px;padding:8px 12px;margin-bottom:6px">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;gap:8px">';
+    html += '<span style="font-size:11px;font-weight:700;color:' + labelColor + '">' + item.label + '</span>';
+    if (item.record) html += '<span style="font-size:10px;color:var(--text-mute);text-align:right">' + item.record + '</span>';
+    html += '</div>';
+    if (item.fukusho) {
+      var pct = parseFloat(item.fukusho);
+      if (!isNaN(pct)) {
+        html += '<div style="height:4px;background:var(--border);border-radius:2px;margin-bottom:4px">'
+              + '<div style="width:' + Math.min(pct,100) + '%;height:100%;background:' + borderColor
+              + ';border-radius:2px"></div></div>';
+        html += '<div style="font-size:9px;color:var(--text-mute);margin-bottom:3px">複勝率 ' + item.fukusho + '</div>';
+      }
+    }
+    if (item.comment) {
+      html += '<div style="font-size:10px;color:var(--text-sub);margin-bottom:4px;line-height:1.5">' + item.comment + '</div>';
+    }
+    if (matched.length > 0) {
+      html += '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px"><span style="font-size:9px;color:var(--text-mute)">今年：</span>';
+      matched.forEach(function(h){
+        html += '<span style="background:' + badgeBg + ';color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px">' + h.name + '</span>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
 function renderPastData() {
   var root = document.getElementById('pastDataRoot');
   if (!root) return;
   var data = RACE_PAST_DATA[currentRace];
   if (!data || !Array.isArray(data.sections)) {
-    if (data && data.anaPoints && data.anaPoints.length) {
+    if (data) {
+      var horsesNew = window.horses || (typeof HORSES !== 'undefined' ? HORSES : []);
       var html = '';
       if (data.summary) {
         html += '<div class="section"><p style="font-size:12px;line-height:1.7;color:var(--text-sub)">' + data.summary + '</p></div>';
       }
-      html += '<div class="section"><h3>💡 攻略ポイント</h3><ul class="check-list" style="list-style:none;padding-left:4px;line-height:1.7">';
-      data.anaPoints.forEach(function(pt){
-        html += '<li style="font-size:12px;margin-bottom:6px;padding-left:14px;text-indent:-14px">▶ ' + pt + '</li>';
-      });
-      html += '</ul></div>';
-      root.innerHTML = html;
+      // 必須4項目（順序固定）
+      html += renderPastSection('人気別成績',   '📊', data.popularity, horsesNew);
+      html += renderPastSection('枠順別成績',   '🔢', data.waku,       horsesNew);
+      html += renderPastSection('脚質別成績',   '🏃', data.pace,       horsesNew);
+      html += renderPastSection('血統別成績',   '🧬', data.blood,      horsesNew);
+      // 任意項目
+      if (data.prevRank) html += renderPastSection('前走着順別成績', '📋', data.prevRank, horsesNew);
+      if (data.prevRace) html += renderPastSection('前走レース別',   '🏆', data.prevRace, horsesNew);
+      if (data.tokyoMileExperience) html += renderPastSection('東京1600m重賞経験', '🗼', data.tokyoMileExperience, horsesNew);
+      if (data.jockey)   html += renderPastSection('騎手別成績',     '🧑‍🦱', data.jockey, horsesNew);
+      if (data.age)      html += renderPastSection('年齢別成績',     '📅', data.age,     horsesNew);
+      if (data.shozo)    html += renderPastSection('所属別成績',     '🏠', data.shozo,   horsesNew);
+      // 攻略ポイント
+      if (data.anaPoints && data.anaPoints.length) {
+        html += '<div class="section"><h3>💡 攻略ポイント</h3><ul class="check-list" style="list-style:none;padding-left:4px;line-height:1.7">';
+        data.anaPoints.forEach(function(pt){
+          html += '<li style="font-size:12px;margin-bottom:6px;padding-left:14px;text-indent:-14px">▶ ' + pt + '</li>';
+        });
+        html += '</ul></div>';
+      }
+      root.innerHTML = html || '<div class="section"><p style="color:var(--text-mute);font-size:13px;">このレースの過去10年データはまだ準備中です。</p></div>';
     } else {
       root.innerHTML = '<div class="section"><p style="color:var(--text-mute);font-size:13px;">このレースの過去10年データはまだ準備中です。</p></div>';
     }
