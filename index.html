@@ -8853,7 +8853,8 @@ function calcKaimePoints(himoCount) {
 function _wakuBox(w, size) {
   var sz = size || 24;
   if (!w) {
-    return '<span style="display:inline-flex;align-items:center;justify-content:center;width:'+sz+'px;height:'+sz+'px;border-radius:4px;background:var(--bg-soft);color:var(--text-mute);font-size:11px;font-weight:700;border:1px dashed var(--border-strong)">?</span>';
+    // 枠順未確定時は何も表示しない（"?"マークを削除）
+    return '';
   }
   return '<span style="display:inline-flex;align-items:center;justify-content:center;width:'+sz+'px;height:'+sz+'px;border-radius:4px;background:var(--waku-'+w+'-bg);color:var(--waku-'+w+'-fg);font-size:11px;font-weight:700;border:1px solid var(--border)">'+w+'</span>';
 }
@@ -8956,11 +8957,13 @@ function renderKaime() {
 
   jikuEl.innerHTML = jikuHtml;
 
-  // ヒモリスト（印バッジ付き）
+  // ヒモリスト（印バッジ付き・選択頭数で制限表示）
   var rankBadge = ['○','▲','△','☆','✕','×','▼','★','◇','♢'];
   var rankColor = ['#0066CC','#FF4444','#00AA44','#AA44AA','#888888','#888888','#AAAAAA','#534AB7','#7B4F8C','#5C6A22'];
+  var himoVisible = himoAll.slice(0, selectedN);
+  var himoExtra = himoAll.length - himoVisible.length;
   var himoHtml = '';
-  himoAll.forEach(function(x, hi) {
+  himoVisible.forEach(function(x, hi) {
     var h = x.h;
     var r = calcFukusho(h);
     var isPopular = (h.popEstimate || 99) <= 3;
@@ -8990,11 +8993,15 @@ function renderKaime() {
       + (isSelected ? '✓ 選択中' : '+ 追加') + '</button>'
       + '</div>';
   });
+  if (himoExtra > 0) {
+    himoHtml += '<div style="font-size:10px;color:var(--color-text-tertiary);text-align:center;padding:6px">'
+      + '▼ ' + himoExtra + '頭を除外中（頭数を増やすと追加）</div>';
+  }
   document.getElementById('himo-list').innerHTML = himoHtml ||
     '<div style="font-size:12px;color:var(--color-text-secondary)">相手候補が見つかりません</div>';
 
-  // サマリー
-  var selectedHimo = himoAll.filter(function(x){return window.excludedHimo.indexOf(x.h.name) === -1;});
+  // サマリー（選択頭数N + ユーザーが手動excludeした分を除外）
+  var selectedHimo = himoVisible.filter(function(x){return window.excludedHimo.indexOf(x.h.name) === -1;});
   var himoCount = selectedHimo.length;
   var pts = calcKaimePoints(himoCount);
   var jikuLabel = (jiku.umaban != null ? jiku.umaban + '番 ' : '') + jiku.name;
@@ -9033,11 +9040,7 @@ function toggleHimo(name) {
 // 軸馬セクションの相手頭数セレクター
 function setNakama(n) {
   window.kaimeNakamaN = n;
-  // 上位N頭以降を excludedHimo に入れる（既存のtoggle機構と統合）
-  if (!window.horses || !horses.length) return renderKaime();
-  var jiku = selectJiku(horses);
-  var himoAll = selectHimo(horses, jiku);
-  window.excludedHimo = himoAll.slice(n).map(function(x){ return x.h.name; });
+  // excludedHimoはユーザーの手動toggle専用に分離。表示N頭はrenderKaime側でslice
   renderKaime();
 }
 window.setNakama = setNakama;
