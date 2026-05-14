@@ -9308,6 +9308,15 @@ function computeScoreBreakdown(horse, raceName) {
   else if (pop === 4)  popScore = 8;
   else if (pop === 5)  popScore = 6;
   else if (pop <= 9)   popScore = 3;
+  // ヴィクトリアマイル: 1番人気複勝率70%・ルメール×1番人気100% → 1番人気を高評価
+  if (raceName && raceName.indexOf('ヴィクトリアマイル') !== -1 && pop === 1) {
+    popScore = 18;
+  }
+  // 新潟大賞典: ハンデ戦の1番人気は0勝 → 1番人気を相対的に下げ、6〜9番人気を上げる
+  if (raceName && raceName.indexOf('新潟大賞典') !== -1) {
+    if (pop === 1)                  popScore = 4;
+    else if (pop >= 6 && pop <= 9)  popScore = 12;
+  }
 
   // 2. 枠順 (max:15) - 全レース対応
   var waku = horse.waku || 0;
@@ -9346,6 +9355,34 @@ function computeScoreBreakdown(horse, raceName) {
     else if (waku === 3) dataScore += 5;
     if (horse.prev1race && horse.prev1race.indexOf('きさらぎ') !== -1) dataScore += 5;
     if (horse.bodyWeightDiff != null && Math.abs(horse.bodyWeightDiff) <= 3) dataScore += 5;
+    dataScore = Math.min(20, dataScore);
+  } else if (raceName && raceName.indexOf('ヴィクトリアマイル') !== -1) {
+    // VM 専用: 前走G2/4番人気以内/外国人騎手/ルメール×1番人気/父SS系/馬体重ゾーン
+    if (horse.prev1grade === 'G2') dataScore += 8;
+    if ((horse.prev1pop || 99) <= 4) dataScore += 4;
+    if (['C.ルメール','D.レーン','M.ディー','F.ゴンサルベス','M.ゴンサルベス'].indexOf(horse.jockey || '') >= 0) dataScore += 3;
+    if (horse.jockey === 'C.ルメール' && (horse.popEstimate || 99) === 1) dataScore += 10;
+    var _vmSS = ['ディープインパクト','キズナ','コントレイル','エピファネイア','ブラックタイド','サトノダイヤモンド','ハーツクライ','アドマイヤマーズ'];
+    if (_vmSS.indexOf(horse.father || '') >= 0) dataScore += 3;
+    if (horse.tokyoMileG === true) dataScore += 4;
+    if (horse.hasWonMiddleDistance === true) dataScore += 4;
+    if (horse.fastFinish === true) dataScore += 3;
+    var _vmBw = horse.bodyWeight || 0;
+    if (_vmBw >= 480 && _vmBw <= 499) dataScore += 3;
+    var _vmDiff = horse.bodyWeightDiff || 0;
+    if (_vmDiff >= 4 && _vmDiff <= 8) dataScore += 2;
+    dataScore = Math.min(20, dataScore);
+  } else if (raceName && raceName.indexOf('新潟大賞典') !== -1) {
+    // 新潟大賞典 専用: ダービー連対血統/リピーター/新潟経験/左回り2000/3走以内連対
+    if (horse.fatherDerbyRenntai === true || horse.motherFatherDerby === true) dataScore += 8;
+    if (horse.hasRibotBlood === true) dataScore += 5;
+    if (horse.repeater === true) dataScore += 6;
+    if (horse.niigataExp === true && horse.repeater !== true) dataScore += 3;
+    if (horse.leftCourse2000 === true) dataScore += 4;
+    if (horse.recent3Renntai === true) dataScore += 4;
+    if (horse.jockeyChanged === true) dataScore += 3;
+    if ((horse.hande || 0) >= 54 && (horse.hande || 0) <= 58) dataScore += 2;
+    if (horse.popEstimate >= 6 && horse.popEstimate <= 9) dataScore += 3;
     dataScore = Math.min(20, dataScore);
   } else {
     dataScore = 10;
@@ -9419,6 +9456,32 @@ function computeScoreBreakdown(horse, raceName) {
   // エプソムC：7歳以上ペナルティ
   if (raceName && raceName.indexOf('エプソム') !== -1) {
     if ((horse.age || 0) >= 7) penalty -= 20;
+  }
+  // ヴィクトリアマイル ペナルティ
+  if (raceName && raceName.indexOf('ヴィクトリアマイル') !== -1) {
+    if (horse.popEstimate === 2 || horse.popEstimate === 3) penalty -= 8;
+    if (horse.prev1race && horse.prev1race.indexOf('阪神牝馬') >= 0 && horse.prev1r === 1) penalty -= 8;
+    if (horse.prev1race && (horse.prev1race.indexOf('中山記念') >= 0 || horse.prev1race.indexOf('愛知杯') >= 0)) penalty -= 12;
+    if ((horse.prev1pop || 0) >= 10 && (horse.prev1r || 0) >= 6) penalty -= 12;
+    if ((horse.age || 0) >= 6 && horse.g1rentalExp !== true) penalty -= 8;
+    if (horse.prev1race && horse.prev1race.indexOf('阪神牝馬') >= 0 && (horse.prev1r || 0) >= 7) penalty -= 10;
+    if (horse.training === 'D') penalty -= 8;
+    if (horse.training === 'C') penalty -= 5;
+    if (waku === 7) penalty -= 10;
+    if (horse.dangerFlag === true) penalty -= 8;
+  }
+  // 新潟大賞典 ペナルティ
+  if (raceName && raceName.indexOf('新潟大賞典') !== -1) {
+    if (horse.sex === '牝') penalty -= 18;
+    if (['3勝','3勝クラス','条件'].indexOf(horse.prev1grade || '') >= 0) penalty -= 18;
+    if (waku === 5) penalty -= 6;
+    if ((horse.popEstimate || 99) === 1) penalty -= 8;
+    if (horse.father === 'ハービンジャー') penalty -= 6;
+    if (horse.father === 'キタサンブラック') penalty -= 6;
+    if ((horse.age || 0) >= 8) penalty -= 8;
+    if ((horse.hande || 0) > 0 && (horse.hande || 0) <= 53) penalty -= 8;
+    if (horse.training === 'D') penalty -= 8;
+    if (horse.training === 'C') penalty -= 4;
   }
 
   // 各項目の上限・下限を強制
