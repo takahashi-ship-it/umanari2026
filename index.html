@@ -3829,26 +3829,29 @@ const HORSES_BY_RACE = {
     shozo:'栗東', jockey:'C.ルメール', odds:3.0, popEstimate:1,
     pace:'差し', leftCourseScore:7,
     prev1race:'金鯱賞', prev1grade:'G2', prev1r:4,
+    fatherDerbyRenntai:true,
     note:'ここ5戦で重賞2着4度。ルメール騎手で悲願のタイトルへ。トニービン内包（母父ハービンジャー）×左回り得意',
-    training:'A',
-    trainingNote:'1週前：美浦W（良）併せ馬 自己ベスト更新。1馬身遅れたが全体時計は最高値。状態良好。ルメール再コンビで悲願のタイトルへ',
-    trainingTime:'自己ベスト更新' },
+    training:'S',
+    trainingNote:'調教S評価：超抜時計・鋭い加速・高水準。1週前美浦W自己ベスト更新に続き最終も抜群の動き。ルメール騎乗で状態は完璧',
+    trainingTime:'+1.2s' },
 
   { name:'シュガークン',      age:5, sex:'牡', waku:null, uma:null,
     father:'ドゥラメンテ', motherFather:'サクラバクシンオー',
     shozo:'栗東', jockey:'武豊', odds:4.4, popEstimate:2,
     pace:'差し', leftCourseScore:8,
     prev1race:'日本ダービー', prev1grade:'G1', prev1r:7,
+    fatherDerbyRenntai:true,
     note:'2024年青葉賞G2勝ち。日本ダービー7着後に屈腱炎で長期離脱。復帰戦。状態は戻ってきている模様',
-    training:'S',
-    trainingNote:'1週前：栗東CW（良）6F79.7-5F65.0-4F50.9-3F36.2-2F22.4-1F11.1 チェリヴェントを追走し軽く仕掛けてあっさり突き放して先着。2F22.4はこの日三番時計。長期休養明けを感じさせない素晴らしい動き',
-    trainingTime:'79.7-65.0-50.9-36.2-22.4-11.1' },
+    training:'A',
+    trainingNote:'調教A評価だが時計遅延・反動懸念あり。長期休養明けの影響か。最終追い切りで状態確認必要',
+    trainingTime:'+1.1s' },
 
   { name:'ガイアメンテ',      age:7, sex:'牡', waku:null, uma:null,
     father:'ドゥラメンテ', motherFather:'ディープインパクト',
     shozo:'栗東', jockey:'未定', odds:5.5, popEstimate:3,
     pace:'差し', leftCourseScore:7,
     prev1race:'福島民報杯', prev1grade:'L', prev1r:2,
+    fatherDerbyRenntai:true,
     note:'福島民報杯2着。ドゥラメンテ産駒でトニービン内包',
     training:'B' },
 
@@ -3858,7 +3861,9 @@ const HORSES_BY_RACE = {
     pace:'差し', leftCourseScore:6,
     prev1race:'金鯱賞', prev1grade:'G2', prev1r:11,
     note:'府中牝馬S勝ち馬。ただし過去10年で牝馬は馬券になっていないデータあり',
-    training:'B', danger:true },
+    training:'B', danger:true,
+    trainingNote:'調教B評価：終い維持・現状維持。消去法で牝馬消し対象',
+    trainingTime:'+0.6s' },
 
   { name:'アンゴラブラック',  age:5, sex:'牡', waku:null, uma:null,
     father:'モーリス', motherFather:'ハービンジャー',
@@ -3866,25 +3871,31 @@ const HORSES_BY_RACE = {
     pace:'先行', leftCourseScore:5,
     prev1race:'中山牝馬S', prev1grade:'G3', prev1r:13,
     note:'中山金杯2着の実績。モーリス産駒',
-    training:'B' },
+    training:'S',
+    trainingNote:'調教S評価：完璧なプロセス・反動一切なし',
+    trainingTime:'+0.8s' },
 
   { name:'ヤマニンブークリエ', age:4, sex:'牡', waku:null, uma:null,
     father:'キタサンブラック', motherFather:'チチカステナンゴ',
     shozo:'栗東', jockey:'横山典弘', odds:12.9, popEstimate:6,
     pace:'差し', leftCourseScore:6,
     prev1race:'ネオムターフC', prev1grade:'国際', prev1r:5,
+    fatherDerbyRenntai:true,
     note:'セントライト記念2着。キタサンブラック産駒（KM直系）×4歳馬',
-    training:'B' },
+    training:'B',
+    trainingNote:'調教B評価：中間加速・順調',
+    trainingTime:'+0.8s' },
 
   { name:'トーセンリョウ',    age:5, sex:'牡', waku:null, uma:null,
     father:'ドゥラメンテ', motherFather:'ハーツクライ',
     shozo:'栗東', jockey:'斎藤新', odds:12.9, popEstimate:7,
     pace:'差し', leftCourseScore:6,
     prev1race:'大阪杯', prev1grade:'G1', prev1r:4,
+    fatherDerbyRenntai:true,
     note:'ドゥラメンテ産駒×母父ハーツクライ（トニービン内包のダブル）。新潟コース適性高い',
-    training:'B', hot:true,
-    trainingNote:'昨年エプソムC3着馬。前走大阪城S7着は休み明けの影響。仕切り直しの一戦に注目',
-    trainingTime:'未確認' },
+    training:'S', hot:true,
+    trainingNote:'調教S評価：馬なりで加速・順調。3頭のS評価のうちの1頭。AI穴馬候補',
+    trainingTime:'+0.5s' },
 
   { name:'サフィラ',          age:4, sex:'牝', waku:null, uma:null,
     father:'エピファネイア', motherFather:'ダイワメジャー',
@@ -3892,7 +3903,9 @@ const HORSES_BY_RACE = {
     pace:'差し', leftCourseScore:5,
     prev1race:'金鯱賞', prev1grade:'G2', prev1r:9,
     note:'4歳牝馬。過去10年で牝馬は馬券になっていないデータあり。割引',
-    training:'C', danger:true },
+    training:'C', danger:true,
+    trainingNote:'調教C評価：減速でデキ落ち懸念。消去法でも牝馬消し対象',
+    trainingTime:'減速' },
 
   { name:'ホールネス',        age:5, sex:'牡', waku:null, uma:null,
     father:'ハービンジャー', motherFather:'ディープインパクト',
@@ -3900,7 +3913,9 @@ const HORSES_BY_RACE = {
     pace:'先行', leftCourseScore:6,
     prev1race:'前走', prev1grade:'L', prev1r:5,
     note:'ハービンジャー産駒は新潟2000mで不振データあり。割引',
-    training:'B', danger:true },
+    training:'D', danger:true,
+    trainingNote:'調教D評価：減速ラップ・基準外',
+    trainingTime:'減速' },
 
   { name:'グランディア',      age:6, sex:'牡', waku:null, uma:null,
     father:'ハービンジャー', motherFather:'キングカメハメハ',
@@ -3908,7 +3923,9 @@ const HORSES_BY_RACE = {
     pace:'差し', leftCourseScore:5,
     prev1race:'大阪城S', prev1grade:'L', prev1r:3,
     note:'ハービンジャー産駒は新潟不振データ。ただし母父キングカメハメハでKM直系を保有',
-    training:'B' },
+    training:'A',
+    trainingNote:'調教A評価だが大幅遅延・反動可能性あり。要注意',
+    trainingTime:'+1.0s' },
 
   { name:'グランドカリナン',  age:5, sex:'牡', waku:null, uma:null,
     father:'キタサンブラック', motherFather:'ファルブラヴ',
@@ -3924,7 +3941,9 @@ const HORSES_BY_RACE = {
     pace:'差し', leftCourseScore:5,
     prev1race:'白富士S', prev1grade:'L', prev1r:7,
     note:'ダイワメジャー産駒×母父ハーツクライ(トニービン内包)',
-    training:'C' },
+    training:'A',
+    trainingNote:'調教A評価：状態急上昇・基準クリア。データ推奨馬（ドゥラドーレスと並んで推奨）',
+    trainingTime:'+0.7s' },
 
   { name:'ラインベック',      age:7, sex:'牡', waku:null, uma:null,
     father:'ハービンジャー', motherFather:'アグネスタキオン',
@@ -5797,9 +5816,42 @@ const RACE_PAST_DATA = {
     { label:'⚠️後方一気（4角12番手以下）0勝', type:'minus',
       detail:'4角最後方からの直線一気は届かない。後方追込馬は割引',
       matchFn: function(h){ return h.pace === '追込' || h.style === '追込'; } },
+    { label:'⚠️1〜3番人気は勝率0%（0-5-2-23）', type:'minus',
+      detail:'上位人気未勝利・波乱傾向強い',
+      matchFn: function(h){ return (h.popEstimate||99) <= 3; } },
+    { label:'⚠️5枠は複勝率5%（過去10年1頭のみ）', type:'minus',
+      detail:'5枠は1/20のみ馬券圏内。評価を大幅に下げる',
+      matchFn: function(h){ return h.waku === 5; } },
+    { label:'⚠️消去①：牝馬（過去10年0-0-0-5）', type:'minus',
+      detail:'出走牝馬は馬券圏内ゼロ・複勝率0%',
+      matchFn: function(h){ return h.sex === '牝'; } },
+    { label:'⚠️消去②：前走3勝クラス以下（0-0-0-4）', type:'minus',
+      detail:'格下レース参戦馬・3着以内実績ゼロ',
+      matchFn: function(h){ return ['3勝','3勝クラス','条件'].indexOf(h.prev1grade||'') >= 0; } },
+    { label:'⭐父か母父が日本ダービー連対【3-3-3】', type:'plus',
+      detail:'ドゥラメンテ・キタサンブラック産駒が該当',
+      matchFn: function(h){ return h.fatherDerbyRenntai === true || h.motherFatherDerby === true; } },
+    { label:'⭐リボー系保有【2-1-1・毎回馬券に絡む】', type:'plus',
+      detail:'Alleged・His Majesty・Key to the Mint保有馬',
+      matchFn: function(h){ return h.hasRibotBlood === true; } },
+    { label:'⭐S評価消去法クリア（シュガークン・シュトルーヴェ・シンハナーダ）', type:'plus',
+      detail:'統計的マイナスデータなし・中心視できる有力馬',
+      matchFn: function(h){ return ['シュガークン','シュトルーヴェ','シンハナーダ'].indexOf(h.name) >= 0; } },
+    { label:'⭐A評価消去法クリア', type:'plus',
+      detail:'ガイアメンテ・グランディア・グランドカリナン・トーセンリョウ・ドゥラドーレス・バレエマスター・ヤマニンブークリエ・ラインベック',
+      matchFn: function(h){ return ['ガイアメンテ','グランディア','グランドカリナン','トーセンリョウ','ドゥラドーレス','バレエマスター','ヤマニンブークリエ','ラインベック'].indexOf(h.name) >= 0; } },
   ],
 
   anaPoints: [
+    '⭐調教S評価3頭：ドゥラドーレス（+1.2s超抜時計）・アンゴラブラック（+0.8s完璧）・トーセンリョウ（+0.5s順調）',
+    '⭐消去法クリアS：シュガークン・シュトルーヴェ・シンハナーダ（統計的マイナスデータなし）',
+    '⭐消去法クリアA：ガイアメンテ・グランディア・グランドカリナン・トーセンリョウ・ドゥラドーレス他',
+    '⭐父か母父が日本ダービー連対【3-3-3】：ドゥラドーレス・シュガークン・ガイアメンテ・トーセンリョウ・ヤマニンブークリエが該当',
+    '⭐リボー系保有【2-1-1・毎回馬券に】：毎回馬券に絡む最注目血統',
+    '⚠️1〜3番人気は勝率0%（0-5-2-23）！ドゥラドーレスが1番人気なら過信禁物',
+    '⚠️5枠は複勝率5%（過去10年1頭のみ馬券圏内）。5枠に入った馬は大幅割引',
+    '⚠️調教C・D評価：サフィラ（C・デキ落ち懸念）・ホールネス（D・基準外）は消し',
+    '⚠️シュガークンは調教A評価だが時計遅延・反動懸念あり。最終追い切りで確認必要',
     '⭐人気薄激走の共通点：関西馬×前走G2以上（着順不問）×差し脚質×馬体重500kg以上×54kg以上のハンデ',
     '⭐乗り替わり騎手が過去10年8勝！鞍上強化の馬は要注目（今年：シュガークン武豊・トーセンリョウ斎藤新）',
     '⭐3連単平均27万3046円・10万馬券超えが6回発生。積極的に中穴〜大穴を狙う',
@@ -6808,6 +6860,46 @@ function calcYoshiEishin(horse) {
   return { pts: 0, label: '' };
 }
 
+// 新潟大賞典専用：消去法・血統ボーナス・人気/枠ペナルティ
+function calcNiigataDaishoten(horse, raceName) {
+  if (!raceName || raceName.indexOf('新潟大賞典') === -1) return { pts: 0, labels: [], label: '' };
+  var pts = 0;
+  var labels = [];
+  // 消去条件①：牝馬（0-0-0-5）
+  if (horse.sex === '牝') {
+    pts -= 20; labels.push('⚠️牝馬【0-0-0-5・完全消し-20pt】');
+  }
+  // 消去条件②：前走3勝クラス以下（0-0-0-4）
+  if (['3勝','3勝クラス','条件'].indexOf(horse.prev1grade || '') >= 0) {
+    pts -= 20; labels.push('⚠️前走3勝クラス以下【0-0-0-4・-20pt】');
+  }
+  // 5枠（複勝率5%）
+  if (horse.waku === 5) {
+    pts -= 8; labels.push('⚠️5枠【複勝率5%・-8pt】');
+  }
+  // 1〜3番人気（勝率0%・0-5-2-23）
+  if ((horse.popEstimate || 99) <= 3) {
+    pts -= 8; labels.push('⚠️1〜3番人気【勝率0%・0-5-2-23・-8pt】');
+  }
+  // 父か母父が日本ダービー連対（3-3-3）
+  if (horse.fatherDerbyRenntai === true || horse.motherFatherDerby === true) {
+    pts += 10; labels.push('⭐父か母父が日本ダービー連対【3-3-3・+10pt】');
+  }
+  // リボー系保有（2-1-1・毎回馬券に）
+  if (horse.hasRibotBlood === true) {
+    pts += 8; labels.push('⭐リボー系保有【2-1-1・+8pt】');
+  }
+  // 東京・中京芝2000m以上3勝クラス以上で上がり最速（3-1-2）
+  if (horse.tokyoNagoyaFastFinish === true) {
+    pts += 8; labels.push('⭐東京・中京2000m以上で上がり最速実績【3-1-2・+8pt】');
+  }
+  // 3走以内に連対（3-3-1）
+  if (horse.recent3Renntai === true) {
+    pts += 6; labels.push('⭐3走以内に連対【3-3-1・+6pt】');
+  }
+  return { pts: pts, labels: labels, label: labels.join(' / ') };
+}
+
 // ヴィクトリアマイル専用：前走着順・枠順・人気・東京1600m重賞経験を加算
 function calcVictoriaMile(horse, raceName) {
   if (!raceName || raceName.indexOf('ヴィクトリアマイル') === -1) return { pts: 0, labels: [] };
@@ -7099,15 +7191,17 @@ function computeScore(h) {
   var trainerObj    = calcTrainerComment(h);
   var yoshiEishinObj = calcYoshiEishin(h);
   var vmObj         = calcVictoriaMile(h, currentRace);
+  var ndsObj        = calcNiigataDaishoten(h, currentRace);
   var jockeyChgPts   = jockeyChgObj.pts;
   var routeNhkPts    = routeNhkObj.pts;
   var trainerPts     = trainerObj.pts;
   var yoshiEishinPts = yoshiEishinObj.pts;
   var vmPts          = vmObj.pts;
+  var ndsPts         = ndsObj.pts;
 
   return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB, special, nhkBw,
            shozoP, jockeyN, careerP, prevR, leftPts, nztPts, framePts, tokyoExpPenalty, anaBonus, agePenalty, prevClassKyoto,
-           jockeyChgPts, routeNhkPts, trainerPts, yoshiEishinPts, vmPts,
+           jockeyChgPts, routeNhkPts, trainerPts, yoshiEishinPts, vmPts, ndsPts,
            _distLabel: distObj.label, _stallionLabel: stallionObj.label,
            _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label,
            _specialLabel: specialObj.label, _nhkBwLabel: nhkBwObj.label,
@@ -7117,7 +7211,7 @@ function computeScore(h) {
            _frameLabel: frameObj.label, _tokyoExpPenaltyLabel: tokyoExpPenaltyObj.label,
            _jockeyChgLabel: jockeyChgObj.label, _routeNhkLabel: routeNhkObj.label,
            _trainerLabel: trainerObj.label, _yoshiEishinLabel: yoshiEishinObj.label,
-           _vmLabel: vmObj.label,
+           _vmLabel: vmObj.label, _ndsLabel: ndsObj.label,
            _siValue: si };
 }
 function sumScore(s) {
@@ -7129,7 +7223,7 @@ function sumScore(s) {
          (s.tokyoExpPenalty || 0) + (s.anaBonus || 0) + (s.agePenalty || 0) +
          (s.prevClassKyoto || 0) +
          (s.jockeyChgPts || 0) + (s.routeNhkPts || 0) + (s.trainerPts || 0) +
-         (s.yoshiEishinPts || 0) + (s.vmPts || 0);
+         (s.yoshiEishinPts || 0) + (s.vmPts || 0) + (s.ndsPts || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
