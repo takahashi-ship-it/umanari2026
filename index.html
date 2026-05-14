@@ -9961,12 +9961,17 @@ function renderKaimokuAI(raceName) {
 
   var html = '';
 
-  // 軸馬＋相手の一体型コンテナ
-  html += '<div style="border:2px solid #FFD700;border-radius:14px;overflow:hidden;margin-bottom:20px">';
+  // 軸馬＋相手の一体型コンテナ（AI予想・青系配色）
+  html += '<div style="border:2px solid #4a90e2;border-radius:14px;overflow:hidden;margin-bottom:20px">';
 
   // ===== 軸馬部分 =====
   html += '<div style="background:#0d1f3c;padding:14px 16px">';
-  html += '<div style="font-size:10px;color:#FFD700;font-weight:700;margin-bottom:6px">🏆 ◎ 軸馬（3着以内確定的）</div>';
+  html += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">';
+  html += '<span style="font-size:14px">🤖</span>';
+  html += '<span style="font-size:11px;color:#7AB8FF;font-weight:700;letter-spacing:0.5px">AI推奨軸馬</span>';
+  html += '<span style="background:#1d4ed8;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:auto">AI推奨</span>';
+  html += '</div>';
+  html += '<div style="font-size:10px;color:#8899CC;margin-bottom:8px">データと調教から導いたAIの本命馬</div>';
   html += '<div style="font-size:22px;font-weight:900;color:#FFFFFF">' + data.jiku + '</div>';
   if (data.jikuNote) html += '<div style="font-size:11px;color:#C0C8D8;margin-top:4px">' + data.jikuNote + '</div>';
 
@@ -9986,7 +9991,7 @@ function renderKaimokuAI(raceName) {
   // jikuMemo（選定理由）
   if (data.jikuMemo && data.jikuMemo.length > 0) {
     html += '<div style="margin-top:10px;padding:10px;background:rgba(255,255,255,0.06);border-radius:8px">';
-    html += '<div style="font-size:10px;color:#FFD700;font-weight:700;margin-bottom:6px">📝 軸馬選定理由</div>';
+    html += '<div style="font-size:10px;color:#7AB8FF;font-weight:700;margin-bottom:6px">📝 軸馬選定理由</div>';
     data.jikuMemo.forEach(function(memo) {
       var c = memo.indexOf('✅') === 0 ? '#7AE6B5'
             : memo.indexOf('⚠️') === 0 ? '#F5C842'
@@ -9999,11 +10004,11 @@ function renderKaimokuAI(raceName) {
   html += '</div>'; // 軸馬部分終わり
 
   // ===== 区切り =====
-  html += '<div style="height:1px;background:rgba(255,215,0,0.3)"></div>';
+  html += '<div style="height:1px;background:rgba(74,144,226,0.3)"></div>';
 
   // ===== 相手（ヒモ）選定部分 =====
   html += '<div style="background:#0a1a30;padding:12px 16px">';
-  html += '<div style="font-size:11px;color:#FFD700;font-weight:700;margin-bottom:8px">相手（ヒモ）選定</div>';
+  html += '<div style="font-size:11px;color:#7AB8FF;font-weight:700;margin-bottom:8px">相手（ヒモ）選定</div>';
 
   // 頭数セレクター
   if (hasSelector) {
@@ -10014,7 +10019,7 @@ function renderKaimokuAI(raceName) {
       html += '<button onclick="setNakamaN(\'' + key + '\',' + n + ')" style="'
         + 'padding:4px 11px;border-radius:8px;cursor:pointer;font-size:11px;font-weight:' + (isSelected ? '700' : '400') + ';'
         + (isSelected
-          ? 'background:#FFD700;color:#0d1f3c;border:1px solid #FFD700'
+          ? 'background:#4a90e2;color:#fff;border:1px solid #4a90e2'
           : 'background:transparent;color:#C0C8D8;border:1px solid #2a3a54')
         + '">' + n + '頭</button>';
     });
@@ -10052,11 +10057,11 @@ function renderKaimokuAI(raceName) {
   html += '</div>'; // 相手部分終わり
 
   // ===== 区切り =====
-  html += '<div style="height:1px;background:rgba(255,215,0,0.3)"></div>';
+  html += '<div style="height:1px;background:rgba(74,144,226,0.3)"></div>';
 
   // ===== 買い目サマリー =====
   html += '<div style="background:#0d1f3c;padding:12px 16px">';
-  html += '<div style="font-size:11px;color:#FFD700;font-weight:700;margin-bottom:6px">📋 買い目サマリー</div>';
+  html += '<div style="font-size:11px;color:#7AB8FF;font-weight:700;margin-bottom:6px">📋 買い目サマリー</div>';
   html += '<div style="font-size:11px;color:#C0C8D8;line-height:1.8">';
   html += '3連単 1頭軸マルチ 軸：' + data.jiku + '<br>';
   html += '相手：' + aiteSelected.map(function(h){ return h.name; }).join('・') + '（' + currentN + '頭）<br>';
@@ -10064,7 +10069,7 @@ function renderKaimokuAI(raceName) {
   html += '</div>';
   html += '<div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center">';
   html += '<span style="font-size:12px;color:#C0C8D8">' + unitCost + '円 × ' + points + '点</span>';
-  html += '<span style="font-size:18px;font-weight:800;color:#FFD700">' + totalCost.toLocaleString() + '円</span>';
+  html += '<span style="font-size:18px;font-weight:800;color:#7AB8FF">' + totalCost.toLocaleString() + '円</span>';
   html += '</div>';
   html += '</div>';
 
