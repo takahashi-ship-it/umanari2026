@@ -8984,7 +8984,7 @@ function renderKaime() {
   jikuHtml += '</div>';
 
   // === 買い目サマリー ===
-  var summaryPts = selectedN * (selectedN - 1) * 2;
+  var summaryPts = selectedN * (selectedN - 1) * 3;
   var summaryCost = summaryPts * 100;
   var summaryHimoNames = himoVisibleList.map(function(x){ return x.h.name; }).join('・');
   jikuHtml += '<div style="padding:12px 0 4px">';
