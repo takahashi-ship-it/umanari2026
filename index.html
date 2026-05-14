@@ -9804,20 +9804,36 @@ function getJikuScore(raceName) {
 // _preserveOrder: true がセットされていればソートせず KAIMOKU_DATA の順序を維持
 function getAiteRanked(raceName) {
   var data = KAIMOKU_DATA[raceName];
-  if (!data || !data.aiteAll) return [];
+  if (!data) return [];
   var horses = (window.HORSES_BY_RACE || HORSES_BY_RACE || {})[raceName] || [];
-  if (!horses.length) return data.aiteAll.slice();
+  var aiteAll = data.aiteAll || [];
+  if (!horses.length) return aiteAll.slice();
 
-  var ranked = data.aiteAll.map(function(aite) {
-    var horse = horses.find(function(h){ return h.name === aite.name; });
-    var score = 0;
-    if (horse && typeof computeScoreBreakdown === 'function') {
-      try { score = computeScoreBreakdown(horse, raceName).total; } catch(e) { score = 0; }
-    }
-    return { name: aite.name, reason: aite.reason || '', score: score };
-  });
+  var jikuName = data.jiku;
+  var reasonByName = {};
+  aiteAll.forEach(function(a){ reasonByName[a.name] = a.reason || ''; });
 
-  if (data._preserveOrder) return ranked; // 元の順序を維持
+  // 全出走馬から軸馬を除いた全頭をランキング対象に（aiteAll不足を補完）
+  var ranked = horses
+    .filter(function(h){ return h.name !== jikuName; })
+    .map(function(horse) {
+      var score = 0;
+      if (typeof computeScoreBreakdown === 'function') {
+        try { score = computeScoreBreakdown(horse, raceName).total; } catch(e) { score = 0; }
+      }
+      return { name: horse.name, reason: reasonByName[horse.name] || '', score: score };
+    });
+
+  if (data._preserveOrder) {
+    // 元のaiteAll順序を維持しつつ、残りの馬はスコア順で末尾に追加
+    var inAite = {};
+    var primary = aiteAll.map(function(a){ inAite[a.name] = true;
+      var r = ranked.find(function(x){ return x.name === a.name; });
+      return r || { name:a.name, reason:a.reason||'', score:0 };
+    });
+    var extras = ranked.filter(function(r){ return !inAite[r.name]; }).sort(function(a,b){ return b.score - a.score; });
+    return primary.concat(extras);
+  }
   ranked.sort(function(a, b) { return b.score - a.score; });
   return ranked;
 }
