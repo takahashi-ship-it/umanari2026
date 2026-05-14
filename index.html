@@ -35,8 +35,11 @@
     --color-text-warning: #EF9F27;
     --color-text-success: #0F6E56;
     --color-text-info: #1d4ed8;
+    --color-text-danger: #A32D2D;
     --color-background-warning: #FAEEDA;
     --color-background-info: #DBEAFE;
+    --color-background-success: #E1F5EE;
+    --color-border-success: #0F6E56;
     --border-radius-md: 8px;
     --border-radius-lg: 12px;
     --waku-1-bg: #ffffff; --waku-1-fg: #000000;
@@ -10163,22 +10166,30 @@ window.setNakamaN = setNakamaN;
  * 軸馬3着内率トラッキング
  * ===================================================== */
 var JIKU_TRACKING = [
-  { race: '皐月賞',         jiku: 'ロブチェン',           result: '1着', hit: true,
-    note: '信頼度スコア最高値→1着✅ 3連単マルチ的中' },
-  { race: 'フローラS',      jiku: 'ラベルセーヌ',         result: '着外', hit: false,
-    note: '軸選定→着外❌' },
-  { race: 'マイラーズC',    jiku: 'アドマイヤズーム',     result: '1着', hit: true,
-    note: '→1着✅ 3連単マルチ的中' },
-  { race: '青葉賞',         jiku: 'ノーブルサヴェージ',   result: '着外', hit: false,
-    note: '軸選定→着外❌' },
-  { race: '天皇賞(春)',     jiku: 'アドマイヤテラ',       result: '3着', hit: true,
-    note: 'G2勝ち・調教A・馬場82で推奨→3着✅ 3連単マルチ的中' },
-  { race: '京都新聞杯',     jiku: 'コンジェスタス',       result: '1着', hit: true,
-    note: '3枠5番・4番人気・コントレイル産駒→1着✅ 3連単5→15→6 74,860円的中！' },
-  { race: 'エプソムカップ', jiku: 'サクラファレル',       result: '着外', hit: false,
-    note: '1番人気5.8倍・D.レーン→着外❌ 1着トロヴァトーレ・2着ステレンボッシュ' },
-  { race: 'NHKマイルC',     jiku: 'エコロアルバ',         result: '着外（BOX的中）', hit: true,
-    note: '軸エコロアルバは着外だがBOX購入で3連単17→16→11 26,150円的中！52,300円払戻',
+  { race: '皐月賞',         aiJiku: 'ロブチェン',         scoreJiku: 'ロブチェン',
+    result: '1着', aiHit: true,  scoreHit: true,  comboHit: true,
+    note: 'ロブチェン1着✅ AI・スコア両方的中 3連単マルチ的中' },
+  { race: 'フローラS',      aiJiku: 'ラベルセーヌ',       scoreJiku: 'ラベルセーヌ',
+    result: '着外', aiHit: false, scoreHit: false, comboHit: false,
+    note: 'ラベルセーヌ着外❌' },
+  { race: 'マイラーズC',    aiJiku: 'アドマイヤズーム',   scoreJiku: 'アドマイヤズーム',
+    result: '1着', aiHit: true,  scoreHit: true,  comboHit: true,
+    note: 'アドマイヤズーム1着✅ 3連単マルチ的中' },
+  { race: '青葉賞',         aiJiku: 'ノーブルサヴェージ', scoreJiku: 'ノーブルサヴェージ',
+    result: '着外', aiHit: false, scoreHit: false, comboHit: false,
+    note: 'ノーブルサヴェージ着外❌' },
+  { race: '天皇賞(春)',     aiJiku: 'アドマイヤテラ',     scoreJiku: 'アドマイヤテラ',
+    result: '3着', aiHit: true,  scoreHit: true,  comboHit: true,
+    note: 'アドマイヤテラ3着✅ G2勝ち・調教A・馬場82で推奨' },
+  { race: '京都新聞杯',     aiJiku: 'コンジェスタス',     scoreJiku: 'コンジェスタス',
+    result: '1着', aiHit: true,  scoreHit: true,  comboHit: true,
+    note: 'コンジェスタス1着✅ 3連単5→15→6 74,860円的中！' },
+  { race: 'エプソムカップ', aiJiku: 'サクラファレル',     scoreJiku: 'サクラファレル',
+    result: '着外', aiHit: false, scoreHit: false, comboHit: false,
+    note: 'サクラファレル着外❌ 1着トロヴァトーレ・2着ステレンボッシュ' },
+  { race: 'NHKマイルC',     aiJiku: 'エコロアルバ',       scoreJiku: 'ロデオドライブ',
+    result: '着外', aiHit: false, scoreHit: true,  comboHit: true,
+    note: 'エコロアルバ着外・スコア1位ロデオドライブ1着✅ BOX52,300円',
     failReason: [
       '乗り替わり（継続騎乗でなかった）→次回乗り替わりには-5pt適用',
       '朝日杯直行ローテ（過去データ不振）→次回このローテには-8pt適用',
@@ -10191,46 +10202,84 @@ function renderJikuTracking() {
   var container = document.getElementById('jiku-tracking-container');
   if (!container) return;
 
-  var hits = JIKU_TRACKING.filter(function(r){ return r.hit; }).length;
-  var total = JIKU_TRACKING.filter(function(r){ return r.result !== '—'; }).length;
-  var rate = total > 0 ? Math.round(hits / total * 100) : 0;
+  var aiHits    = JIKU_TRACKING.filter(function(r){ return r.aiHit; }).length;
+  var scoreHits = JIKU_TRACKING.filter(function(r){ return r.scoreHit; }).length;
+  var comboHits = JIKU_TRACKING.filter(function(r){ return r.comboHit; }).length;
+  var total     = JIKU_TRACKING.length;
 
   var html = '<div class="card" style="margin-top:12px">';
   html += '<div class="ct">🎯 軸馬3着内率トラッキング</div>';
 
-  html += '<div style="display:flex;gap:12px;margin-bottom:14px">';
-  html += '<div style="flex:1;background:var(--color-background-secondary);border-radius:8px;padding:10px;text-align:center">';
-  html += '<div style="font-size:11px;color:var(--color-text-secondary)">軸馬成功回数</div>';
-  html += '<div style="font-size:24px;font-weight:800;color:#0F6E56">' + hits + '<span style="font-size:13px">/' + total + '</span></div>';
+  // ── サマリー3列 ──
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">';
+  // AI推奨軸馬
+  html += '<div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 8px;text-align:center">';
+  html += '<div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px">🤖 AI推奨軸馬</div>';
+  html += '<div style="font-size:20px;font-weight:600;color:var(--color-text-primary)">' + aiHits + '<span style="font-size:12px;color:var(--color-text-tertiary)">/' + total + '</span></div>';
+  html += '<div style="font-size:11px;color:var(--color-text-secondary)">' + Math.round(aiHits/total*100) + '%</div>';
   html += '</div>';
-  html += '<div style="flex:1;background:var(--color-background-secondary);border-radius:8px;padding:10px;text-align:center">';
-  html += '<div style="font-size:11px;color:var(--color-text-secondary)">3着内率</div>';
-  html += '<div style="font-size:24px;font-weight:800;color:' + (rate >= 50 ? '#0F6E56' : '#A32D2D') + '">' + rate + '%</div>';
+  // スコア1位
+  html += '<div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 8px;text-align:center">';
+  html += '<div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px">📊 スコア1位</div>';
+  html += '<div style="font-size:20px;font-weight:600;color:var(--color-text-primary)">' + scoreHits + '<span style="font-size:12px;color:var(--color-text-tertiary)">/' + total + '</span></div>';
+  html += '<div style="font-size:11px;color:var(--color-text-secondary)">' + Math.round(scoreHits/total*100) + '%</div>';
+  html += '</div>';
+  // 複合的中
+  var comboPct = Math.round(comboHits/total*100);
+  var comboColor = comboPct >= 60 ? 'var(--color-text-success)' : 'var(--color-text-primary)';
+  html += '<div style="background:var(--color-background-success);border-radius:var(--border-radius-md);padding:10px 8px;text-align:center;border:1px solid var(--color-border-success)">';
+  html += '<div style="font-size:10px;color:var(--color-text-success);margin-bottom:4px;font-weight:600">⚡ 複合的中</div>';
+  html += '<div style="font-size:20px;font-weight:700;color:' + comboColor + '">' + comboHits + '<span style="font-size:12px;color:var(--color-text-tertiary)">/' + total + '</span></div>';
+  html += '<div style="font-size:11px;color:' + comboColor + ';font-weight:600">' + comboPct + '%</div>';
   html += '</div>';
   html += '</div>';
 
-  html += '<div style="height:8px;background:var(--color-background-secondary);border-radius:4px;margin-bottom:14px;overflow:hidden">';
-  html += '<div style="width:' + rate + '%;height:100%;background:linear-gradient(90deg,#0F6E56,#1D9E75);border-radius:4px;transition:width 0.5s"></div>';
+  // 説明文
+  html += '<div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:12px;line-height:1.5">';
+  html += '⚡複合的中 = AI推奨またはスコア1位のどちらかが3着以内に来た場合';
   html += '</div>';
 
-  html += '<div style="font-size:11px;font-weight:600;color:var(--color-text-secondary);margin-bottom:8px">レース別結果</div>';
+  // ── レース別一覧 ──
   JIKU_TRACKING.forEach(function(r) {
-    var hitColor = r.hit ? '#0F6E56' : (r.result === '—' ? '#999' : '#A32D2D');
-    var hitIcon = r.hit ? '✅' : (r.result === '—' ? '⏳' : '❌');
-    html += '<div style="padding:8px 0;border-bottom:0.5px solid var(--border)">';
-    html += '<div style="display:flex;align-items:center;gap:8px">';
-    html += '<span style="font-size:13px">' + hitIcon + '</span>';
-    html += '<div style="flex:1">';
-    html += '<div style="font-size:12px;font-weight:500">' + r.race + '</div>';
-    html += '<div style="font-size:10px;color:var(--color-text-secondary)">軸：' + r.jiku + (r.note ? '　' + r.note : '') + '</div>';
+    var bg = r.comboHit ? 'var(--color-background-success)' : 'var(--color-background-secondary)';
+    var borderColor = r.comboHit ? 'var(--color-border-success)' : 'var(--color-border-tertiary)';
+    html += '<div style="background:' + bg + ';border-left:3px solid ' + borderColor + ';border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:8px">';
+
+    // レース名・結果
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">';
+    html += '<span style="font-size:12px;font-weight:600;color:var(--color-text-primary)">' + r.race + '</span>';
+    html += '<span style="font-size:11px;color:var(--color-text-secondary);font-weight:500">' + (r.result || '') + '</span>';
     html += '</div>';
-    html += '<div style="font-size:13px;font-weight:700;color:' + hitColor + '">' + r.result + '</div>';
+
+    // AI軸 vs スコア1位 の2列
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">';
+    var aiColor = r.aiHit ? 'var(--color-text-success)' : 'var(--color-text-danger)';
+    html += '<div style="font-size:10px">';
+    html += '<span style="color:var(--color-text-tertiary)">🤖 AI: </span>';
+    html += '<span style="color:' + aiColor + '">' + (r.aiHit ? '✅' : '❌') + ' ' + (r.aiJiku || '') + '</span>';
     html += '</div>';
+    var scoreColor = r.scoreHit ? 'var(--color-text-success)' : 'var(--color-text-danger)';
+    var isSame = r.aiJiku === r.scoreJiku;
+    html += '<div style="font-size:10px">';
+    html += '<span style="color:var(--color-text-tertiary)">📊 スコア: </span>';
+    if (isSame) {
+      html += '<span style="color:var(--color-text-tertiary)">同上</span>';
+    } else {
+      html += '<span style="color:' + scoreColor + '">' + (r.scoreHit ? '✅' : '❌') + ' ' + (r.scoreJiku || '') + '</span>';
+    }
+    html += '</div>';
+    html += '</div>';
+
+    // ノート
+    if (r.note) {
+      html += '<div style="font-size:10px;color:var(--color-text-secondary);line-height:1.5">' + r.note + '</div>';
+    }
+    // failReason
     if (r.failReason && r.failReason.length > 0) {
-      html += '<div style="margin-top:6px;padding:6px 8px;background:rgba(239,159,39,0.1);border-radius:6px">';
-      html += '<div style="font-size:9px;color:#EF9F27;font-weight:700;margin-bottom:3px">📝 振り返り・改善点</div>';
-      r.failReason.forEach(function(reason) {
-        html += '<div style="font-size:9px;color:#666;margin-bottom:2px;line-height:1.5">• ' + reason + '</div>';
+      html += '<div style="margin-top:6px;padding:6px 8px;background:var(--color-background-warning);border-radius:var(--border-radius-md)">';
+      html += '<div style="font-size:9px;color:var(--color-text-warning);font-weight:600;margin-bottom:3px">📝 振り返り</div>';
+      r.failReason.forEach(function(f) {
+        html += '<div style="font-size:9px;color:var(--color-text-secondary);margin-bottom:2px;line-height:1.4">• ' + f + '</div>';
       });
       html += '</div>';
     }
