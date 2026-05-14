@@ -8830,6 +8830,7 @@ function selectJiku(horses) {
 }
 
 function selectHimo(horses, jiku) {
+  // 軸馬以外の全頭をスコア順に返す（呼び出し側でslice(0, N)・上限撤廃）
   return horses
     .filter(function(h){return h.name !== jiku.name;})
     .map(function(h) {
@@ -8840,9 +8841,7 @@ function selectHimo(horses, jiku) {
       if (!isPopular && (h.waku === 8 || h.waku === 1)) sc -= 5;
       return { h: h, score: sc, rank: r.rank, isPopular: isPopular };
     })
-    .filter(function(x){return x.score > 10;})
-    .sort(function(a,b){return b.score - a.score;})
-    .slice(0, 6);
+    .sort(function(a,b){return b.score - a.score;});
 }
 
 function calcKaimePoints(himoCount) {
