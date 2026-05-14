@@ -32,6 +32,11 @@
     --color-background-secondary: var(--bg-soft);
     --color-border-secondary: var(--border);
     --color-border-tertiary: var(--border);
+    --color-text-warning: #EF9F27;
+    --color-text-success: #0F6E56;
+    --color-text-info: #1d4ed8;
+    --color-background-warning: #FAEEDA;
+    --color-background-info: #DBEAFE;
     --border-radius-md: 8px;
     --border-radius-lg: 12px;
     --waku-1-bg: #ffffff; --waku-1-fg: #000000;
@@ -2052,23 +2057,9 @@
           </div>
         </div>
 
-        <!-- 相手（ヒモ）カード -->
-        <div class="card">
-          <div class="ct">相手（ヒモ）選定</div>
-          <div style="background:#EFF6FF;border-left:3px solid #2563EB;
-                      border-radius:var(--border-radius-md);padding:8px 12px;
-                      margin-bottom:12px;font-size:11px;color:#1d4ed8;line-height:1.7">
-            ⚙️ 人気馬（3番人気以内）は大外枠・内枠の不利があってもヒモに残します。<br>
-            人気薄の馬のみ、過去データ通りの枠不利評価を適用します。
-          </div>
-          <div id="himo-list"></div>
-        </div>
-
-        <!-- 買い目サマリー -->
-        <div class="card" style="background:#EFF6FF;border:1px solid #2563EB">
-          <div class="ct" style="color:#1d4ed8">買い目サマリー</div>
-          <div id="kaime-summary"></div>
-        </div>
+        <!-- 旧「相手（ヒモ）カード」「買い目サマリーカード」は軸馬一体型カードに統合 -->
+        <div id="himo-list" style="display:none"></div>
+        <div id="kaime-summary" style="display:none"></div>
 
         <!-- AI予想買い目 + AI推奨穴馬 -->
         <div id="ai-kaimoku-container"></div>
@@ -8868,6 +8859,7 @@ function renderKaime() {
   var jikuR = calcFukusho(jiku);
   var fukushoProb = Math.min(95, Math.round(jikuR.score * 0.85));
   var jikuUmaban = jiku.umaban != null ? jiku.umaban + '番 ' : '';
+  var jikuUmaDisplay = (jiku.umaban != null) ? (jiku.umaban + '番') : '';
 
   // KAIMOKU_DATAから軸馬選定理由を取得
   var raceName = window.currentRaceName || currentRace;
@@ -8906,55 +8898,113 @@ function renderKaime() {
             + '</div>';
   }
 
-  var jikuHtml =
-      '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">'
-    +   '<span style="color:#FFD700;font-size:22px;font-weight:900">◎</span>'
-    +   _wakuBox(jiku.waku, 28)
-    +   '<span style="font-size:20px;font-weight:800;color:#FFD700">' + jikuUmaban + jiku.name + '</span>'
-    +   (jiku.popEstimate ? '<span style="font-size:11px;background:#FFD700;color:#1a2744;padding:2px 8px;border-radius:9px;font-weight:800">' + jiku.popEstimate + '番人気</span>' : '')
-    +   '<span style="font-size:11px;background:rgba(255,255,255,0.15);color:#FFD700;padding:2px 8px;border-radius:9px;font-weight:700">調教 ' + (jiku.training || '—') + '</span>'
-    +   '<span style="font-size:13px;font-weight:700;color:#FFD700">信頼度 ' + jikuR.score + '%</span>'
-    +   '<span style="font-size:12px;background:rgba(255,255,255,0.12);color:#FFD700;padding:2px 8px;border-radius:9px">3着内 推定' + fukushoProb + '%</span>'
-    + '</div>'
-    + (jikuR.ok.length
-        ? '<div style="font-size:12px;color:#AAC;line-height:1.7;margin-bottom:10px">'
-          + '好材料：' + jikuR.ok.slice(0,3).join('・')
-          + '</div>'
-        : '')
-    + memoHtml
-    + '<div style="font-size:11px;font-weight:600;color:#FFD700;margin:12px 0 6px">軸馬を変更する：</div>'
-    + '<div id="jiku-change" style="display:flex;flex-wrap:wrap;gap:5px">';
+  // ====== 新デザイン：一体型カード（軸馬+相手+サマリー） ======
+  var selectedN = window.kaimeNakamaN || 6;
+  var himoVisibleList = himoAll.slice(0, selectedN);
+  var himoExtraCount = himoAll.length - himoVisibleList.length;
 
+  var jikuHtml = '';
+
+  // === 軸馬カード（馬名・選定理由・変更ボタン） ===
+  jikuHtml += '<div style="padding:4px 0 12px;border-bottom:0.5px solid var(--color-border-tertiary)">';
+  jikuHtml += '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px">';
+  jikuHtml += '<div style="flex:1;min-width:0">';
+  jikuHtml += '<div style="font-size:11px;color:#FFD700;margin-bottom:3px;font-weight:700">◎ 本命' + (jikuUmaDisplay ? ' <span style="background:rgba(255,255,255,0.08);border:0.5px solid rgba(255,215,0,0.4);border-radius:4px;padding:1px 6px;font-size:10px;color:#FFD700;margin-left:4px">' + jikuUmaDisplay + '</span>' : '') + '</div>';
+  jikuHtml += '<div style="font-size:22px;font-weight:800;color:#FFFFFF;line-height:1.2">' + jiku.name + '</div>';
+  if (kaimokuData && kaimokuData.jikuNote && jiku.name === aiJiku) {
+    jikuHtml += '<div style="font-size:11px;color:#C0D0E8;margin-top:4px;line-height:1.4">' + kaimokuData.jikuNote + '</div>';
+  }
+  jikuHtml += '<div style="font-size:10px;color:#AAC;margin-top:6px">調教 ' + (jiku.training || '—') + (jiku.popEstimate ? ' / ' + jiku.popEstimate + '番人気' : '') + '</div>';
+  jikuHtml += '</div>';
+  jikuHtml += '<div style="text-align:right;flex-shrink:0">';
+  jikuHtml += '<div style="font-size:10px;color:#AAC">3着内推定</div>';
+  jikuHtml += '<div style="font-size:22px;font-weight:800;color:#7AE6B5">' + fukushoProb + '%</div>';
+  jikuHtml += '<div style="font-size:10px;color:#AAC;margin-top:2px">信頼度 ' + jikuR.score + '%</div>';
+  jikuHtml += '</div>';
+  jikuHtml += '</div>';
+
+  // 選定理由
+  jikuHtml += memoHtml;
+
+  // 軸馬変更ボタン
+  jikuHtml += '<div style="margin-top:12px">';
+  jikuHtml += '<div style="font-size:11px;color:#AAC;margin-bottom:5px">軸馬を変更する：</div>';
+  jikuHtml += '<div id="jiku-change" style="display:flex;flex-wrap:wrap;gap:4px">';
   horses.forEach(function(h) {
     var isSelected = h.name === jiku.name;
     var lbl = (h.umaban != null ? h.umaban + '番 ' : '') + h.name;
     jikuHtml += '<button onclick="changeJiku(\'' + h.name.replace(/'/g, "\\'") + '\')"'
-      + ' style="padding:4px 10px;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;'
-      + 'background:' + (isSelected ? '#FFD700' : 'rgba(255,255,255,0.1)') + ';'
+      + ' style="font-size:11px;padding:3px 8px;border-radius:var(--border-radius-md);cursor:pointer;'
+      + 'background:' + (isSelected ? '#FFD700' : 'rgba(255,255,255,0.08)') + ';'
       + 'color:' + (isSelected ? '#1a2744' : '#cfd6e4') + ';'
-      + 'border:1px solid ' + (isSelected ? '#FFD700' : 'rgba(255,255,255,0.2)') + ';'
-      + 'font-family:inherit;'
-      + 'font-weight:' + (isSelected ? '800' : '500') + '">'
-      + lbl + '</button>';
+      + 'border:0.5px solid ' + (isSelected ? '#FFD700' : 'rgba(255,255,255,0.15)') + ';'
+      + 'font-family:inherit;font-weight:' + (isSelected ? '700' : '500') + '">'
+      + lbl + (isSelected ? ' ✓' : '') + '</button>';
   });
+  jikuHtml += '</div></div>';
   jikuHtml += '</div>';
 
-  // 相手頭数セレクター（4〜10頭）
-  var selectedN = window.kaimeNakamaN || 6;
-  jikuHtml += '<div style="margin:14px 0 8px">'
-    + '<div style="font-size:11px;color:#AAC;margin-bottom:6px;font-weight:600">相手頭数を選択</div>'
-    + '<div style="display:flex;flex-wrap:wrap;gap:4px">';
+  // === 相手（ヒモ）選定 ===
+  jikuHtml += '<div style="padding:12px 0;border-bottom:0.5px solid var(--color-border-tertiary)">';
+  jikuHtml += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px">';
+  jikuHtml += '<div style="font-size:12px;font-weight:700;color:#FFD700">相手（ヒモ）選定</div>';
+  jikuHtml += '<div style="display:flex;align-items:center;gap:3px">';
   [4,5,6,7,8,9,10].forEach(function(n) {
     var isSel = (n === selectedN);
-    jikuHtml += '<button onclick="setNakama(' + n + ')" '
-      + 'style="padding:5px 11px;border-radius:8px;border:1px solid '
-      + (isSel ? '#FFD700;background:#FFD700;color:#1a2744' : 'rgba(255,255,255,0.2);background:transparent;color:#cfd6e4')
-      + ';font-size:11px;font-weight:' + (isSel ? '800' : '500') + ';cursor:pointer">'
-      + n + '頭</button>';
+    jikuHtml += '<button onclick="setNakama(' + n + ')" style="'
+      + 'font-size:11px;padding:3px 9px;border-radius:8px;cursor:pointer;'
+      + (isSel
+          ? 'background:#FFD700;color:#1a2744;border:0.5px solid #FFD700;font-weight:700'
+          : 'background:rgba(255,255,255,0.08);color:#cfd6e4;border:0.5px solid rgba(255,255,255,0.15);font-weight:500')
+      + '">' + n + '</button>';
   });
+  jikuHtml += '<span style="font-size:11px;color:#AAC;padding:2px 4px">頭</span>';
+  jikuHtml += '</div></div>';
+
+  // 相手馬リスト（印バッジ付き）
+  var _rankLabels = ['○','▲','△','☆','✕','×','▼','▽','◇','♢'];
+  var _rankColors = ['#e24b4a','#ef9f27','#185fa5','#1d9e75','#888','#888','#aaa','#aaa','#888','#888'];
+  himoVisibleList.forEach(function(x, i) {
+    var h = x.h;
+    var c = _rankColors[i % _rankColors.length];
+    var badge = _rankLabels[i % _rankLabels.length];
+    var umaNo = (h.umaban != null) ? h.umaban + '番' : '';
+    jikuHtml += '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;'
+      + 'background:rgba(255,255,255,0.04);border-radius:var(--border-radius-md);'
+      + 'border-left:2px solid ' + c + ';margin-bottom:4px">';
+    jikuHtml += '<span style="font-size:14px;font-weight:700;color:' + c + ';min-width:18px">' + badge + '</span>';
+    if (umaNo) jikuHtml += '<span style="font-size:10px;color:#AAC">' + umaNo + '</span>';
+    jikuHtml += '<span style="font-size:13px;font-weight:600;color:#FFFFFF;flex:1">' + h.name + '</span>';
+    jikuHtml += '<span style="font-size:11px;color:#AAC">' + (x.score || 0) + '%</span>';
+    jikuHtml += '</div>';
+  });
+  if (himoExtraCount > 0) {
+    jikuHtml += '<div style="font-size:10px;color:#888;text-align:center;padding:4px">▼ ' + himoExtraCount + '頭を除外中（頭数を増やすと追加）</div>';
+  }
+  jikuHtml += '</div>';
+
+  // === 買い目サマリー ===
+  var summaryPts = selectedN * (selectedN - 1) * 2;
+  var summaryCost = summaryPts * 100;
+  var summaryHimoNames = himoVisibleList.map(function(x){ return x.h.name; }).join('・');
+  jikuHtml += '<div style="padding:12px 0 4px">';
+  jikuHtml += '<div style="font-size:12px;font-weight:700;color:#FFD700;margin-bottom:6px">📋 買い目サマリー</div>';
+  jikuHtml += '<div style="font-size:11px;color:#C0D0E8;line-height:1.7">';
+  jikuHtml += '3連単 1頭軸マルチ<br>';
+  jikuHtml += '軸：' + jiku.name + '<br>';
+  jikuHtml += '相手：' + summaryHimoNames + '（' + selectedN + '頭）<br>';
+  jikuHtml += '点数：' + summaryPts + '点';
+  jikuHtml += '</div>';
+  jikuHtml += '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:8px;border-top:0.5px solid rgba(255,215,0,0.2)">';
+  jikuHtml += '<span style="font-size:11px;color:#AAC">100円 × ' + summaryPts + '点</span>';
+  jikuHtml += '<span style="font-size:20px;font-weight:800;color:#FFD700">' + summaryCost.toLocaleString() + '円</span>';
   jikuHtml += '</div></div>';
 
   jikuEl.innerHTML = jikuHtml;
+
+  // 静的HTMLの旧#himo-list/#kaime-summaryは空にして重複表示を回避
+  var _hl = document.getElementById('himo-list'); if (_hl) _hl.innerHTML = '';
+  var _ks = document.getElementById('kaime-summary'); if (_ks) _ks.innerHTML = '';
 
   // ヒモリスト（印バッジ付き・選択頭数で制限表示）
   var rankBadge = ['○','▲','△','☆','✕','×','▼','★','◇','♢'];
