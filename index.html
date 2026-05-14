@@ -8869,14 +8869,19 @@ function renderKaime() {
   var fukushoProb = Math.min(95, Math.round(jikuR.score * 0.85));
   var jikuUmaban = jiku.umaban != null ? jiku.umaban + '番 ' : '';
 
-  // KAIMOKU_DATAから軸馬選定理由を取得（jikuが一致する場合のみ）
+  // KAIMOKU_DATAから軸馬選定理由を取得
   var raceName = window.currentRaceName || currentRace;
   var kaimokuData = (typeof KAIMOKU_DATA !== 'undefined') ? KAIMOKU_DATA[raceName] : null;
-  var jikuMemo = (kaimokuData && kaimokuData.jiku === jiku.name) ? (kaimokuData.jikuMemo || []) : [];
+  // 推奨軸と現在の選択軸が一致しない場合は注意書きを付与
+  var memoMismatch = (kaimokuData && kaimokuData.jiku && kaimokuData.jiku !== jiku.name);
+  var jikuMemo = (kaimokuData && kaimokuData.jikuMemo) || [];
   var memoHtml = '';
   if (jikuMemo.length > 0) {
     memoHtml = '<div style="margin-top:10px;padding:10px;background:rgba(255,215,0,0.08);border-radius:8px;border-left:3px solid #FFD700">'
-            + '<div style="font-size:10px;color:#FFD700;margin-bottom:6px;font-weight:700">📝 軸馬選定理由</div>';
+            + '<div style="font-size:10px;color:#FFD700;margin-bottom:6px;font-weight:700">📝 軸馬選定理由 ' + (kaimokuData.jiku ? '（推奨軸：' + kaimokuData.jiku + '）' : '') + '</div>';
+    if (memoMismatch) {
+      memoHtml += '<div style="font-size:9px;color:#F5C842;margin-bottom:5px;line-height:1.4;font-style:italic">※ 現在選択中の' + jiku.name + 'はAI推奨軸と異なります。以下は推奨軸についての解説</div>';
+    }
     jikuMemo.forEach(function(memo) {
       var color = memo.indexOf('✅') === 0 ? '#7AE6B5'
                 : memo.indexOf('⚠️') === 0 ? '#F5C842'
@@ -8889,9 +8894,10 @@ function renderKaime() {
 
   var jikuHtml =
       '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">'
+    +   '<span style="color:#FFD700;font-size:22px;font-weight:900">◎</span>'
     +   _wakuBox(jiku.waku, 28)
     +   '<span style="font-size:20px;font-weight:800;color:#FFD700">' + jikuUmaban + jiku.name + '</span>'
-    +   '<span style="font-size:11px;background:#FFD700;color:#1a2744;padding:2px 8px;border-radius:9px;font-weight:800">' + (jiku.popEstimate || '?') + '番人気</span>'
+    +   (jiku.popEstimate ? '<span style="font-size:11px;background:#FFD700;color:#1a2744;padding:2px 8px;border-radius:9px;font-weight:800">' + jiku.popEstimate + '番人気</span>' : '')
     +   '<span style="font-size:11px;background:rgba(255,255,255,0.15);color:#FFD700;padding:2px 8px;border-radius:9px;font-weight:700">調教 ' + (jiku.training || '—') + '</span>'
     +   '<span style="font-size:13px;font-weight:700;color:#FFD700">信頼度 ' + jikuR.score + '%</span>'
     +   '<span style="font-size:12px;background:rgba(255,255,255,0.12);color:#FFD700;padding:2px 8px;border-radius:9px">3着内 推定' + fukushoProb + '%</span>'
