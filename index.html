@@ -3205,9 +3205,11 @@ const HORSES_BY_RACE = {
     tokyoMileG:true, hasWonMiddleDistance:true, fastFinish:true, miileG1Exp:true,
     g1rentalExp:true, recentG1Hit:true, farm:'ノーザンF',
     note:'昨年桜花賞・秋華賞二冠馬。阪神牝馬Sレースレコードで快勝。ルメール×前走阪神牝馬S1着の最強データ',
-    training:'S', hot:true,
-    trainingNote:'1週前：栗東CW（良）17.9-15.5-15.1-13.1-11.1-11.1。相手をぶっ千切るド派手な動き！折り合い考慮での内容でこれだけ弾けるなら既に9割仕上がり。最終はサラっと流す程度で十分',
-    trainingTime:'17.9-15.5-15.1-13.1-11.1-11.1' },
+    training:'A', hot:true,
+    trainerPositive:true,
+    yoshiEishinNote:'陣営「東京マイルはすごく合ってる舞台」「スピードの持続力が最大の武器」',
+    trainingNote:'最終調教A評価：1週前50.4秒・当週坂路Δt+0.7s（鋭い加速）→人気に応える万全のデキ。陣営「東京マイルはすごく合ってる舞台・スピードの持続力が最大の武器」',
+    trainingTime:'50.4 / Δt+0.7s' },
 
   { name:'カムニャック',       age:4, sex:'牝', waku:null, umaban:null,
     father:'ブラックタイド', motherFather:'サクラバクシンオー', blood:'サンデー系',
@@ -3219,8 +3221,10 @@ const HORSES_BY_RACE = {
     g1rentalExp:true, recentG1Hit:false,
     note:'昨年オークス馬。阪神牝馬S上がり最速で2着。ブラックタイド産駒（ディープ系）×差し馬',
     training:'A', hot:true,
-    trainingNote:'1週前：栗東CW（良）14.8-14.4-14.5-14.3-11.3-11.3。1頭と併入・1頭に先着。いつものように気持ちは入るがうるさくはなく折り合いOK。本番でも面白い',
-    trainingTime:'14.8-14.4-14.5-14.3-11.3-11.3' },
+    trainerPositive:true,
+    yoshiEishinNote:'陣営「動きよくなってる・落ち着きがカギ」距離は少し長め傾向だが東京直線でカバー',
+    trainingNote:'最終調教A評価：当週Δt+1.2s（突出した加速）→極めて鋭い伸び。陣営「ゲートインがカギ・前走より動きよくなってる・落ち着きが当日のカギ」',
+    trainingTime:'Δt+1.2s' },
 
   { name:'クイーンズウォーク',  age:5, sex:'牝', waku:null, umaban:null,
     father:'キズナ', motherFather:'ハーツクライ', blood:'KK系孫',
@@ -3231,9 +3235,11 @@ const HORSES_BY_RACE = {
     repeater:true, tokyoMileG:true, hasWonMiddleDistance:true, fastFinish:true, miileG1Exp:false,
     g1rentalExp:false, recentG1Hit:false,
     note:'昨年ヴィクトリアマイル2着。キズナ産駒(ディープ系)×東京巧者。充実の5歳馬',
-    training:'A', hot:true,
-    trainingNote:'1週前：栗東CW（良）6F82.5-11秒8を馬なり。3頭併せで中と外の2頭に先着。福永助手「よく動けていた。暖かくなって体調が上がってきた」と順調ぶりを伝える',
-    trainingTime:'82.5-10.8' },
+    training:'D', hot:true,
+    trainerPositive:true,
+    yoshiEishinNote:'陣営「ここを目標にやってきた・状態安定・コース適性心配なし」yumeko_keiba「この中では抜けてる」',
+    trainingNote:'最終調教D評価：当週・1週前基準タイム未達（1週前終い10.8秒は格上の時計）→要注意。ただし陣営「ここを目標・状態は安定・コース適性は心配なし」「yumeko_keiba：この中では抜けてる」との好コメントあり',
+    trainingTime:'82.5-10.8（基準タイム未達）' },
 
   { name:'チェルヴィニア',      age:5, sex:'牝', waku:null, umaban:null,
     father:'ハービンジャー', motherFather:'キングカメハメハ', blood:'欧州',
@@ -3244,7 +3250,9 @@ const HORSES_BY_RACE = {
     tokyoMileG:true, hasWonMiddleDistance:true, fastFinish:true, miileG1Exp:false,
     g1rentalExp:true, recentG1Hit:false,
     note:'24年牝馬二冠馬。ただしマイルではスピード不足の懸念あり。左回りは好成績。前走中山記念5着は危険データ',
-    training:'B' },
+    training:'A', hot:true,
+    trainingNote:'最終調教A評価：1週前4F49.5秒（猛時計・メンバー随一）・当週Δt+1.2s（出色）→メンバー中最高の仕上がり！4番人気で妙味あり',
+    trainingTime:'49.5 / Δt+1.2s' },
 
   { name:'ジョスラン',          age:4, sex:'牝', waku:null, umaban:null,
     father:'エピファネイア', motherFather:'ハーツクライ', blood:'サンデー系',
@@ -3255,7 +3263,9 @@ const HORSES_BY_RACE = {
     hasWonMiddleDistance:true, fastFinish:false, tokyoMileG:false, miileG1Exp:false,
     g1rentalExp:false, recentG1Hit:false,
     note:'小倉牝馬S勝ち。東京マイルへの適性は未知数だが前走1着と勢いあり',
-    training:'A' },
+    training:'A',
+    trainingNote:'最終調教A評価：当週Δt+1.1s（鋭い加速）→反応の良さで浮上。全体時計は基準未達だが加速度は優秀',
+    trainingTime:'Δt+1.1s' },
 
   { name:'エリカエクスプレス',  age:4, sex:'牝', waku:null, umaban:null,
     father:'エピファネイア', motherFather:'ディープインパクト', blood:'サンデー系',
@@ -3266,7 +3276,11 @@ const HORSES_BY_RACE = {
     hasWonMiddleDistance:false, fastFinish:false, tokyoMileG:false, miileG1Exp:false,
     g1rentalExp:false, recentG1Hit:false,
     note:'武豊騎乗。エピファネイア×ディープインパクト（母父）',
-    training:'B' },
+    training:'B',
+    trainerPositive:true,
+    yoshiEishinNote:'陣営「3歳より心身ともに成長・伸び代に期待」武豊「入れ込みマシ」',
+    trainingNote:'最終調教B評価：好時計・加速+0.5s（A基準0.7s未達）→現状維持。陣営「中山牝馬Sの+10は成長分・3歳より心身ともに成長・伸び代に期待」',
+    trainingTime:'Δt+0.5s' },
 
   { name:'ニシノティアモ',      age:5, sex:'牝', waku:null, umaban:null,
     father:'ロードカナロア', motherFather:'ディープインパクト', blood:'KM系',
@@ -3278,9 +3292,11 @@ const HORSES_BY_RACE = {
     hasWonMiddleDistance:true, fastFinish:false, tokyoMileG:false, miileG1Exp:false,
     g1rentalExp:false, recentG1Hit:false,
     note:'ロードカナロア産駒×母父ディープインパクト。東京マイル適性あり。前走中山牝馬S5着・前々走福島記念1着',
-    training:'B',
-    trainingNote:'中山牝馬S5着から参戦。前々走福島記念1着と好調維持',
-    trainingTime:'未確認' },
+    training:'C',
+    trainerPositive:false,
+    yoshiEishinNote:'最終追い切りで大幅減速・反動懸念。状態に不安あり',
+    trainingNote:'最終調教C評価：1週前猛時計→当週坂路基準より2秒以上遅れ・大幅減点・反動懸念。マイナス評価',
+    trainingTime:'2秒以上遅れ' },
 
   { name:'カナテープ',          age:7, sex:'牝', waku:null, umaban:null,
     father:'ディープインパクト', motherFather:'キングカメハメハ', blood:'サンデー系',
@@ -3293,7 +3309,9 @@ const HORSES_BY_RACE = {
     tokyoCourse:'4-4-2-1（勝率36.4%・複勝率90.9%）',
     leftCourse:'東京4-4-2-1・左回り全体5-4-4-2・右回り0-0-0-5',
     note:'東京コース4-4-2-1（複勝率90.9%）・左回りの王！右回りは0勝。関屋記念（新潟芝1600m）コースレコード勝ち。7歳でも東京マイルなら別格の信頼',
-    training:'B' },
+    training:'B',
+    trainingNote:'最終調教B評価：平行ラップ（加速なし）だが美浦ウッド全体基準51.0以下突破。時計基準クリア。東京コース4-4-2-1の東京の女王',
+    trainingTime:'平行ラップ・基準クリア' },
 
   { name:'パラディレーヌ',      age:4, sex:'牝', waku:null, umaban:null,
     father:'ブリックスアンドモルタル', motherFather:'ディープインパクト', blood:'サンデー系',
@@ -3304,9 +3322,9 @@ const HORSES_BY_RACE = {
     hasWonMiddleDistance:false, fastFinish:false, tokyoMileG:false, miileG1Exp:false,
     g1rentalExp:false, recentG1Hit:false,
     note:'昨年エリザベス女王杯2着。坂井瑠星騎乗。前走福島牝馬S8着の凡走後で警戒',
-    training:'A', hot:true,
-    trainingNote:'1週前：坂路 4F55.8-13.0。坂井騎手騎乗で感触確認。「気を緩めたらもっと時計が出そう」と坂井コメント。千田師「3走目だし、具合はいいですよ」とべた褒め',
-    trainingTime:'55.8-13.0' },
+    training:'D', hot:false,
+    trainingNote:'最終調教D評価：1週前・当週全体・終い基準タイム未達→評価対象外',
+    trainingTime:'基準未達' },
 
   { name:'ラヴァンダ',          age:5, sex:'牝', waku:null, umaban:null,
     father:'ロードカナロア', motherFather:'ディープインパクト', blood:'KM系',
@@ -5664,6 +5682,11 @@ const RACE_PAST_DATA = {
   ],
 
   anaPoints: [
+    '⭐最終調教メンバー随一：チェルヴィニア（4F49.5秒猛時計・Δt+1.2s出色）が最高仕上がり',
+    '⭐エンブロイダリー・カムニャック・ジョスランもA評価で万全のデキ',
+    '⭐陣営コメントで本気度が高い馬：クイーンズウォーク（「ここを目標」）・エンブロイダリー（「合ってる舞台」）',
+    '⚠️最終調教D評価：クイーンズウォーク（基準未達だが陣営は自信）・パラディレーヌ（評価対象外）',
+    '⚠️ニシノティアモは1週前猛時計から当週2秒以上遅れ・反動懸念。C評価で割引',
     '⭐前走6着以下が9勝で最多！大敗からの巻き返しが最も多い。前走着順だけで判断するのは危険',
     '⭐前走4着組が勝率8.7%で最高値。前走2着組も勝率7.8%・3着内率27.5%と安定',
     '⭐休み明け2戦目が8勝・複勝率21.4%の優秀データ。今年の2戦目組に注目',
@@ -6996,6 +7019,18 @@ function calcVictoriaMile(horse, raceName) {
   // カナテープ特別ボーナス（東京コース4-4-2-1・複勝率90.9%）
   if (horse.name === 'カナテープ') {
     pts += 8; labels.push('⭐東京コース4-4-2-1・複勝率90.9%【東京マイル別格+8pt】');
+  }
+  // チェルヴィニア最終調教メンバー随一
+  if (horse.name === 'チェルヴィニア') {
+    pts += 5; labels.push('⭐最終調教メンバー随一【4F49.5秒+Δt+1.2s・+5pt】');
+  }
+  // 最終調教D評価ペナルティ（基準未達）
+  if (horse.training === 'D') {
+    pts -= 8; labels.push('⚠️最終調教D評価【基準未達・-8pt】');
+  }
+  // 最終調教C評価ペナルティ（反動懸念）
+  if (horse.training === 'C') {
+    pts -= 5; labels.push('⚠️最終調教C評価【反動懸念・-5pt】');
   }
   return { pts: pts, labels: labels, label: labels.join(' / ') };
 }
