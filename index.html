@@ -8872,17 +8872,24 @@ function renderKaime() {
   // KAIMOKU_DATAから軸馬選定理由を取得
   var raceName = window.currentRaceName || currentRace;
   var kaimokuData = (typeof KAIMOKU_DATA !== 'undefined') ? KAIMOKU_DATA[raceName] : null;
-  // 推奨軸と現在の選択軸が一致しない場合は注意書きを付与
-  var memoMismatch = (kaimokuData && kaimokuData.jiku && kaimokuData.jiku !== jiku.name);
-  var jikuMemo = (kaimokuData && kaimokuData.jikuMemo) || [];
+  var aiJiku = kaimokuData && kaimokuData.jiku;
+  var reasonMap = (kaimokuData && kaimokuData.jikuReasonMap) || {};
+  // 選択馬独自の理由を優先。なければAI推奨軸と一致する場合のみjikuMemoをフォールバック
+  var selectedReasons = reasonMap[jiku.name] || [];
+  var memoSource = '';
+  var displayMemo = [];
+  if (selectedReasons.length > 0) {
+    displayMemo = selectedReasons;
+    memoSource = '（' + jiku.name + 'の選定理由）';
+  } else if (aiJiku === jiku.name && kaimokuData && kaimokuData.jikuMemo && kaimokuData.jikuMemo.length) {
+    displayMemo = kaimokuData.jikuMemo;
+    memoSource = '（AI推奨軸：' + aiJiku + '）';
+  }
   var memoHtml = '';
-  if (jikuMemo.length > 0) {
+  if (displayMemo.length > 0) {
     memoHtml = '<div style="margin-top:10px;padding:10px;background:rgba(255,215,0,0.08);border-radius:8px;border-left:3px solid #FFD700">'
-            + '<div style="font-size:10px;color:#FFD700;margin-bottom:6px;font-weight:700">📝 軸馬選定理由 ' + (kaimokuData.jiku ? '（推奨軸：' + kaimokuData.jiku + '）' : '') + '</div>';
-    if (memoMismatch) {
-      memoHtml += '<div style="font-size:9px;color:#F5C842;margin-bottom:5px;line-height:1.4;font-style:italic">※ 現在選択中の' + jiku.name + 'はAI推奨軸と異なります。以下は推奨軸についての解説</div>';
-    }
-    jikuMemo.forEach(function(memo) {
+            + '<div style="font-size:10px;color:#FFD700;margin-bottom:6px;font-weight:700">📝 軸馬選定理由 ' + memoSource + '</div>';
+    displayMemo.forEach(function(memo) {
       var color = memo.indexOf('✅') === 0 ? '#7AE6B5'
                 : memo.indexOf('⚠️') === 0 ? '#F5C842'
                 : memo.indexOf('→')  === 0 ? '#F5C842'
@@ -8890,6 +8897,13 @@ function renderKaime() {
       memoHtml += '<div style="font-size:10px;color:' + color + ';margin-bottom:3px;line-height:1.5">' + memo + '</div>';
     });
     memoHtml += '</div>';
+  } else if (aiJiku && aiJiku !== jiku.name) {
+    // 選択馬の理由が無く、AI推奨軸とも異なる場合：簡易表示
+    memoHtml = '<div style="margin-top:10px;padding:10px;background:rgba(255,215,0,0.08);border-radius:8px;border-left:3px solid #FFD700">'
+            + '<div style="font-size:10px;color:#FFD700;margin-bottom:4px;font-weight:700">📝 軸馬選定理由</div>'
+            + '<div style="font-size:10px;color:#C0C8D8;line-height:1.5">選択中の軸馬：' + jiku.name + '</div>'
+            + '<div style="font-size:9px;color:#8899CC;margin-top:4px">（AI推奨軸：' + aiJiku + '）</div>'
+            + '</div>';
   }
 
   var jikuHtml =
@@ -9372,6 +9386,46 @@ var KAIMOKU_DATA = {
       '⚠️ 前走1着は過去20回で勝率2.7%と低い',
       '→ ルメール×1番人気×桜花賞連対の複勝率100%データがあらゆるマイナスを上回る',
     ],
+    jikuReasonMap: {
+      'エンブロイダリー': [
+        '✅ C.ルメール×1番人気→複勝率100%（過去20年）',
+        '✅ 桜花賞連対×ルメール×1番人気の三条件が揃う',
+        '✅ 阪神牝馬Sレースレコード・調教A評価',
+        '⚠️ 阪神牝馬S1着馬は過去10年0勝のデータあり',
+      ],
+      'クイーンズウォーク': [
+        '✅ 昨年ヴィクトリアマイル2着のリピーター',
+        '✅ 陣営「ここを目標にやってきた・状態安定」',
+        '✅ 西村淳也騎手・東京マイルコース適性◎',
+        '✅ 3番人気（連対率60%の安定人気帯）',
+        '⚠️ 調教D評価（基準タイム未達）は注意',
+        '→ リピーター×目標レース×コース適性の三拍子',
+      ],
+      'カムニャック': [
+        '✅ 2番人気5.3倍・川田将雅騎乗',
+        '✅ オークス（東京2400m）勝ち馬・東京コース適性高い',
+        '✅ 調教A評価・前走より動きが向上',
+        '⚠️ 2番人気は過去10年0勝のデータあり',
+      ],
+      'チェルヴィニア': [
+        '✅ 最終調教メンバー随一（1週前4F49.5秒猛時計）',
+        '✅ 5番人気14.6倍（2〜3番人気消しデータを回避）',
+        '✅ D.レーン騎乗・外国人騎手は過去5年全て馬券内',
+        '⚠️ 前走中山記念→ヴィクトリアマイルは過去20年0-0-0-5',
+      ],
+      'ジョスラン': [
+        '✅ 最終調教A評価：Δt+1.1s（鋭い加速）',
+        '✅ 4番人気14.2倍（前走4番人気以内→3着内21/28頭の鉄板）',
+        '✅ 小倉牝馬S勝ち・4歳馬（10勝最多）',
+        '⚠️ 東京芝1600m重賞3着内経験なし',
+      ],
+      'カナテープ': [
+        '✅ 東京コース4-4-2-1・複勝率90.9%の女王',
+        '✅ 左回り5-4-4-2・右回り0勝の左回り専用馬',
+        '✅ 関屋記念コースレコード勝ち',
+        '⚠️ 7歳馬・調教B評価は割引材料',
+      ],
+    },
     aiteAll: [
       { name:'カムニャック',       reason:'SI90・2番人気5.3倍・川田・オークス馬・調教A・落ち着き改善・2番人気は過去10年0勝注意' },
       { name:'クイーンズウォーク', reason:'SI88・3番人気6.5倍・昨年2着・陣営「ここを目標」・調教B・3番人気は過去10年0勝注意' },
