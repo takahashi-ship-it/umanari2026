@@ -7202,8 +7202,23 @@ function computeScore(h) {
   const speed = speedIndexPoints(si);
 
   // 馬場適性（h.babaScore + 現在選択中の馬場 → -3〜+15 点）
+  // babaScore 未設定時は leftCourseScore / rightCourseScore からデフォルト導出
   var babaKey = (typeof currentBaba !== 'undefined' && currentBaba) ? currentBaba : 'good';
-  var baba = h.babaScore ? calcBabaPts(h, babaKey) : null;
+  var baba;
+  if (h.babaScore) {
+    baba = calcBabaPts(h, babaKey);
+  } else {
+    var _dirForBaba = (typeof getRaceDirection === 'function') ? getRaceDirection(currentRace || '') : 'right';
+    var _cs = (_dirForBaba === 'left') ? h.leftCourseScore : h.rightCourseScore;
+    if (_cs == null) {
+      baba = (babaKey === 'heavy' || babaKey === 'veryHeavy') ? 0 : 4; // 良馬場デフォルト
+    } else if (_cs >= 10) baba = 8;
+    else if (_cs >= 7)    baba = 6;
+    else if (_cs >= 5)    baba = 4;
+    else if (_cs >= 3)    baba = 2;
+    else if (_cs >= 1)    baba = 0;
+    else                  baba = 0;
+  }
 
   // 馬体重評価（-2〜+1点）
   var bw = calcBodyWeightScore(h);
