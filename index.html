@@ -4054,6 +4054,7 @@ const HORSES_BY_RACE = {
     niigataExp:false, leftCourse2000:true,
     speedIndex:88, maxDistExp:2400, distExpRank:1, distExpRace:'青葉賞',
     wins2000m:0, farm:'ノーザンF',
+    longRest:true, restMonths:24, isFirstStartAfterRest:true,
     note:'2024年青葉賞G2勝ち。日本ダービー7着後に屈腱炎で長期離脱。復帰戦。状態は戻ってきている模様',
     training:'A',
     trainingNote:'最終：栗東CW 馬なり。1週前CW79.7-65.8-50.3-35.4-11.1 武豊騎乗でボルザコフスキー（古馬OP）と併せ0.5秒追走同入。長期休養明けを感じさせない好内容。ただし調教S評価で時計遅延・反動懸念あり',
@@ -7019,6 +7020,20 @@ function calcYoshiEishin(horse) {
   return { pts: 0, label: '' };
 }
 
+// 全レース共通：長期休養明けペナルティ
+function calcLongRestPenalty(horse) {
+  if (!horse || horse.longRest !== true) return { pts: 0, label: '', labels: [] };
+  var months = horse.restMonths || 6;
+  if (months >= 12) {
+    var lbl1 = '⚠️1年以上休養明け【復帰戦リスク-10pt】';
+    return { pts: -10, label: lbl1, labels: [lbl1] };
+  } else if (months >= 6) {
+    var lbl2 = '⚠️半年以上休養明け-5pt';
+    return { pts: -5, label: lbl2, labels: [lbl2] };
+  }
+  return { pts: 0, label: '', labels: [] };
+}
+
 // 新潟大賞典専用：消去法・血統ボーナス・人気/枠ペナルティ
 function calcNiigataDaishoten(horse, raceName) {
   if (!raceName || raceName.indexOf('新潟大賞典') === -1) return { pts: 0, labels: [], label: '' };
@@ -7146,6 +7161,15 @@ function calcNiigataDaishoten(horse, raceName) {
   // 近走芝2000m勝利（スロー継続で好走パターン）
   if ((horse.wins2000m || 0) >= 1) {
     pts += 5; labels.push('⭐近走芝2000m勝利あり【スロー継続+5pt】');
+  }
+  // 長期休養明け（新潟大賞典は重ハンデ・タフな展開でリスク大）
+  if (horse.longRest === true) {
+    var _ndRestM = horse.restMonths || 6;
+    if (_ndRestM >= 12) {
+      pts -= 15; labels.push('⚠️1年以上の長期休養明け【復帰戦・状態未知-15pt】');
+    } else if (_ndRestM >= 6) {
+      pts -= 8; labels.push('⚠️半年以上休養明け【状態確認必要-8pt】');
+    }
   }
   // 加点合計に+20の上限を設ける（積み上がりすぎ防止）
   // labels から加減点を集計し、プラス側のみキャップ。マイナス側は無上限。
@@ -7511,16 +7535,18 @@ function computeScore(h) {
   var yoshiEishinObj = calcYoshiEishin(h);
   var vmObj         = calcVictoriaMile(h, currentRace);
   var ndsObj        = calcNiigataDaishoten(h, currentRace);
+  var longRestObj   = calcLongRestPenalty(h);
   var jockeyChgPts   = jockeyChgObj.pts;
   var routeNhkPts    = routeNhkObj.pts;
   var trainerPts     = trainerObj.pts;
   var yoshiEishinPts = yoshiEishinObj.pts;
   var vmPts          = vmObj.pts;
   var ndsPts         = ndsObj.pts;
+  var longRestPts    = longRestObj.pts;
 
   return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB, special, nhkBw,
            shozoP, jockeyN, careerP, prevR, leftPts, nztPts, framePts, tokyoExpPenalty, anaBonus, agePenalty, prevClassKyoto,
-           jockeyChgPts, routeNhkPts, trainerPts, yoshiEishinPts, vmPts, ndsPts,
+           jockeyChgPts, routeNhkPts, trainerPts, yoshiEishinPts, vmPts, ndsPts, longRestPts,
            _distLabel: distObj.label, _stallionLabel: stallionObj.label,
            _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label,
            _specialLabel: specialObj.label, _nhkBwLabel: nhkBwObj.label,
@@ -7531,6 +7557,7 @@ function computeScore(h) {
            _jockeyChgLabel: jockeyChgObj.label, _routeNhkLabel: routeNhkObj.label,
            _trainerLabel: trainerObj.label, _yoshiEishinLabel: yoshiEishinObj.label,
            _vmLabel: vmObj.label, _ndsLabel: ndsObj.label,
+           _longRestLabel: longRestObj.label,
            _siValue: si };
 }
 function sumScore(s) {
@@ -7542,7 +7569,8 @@ function sumScore(s) {
          (s.tokyoExpPenalty || 0) + (s.anaBonus || 0) + (s.agePenalty || 0) +
          (s.prevClassKyoto || 0) +
          (s.jockeyChgPts || 0) + (s.routeNhkPts || 0) + (s.trainerPts || 0) +
-         (s.yoshiEishinPts || 0) + (s.vmPts || 0) + (s.ndsPts || 0);
+         (s.yoshiEishinPts || 0) + (s.vmPts || 0) + (s.ndsPts || 0) +
+         (s.longRestPts || 0);
 }
 function rankFromTotal(total) {
   if (total >= 80) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
@@ -9842,6 +9870,18 @@ function computeScoreBreakdown(horse, raceName) {
     if (horse.training === 'C') penalty -= 4;
     if ((horse.odds || 0) > 0 && (horse.odds || 0) < 5.0) penalty -= 8;
     else if ((horse.odds || 0) > 20.0) penalty -= 5;
+    // 新潟大賞典専用：長期休養明けペナルティ（重ハンデ・タフな展開リスク）
+    if (horse.longRest === true) {
+      var _ndRestMb = horse.restMonths || 6;
+      if (_ndRestMb >= 12) penalty -= 15;
+      else if (_ndRestMb >= 6) penalty -= 8;
+    }
+  }
+  // 全レース共通：長期休養明けペナルティ
+  if (horse.longRest === true) {
+    var _grRestM = horse.restMonths || 6;
+    if (_grRestM >= 12) penalty -= 10;
+    else if (_grRestM >= 6) penalty -= 5;
   }
 
   // 各項目の上限・下限を強制
