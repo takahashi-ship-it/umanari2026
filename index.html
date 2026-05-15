@@ -3958,15 +3958,16 @@ const HORSES_BY_RACE = {
   { name:'トーセンリョウ',    age:7, sex:'牡', waku:4, umaban:7, uma:7, hande:56.0,
     father:'ドゥラメンテ', motherFather:'ハーツクライ',
     shozo:'美浦', stable:'美浦', jockey:'未定', odds:22.3, popEstimate:9,
-    pace:'差し', leftCourseScore:8,
+    pace:'差し', leftCourseScore:5,
     prev1race:'大阪城S', prev1grade:'L', prev1r:7,
     fatherDerbyRenntai:true,
-    niigataExp:true, leftCourse2000:true,
+    niigataExp:false, leftCourse2000:true,
+    leftCourse:'東京【2-3-2-4】・左回り通算【2-3-2-6】',
     yoshiEishinPick:true,
-    yoshiEishinNote:'左回り2000〜2200m中心に【5戦4勝】・新潟2戦2勝・調教S評価。AI穴馬候補筆頭（8番人気17倍）',
+    yoshiEishinNote:'東京競馬場【2-3-2-4】・左回り通算【2-3-2-6】・調教S評価。AI穴馬候補',
     speedIndex:82, maxDistExp:2200, distExpRank:1, distExpRace:'大阪城S',
     wins2000m:2, farm:'その他',
-    note:'ドゥラメンテ産駒×母父ハーツクライ（トニービン内包のダブル）。左回り2000〜2200m【5戦4勝】・新潟2戦2勝の超得意コース。AI穴馬候補筆頭',
+    note:'ドゥラメンテ産駒×母父ハーツクライ（トニービン内包のダブル）。東京【2-3-2-4】・左回り通算【2-3-2-6】の左回り得意馬。AI穴馬候補',
     training:'S', hot:true,
     trainingNote:'最終：調教S評価・馬なりで加速・順調。1週前CW81.3-65.6-50.6-36.0-10.9 西村淳也騎乗。終い10.9秒は非常に優秀で馬なりでこの終いなら反応面を高く評価。AI穴馬候補筆頭',
     trainingTime:'1週前 81.3-65.6-50.6-36.0-10.9' },
@@ -6307,9 +6308,9 @@ const BABA_PTS = {
 };
 
 function maxScoreFor(score) {
-  // 表示満点を 110pt に正規化（好条件馬が80%以上になるよう調整／実効最大値ベース）
+  // 表示満点を 115pt に正規化（複数馬の99%張り付き防止・差別化）
   // 馬体重・NHK特殊ボーナス等は合計値に含まれるが分母には算入しない（高評価馬は99%キャップ）
-  return 110;
+  return 115;
 }
 
 // 馬場適性スコア（最大15点・最小-3点）
