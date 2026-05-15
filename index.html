@@ -7156,10 +7156,10 @@ function calcNiigataDaishoten(horse, raceName) {
     if (mp) _plus += parseInt(mp[1], 10);
     if (mm) _minus -= parseInt(mm[1], 10);
   });
-  var _cappedPlus = Math.min(20, _plus);
+  var _cappedPlus = Math.min(30, _plus);
   var _final = _cappedPlus + _minus;
   if (_plus > 20) {
-    labels.push('（加点合計 +' + _plus + 'pt を上限 +20pt にキャップ／マイナス ' + _minus + 'pt はそのまま）');
+    labels.push('（加点合計 +' + _plus + 'pt を上限 +30pt にキャップ／マイナス ' + _minus + 'pt はそのまま）');
   }
   return { pts: _final, labels: labels, label: labels.join(' / ') };
 }
@@ -7296,10 +7296,10 @@ function calcVictoriaMile(horse, raceName) {
     if (mp) _plus += parseInt(mp[1], 10);
     if (mm) _minus -= parseInt(mm[1], 10);
   });
-  var _cappedPlus = Math.min(20, _plus);
+  var _cappedPlus = Math.min(30, _plus);
   var _final = _cappedPlus + _minus;
   if (_plus > 20) {
-    labels.push('（加点合計 +' + _plus + 'pt を上限 +20pt にキャップ／マイナス ' + _minus + 'pt はそのまま）');
+    labels.push('（加点合計 +' + _plus + 'pt を上限 +30pt にキャップ／マイナス ' + _minus + 'pt はそのまま）');
   }
   return { pts: _final, labels: labels, label: labels.join(' / ') };
 }
