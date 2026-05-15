@@ -9857,12 +9857,14 @@ function computeScoreBreakdown(horse, raceName) {
   distScore     = Math.min(8,  Math.max(0, distScore));
   dirScore      = Math.min(5,  Math.max(0, dirScore));
 
-  var MAX = 113; // 20+15+20+10+10+10+10+10+15+8+5 = 133 → ペナルティ考慮で113
+  // 分母を実効最大値100に正規化（1位馬が80%以上になるよう調整）
+  // 各項目最大: 20+15+20+10+10+10+10+10+15+8+5 = 133 だが、全項目MAXは現実的でないため100で割る
+  var MAX = 100;
   var raw = popScore + wakuScore + dataScore + bloodScore + jockeyScore
           + courseScore + trainingScore + speedScore + babaScore
           + distScore + dirScore + penalty;
   var total = Math.max(0, raw);
-  var pct = Math.max(0, Math.min(100, Math.round(total / MAX * 100)));
+  var pct = Math.max(0, Math.min(99, Math.round(total / MAX * 100)));
 
   return {
     total: total,
