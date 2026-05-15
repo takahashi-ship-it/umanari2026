@@ -7147,7 +7147,21 @@ function calcNiigataDaishoten(horse, raceName) {
   if ((horse.wins2000m || 0) >= 1) {
     pts += 5; labels.push('⭐近走芝2000m勝利あり【スロー継続+5pt】');
   }
-  return { pts: pts, labels: labels, label: labels.join(' / ') };
+  // 加点合計に+20の上限を設ける（積み上がりすぎ防止）
+  // labels から加減点を集計し、プラス側のみキャップ。マイナス側は無上限。
+  var _plus = 0, _minus = 0;
+  labels.forEach(function(lbl) {
+    var mp = lbl.match(/\+(\d+)pt】/);
+    var mm = lbl.match(/-(\d+)pt】/);
+    if (mp) _plus += parseInt(mp[1], 10);
+    if (mm) _minus -= parseInt(mm[1], 10);
+  });
+  var _cappedPlus = Math.min(20, _plus);
+  var _final = _cappedPlus + _minus;
+  if (_plus > 20) {
+    labels.push('（加点合計 +' + _plus + 'pt を上限 +20pt にキャップ／マイナス ' + _minus + 'pt はそのまま）');
+  }
+  return { pts: _final, labels: labels, label: labels.join(' / ') };
 }
 
 // ヴィクトリアマイル専用：前走着順・枠順・人気・東京1600m重賞経験を加算
