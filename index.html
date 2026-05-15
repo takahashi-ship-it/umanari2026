@@ -3964,10 +3964,10 @@ const HORSES_BY_RACE = {
     niigataExp:false, leftCourse2000:true,
     leftCourse:'東京【2-3-2-4】・左回り通算【2-3-2-6】',
     yoshiEishinPick:true,
-    yoshiEishinNote:'東京競馬場【2-3-2-4】・左回り通算【2-3-2-6】・調教S評価。AI穴馬候補',
+    yoshiEishinNote:'東京競馬場【2-3-2-4】・左回り通算【2-3-2-6】・調教S評価。AI穴馬候補（9番人気22.3倍）',
     speedIndex:82, maxDistExp:2200, distExpRank:1, distExpRace:'大阪城S',
     wins2000m:2, farm:'その他',
-    note:'ドゥラメンテ産駒×母父ハーツクライ（トニービン内包のダブル）。東京【2-3-2-4】・左回り通算【2-3-2-6】の左回り得意馬。AI穴馬候補',
+    note:'ドゥラメンテ産駒×母父ハーツクライ（トニービン内包）。東京競馬場【2-3-2-4】・左回り通算【2-3-2-6】。調教S評価。AI穴馬候補',
     training:'S', hot:true,
     trainingNote:'最終：調教S評価・馬なりで加速・順調。1週前CW81.3-65.6-50.6-36.0-10.9 西村淳也騎乗。終い10.9秒は非常に優秀で馬なりでこの終いなら反応面を高く評価。AI穴馬候補筆頭',
     trainingTime:'1週前 81.3-65.6-50.6-36.0-10.9' },
@@ -9900,9 +9900,9 @@ function computeScoreBreakdown(horse, raceName) {
   distScore     = Math.min(8,  Math.max(0, distScore));
   dirScore      = Math.min(5,  Math.max(0, dirScore));
 
-  // 分母を実効最大値100に正規化（1位馬が80%以上になるよう調整）
-  // 各項目最大: 20+15+20+10+10+10+10+10+15+8+5 = 133 だが、全項目MAXは現実的でないため100で割る
-  var MAX = 100;
+  // 分母を実効最大値115に正規化（複数馬の99%張り付き防止・差別化）
+  // 各項目最大: 20+15+20+10+10+10+10+10+15+8+5 = 133 だが、全項目MAXは現実的でないため115で割る
+  var MAX = 115;
   var raw = popScore + wakuScore + dataScore + bloodScore + jockeyScore
           + courseScore + trainingScore + speedScore + babaScore
           + distScore + dirScore + penalty;
