@@ -7329,15 +7329,15 @@ function calcVictoriaMile(horse, raceName) {
 }
 
 function computeScore(h) {
-  // 人気ボーナス（最新オッズ反映・最大+12 / 最小-3）
+  // 人気ボーナス（1番人気が最高点・最大+20 / 最小-3）
   let ninki;
   var pop = h.popEstimate || 99;
-  if (pop === 1)      ninki = 8;
-  else if (pop === 2) ninki = 12;
-  else if (pop === 3) ninki = 10;
-  else if (pop === 4) ninki = 8;
-  else if (pop === 5) ninki = 6;
-  else if (pop <= 9)  ninki = 3;
+  if (pop === 1)      ninki = 20;
+  else if (pop === 2) ninki = 16;
+  else if (pop === 3) ninki = 12;
+  else if (pop === 4) ninki = 10;
+  else if (pop <= 6)  ninki = 8;
+  else if (pop <= 9)  ninki = 4;
   else                ninki = -3;
 
   // 枠順スコア：NHKマイルC は専用テーブル、その他は汎用テーブル
@@ -7704,7 +7704,7 @@ function renderHorses() {
       ${h.trainingNote ? `<div style="margin-top:8px;padding:6px 10px;background:#FAEEDA;border-left:3px solid #B8600C;border-radius:var(--border-radius-md);font-size:11px;color:#854F0B;line-height:1.6"><span style="font-weight:700">🏃 最終追切：</span>${h.trainingBadge ? `<span style="color:#A32D2D;font-weight:700;margin-right:4px">${h.trainingBadge}</span>` : ''}${h.trainingNote}${h.trainingTime ? ` <span style="color:#888;font-size:10px">(${h.trainingTime})</span>` : ''}</div>` : ''}
       ${h.babaNotes && h.babaNotes.good ? `<div style="margin-top:6px;padding:6px 10px;background:#E1F5EE;border-left:3px solid #0F6E56;border-radius:var(--border-radius-md);font-size:11px;color:#085041;line-height:1.6"><span style="font-weight:700">🏇 馬場適性：</span>${h.babaNotes.good}</div>` : ''}
 
-      <div class="horse-comment">${h.prevComment}</div>
+      ${h.prevComment ? `<div class="horse-comment">${h.prevComment}</div>` : ''}
       ${h.note ? `<div class="horse-comment" style="background:#fbf6e3;border-left:3px solid var(--gold);margin-top:8px">${h.note}</div>` : ''}
       ${(h.yoshiEishinPick || h.yoshiEishinMinus || h.yoshiEishinNote) ? (function(){
         var pos = h.yoshiEishinPick === true;
@@ -8117,7 +8117,7 @@ function renderShutsubaTable() {
   sorted.forEach(function(h, idx) {
     var bg = idx % 2 === 0 ? '#fff' : '#f8f8f8';
     var tc = h.training === 'S' ? '#E24B4A' : h.training === 'A' ? '#1D9E75' : h.training === 'B' ? '#EF9F27' : '#888';
-    var rank = h.prevRank;
+    var rank = h.prev1r ?? h.prevRank;
     var pc = rank > 0 && rank <= 3 ? '#0F6E56' : rank > 0 && rank <= 5 ? '#EF9F27' : '#A32D2D';
     var oc = h.odds && h.odds <= 5 ? '#A32D2D' : h.odds && h.odds <= 10 ? '#EF9F27' : '#555';
 
@@ -8144,7 +8144,7 @@ function renderShutsubaTable() {
     // 調教師
     rows += '<td style="padding:7px 6px;min-width:72px;color:#555;font-size:11px;white-space:nowrap">' + (h.trainer || '-') + '</td>';
     // 前走
-    rows += '<td style="text-align:center;padding:7px 6px;min-width:88px;color:#555;font-size:11px;white-space:nowrap">' + (h.prevRace || '-') + '</td>';
+    rows += '<td style="text-align:center;padding:7px 6px;min-width:88px;color:#555;font-size:11px;white-space:nowrap">' + (h.prev1race || h.prevRace || '-') + '</td>';
     // 前走着
     rows += '<td style="text-align:center;padding:7px 4px;min-width:44px;font-weight:600;color:' + pc + '">' + (rank ? rank + '着' : '-') + '</td>';
     // 馬体重
