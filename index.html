@@ -7288,7 +7288,20 @@ function calcVictoriaMile(horse, raceName) {
   if (_bw >= 480 && _bw <= 499)          { pts += 3; labels.push('⭐馬体重' + _bw + 'kg【480〜499kg好走ゾーン+3pt】'); }
   else if (_bw >= 500 && _bw <= 519)     { pts += 2; labels.push('馬体重' + _bw + 'kg【500〜519kg安定ゾーン+2pt】'); }
   else if (_bw > 0 && _bw < 460)         { pts -= 3; labels.push('⚠️馬体重' + _bw + 'kg【460kg未満・軽量-3pt】'); }
-  return { pts: pts, labels: labels, label: labels.join(' / ') };
+  // 加点合計に+20の上限を設ける（積み上がりすぎ防止・ndsPtsと同じ仕様）
+  var _plus = 0, _minus = 0;
+  labels.forEach(function(lbl) {
+    var mp = lbl.match(/\+(\d+)pt】/);
+    var mm = lbl.match(/-(\d+)pt】/);
+    if (mp) _plus += parseInt(mp[1], 10);
+    if (mm) _minus -= parseInt(mm[1], 10);
+  });
+  var _cappedPlus = Math.min(20, _plus);
+  var _final = _cappedPlus + _minus;
+  if (_plus > 20) {
+    labels.push('（加点合計 +' + _plus + 'pt を上限 +20pt にキャップ／マイナス ' + _minus + 'pt はそのまま）');
+  }
+  return { pts: _final, labels: labels, label: labels.join(' / ') };
 }
 
 function computeScore(h) {
