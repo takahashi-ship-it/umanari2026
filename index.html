@@ -7605,7 +7605,9 @@ function renderHorses() {
     }
     const wakuClass = h.waku ? `waku-${h.waku}` : 'waku-tbd';
     const wakuText = h.waku ?? '?';
-    const prevRankText = h.prevRank > 0 ? `${h.prevRank}着` : '出走前';
+    const prevRankNum = h.prev1r ?? h.prevRank;
+    const prevRankText = (prevRankNum != null && prevRankNum > 0) ? `${prevRankNum}着` : '出走前';
+    const prevRaceText = h.prev1race || h.prevRace || '前走不明';
     const siLabelText = siAvailable
       ? `⚡ SI: ${siVal}`
       : `⚡ SI: ―`;
@@ -7670,7 +7672,7 @@ function renderHorses() {
         <span class="badge">${h.age}歳${h.sex}</span>
         <span class="badge">${h.stable || h.shozo || '不明'}</span>
         <span class="badge">父: ${h.father || '不明'}</span>
-        <span class="badge">前走: ${h.prevRace} ${prevRankText}</span>
+        <span class="badge">前走: ${prevRaceText} ${prevRankText}</span>
       </div>
 
       <div class="score-block">
