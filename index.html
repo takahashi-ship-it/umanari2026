@@ -6306,9 +6306,9 @@ const BABA_PTS = {
 };
 
 function maxScoreFor(score) {
-  // 表示満点を 143pt に統一（人気20+枠15+データ20+血統10+騎手10+コース10+調教10+SI10+馬場15+距離8+種牡馬10+左回り5）
-  // 馬体重・NHK特殊ボーナス等は合計値に含まれるが分母には算入しない（高評価馬は100%キャップ）
-  return 143;
+  // 表示満点を 110pt に正規化（好条件馬が80%以上になるよう調整／実効最大値ベース）
+  // 馬体重・NHK特殊ボーナス等は合計値に含まれるが分母には算入しない（高評価馬は99%キャップ）
+  return 110;
 }
 
 // 馬場適性スコア（最大15点・最小-3点）
@@ -7560,7 +7560,7 @@ function renderHorses() {
 
   // 各馬の pct（0-100%）を事前計算 + 80% 以上の馬数を集計（◎本命の重複防止用）
   enriched.forEach(e => {
-    e._pct = Math.min(100, Math.round(sumScore(e.score) * 100 / maxScoreFor(e.score)));
+    e._pct = Math.min(99, Math.round(sumScore(e.score) * 100 / maxScoreFor(e.score)));
   });
   const honmeiCount = enriched.filter(e => e._pct >= 80).length;
 
