@@ -7232,7 +7232,9 @@ function calcVictoriaMile(horse, raceName) {
     pts -= 12; labels.push('⚠️前走重賞以外【複勝0%・-12pt】');
   }
   if (horse.tokyoMileG === true) {
-    pts += 10; labels.push('東京1600m重賞3着内経験【勝ち馬必須条件+10pt】');
+    pts += 8; labels.push('⭐東京1600m重賞3着内経験【過去6年全勝ち馬該当+8pt】');
+  } else if (horse.tokyoMileG === false) {
+    pts -= 8; labels.push('⚠️東京1600m重賞経験なし【過去6年の必須条件未該当-8pt】');
   }
   if ((horse.age || 0) === 5) {
     pts += 5; labels.push('5歳馬【勝率6.9%・単回110%+5pt】');
@@ -9821,7 +9823,7 @@ function computeScoreBreakdown(horse, raceName) {
     if (horse.jockey === 'C.ルメール' && (horse.popEstimate || 99) === 1) dataScore += 10;
     var _vmSS = ['ディープインパクト','キズナ','コントレイル','エピファネイア','ブラックタイド','サトノダイヤモンド','ハーツクライ','アドマイヤマーズ'];
     if (_vmSS.indexOf(horse.father || '') >= 0) dataScore += 3;
-    if (horse.tokyoMileG === true) dataScore += 4;
+    if (horse.tokyoMileG === true) dataScore += 8;
     if (horse.hasWonMiddleDistance === true) dataScore += 4;
     if (horse.fastFinish === true) dataScore += 3;
     var _vmBw = horse.bodyWeight || 0;
@@ -9933,6 +9935,8 @@ function computeScoreBreakdown(horse, raceName) {
     if (horse.training === 'C') penalty -= 5;
     if (waku === 7) penalty -= 10;
     if (horse.dangerFlag === true) penalty -= 8;
+    // 東京1600m重賞経験なし（過去6年全勝ち馬該当の必須条件）
+    if (horse.tokyoMileG === false) penalty -= 8;
   }
   // 新潟大賞典 ペナルティ
   if (raceName && raceName.indexOf('新潟大賞典') !== -1) {
