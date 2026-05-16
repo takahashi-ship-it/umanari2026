@@ -3499,7 +3499,7 @@ const HORSES_BY_RACE = {
     g1rentalExp:false, recentG1Hit:false,
     bodyWeight:450, prevBodyWeight:440, bodyWeightDiff:10,
     speedIndex:68, maxDistExp:1800, distExpRank:4, distExpRace:'前走',
-    note:'ルーラーシップ産駒（トニービン内包）×7歳牝馬',
+    note:'前走愛知杯は外枠+スタート後に挟まれた不利で参考外。芝1600m【1-1-2-0】大崩れなし。牡馬混合の京成杯AH1:31.4で2着・上がり3F32秒8の強烈な末脚。本調子を取り戻しつつある。80倍の伏兵として警戒必要',
     training:'B',
     trainingNote:'最終：栗東坂路 単走。右肢が強めで外ラチ寄りに流れるが、ひと頃より流れ幅少ない。推進力・四肢の回転は前走当該週より上。本調子取り戻しつつある',
     trainingTime:'坂路単走' },
@@ -9716,6 +9716,17 @@ var KAIMOKU_DATA = {
           '⚠️ 前走G3組は過去5年で0勝（0-3-1-29）',
         ] },
     ],
+    caveatHorses: [
+      { name:'ドロップオブライト', uma:10, pop:17, odds:80.4, label:'⚡ 伏兵注意',
+        caveatNote:'80倍の大穴だが「上がり32秒台の末脚×マイル適性」は軽視できない。3連複の押さえ候補。',
+        reasons:[
+          '芝1600m【1-1-2-0】と大崩れなし・牡馬混合の京成杯AH1:31.4で2着',
+          '上がり3F32秒8の強烈な末脚を持つ・むしろマイルが適鞍の可能性',
+          '本調子を取り戻しつつある（調教評価B・前走比で動きが向上）',
+          '前走愛知杯は外枠+スタート後に挟まれた不利で参考外',
+          'Winsight穴馬候補指名・当日パドック要チェック',
+        ] },
+    ],
     _selectedN: 6,
     unitCost: 100,
   },
@@ -10137,6 +10148,38 @@ function renderAnaHorses(raceName) {
   return html;
 }
 
+function renderCaveatHorses(raceName) {
+  var data = (typeof KAIMOKU_DATA !== 'undefined') ? KAIMOKU_DATA[raceName] : null;
+  if (!data || !Array.isArray(data.caveatHorses) || data.caveatHorses.length === 0) return '';
+  var html = '<div style="margin-bottom:16px">';
+  html += '<div style="font-size:13px;font-weight:700;color:#B8600C;margin-bottom:6px;display:flex;align-items:center;gap:6px">⚡ 伏兵注意馬（買い目外だが要警戒）</div>';
+  html += '<div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:10px">買い目には含めないが押さえ候補として要警戒の伏兵</div>';
+  data.caveatHorses.forEach(function(h) {
+    html += '<div style="background:var(--color-background-secondary);border:1px solid var(--color-border-secondary);border-left:4px solid #EF9F27;border-radius:12px;padding:12px 14px;margin-bottom:10px">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px">';
+    html += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
+    html += '<span style="font-size:10px;background:rgba(239,159,39,0.15);color:#EF9F27;padding:2px 6px;border-radius:6px;font-weight:700">' + (h.label || '⚡ 伏兵') + '</span>';
+    html += '<span style="font-size:15px;font-weight:800;color:var(--color-text-primary)">' + (h.uma ? h.uma + '番 ' : '') + h.name + '</span>';
+    html += '<span style="font-size:10px;color:var(--color-text-tertiary)">' + h.pop + '番人気</span>';
+    html += '</div>';
+    html += '<span style="font-size:13px;color:#EF9F27;font-weight:700">' + h.odds + '倍</span>';
+    html += '</div>';
+    if (h.caveatNote) {
+      html += '<div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:6px;line-height:1.5;font-style:italic;padding:6px 8px;background:rgba(239,159,39,0.06);border-radius:6px">' + h.caveatNote + '</div>';
+    }
+    if (h.reasons && h.reasons.length > 0) {
+      html += '<div style="display:flex;flex-direction:column;gap:3px">';
+      h.reasons.forEach(function(r) {
+        html += '<div style="font-size:10px;color:var(--color-text-secondary);line-height:1.5">・' + r + '</div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
 function renderKaimokuAI(raceName) {
   var container = document.getElementById('ai-kaimoku-container');
 
@@ -10303,6 +10346,8 @@ function renderKaimokuAI(raceName) {
 
   // AIの推奨穴馬（一体型コンテナの下に配置）
   html += renderAnaHorses(key);
+  // 伏兵注意馬（AI推奨穴馬の下に配置）
+  html += renderCaveatHorses(key);
 
   html += '<div style="font-size:10px;color:var(--color-text-tertiary);padding:8px;background:#F8F6EF;border-radius:6px;margin-top:12px">';
   html += '※ 3連単マルチ：軸馬が1〜3着どこでも来れば的中。購入は自己責任でお願いします。';
