@@ -7566,6 +7566,12 @@ function computeScore(h) {
            _siValue: si };
 }
 function sumScore(s) {
+  // vmPts: プラス側+40キャップ・マイナス側は無上限（calc内+30と二重防御）
+  var _vm = s.vmPts || 0;
+  var _vmCapped = Math.min(40, Math.max(0, _vm)) + Math.min(0, _vm);
+  // ndsPts: プラス側+20キャップ・マイナス側は無上限
+  var _nds = s.ndsPts || 0;
+  var _ndsCapped = Math.min(20, Math.max(0, _nds)) + Math.min(0, _nds);
   return s.ninki + s.waku + s.dataFit + s.ketto + s.jockey + s.course + s.chokyo + s.speed +
          (s.baba || 0) + (s.bw || 0) + (s.dist || 0) + (s.stallion || 0) +
          (s.tokyo || 0) + (s.sexB || 0) + (s.special || 0) + (s.nhkBw || 0) +
@@ -7574,7 +7580,7 @@ function sumScore(s) {
          (s.tokyoExpPenalty || 0) + (s.anaBonus || 0) + (s.agePenalty || 0) +
          (s.prevClassKyoto || 0) +
          (s.jockeyChgPts || 0) + (s.routeNhkPts || 0) + (s.trainerPts || 0) +
-         (s.yoshiEishinPts || 0) + (s.vmPts || 0) + (s.ndsPts || 0) +
+         (s.yoshiEishinPts || 0) + _vmCapped + _ndsCapped +
          (s.longRestPts || 0);
 }
 function rankFromTotal(total) {
