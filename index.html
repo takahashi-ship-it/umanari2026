@@ -7595,12 +7595,19 @@ function renderHorses() {
   const grid = document.getElementById('horseGrid');
   grid.innerHTML = '';
   const enriched = HORSES.map(h => ({ h, score: computeScore(h) }));
-  enriched.sort((a, b) => sumScore(b.score) - sumScore(a.score));
 
-  // 各馬の pct（0-100%）を事前計算 + 80% 以上の馬数を集計（◎本命の重複防止用）
+  // pct は computeScoreBreakdown を真値とし、画面表示と内部計算を統一
+  // （sumScore ベースは vmPts/ndsPts 等の積み上がりで99%張り付きが発生するため）
   enriched.forEach(e => {
-    e._pct = Math.min(99, Math.round(sumScore(e.score) * 100 / maxScoreFor(e.score)));
+    var _bd = (typeof computeScoreBreakdown === 'function')
+      ? computeScoreBreakdown(e.h, currentRace)
+      : { pct: Math.min(99, Math.round(sumScore(e.score) * 100 / maxScoreFor(e.score))) };
+    e._pct = Math.max(0, Math.min(99, _bd.pct));
   });
+  // pct 順にソート（同点時は sumScore で副次ソート）
+  enriched.sort((a, b) => (b._pct - a._pct) || (sumScore(b.score) - sumScore(a.score)));
+
+  // 80% 以上の馬数を集計（◎本命の重複防止用）
   const honmeiCount = enriched.filter(e => e._pct >= 80).length;
 
   enriched.forEach(({ h, score, _pct }, idx) => {
