@@ -9727,6 +9727,37 @@ var KAIMOKU_DATA = {
           'Winsight穴馬候補指名・当日パドック要チェック',
         ] },
     ],
+    yumaBaken: {
+      concept: '上位人気（単勝10倍以下）が全て飛んだ時の一攫千金シナリオ',
+      trigger: '1〜4番人気（エンブロイダリー・カムニャック・ニシノティアモ・クイーンズウォーク）が全着外になった場合',
+      criteria: [
+        '①単勝15倍以上のオッズ妙味',
+        '②過去に重賞3着内or同条件好走の実力の裏付け',
+        '③消去法データをクリア',
+        '④血統的にコース適性あり',
+        '⑤当日の状態・騎手・枠順の変化要素',
+      ],
+      horses: [
+        { name:'ドロップオブライト', uma:10, odds:80.4, rank:1, stars:3,
+          reasons:[
+            '芝1600m【1-1-2-0】大崩れなし・京成杯AH牡馬混合で1:31.4の2着',
+            '上がり3F32秒8の強烈な末脚・むしろマイルが本来の適距離',
+            '前走愛知杯は外枠+スタート挟まれで参考外・本調子取り戻し中',
+            'ディープ系血統×東京マイル適性',
+            '17番人気の超低人気で絡めば高配当確実',
+          ],
+          scenario: '展開が上位人気向きでなく外差しが効く馬場になった時、後方一気で差し切る可能性。3連複BOXで仕込む価値あり。' },
+        { name:'ラヴァンダ', uma:6, odds:19.7, rank:2, stars:2,
+          reasons:[
+            '東京芝【1-2-1-1】・5戦全て重賞・牡馬混合含む好実績',
+            '3枠6番の内枠でロスなく立ち回れる',
+            '前走8着は馬場・展開の不利で度外視の可能性',
+            'ハービンジャー産駒×瞬発力型',
+          ],
+          scenario: '内枠を活かしてロスなく立ち回り、直線で東京適性を爆発させるシナリオ。' },
+      ],
+      recommendation: '3連単BOX：ドロップオブライト・ラヴァンダ・カナテープ・パラディレーヌの4頭BOX（24点×100円=2,400円）',
+    },
     _selectedN: 6,
     unitCost: 100,
   },
@@ -10180,6 +10211,60 @@ function renderCaveatHorses(raceName) {
   return html;
 }
 
+function renderYumaBaken(raceName) {
+  var data = (typeof KAIMOKU_DATA !== 'undefined') ? KAIMOKU_DATA[raceName] : null;
+  if (!data || !data.yumaBaken) return '';
+  var yume = data.yumaBaken;
+  var html = '<div style="margin-top:20px;border:1px solid var(--color-border-secondary);border-radius:12px;overflow:hidden">';
+  // タイトルバー
+  html += '<div style="padding:10px 14px;background:linear-gradient(135deg,#FAEEDA,#FBF6E3);border-bottom:1px solid var(--color-border-secondary);display:flex;align-items:center;gap:8px">';
+  html += '<span style="font-size:18px">🎰</span>';
+  html += '<div>';
+  html += '<div style="font-size:13px;font-weight:700;color:var(--color-text-primary)">夢馬券</div>';
+  html += '<div style="font-size:10px;color:var(--color-text-tertiary)">上位人気一掃時の一攫千金シナリオ</div>';
+  html += '</div>';
+  html += '<span style="margin-left:auto;font-size:10px;background:rgba(239,159,39,0.15);color:#B8600C;padding:2px 8px;border-radius:10px;font-weight:600">ロマン枠</span>';
+  html += '</div>';
+  // コンセプト・発動条件・選出基準
+  html += '<div style="padding:10px 14px;border-bottom:0.5px solid var(--color-border-tertiary)">';
+  html += '<div style="font-size:10px;color:var(--color-text-secondary);line-height:1.7">';
+  if (yume.trigger) html += '<b style="color:var(--color-text-primary)">発動条件：</b>' + yume.trigger + '<br>';
+  if (yume.criteria && yume.criteria.length) {
+    html += '<b style="color:var(--color-text-primary)">選出基準：</b>';
+    yume.criteria.forEach(function(c){ html += c + '　'; });
+  }
+  html += '</div></div>';
+  // 候補馬リスト
+  (yume.horses || []).forEach(function(h, idx) {
+    var stars = '⭐'.repeat(h.stars || 1);
+    html += '<div style="padding:10px 14px;' + (idx < yume.horses.length - 1 ? 'border-bottom:0.5px solid var(--color-border-tertiary)' : '') + '">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">';
+    html += '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">';
+    html += '<span style="font-size:11px;color:var(--color-text-tertiary)">' + h.uma + '番</span>';
+    html += '<span style="font-size:14px;font-weight:700;color:var(--color-text-primary)">' + h.name + '</span>';
+    html += '<span style="font-size:11px;color:#B8600C">' + stars + '</span>';
+    html += '</div>';
+    html += '<span style="font-size:14px;font-weight:700;color:#EF9F27">' + h.odds + '倍</span>';
+    html += '</div>';
+    if (h.scenario) {
+      html += '<div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:6px;line-height:1.5;font-style:italic;padding:6px 8px;background:rgba(239,159,39,0.06);border-radius:6px">💭 ' + h.scenario + '</div>';
+    }
+    (h.reasons || []).forEach(function(r) {
+      html += '<div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:2px;line-height:1.5">・' + r + '</div>';
+    });
+    html += '</div>';
+  });
+  // 推奨買い目
+  if (yume.recommendation) {
+    html += '<div style="padding:10px 14px;background:var(--color-background-secondary);border-top:1px solid var(--color-border-secondary)">';
+    html += '<div style="font-size:10px;font-weight:700;color:var(--color-text-primary);margin-bottom:4px">🎰 夢馬券・推奨買い目</div>';
+    html += '<div style="font-size:11px;color:var(--color-text-secondary);line-height:1.6">' + yume.recommendation + '</div>';
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
 function renderKaimokuAI(raceName) {
   var container = document.getElementById('ai-kaimoku-container');
 
@@ -10348,6 +10433,8 @@ function renderKaimokuAI(raceName) {
   html += renderAnaHorses(key);
   // 伏兵注意馬（AI推奨穴馬の下に配置）
   html += renderCaveatHorses(key);
+  // 夢馬券（最下部に配置）
+  html += renderYumaBaken(key);
 
   html += '<div style="font-size:10px;color:var(--color-text-tertiary);padding:8px;background:#F8F6EF;border-radius:6px;margin-top:12px">';
   html += '※ 3連単マルチ：軸馬が1〜3着どこでも来れば的中。購入は自己責任でお願いします。';
