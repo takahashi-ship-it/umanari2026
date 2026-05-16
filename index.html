@@ -9728,35 +9728,58 @@ var KAIMOKU_DATA = {
         ] },
     ],
     yumaBaken: {
-      concept: '上位人気（単勝10倍以下）が全て飛んだ時の一攫千金シナリオ',
       trigger: '1〜4番人気（エンブロイダリー・カムニャック・ニシノティアモ・クイーンズウォーク）が全着外になった場合',
-      criteria: [
-        '①単勝15倍以上のオッズ妙味',
-        '②過去に重賞3着内or同条件好走の実力の裏付け',
-        '③消去法データをクリア',
-        '④血統的にコース適性あり',
-        '⑤当日の状態・騎手・枠順の変化要素',
+      patterns: [
+        { label:'4頭BOX', count:4, points:24, cost:2400, desc:'コンパクトに夢を狙う',
+          horses:['ドロップオブライト','ラヴァンダ','カナテープ','パラディレーヌ'] },
+        { label:'6頭BOX', count:6, points:120, cost:12000, desc:'最大限の夢を買う',
+          horses:['ドロップオブライト','ラヴァンダ','カナテープ','パラディレーヌ','ニシノティアモ','チェルヴィニア'] },
       ],
       horses: [
-        { name:'ドロップオブライト', uma:10, odds:80.4, rank:1, stars:3,
+        { name:'ドロップオブライト', uma:10, odds:80.4, stars:3, label:'筆頭',
+          scenario:'80倍の大穴だが「上がり32秒台の末脚×マイル適性」は軽視できない。3連複の押さえ候補。',
           reasons:[
-            '芝1600m【1-1-2-0】大崩れなし・京成杯AH牡馬混合で1:31.4の2着',
+            '芝1600m【1-1-2-0】大崩れなし・牡馬混合の京成杯AHで1:31.4の2着',
             '上がり3F32秒8の強烈な末脚・むしろマイルが本来の適距離',
-            '前走愛知杯は外枠+スタート挟まれで参考外・本調子取り戻し中',
-            'ディープ系血統×東京マイル適性',
-            '17番人気の超低人気で絡めば高配当確実',
-          ],
-          scenario: '展開が上位人気向きでなく外差しが効く馬場になった時、後方一気で差し切る可能性。3連複BOXで仕込む価値あり。' },
-        { name:'ラヴァンダ', uma:6, odds:19.7, rank:2, stars:2,
+            '前走愛知杯は外枠+スタート挟まれの不利で参考外・本調子取り戻し中',
+            'Winsight穴馬候補指名・当日パドック要チェック',
+          ] },
+        { name:'ラヴァンダ', uma:6, odds:19.7, stars:2, label:'対抗',
+          scenario:'内枠を活かしてロスなく立ち回り、直線で東京適性を爆発させるシナリオ。',
           reasons:[
-            '東京芝【1-2-1-1】・5戦全て重賞・牡馬混合含む好実績',
-            '3枠6番の内枠でロスなく立ち回れる',
+            '東京芝【1-2-1-1】5戦全て重賞・牡馬混合含む',
+            '3枠6番の内枠・ロスなく立ち回れる',
             '前走8着は馬場・展開の不利で度外視の可能性',
-            'ハービンジャー産駒×瞬発力型',
-          ],
-          scenario: '内枠を活かしてロスなく立ち回り、直線で東京適性を爆発させるシナリオ。' },
+          ] },
+        { name:'カナテープ', uma:13, odds:34.6, stars:2, label:'注目',
+          scenario:'M寄りのペースで外差しが効く展開になれば、東京4-4-2-1の実績が爆発するシナリオ。',
+          reasons:[
+            '東京芝【4-4-2-1】複勝率90.9%・今年メンバー最速持ち時計1:31.0秒',
+            '上がり32秒台の瞬発力はメンバートップクラス',
+            '義英真×真田幸太郎Wダブル推奨',
+          ] },
+        { name:'パラディレーヌ', uma:17, odds:40.5, stars:1, label:'一発',
+          scenario:'ワンターンの東京マイルはベスト条件。前走度外視で条件好転なら一発の可能性。',
+          reasons:[
+            '前走福島牝馬S8着は1番人気+6kgの太め残りで度外視',
+            'ワンターンの東京が条件ベスト・坂井瑠星騎手',
+            '義英真・渾身の穴馬推奨',
+          ] },
+        { name:'ニシノティアモ', uma:16, odds:9.8, stars:1, label:'警戒',
+          scenario:'調教首位評価＋前走不利度外視。上位人気一掃時に絡む可能性。',
+          reasons:[
+            '調教最終版メンバー首位評価（ウマニティ）',
+            '前走中山牝馬Sは馬場不利で度外視・東京1600〜1800m【3-1-0-0】',
+            '田原成貴（昨年VM的中）推奨馬',
+          ] },
+        { name:'チェルヴィニア', uma:18, odds:21.7, stars:1, label:'変わり身',
+          scenario:'調教最高仕上がりで前走度外視。D.レーン×秋華賞馬の潜在能力に賭けるシナリオ。',
+          reasons:[
+            '最終調教メンバー随一（1週前4F49.5秒猛時計）',
+            '牝馬二冠馬の底力・左回り好走実績',
+            '前走中山記念5着は消しデータだが調教は過去最高レベル',
+          ] },
       ],
-      recommendation: '3連単BOX：ドロップオブライト・ラヴァンダ・カナテープ・パラディレーヌの4頭BOX（24点×100円=2,400円）',
     },
     _selectedN: 6,
     unitCost: 100,
@@ -10215,50 +10238,73 @@ function renderYumaBaken(raceName) {
   var data = (typeof KAIMOKU_DATA !== 'undefined') ? KAIMOKU_DATA[raceName] : null;
   if (!data || !data.yumaBaken) return '';
   var yume = data.yumaBaken;
-  var html = '<div style="margin-top:20px;border:1px solid var(--color-border-secondary);border-radius:12px;overflow:hidden">';
-  // タイトルバー
-  html += '<div style="padding:10px 14px;background:linear-gradient(135deg,#FAEEDA,#FBF6E3);border-bottom:1px solid var(--color-border-secondary);display:flex;align-items:center;gap:8px">';
-  html += '<span style="font-size:18px">🎰</span>';
-  html += '<div>';
-  html += '<div style="font-size:13px;font-weight:700;color:var(--color-text-primary)">夢馬券</div>';
-  html += '<div style="font-size:10px;color:var(--color-text-tertiary)">上位人気一掃時の一攫千金シナリオ</div>';
+  var labelStyles = {
+    '筆頭':    {bg:'#BA7517', color:'#FAEEDA'},
+    '対抗':    {bg:'#0F6E56', color:'#E1F5EE'},
+    '注目':    {bg:'#185FA5', color:'#E6F1FB'},
+    '一発':    {bg:'#993556', color:'#FBEAF0'},
+    '警戒':    {bg:'#5F5E5A', color:'#F1EFE8'},
+    '変わり身':{bg:'#533B0B', color:'#FAEEDA'},
+  };
+  var html = '<div style="border-radius:14px;overflow:hidden;border:1.5px solid #0F6E56;margin-top:20px">';
+  // ヘッダー
+  html += '<div style="background:#085041;padding:12px 14px;display:flex;align-items:center;gap:10px">';
+  html += '<span style="font-size:20px">✨</span>';
+  html += '<div style="flex:1">';
+  html += '<div style="font-size:15px;font-weight:500;color:#FAC775;letter-spacing:2px">夢 馬 券</div>';
+  html += '<div style="font-size:10px;color:#9FE1CB">上位人気一掃時の一攫千金シナリオ</div>';
   html += '</div>';
-  html += '<span style="margin-left:auto;font-size:10px;background:rgba(239,159,39,0.15);color:#B8600C;padding:2px 8px;border-radius:10px;font-weight:600">ロマン枠</span>';
+  html += '<span style="font-size:10px;background:transparent;color:#FAC775;padding:2px 8px;border-radius:8px;border:0.5px solid #FAC775">ロマン枠</span>';
   html += '</div>';
-  // コンセプト・発動条件・選出基準
-  html += '<div style="padding:10px 14px;border-bottom:0.5px solid var(--color-border-tertiary)">';
-  html += '<div style="font-size:10px;color:var(--color-text-secondary);line-height:1.7">';
-  if (yume.trigger) html += '<b style="color:var(--color-text-primary)">発動条件：</b>' + yume.trigger + '<br>';
-  if (yume.criteria && yume.criteria.length) {
-    html += '<b style="color:var(--color-text-primary)">選出基準：</b>';
-    yume.criteria.forEach(function(c){ html += c + '　'; });
+  // 発動条件
+  if (yume.trigger) {
+    html += '<div style="padding:10px 14px;border-bottom:0.5px solid #0F6E56;background:var(--color-background-secondary)">';
+    html += '<div style="font-size:10px;color:#0F6E56;font-weight:500;margin-bottom:3px">発動条件</div>';
+    html += '<div style="font-size:11px;color:var(--color-text-secondary);line-height:1.5">' + yume.trigger + '</div>';
+    html += '</div>';
   }
-  html += '</div></div>';
   // 候補馬リスト
   (yume.horses || []).forEach(function(h, idx) {
     var stars = '⭐'.repeat(h.stars || 1);
-    html += '<div style="padding:10px 14px;' + (idx < yume.horses.length - 1 ? 'border-bottom:0.5px solid var(--color-border-tertiary)' : '') + '">';
-    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">';
-    html += '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">';
-    html += '<span style="font-size:11px;color:var(--color-text-tertiary)">' + h.uma + '番</span>';
-    html += '<span style="font-size:14px;font-weight:700;color:var(--color-text-primary)">' + h.name + '</span>';
-    html += '<span style="font-size:11px;color:#B8600C">' + stars + '</span>';
+    var ls = labelStyles[h.label] || {bg:'#444441', color:'#F1EFE8'};
+    var isLast = idx === yume.horses.length - 1;
+    html += '<div style="padding:12px 14px;background:var(--color-background-primary);' + (isLast ? '' : 'border-bottom:0.5px solid #0F6E56') + '">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:4px">';
+    html += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
+    html += '<span style="font-size:10px;background:' + ls.bg + ';color:' + ls.color + ';padding:2px 8px;border-radius:8px;font-weight:600">' + stars + ' ' + h.label + '</span>';
+    html += '<span style="font-size:13px;font-weight:600;color:var(--color-text-primary)">' + h.uma + '番 ' + h.name + '</span>';
     html += '</div>';
-    html += '<span style="font-size:14px;font-weight:700;color:#EF9F27">' + h.odds + '倍</span>';
+    html += '<span style="font-size:16px;font-weight:700;color:#BA7517">' + h.odds + '倍</span>';
     html += '</div>';
     if (h.scenario) {
-      html += '<div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:6px;line-height:1.5;font-style:italic;padding:6px 8px;background:rgba(239,159,39,0.06);border-radius:6px">💭 ' + h.scenario + '</div>';
+      html += '<div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:8px;line-height:1.6;padding:8px 10px;background:var(--color-background-secondary);border-radius:8px;border-left:3px solid #0F6E56">' + h.scenario + '</div>';
     }
     (h.reasons || []).forEach(function(r) {
-      html += '<div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:2px;line-height:1.5">・' + r + '</div>';
+      html += '<div style="display:flex;align-items:flex-start;gap:6px;font-size:11px;color:var(--color-text-secondary);margin-bottom:3px;line-height:1.5">';
+      html += '<span style="color:#0F6E56;flex-shrink:0;margin-top:1px">✓</span><span>' + r + '</span></div>';
     });
     html += '</div>';
   });
-  // 推奨買い目
-  if (yume.recommendation) {
-    html += '<div style="padding:10px 14px;background:var(--color-background-secondary);border-top:1px solid var(--color-border-secondary)">';
-    html += '<div style="font-size:10px;font-weight:700;color:var(--color-text-primary);margin-bottom:4px">🎰 夢馬券・推奨買い目</div>';
-    html += '<div style="font-size:11px;color:var(--color-text-secondary);line-height:1.6">' + yume.recommendation + '</div>';
+  // 2パターンの買い目フッター
+  if (yume.patterns && yume.patterns.length) {
+    html += '<div style="background:#085041;padding:12px 14px">';
+    html += '<div style="font-size:11px;font-weight:600;color:#FAC775;margin-bottom:10px">🎰 夢馬券・推奨買い目（' + yume.patterns.length + 'パターン）</div>';
+    yume.patterns.forEach(function(p, idx) {
+      var isFirst = idx === 0;
+      html += '<div style="background:' + (isFirst ? '#0F6E56' : '#04342C') + ';border-radius:8px;padding:10px 12px;' + (idx < yume.patterns.length - 1 ? 'margin-bottom:8px' : '') + '">';
+      html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:4px">';
+      html += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
+      html += '<span style="font-size:12px;font-weight:700;color:#FAC775">3連単' + p.label + '</span>';
+      html += '<span style="font-size:10px;color:#9FE1CB">' + (p.desc || '') + '</span>';
+      html += '</div>';
+      html += '<span style="font-size:15px;font-weight:700;color:#FAC775">' + p.cost.toLocaleString() + '円</span>';
+      html += '</div>';
+      if (p.horses && p.horses.length) {
+        html += '<div style="font-size:10px;color:#9FE1CB;margin-bottom:4px;line-height:1.5">' + p.horses.join('・') + '</div>';
+      }
+      html += '<div style="font-size:10px;color:#5DCAA5">100円 × ' + p.points + '点</div>';
+      html += '</div>';
+    });
     html += '</div>';
   }
   html += '</div>';
