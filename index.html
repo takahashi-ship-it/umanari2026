@@ -3281,11 +3281,12 @@ const HORSES_BY_RACE = {
     pace:'差し', style:'差し', leftCourseScore:7,
     prev1race:'小倉牝馬S', prev1grade:'G3', prev1r:1, prev1pop:1,
     prevRace:'小倉牝馬S', prevGrade:'G3', prevRank:1,
-    hasWonMiddleDistance:true, fastFinish:false, tokyoMileG:false, miileG1Exp:false,
+    hasWonMiddleDistance:true, fastFinish:false, tokyoMileG:true, miileG1Exp:false,
     g1rentalExp:false, recentG1Hit:false,
     bodyWeight:480, prevBodyWeight:472, bodyWeightDiff:8,
     speedIndex:82, maxDistExp:1800, distExpRank:1, distExpRace:'小倉牝馬S',
     continuousJockey:false,
+    leftCourse:'東京1800mカーネーションS1着・東京芝実績あり',
     note:'小倉牝馬S勝ち。東京マイルへの適性は未知数だが前走1着と勢いあり',
     training:'A',
     trainingNote:'最終：美浦W 83.4-68.3-53.6-38.7-11.6 併せ同入。1週前83.8-37.8-11.4 馬なり好時計。全体時計は基準未達だがΔt+1.1s（鋭い加速）で反応の良さが浮上',
@@ -3316,12 +3317,13 @@ const HORSES_BY_RACE = {
     prev1race:'中山牝馬S', prev1grade:'G3', prev1r:5, prev1pop:6,
     prevRace:'中山牝馬S', prevGrade:'G3', prevRank:5,
     prev2race:'福島記念', prev2grade:'G3', prev2r:1,
-    hasWonMiddleDistance:true, fastFinish:false, tokyoMileG:false, miileG1Exp:false,
+    hasWonMiddleDistance:true, fastFinish:false, tokyoMileG:true, miileG1Exp:false,
     g1rentalExp:false, recentG1Hit:false,
     bodyWeight:459, prevBodyWeight:448, bodyWeightDiff:11,
     speedIndex:80, maxDistExp:2000, distExpRank:1, distExpRace:'福島記念',
     continuousJockey:true,
     yoshiEishinPick:true,
+    leftCourse:'東京1600〜1800m【3-1-0-0】連対率100%',
     note:'ロードカナロア産駒×母父ディープインパクト。昨年1勝クラスから福島記念まで4連勝。東京・甲斐路S上がり33.1秒で差し切り。前走中山牝馬S5着は馬場不利（脚をとられた）で度外視。調教最終版でメンバー首位評価。3番人気9.8倍で妙味あり',
     training:'A',
     trainerPositive:false,
@@ -7232,9 +7234,15 @@ function calcVictoriaMile(horse, raceName) {
     pts -= 12; labels.push('⚠️前走重賞以外【複勝0%・-12pt】');
   }
   if (horse.tokyoMileG === true) {
-    pts += 8; labels.push('⭐東京1600m重賞3着内経験【過去6年全勝ち馬該当+8pt】');
+    // 東京コース複数好走（カナテープ4-4-2-1・ニシノティアモ3-1-0-0 等）は段階評価で上限+10
+    var _lc = horse.leftCourse || '';
+    if (/4-4|4-3|3-1-0-0/.test(_lc)) {
+      pts += 10; labels.push('⭐東京コース複数好走実績【+10pt】');
+    } else {
+      pts += 8; labels.push('⭐東京1600〜1800m重賞経験あり【+8pt】');
+    }
   } else if (horse.tokyoMileG === false) {
-    pts -= 8; labels.push('⚠️東京1600m重賞経験なし【過去6年の必須条件未該当-8pt】');
+    pts -= 8; labels.push('⚠️東京1600〜1800m重賞経験なし【-8pt】');
   }
   if ((horse.age || 0) === 5) {
     pts += 5; labels.push('5歳馬【勝率6.9%・単回110%+5pt】');
