@@ -10088,6 +10088,18 @@ function renderKaimokuAI(raceName) {
 
   var html = '';
 
+  // 予想の基本方針（買い目タブ最上部に固定表示）
+  html += '<div style="border:1px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:16px;background:var(--color-background-secondary)">';
+  html += '<div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px">📋 UMANARI予想の基本方針</div>';
+  html += '<div style="font-size:11px;color:var(--color-text-secondary);line-height:1.8">';
+  html += '✅ <b>信頼度スコア</b> = 3着以内に来る可能性の高さ<br>';
+  html += '✅ <b>スコア上位馬</b>の中から1着候補を絞る<br>';
+  html += '✅ <b>軸明確</b>なら3連単1頭軸マルチ（相手4〜10頭）<br>';
+  html += '✅ <b>軸不明・荒れるレース</b>なら3連単BOX<br>';
+  html += '⚠️ スコアが拮抗している時 = <b>難しいレース</b>のシグナル → マルチで対応';
+  html += '</div>';
+  html += '</div>';
+
   // 軸馬＋相手の一体型コンテナ（AI予想・青系配色）
   html += '<div style="border:2px solid #4a90e2;border-radius:14px;overflow:hidden;margin-bottom:20px">';
 
