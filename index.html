@@ -6614,6 +6614,36 @@ function renderPastData() {
   if (data.leftCourseRanking) {
     html += renderLeftCourseRanking(data.leftCourseRanking);
   }
+  // pastResults（過去N年の1〜3着・3連単配当の年表）
+  if (Array.isArray(data.pastResults) && data.pastResults.length) {
+    html += '<div class="section"><h3>📅 過去' + data.pastResults.length + '年 1〜3着一覧</h3>';
+    html += '<div class="table-wrap"><table class="data-table">';
+    html += '<thead><tr><th>年</th><th>1着</th><th>2着</th><th>3着</th><th>3連単</th></tr></thead><tbody>';
+    data.pastResults.forEach(function(r) {
+      var fm = function(h){ return h ? (h.name + (h.pop ? '<span style="font-size:10px;color:var(--text-mute);margin-left:4px">(' + h.pop + '人)</span>' : '')) : '-'; };
+      var dan = (r.sanrentan || 0).toLocaleString() + '円';
+      var danColor = r.sanrentan >= 100000 ? '#A32D2D' : r.sanrentan >= 30000 ? '#EF9F27' : 'var(--text)';
+      html += '<tr>';
+      html += '<td style="font-weight:700;color:var(--navy)">' + r.year + '</td>';
+      html += '<td>' + fm(r.first) + '</td>';
+      html += '<td>' + fm(r.second) + '</td>';
+      html += '<td>' + fm(r.third) + '</td>';
+      html += '<td style="font-weight:700;color:' + danColor + '">' + dan + '</td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table></div></div>';
+  }
+  // anaPoints（攻略ポイント・35項目等）— sections が array でも anaPoints があれば必ず描画
+  if (Array.isArray(data.anaPoints) && data.anaPoints.length) {
+    var hasAnaPointsSection = data.sections.some(function(s){ return s.renderFromAnaPoints === true; });
+    if (!hasAnaPointsSection) {
+      html += '<div class="section"><h3>💡 攻略ポイント</h3><ul class="check-list" style="list-style:none;padding-left:4px;line-height:1.7">';
+      data.anaPoints.forEach(function(pt) {
+        html += '<li style="font-size:12px;margin-bottom:6px;padding-left:14px;text-indent:-14px">▶ ' + pt + '</li>';
+      });
+      html += '</ul></div>';
+    }
+  }
   // 穴馬条件・該当馬バッジ（NHKマイルC のみ）
   if (typeof renderAnaBadges === 'function') {
     html += renderAnaBadges(currentRace);
