@@ -7579,6 +7579,67 @@ function calcVictoriaMile(horse, raceName) {
   return { pts: _final, labels: labels, label: labels.join(' / ') };
 }
 
+// オークス専用：桜花賞組・三冠馬データ・血統ボーナス・騎手ボーナス
+function calcOaks(horse, raceName) {
+  if (!raceName || raceName.indexOf('オークス') === -1) return { pts: 0, labels: [], label: '' };
+  var pts = 0;
+  var labels = [];
+  if (horse.prev1race === '桜花賞') {
+    if (horse.prev1r === 1)        { pts += 15; labels.push('⭐桜花賞1着→オークス【4-1-0-3】複勝率62.5%+15pt】'); }
+    else if (horse.prev1r <= 3)    { pts += 8;  labels.push('⭐桜花賞3着以内→高確率3着内+8pt】'); }
+    else if (horse.prev1r <= 9)    { pts += 3;  labels.push('桜花賞4-9着→巻き返し候補+3pt】'); }
+    else                           { pts -= 5;  labels.push('⚠️桜花賞10着以下→割引-5pt】'); }
+  }
+  if (horse.prev1race && horse.prev1race.indexOf('フローラ') >= 0) {
+    if (horse.prev1r === 1)        { pts += 10; labels.push('⭐フローラS1着→連対率40%・最強ステップ+10pt】'); }
+    else if (horse.prev1r <= 5)    { pts += 4;  labels.push('フローラS5着以内→3着内あり+4pt】'); }
+  }
+  if (horse.prev1race && (horse.prev1race.indexOf('忘れな草') >= 0 || horse.prev1race.indexOf('わすれな草') >= 0)) {
+    if (horse.prev1r === 1)        { pts += 8;  labels.push('⭐忘れな草賞1着→複勝率25%・侮れないステップ+8pt】'); }
+  }
+  if (horse.jockey && horse.jockey.indexOf('ルメール') >= 0) {
+    pts += 10; labels.push('⭐ルメール騎手→過去10年4勝・複勝率67%+10pt】');
+  }
+  if (horse.jockey && horse.jockey.indexOf('松山') >= 0) {
+    pts += 5;  labels.push('⭐松山騎手継続騎乗（デアリングタクト三冠実績）+5pt】');
+  }
+  if (horse.prev1r === 1 && horse.prev1race === '桜花賞' &&
+      (horse.style === '差し' || horse.style === '追込' || horse.pace === '差し' || horse.pace === '追込')) {
+    pts += 12; labels.push('⭐【三冠馬データ】桜花賞1着×中団差し→過去全員三冠達成+12pt】');
+  }
+  if (horse.father && (
+    horse.father.indexOf('ディープインパクト') >= 0 ||
+    horse.father.indexOf('キングカメハメハ') >= 0 ||
+    horse.father.indexOf('エピファネイア') >= 0 ||
+    horse.father.indexOf('ドゥラメンテ') >= 0 ||
+    horse.father.indexOf('キズナ') >= 0 ||
+    horse.father.indexOf('アルアイン') >= 0
+  )) {
+    pts += 5; labels.push('⭐東京2400m適性血統【+5pt】');
+  }
+  if (horse.father && (
+    horse.father.indexOf('ドレフォン') >= 0 ||
+    horse.father.indexOf('ロードカナロア') >= 0 ||
+    horse.father.indexOf('クロフネ') >= 0
+  )) {
+    pts -= 5; labels.push('⚠️スプリンター系×東京2400m距離不安-5pt】');
+  }
+  if (horse.tokyoMileG === true) {
+    pts += 6; labels.push('⭐東京コース実績あり+6pt】');
+  }
+  // キャップ処理（プラス側+30上限）
+  var _plus = 0, _minus = 0;
+  labels.forEach(function(lbl) {
+    var mp = lbl.match(/\+(\d+)pt】/);
+    var mm = lbl.match(/-(\d+)pt】/);
+    if (mp) _plus += parseInt(mp[1], 10);
+    if (mm) _minus -= parseInt(mm[1], 10);
+  });
+  var _cappedPlus = Math.min(30, _plus);
+  var _final = _cappedPlus + _minus;
+  return { pts: _final, labels: labels, label: labels.join(' / ') };
+}
+
 function computeScore(h) {
   // 人気ボーナス（1番人気が最高点・最大+20 / 最小-3）
   let ninki;
@@ -7786,6 +7847,7 @@ function computeScore(h) {
   var yoshiEishinObj = calcYoshiEishin(h);
   var vmObj         = calcVictoriaMile(h, currentRace);
   var ndsObj        = calcNiigataDaishoten(h, currentRace);
+  var oaksObj       = calcOaks(h, currentRace);
   var longRestObj   = calcLongRestPenalty(h);
   var jockeyChgPts   = jockeyChgObj.pts;
   var routeNhkPts    = routeNhkObj.pts;
@@ -7793,11 +7855,12 @@ function computeScore(h) {
   var yoshiEishinPts = yoshiEishinObj.pts;
   var vmPts          = vmObj.pts;
   var ndsPts         = ndsObj.pts;
+  var oaksPts        = oaksObj.pts;
   var longRestPts    = longRestObj.pts;
 
   return { ninki, waku, dataFit, ketto, jockey, course, chokyo, speed, baba, bw, dist, stallion, tokyo, sexB, special, nhkBw,
            shozoP, jockeyN, careerP, prevR, leftPts, nztPts, framePts, tokyoExpPenalty, anaBonus, agePenalty, prevClassKyoto,
-           jockeyChgPts, routeNhkPts, trainerPts, yoshiEishinPts, vmPts, ndsPts, longRestPts,
+           jockeyChgPts, routeNhkPts, trainerPts, yoshiEishinPts, vmPts, ndsPts, oaksPts, longRestPts,
            _distLabel: distObj.label, _stallionLabel: stallionObj.label,
            _tokyoLabel: tokyoObj.label, _sexLabel: sexObj.label,
            _specialLabel: specialObj.label, _nhkBwLabel: nhkBwObj.label,
@@ -7827,6 +7890,7 @@ function sumScore(s) {
          (s.prevClassKyoto || 0) +
          (s.jockeyChgPts || 0) + (s.routeNhkPts || 0) + (s.trainerPts || 0) +
          (s.yoshiEishinPts || 0) + _vmCapped + _ndsCapped +
+         (s.oaksPts || 0) +
          (s.longRestPts || 0);
 }
 function rankFromTotal(total) {
@@ -10298,6 +10362,11 @@ function computeScoreBreakdown(horse, raceName) {
       if (_ndRestMb >= 12) penalty -= 15;
       else if (_ndRestMb >= 6) penalty -= 8;
     }
+  }
+  // オークス専用：calcOaks の合算値を penalty に正値加算（dataScore キャップ回避）
+  if (raceName && raceName.indexOf('オークス') !== -1 && typeof calcOaks === 'function') {
+    var _oaksObj = calcOaks(horse, raceName);
+    if (_oaksObj && _oaksObj.pts) penalty += _oaksObj.pts;
   }
   // 全レース共通：長期休養明けペナルティ
   if (horse.longRest === true) {
