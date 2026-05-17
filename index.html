@@ -1408,10 +1408,8 @@
     <nav class="tabs" id="contentTabs">
       <button class="tab active" data-target="tab-shutsuba">出馬表</button>
       <button class="tab"        data-target="tab-odds">📊 オッズ</button>
-      <button class="tab"        data-target="tab-criteria">選定基準</button>
       <button class="tab"        data-target="tab-data">過去10年</button>
       <button class="tab"        data-target="tab-horses">登録馬・信頼度</button>
-      <button class="tab"        data-target="tab-check">危険な人気馬・穴馬</button>
       <button class="tab"        data-target="tab-kaime">買い目</button>
       <button class="tab"        data-target="tab-report">収支レポート</button>
     </nav>
@@ -1450,43 +1448,6 @@
       </div>
     </div>
 
-    <!-- TAB: 選定基準 -->
-    <div class="panel" id="tab-criteria">
-      <div class="section">
-        <h3>複勝率重視の選定基準</h3>
-        <p class="lead">
-          過去10年データ【勝-2着-3着-着外】から「来やすい条件」と「消し条件」を抽出。
-          プラス材料3つ以上 × マイナス材料1つ以下 を基本ライン。
-        </p>
-        <div class="criteria-grid">
-          <div class="criteria-col good">
-            <h4>✓ 来やすい条件</h4>
-            <ul id="goodList"></ul>
-          </div>
-          <div class="criteria-col bad">
-            <h4>✕ 消し条件</h4>
-            <ul id="badList"></ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <h3>本命〜押さえ 推奨配分</h3>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>印</th><th>役割</th><th>条件</th><th>狙い</th></tr></thead>
-            <tbody>
-              <tr><td><span class="rank-mark rank-honmei" style="width:24px;height:24px;font-size:13px;">◎</span></td><td>本命</td><td>G1実績＋長距離適性◎</td><td>軸馬。複勝・3連複1列目</td></tr>
-              <tr><td><span class="rank-mark rank-taikou" style="width:24px;height:24px;font-size:13px;">○</span></td><td>対抗</td><td>前走重賞連対</td><td>馬連・3連複2列目</td></tr>
-              <tr><td><span class="rank-mark rank-tanana" style="width:24px;height:24px;font-size:13px;">▲</span></td><td>単穴</td><td>長距離血統＋上がり最速級</td><td>3連単2着付け</td></tr>
-              <tr><td><span class="rank-mark rank-renka" style="width:24px;height:24px;font-size:13px;">△</span></td><td>連下</td><td>条件満たす中堅人気</td><td>3連複3列目</td></tr>
-              <tr><td><span class="rank-mark rank-keshi" style="width:24px;height:24px;font-size:13px;">×</span></td><td>消し</td><td>消し条件該当</td><td>馬券から外す</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
     <!-- ② TAB: 過去10年（JSで動的描画） -->
     <div class="panel" id="tab-data">
       <div id="pastDataRoot"></div>
@@ -1520,117 +1481,6 @@
             </tbody>
           </table>
         </div>
-      </div>
-    </div>
-
-    <!-- TAB: 穴馬チェック -->
-    <div class="panel" id="tab-check">
-      <div id="pn-ana" class="pn">
-
-        <!-- 0. 馬場状態予想（馬場ボタンはレース情報ヘッダーに常設） -->
-        <div class="card" id="baba-panel">
-          <div class="ct">当日馬場予想</div>
-          <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:10px">
-            ヘッダーの「馬場切替」ボタンから想定馬場を選択すると、各馬の馬場適性スコアから「恩恵を受ける馬」「割引になる馬」を自動表示します。
-          </div>
-          <div id="baba-result"></div>
-        </div>
-
-        <!-- 1. オッズ入力パネル -->
-        <div class="card">
-          <div class="ct">オッズ入力（10倍以下 = 危険馬チェック対象）</div>
-          <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:10px">
-            各馬の予想オッズを入力して「チェック実行」を押してください。
-            10倍以下かつ危険条件に該当する馬を赤色でアラート表示します。
-          </div>
-          <div id="odds-input-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:12px"></div>
-          <button onclick="runCheck()"
-            style="padding:9px 20px;background:var(--color-text-primary);color:var(--color-background-primary);
-                   border:none;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer">
-            危険馬・穴馬チェックを実行
-          </button>
-        </div>
-
-        <!-- 2. 危険な人気馬アラート -->
-        <div class="card">
-          <div class="ct" style="color:#A32D2D">危険な人気馬アラート（10倍以下なのに要注意な馬）</div>
-          <div id="danger-list">
-            <div style="font-size:12px;color:var(--color-text-secondary)">
-              オッズを入力してチェックを実行してください
-            </div>
-          </div>
-        </div>
-
-        <!-- 3. 穴馬候補の自動抽出 -->
-        <div class="card">
-          <div class="ct" style="color:#0F6E56">穴馬候補の自動抽出（5番人気以下の好走候補）</div>
-          <div id="ana-list">
-            <div style="font-size:12px;color:var(--color-text-secondary)">
-              オッズを入力してチェックを実行してください
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. チェックリスト（来やすい条件・消し条件） -->
-        <div class="card">
-          <div class="ct">穴馬選別チェックリスト</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-
-            <!-- 来やすい条件 -->
-            <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:12px 14px;border:0.5px solid #639922">
-              <div style="font-size:11px;font-weight:500;color:#0F6E56;margin-bottom:8px">
-                必須条件（穴馬が満たすべき条件）
-              </div>
-              <div id="checklist-ok-text" style="font-size:12px;color:#085041;line-height:2.1">
-                ✅ 前走が阪神大賞典・日経賞・大阪杯のいずれか<br>
-                ✅ 前走3着以内（または天皇賞春リピーター）<br>
-                ✅ 先行〜中団のポジション取り<br>
-                ✅ 長距離重賞（3000m超）の好走実績
-              </div>
-              <div id="checklist-ok" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px"></div>
-            </div>
-
-            <!-- 消し条件 -->
-            <div style="background:#FCEBEB;border-radius:var(--border-radius-md);padding:12px 14px;border:0.5px solid #E24B4A">
-              <div style="font-size:11px;font-weight:500;color:#A32D2D;margin-bottom:8px">
-                即消し条件（1つでも該当で消し）
-              </div>
-              <div id="checklist-ng-text" style="font-size:12px;color:#7A1E1E;line-height:2.1">
-                ❌ 日経賞4着以下【0-0-0-21】<br>
-                ❌ 牝馬（天皇賞春は過去10年勝利ゼロ）<br>
-                ❌ 7歳以上（勝率0%）<br>
-                ❌ 後方一手の追込（2020年以降勝ちゼロ）<br>
-                ❌ 前走G3以下からの長距離G1参戦<br>
-                ❌ 中3週以内の強行軍
-              </div>
-              <div id="checklist-ng" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px"></div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- 4-2. 穴馬候補スコアカード（NHKマイルC専用） -->
-        <div class="card" id="ana-scorecard">
-          <div class="ct">🎯 穴馬候補スコアカード</div>
-          <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:10px;
-                      background:#FAEEDA;border-radius:var(--border-radius-md);padding:8px 12px">
-            ⚙️ 以下の条件に多く当てはまる人気薄の馬が穴馬候補です。
-            外枠・差し脚質・小柄馬体重の3条件が揃えば最有力。
-          </div>
-          <div id="ana-scorecard-list"></div>
-        </div>
-
-        <!-- 5. 推奨フォーメーション -->
-        <div class="card" style="background:#E1F5EE;border:1px solid #639922">
-          <div class="ct" style="color:#085041">推奨 3連単フォーメーション</div>
-          <div style="font-size:12px;color:#085041;line-height:1.9">
-            <strong>1着固定：3番人気以内の本命馬</strong>（勝ち馬は全10年で3番人気以内が鉄則）<br>
-            <strong>2〜3着：穴馬候補3〜5頭</strong>（上記チェックリストを通過した馬）<br>
-            <strong>買い目：1着固定フォーメーション（1頭軸×相手5〜6頭）</strong>
-          </div>
-          <div id="formation-suggest" style="margin-top:10px"></div>
-        </div>
-
       </div>
     </div>
 
@@ -2465,7 +2315,6 @@ document.querySelectorAll('#contentTabs .tab').forEach(t => {
     document.querySelectorAll('.race-page > .panel').forEach(p => p.classList.remove('active'));
     t.classList.add('active');
     document.getElementById(t.dataset.target).classList.add('active');
-    if (t.dataset.target === 'tab-check' && typeof sw === 'function') sw('ana');
     if (t.dataset.target === 'tab-kaime' && typeof sw === 'function') sw('kaime');
     if (t.dataset.target === 'tab-shutsuba') {
       renderShutsubaTable();
@@ -8457,16 +8306,14 @@ function setCurrentRace(name) {
   if (document.getElementById('goodList')) renderCriteria();
   renderChecklistHorses();
 
-  // Re-init odds grid only if the ana-check tab is currently active
-  var activeTab = document.querySelector('#contentTabs .tab.active');
-  if (activeTab && activeTab.dataset.target === 'tab-check') initOddsGrid();
+  // ana-check タブは削除済み（initOddsGrid 不要）
 
   // Refresh 出馬表 if shutsuba tab is active (or always — table is cheap)
   if (document.getElementById('shutsuba-container')) renderShutsubaTable();
   if (document.getElementById('bw-grid')) initBwGrid();
   if (document.getElementById('pace-predict')) renderPacePredict();
 
-  // Refresh baba prediction with current selection (works even before tab-check is opened)
+  // Refresh baba prediction with current selection
   if (typeof setBaba === 'function') setBaba(currentBaba);
 
   // Reset kaime selections on race switch; re-render if kaime tab is currently active
