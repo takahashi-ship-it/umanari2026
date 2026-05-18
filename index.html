@@ -6609,6 +6609,10 @@ function renderPastData() {
         });
         html += '</ul></div>';
       }
+      // 平安ステークス専用：過去データ該当馬バッジ
+      if (currentRace === '平安ステークス' && typeof renderHeianBadges === 'function') {
+        html += renderHeianBadges(horsesNew);
+      }
       // 穴馬条件・該当馬バッジ（anaConditions があれば全レース共通）
       if (typeof renderAnaBadges === 'function') {
         html += renderAnaBadges(currentRace);
@@ -11668,6 +11672,61 @@ RACE_META['平安ステークス'] = {
   isFinished: false,
   babaPrediction: { status: "良馬場想定", icon: "☀️", color: "#1D9E75", comment: "京都ダート開催" },
 };
+
+
+// 平安ステークス専用：過去10年データ該当馬バッジ
+function renderHeianBadges(horses) {
+  if (!horses || !horses.length) return '';
+  var badges = [
+    { label:'⭐ 関西馬（栗東）',      color:'#0F6E56', desc:'2014年以降11勝・関東馬で6番人気以下は【0-0-0-27】完全消し',
+      match:function(h){ return h.stable && h.stable.indexOf('栗東') >= 0; } },
+    { label:'⭐ 4〜5歳',              color:'#185FA5', desc:'勝ち馬10頭全て4〜5歳・6歳未勝利・7歳以上未勝利',
+      match:function(h){ return h.age === 4 || h.age === 5; } },
+    { label:'⭐ 1番人気',             color:'#8B1A1A', desc:'【5-1-0-4】複勝率60%・単勝2.9倍以内なら連対率87.5%',
+      match:function(h){ return h.popEstimate === 1; } },
+    { label:'⭐ 3番人気',             color:'#8B1A1A', desc:'【1-4-4-1】複勝率90%が最高！',
+      match:function(h){ return h.popEstimate === 3; } },
+    { label:'⭐ 昨年3着以内リピーター', color:'#BA7517', desc:'同コース実績証明済み',
+      match:function(h){ return ['ロードクロンヌ','レヴォントゥレット','タイトニット'].indexOf(h.name) >= 0; } },
+    { label:'⭐ 逃げ・先行脚質',       color:'#0F6E56', desc:'勝ち馬8頭中6頭が4角3番手以内→逃げ先行が圧倒的有利',
+      match:function(h){ return h.pace === '逃げ' || h.pace === '先行'; } },
+    { label:'⚠️ 関東馬で6番人気以下',  color:'#993556', desc:'【0-0-0-27】完全消しデータ該当',
+      match:function(h){ var k = h.stable && h.stable.indexOf('栗東') < 0; return k && h.popEstimate >= 6; } },
+    { label:'⚠️ 6歳で8番人気以下',     color:'#993556', desc:'【0-0-1-25】消しデータ該当',
+      match:function(h){ return h.age === 6 && h.popEstimate >= 8; } },
+    { label:'⚠️ 7歳以上で7番人気以下', color:'#993556', desc:'【0-0-1-24】消しデータ該当',
+      match:function(h){ return h.age >= 7 && h.popEstimate >= 7; } },
+    { label:'⚠️ 7〜8枠',              color:'#5F5E5A', desc:'回収率が低い・実力馬以外は割引',
+      match:function(h){ return h.waku >= 7; } },
+  ];
+  var h = '';
+  h += '<div class="section" style="margin-top:16px;padding:12px 14px;background:var(--bg);border:0.5px solid var(--border);border-radius:8px">';
+  h += '<h3 style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:6px">🎯 過去データ該当馬チェック</h3>';
+  var any = false;
+  badges.forEach(function(badge) {
+    var matched = horses.filter(badge.match);
+    if (!matched.length) return;
+    any = true;
+    h += '<div style="margin-bottom:10px">';
+    h += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">';
+    h += '<span style="font-size:11px;background:' + badge.color + ';color:#fff;padding:2px 8px;border-radius:10px;font-weight:600">' + badge.label + '</span>';
+    h += '<span style="font-size:10px;color:var(--text-mute)">' + matched.length + '頭該当</span>';
+    h += '</div>';
+    h += '<div style="font-size:10px;color:var(--text-mute);margin-bottom:5px;padding-left:4px">' + badge.desc + '</div>';
+    h += '<div style="display:flex;flex-wrap:wrap;gap:4px;padding-left:4px">';
+    matched.forEach(function(horse) {
+      h += '<span style="font-size:11px;background:var(--bg-soft);color:var(--text);padding:2px 8px;border-radius:6px;border:0.5px solid var(--border)">'
+        + horse.name + (horse.popEstimate ? '<span style="color:var(--text-mute);margin-left:3px">(' + horse.popEstimate + '人)</span>' : '')
+        + '</span>';
+    });
+    h += '</div></div>';
+  });
+  if (!any) {
+    h += '<div style="font-size:11px;color:var(--text-mute);font-style:italic">該当馬なし</div>';
+  }
+  h += '</div>';
+  return h;
+}
 
 </script>
 </body>
