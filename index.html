@@ -8457,7 +8457,8 @@ function setCurrentRace(name) {
   // Reset kaime selections on race switch; re-render if kaime tab is currently active
   window.selectedJiku = null;
   window.excludedHimo = [];
-  if (activeTab && activeTab.dataset.target === 'tab-kaime' && typeof renderKaime === 'function') renderKaime();
+  var _activeTab = document.querySelector('#contentTabs .tab.active');
+  if (_activeTab && _activeTab.dataset.target === 'tab-kaime' && typeof renderKaime === 'function') renderKaime();
 
   // post-render 検証ログ（描画反映後にコンテナを確認）
   setTimeout(function() {
