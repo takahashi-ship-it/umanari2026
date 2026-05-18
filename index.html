@@ -2201,7 +2201,7 @@ const STATUS_BADGE = {
 };
 
 const TARGET_RACE_NAME = "天皇賞（春）";
-const SUPPORTED_RACES = new Set(["天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス"]);
+const SUPPORTED_RACES = new Set(["天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス"]);
 
 let currentMonth = 5;
 let currentGrade = "G1";
@@ -6391,6 +6391,27 @@ function renderPastData() {
       if (data.shozo)    html += renderPastSection('所属別成績',     '🏠', data.shozo,   horsesNew);
       if (data.hande)    html += renderPastSection('斤量別成績',     '⚖️', data.hande,   horsesNew);
       if (data.prevDistance) html += renderPastSection('前走距離別成績', '📐', data.prevDistance, horsesNew);
+      // pastResults（過去N年の1〜3着・3連単配当の年表）
+      if (Array.isArray(data.pastResults) && data.pastResults.length) {
+        html += '<div class="section"><h3>📅 過去' + data.pastResults.length + '年 1〜3着一覧</h3>';
+        html += '<div class="table-wrap"><table class="data-table">';
+        var hasVenue = data.pastResults.some(function(r){ return r.venue; });
+        html += '<thead><tr><th>年</th>' + (hasVenue ? '<th>開催</th>' : '') + '<th>1着</th><th>2着</th><th>3着</th><th>3連単</th></tr></thead><tbody>';
+        data.pastResults.forEach(function(r) {
+          var fm = function(h){ return h ? (h.name + (h.pop ? '<span style="font-size:10px;color:var(--text-mute);margin-left:4px">(' + h.pop + '人)</span>' : '')) : '-'; };
+          var dan = (r.sanrentan || 0).toLocaleString() + '円';
+          var danColor = r.sanrentan >= 100000 ? '#A32D2D' : r.sanrentan >= 30000 ? '#EF9F27' : 'var(--text)';
+          html += '<tr>';
+          html += '<td style="font-weight:700;color:var(--navy)">' + r.year + '</td>';
+          if (hasVenue) html += '<td style="font-size:11px;color:var(--text-sub)">' + (r.venue || '-') + '</td>';
+          html += '<td>' + fm(r.first) + '</td>';
+          html += '<td>' + fm(r.second) + '</td>';
+          html += '<td>' + fm(r.third) + '</td>';
+          html += '<td style="font-weight:700;color:' + danColor + '">' + dan + '</td>';
+          html += '</tr>';
+        });
+        html += '</tbody></table></div></div>';
+      }
       // 攻略ポイント
       if (data.anaPoints && data.anaPoints.length) {
         html += '<div class="section"><h3>💡 攻略ポイント</h3><ul class="check-list" style="list-style:none;padding-left:4px;line-height:1.7">';
@@ -11380,6 +11401,91 @@ window.addEventListener('load', function() {
     if (typeof setBaba === 'function') setBaba(window.currentBaba || 'good');
   }, 50);
 });
+
+// ===== 平安ステークス2026 =====
+RACE_META['平安ステークス'] = {
+  gradeLine: "G3 / 第32回",
+  title:     "平安ステークス",
+  date:      "2026-05-23 (土)",
+  venue:     "京都競馬場",
+  surface:   "ダ1900m",
+  age:       "4歳上",
+  pageTitle: "JRA重賞予想 2026 | 平安ステークス",
+  distance: 1900,
+  direction: 'right',
+  isFinished: false,
+  babaPrediction: { status: "良馬場想定", icon: "☀️", color: "#1D9E75", comment: "京都ダート開催" },
+};
+
+RACE_PAST_DATA['平安ステークス'] = {
+  pastResults: [
+    { year:2025, first:{name:'アウトレンジ',     pop:4,  odds:9.4},  second:{name:'ロードクロンヌ',    pop:2,  odds:4.0},  third:{name:'レヴォントゥレット', pop:10, odds:26.8}, sanrentan:83590,  venue:'京都' },
+    { year:2024, first:{name:'ミトノオー',       pop:5,  odds:12.9}, second:{name:'ハピ',              pop:3,  odds:5.3},  third:{name:'タイトニット',       pop:10, odds:22.4}, sanrentan:38830,  venue:'京都' },
+    { year:2023, first:{name:'テーオーケインズ', pop:1,  odds:2.1},  second:{name:'サンライズウルス',  pop:2,  odds:4.2},  third:{name:'グロリアムンディ',   pop:3,  odds:6.1},  sanrentan:940,    venue:'京都' },
+    { year:2022, first:{name:'テーオーケインズ', pop:1,  odds:1.7},  second:{name:'ハピ',              pop:7,  odds:14.2}, third:{name:'スワーヴアラミス',   pop:3,  odds:5.8},  sanrentan:3350,   venue:'中京' },
+    { year:2021, first:{name:'サンライズホープ', pop:2,  odds:3.8},  second:{name:'テーオーケインズ',  pop:1,  odds:2.4},  third:{name:'メイショウカズサ',   pop:3,  odds:6.4},  sanrentan:1490,   venue:'中京' },
+    { year:2020, first:{name:'オメガパフューム', pop:3,  odds:5.7},  second:{name:'ヴェンジェンス',    pop:5,  odds:8.4},  third:{name:'クリンチャー',       pop:2,  odds:4.1},  sanrentan:3000,   venue:'京都' },
+    { year:2019, first:{name:'グリム',           pop:1,  odds:2.4},  second:{name:'オメガパフューム',  pop:12, odds:28.6}, third:{name:'クリソライト',       pop:3,  odds:5.2},  sanrentan:32970,  venue:'京都' },
+    { year:2018, first:{name:'ロードゴラッソ',   pop:7,  odds:14.8}, second:{name:'クリノスターオー',  pop:3,  odds:5.4},  third:{name:'ドラゴンバローズ',   pop:5,  odds:9.2},  sanrentan:24480,  venue:'京都' },
+    { year:2017, first:{name:'クリノスターオー', pop:1,  odds:2.0},  second:{name:'メイショウスミトモ',pop:6,  odds:12.3}, third:{name:'コスモカナディアン', pop:15, odds:62.4}, sanrentan:96220,  venue:'京都' },
+    { year:2016, first:{name:'クリノスターオー', pop:1,  odds:1.8},  second:{name:'ストロングバローズ',pop:3,  odds:6.1},  third:{name:'マイネルバサラ',     pop:4,  odds:8.3},  sanrentan:1770,   venue:'京都' },
+  ],
+  anaPoints: [
+    // ===== 過去10年 1〜3着サマリー =====
+    '📊 過去10年の勝ち馬：クリノスターオー(1)×2回(2016・17)・ロードゴラッソ(7)・グリム(1)・オメガパフューム(3)・サンライズホープ(2)・テーオーケインズ(1)×2回(22・23)・ミトノオー(5)・アウトレンジ(4)',
+    '📊 3連単配当：83,590円(2025)・38,830円(2024)・940円(2023)・3,350円(2022)・1,490円(2021)・3,000円(2020)・32,970円(2019)・24,480円(2018)・96,220円(2017)・1,770円(2016)',
+    // ===== コース解説 =====
+    '🏟️【コース特徴】4コーナー付近スタート・最初のコーナーまで420m超で枠順有利不利少なめ。1周1607.6m・バックストレッチ404mでスピード必要・3コーナー手前高低差3m・直線329.1mと短め',
+    '⭐【最重要傾向】勝ち馬8頭中6頭が4コーナー3番手以内→逃げ先行が圧倒的有利',
+    // ===== 人気データ =====
+    '⭐1番人気【5-1-0-4】複勝率60%・単勝2.9倍以内なら【5-2-0-1】連対率87.5%で信頼',
+    '⭐3番人気【1-4-4-1】複勝率90%が最高！3番人気は複勝の積極活用',
+    '⚠️2番人気【1-1-1-7】複勝率30%と低い・2番人気は割引',
+    '⚠️8番人気以下【0-1-2-64】3連単平均85,780円の波乱も10番人気以下は3頭のみ',
+    // ===== 年齢データ =====
+    '⭐5歳【6-3-4-35】中心・4歳【4-2-1-28】 / 勝ち馬10頭全て4歳か5歳',
+    '⚠️6歳で当日8番人気以下→【0-0-1-25】消し',
+    '⚠️7歳以上で当日7番人気以下→【0-0-1-24】消し',
+    // ===== 所属（最重要）=====
+    '⭐【最重要】関西馬が圧倒的：2014年以降11勝・2着12回・3着12回',
+    '⚠️関東馬は2番人気以内でも好走は2024年ミトノオー（5番人気）の1頭のみ',
+    '⚠️関東馬で当日6番人気以下→【0-0-0-27】完全消し',
+    // ===== 前走データ =====
+    '⭐前走場所：地方・阪神・東京の3組が主力→1〜3着馬36頭中28頭が該当',
+    '⭐フェブラリーS組【2-1-1-4】複勝率50%・安定',
+    '⭐ダイオライト記念組【2-1-0-5】・サウジC組【1-0-1-0】地方・海外交流組',
+    '⚠️アンタレスS組【1-2-4-45】前走1着でも【0-1-0-3】と不振',
+    '⚠️前走1900m以下のOP特別→【0-0-0-15】完全消し',
+    '⚠️前走3勝クラス→【0-0-0-12】完全消し',
+    '⭐前走距離1600m【2-2-1-7】複勝率41.7%・2000m以上【2-2-0-6】複勝率40%',
+    '⚠️前走重賞10番人気以下→【0-1-0-28】例外2024ハピ（天皇賞春経由）のみ',
+    // ===== 脚質データ =====
+    '⭐【最重要】逃げ・先行が圧倒的有利：勝ち馬8頭中6頭が4コーナー3番手以内',
+    '⭐4コーナー5番手以内：馬券24頭中11頭・先行力必須',
+    '⚠️コーナー加速が不得手な差し追込タイプは鬼門',
+    '⭐持ち時計が速い馬→上がり12秒2以内【1-2-3-6】複勝率50%',
+    // ===== 枠順データ =====
+    '⭐枠順の有利不利は少ない（コーナーまで420m超）',
+    '⚠️7〜8枠は回収率が低い→実力馬に限定',
+    '⭐1〜4枠【6勝・3着以内14頭】・5〜8枠【4勝・3着以内16頭】ほぼ互角',
+    // ===== 調教データ =====
+    '⭐栗東CW組【6-4-1-36】11頭が馬券・複勝率23.4%が最優秀',
+    '⭐栗東坂路組【3-6-8-57】17頭が馬券・複勝率23%',
+    '⚠️美浦南坂路【0-0-0-6】・美浦南W【1-0-0-20】美浦馬苦戦',
+    // ===== 血統データ =====
+    '⭐キングカメハメハ産駒3勝・シニスターミニスター産駒2勝',
+    '⭐AP Indy直系が京都ダートで強い',
+    '⭐Mr.Prospector・Nijinsky・Specialの血脈→リピーター馬に共通',
+    '⭐ゴール前直線329mと短い→米国短距離スプリント系が合う',
+    // ===== 間隔データ =====
+    '⭐10週〜25週（2〜6ヶ月）【7-3-3-30】が最多勝利・帝王賞を見据えた調整組',
+    '⚠️半年以上の休み明け【0-0-0-1】好走なし',
+    // ===== 選定基準まとめ =====
+    '🏆【軸馬条件】4〜5歳×関西馬×逃げ先行×前走地方or阪神orフェブラリーS×単勝2.9倍以内or3番人気',
+    '🏆【相手条件】4〜5歳×関西馬×前走重賞1〜5番人気×持ち時計上位',
+    '★消し条件：関東馬6番人気以下・前走1900m以下OP・前走3勝クラス・6歳8番人気以下・7歳7番人気以下・差し追込',
+  ],
+};
 </script>
 </body>
 </html>
