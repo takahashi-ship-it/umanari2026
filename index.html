@@ -8652,7 +8652,7 @@ function setCurrentRace(name) {
 
 renderPastData();
 renderHorses();
-renderCriteria();
+if (document.getElementById('goodList')) renderCriteria();
 
 // 初回表示の馬場予想バッジ（天皇賞春のbabaPrediction）
 (function() {
@@ -11344,14 +11344,8 @@ var JIKU_TRACKING = [
 ];
 
 function renderJikuTracking() {
-  console.log('[jiku-track] called at', new Date().toISOString());
   var container = document.getElementById('jiku-tracking-container');
-  console.log('[jiku-track] container=', container);
-  console.log('[jiku-track] container parent display=', container ? getComputedStyle(container.parentElement).display : 'N/A');
-  console.log('[jiku-track] JIKU_TRACKING typeof=', typeof JIKU_TRACKING);
-  console.log('[jiku-track] JIKU_TRACKING.length=', (typeof JIKU_TRACKING !== 'undefined' ? JIKU_TRACKING.length : 'undefined'));
-  if (!container) { console.warn('[jiku-track] EARLY RETURN: no container'); return; }
-  try {
+  if (!container) return;
 
   var aiHits    = JIKU_TRACKING.filter(function(r){ return r.aiHit; }).length;
   var scoreHits = JIKU_TRACKING.filter(function(r){ return r.scoreHit; }).length;
@@ -11474,11 +11468,6 @@ function renderJikuTracking() {
 
   html += '</div>';
   container.innerHTML = html;
-    console.log('[jiku-track] innerHTML set, length=', html.length, 'container.children=', container.children.length);
-  } catch (e) {
-    console.error('[jiku-track] EXCEPTION', e);
-    container.innerHTML = '<div style="color:red;padding:10px">⚠️ 軸馬トラッキング描画エラー: ' + e.message + '</div>';
-  }
 }
 
 function sw(t) {
