@@ -8317,8 +8317,9 @@ function renderHorses() {
   enriched.forEach(e => {
     var _bd = (typeof computeScoreBreakdown === 'function')
       ? computeScoreBreakdown(e.h, currentRace)
-      : { pct: Math.min(99, Math.round(sumScore(e.score) * 100 / maxScoreFor(e.score))) };
+      : { pct: Math.min(99, Math.round(sumScore(e.score) * 100 / maxScoreFor(e.score))), total: sumScore(e.score), max: maxScoreFor(e.score), items: {} };
     e._pct = Math.max(0, Math.min(99, _bd.pct));
+    e._bd = _bd;
   });
   // pct 順にソート（同点時は sumScore で副次ソート）
   enriched.sort((a, b) => (b._pct - a._pct) || (sumScore(b.score) - sumScore(a.score)));
@@ -8326,11 +8327,13 @@ function renderHorses() {
   // 80% 以上の馬数を集計（◎本命の重複防止用）
   const honmeiCount = enriched.filter(e => e._pct >= 80).length;
 
-  enriched.forEach(({ h, score, _pct }, idx) => {
+  enriched.forEach(({ h, score, _pct, _bd }, idx) => {
     const siVal = score._siValue;
     const siAvailable = siVal !== null && siVal !== undefined;
-    const total = sumScore(score);
-    const maxS = maxScoreFor(score);
+    const breakdown = _bd || { items: {}, total: 0, max: 115 };
+    const bdItems = breakdown.items || {};
+    const total = breakdown.total;
+    const maxS = breakdown.max;
     const pct = _pct;
     let rank = rankFromTotal(pct);
     // 80% 以上が複数いる場合：最高スコア（idx===0）のみ ◎本命、残りは ○対抗 に降格
@@ -8418,19 +8421,17 @@ function renderHorses() {
           <div class="score-bar-fill ${rank.key}" style="width:${pct}%"></div>
         </div>
         <div class="score-detail">
-          <div class="score-item"><div class="si-label">人気</div><div class="si-val">${score.ninki}/20</div></div>
-          <div class="score-item"><div class="si-label">枠順</div><div class="si-val">${score.waku}/15</div></div>
-          <div class="score-item"><div class="si-label">データ</div><div class="si-val">${score.dataFit}/20</div></div>
-          <div class="score-item"><div class="si-label">血統</div><div class="si-val">${score.ketto}/10</div></div>
-          <div class="score-item"><div class="si-label">騎手</div><div class="si-val">${score.jockey}/10</div></div>
-          <div class="score-item"><div class="si-label">コース</div><div class="si-val">${score.course}/10</div></div>
-          <div class="score-item" title="${(h.trainingNote || '').replace(/"/g,'&quot;')}"><div class="si-label">調教</div><div class="si-val">${h.trainingBadge ? '<span style="color:#A32D2D;font-weight:700">'+h.trainingBadge+'</span> ' : ''}${score.chokyo}/10</div></div>
+          <div class="score-item"><div class="si-label">人気</div><div class="si-val">${(bdItems.popularity && bdItems.popularity.score) || 0}/20</div></div>
+          <div class="score-item"><div class="si-label">枠順</div><div class="si-val">${(bdItems.waku && bdItems.waku.score) || 0}/15</div></div>
+          <div class="score-item"><div class="si-label">データ</div><div class="si-val">${(bdItems.data && bdItems.data.score) || 0}/20</div></div>
+          <div class="score-item"><div class="si-label">血統</div><div class="si-val">${(bdItems.blood && bdItems.blood.score) || 0}/10</div></div>
+          <div class="score-item"><div class="si-label">騎手</div><div class="si-val">${(bdItems.jockey && bdItems.jockey.score) || 0}/10</div></div>
+          <div class="score-item"><div class="si-label">コース</div><div class="si-val">${(bdItems.course && bdItems.course.score) || 0}/10</div></div>
+          <div class="score-item" title="${(h.trainingNote || '').replace(/"/g,'&quot;')}"><div class="si-label">調教</div><div class="si-val">${h.trainingBadge ? '<span style="color:#A32D2D;font-weight:700">'+h.trainingBadge+'</span> ' : ''}${(bdItems.training && bdItems.training.score) || 0}/10</div></div>
           <div class="score-item"><div class="si-label">スピード</div><div class="si-val">${siDetailText}</div></div>
-          <div class="score-item"><div class="si-label">馬場適性</div><div class="si-val" style="color:${score.baba >= 15 ? '#A32D2D' : score.baba >= 8 ? '#0F6E56' : score.baba >= 4 ? '#2563eb' : score.baba >= 0 ? '#EF9F27' : '#A32D2D'}">${score.baba != null ? score.baba + '/15 ' + (score.baba >= 15 ? '★' : score.baba >= 8 ? '◎' : score.baba >= 4 ? '○' : score.baba >= 0 ? '△' : '×') : '--'}</div></div>
-          <div class="score-item"><div class="si-label">馬体重</div><div class="si-val" style="color:${score.bw > 0 ? '#0F6E56' : score.bw < 0 ? '#A32D2D' : '#888'}">${h.bodyWeightDiff != null ? (h.bodyWeightDiff >= 0 ? '+' : '') + h.bodyWeightDiff + 'kg' : '--'} (${score.bw >= 0 ? '+' : ''}${score.bw||0})</div></div>
-          <div class="score-item" title="${score._distLabel || ''}"><div class="si-label">距離経験</div><div class="si-val" style="color:${score.dist >= 8 ? '#0F6E56' : score.dist >= 4 ? '#2563eb' : score.dist > 0 ? '#888' : '#bbb'}">${(score.dist || 0) > 0 ? '+' + score.dist : '0'}/8</div></div>
-          <div class="score-item" title="${score._stallionLabel || ''}"><div class="si-label">種牡馬</div><div class="si-val" style="color:${score.stallion >= 8 ? '#A32D2D' : score.stallion >= 4 ? '#0F6E56' : '#888'}">${(score.stallion || 0) > 0 ? '+' + score.stallion : '0'}/10</div></div>
-          <div class="score-item" title="${score._leftLabel || ''}"><div class="si-label">${(typeof getRaceDirection === 'function' && getRaceDirection(currentRace||'') === 'right') ? '右回り' : '左回り'}</div><div class="si-val" style="color:${score.leftPts >= 5 ? '#A32D2D' : score.leftPts >= 3 ? '#0F6E56' : score.leftPts > 0 ? '#2563eb' : score.leftPts < 0 ? '#A32D2D' : '#888'}">${score.leftPts > 0 ? '+' + score.leftPts : (score.leftPts || 0)}/5</div></div>
+          ${(function(){var b=(bdItems.baba && bdItems.baba.score)||0;var c=b>=15?'#A32D2D':b>=8?'#0F6E56':b>=4?'#2563eb':b>=0?'#EF9F27':'#A32D2D';var ic=b>=15?'★':b>=8?'◎':b>=4?'○':b>=0?'△':'×';return '<div class="score-item"><div class="si-label">馬場適性</div><div class="si-val" style="color:'+c+'">'+b+'/15 '+ic+'</div></div>';})()}
+          ${(function(){var d=(bdItems.distance && bdItems.distance.score)||0;var c=d>=8?'#0F6E56':d>=4?'#2563eb':d>0?'#888':'#bbb';return '<div class="score-item" title="'+((breakdown.distLabel||'').replace(/"/g,'&quot;'))+'"><div class="si-label">距離経験</div><div class="si-val" style="color:'+c+'">'+(d>0?'+'+d:'0')+'/8</div></div>';})()}
+          ${(function(){var p=(bdItems.direction && bdItems.direction.score)||0;var lbl=(bdItems.direction && bdItems.direction.label)||'左回り';var c=p>=5?'#A32D2D':p>=3?'#0F6E56':p>0?'#2563eb':p<0?'#A32D2D':'#888';return '<div class="score-item" title="'+((breakdown.dirLabel||'').replace(/"/g,'&quot;'))+'"><div class="si-label">'+lbl+'</div><div class="si-val" style="color:'+c+'">'+(p>0?'+'+p:p)+'/5</div></div>';})()}
           <div class="score-item"><div class="si-label">合計</div><div class="si-val">${total}/${maxS}</div></div>
         </div>
       </div>
