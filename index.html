@@ -8050,7 +8050,13 @@ function calcHeianS(horse, raceName) {
     if (mm) _minus -= parseInt(mm[1], 10);
   });
   var _capped = Math.min(30, _plus) + _minus;
-  return { pts: _capped, labels: labels, label: labels.join(' / ') };
+  // 1番人気への特別加点【キャップ外】（画像データ：勝率50%・単回131%・軸機能性高）
+  var _specialBonus = 0;
+  if (horse.popEstimate === 1) {
+    _specialBonus = 10;
+    labels.push('⭐1番人気軸機能（勝率50%・単回131%・キャップ外）+10pt】');
+  }
+  return { pts: _capped + _specialBonus, labels: labels, label: labels.join(' / ') };
 }
 
 function computeScore(h) {
