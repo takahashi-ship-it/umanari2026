@@ -10873,6 +10873,54 @@ function computeScoreBreakdown(horse, raceName) {
     if (horse.farm === 'ノーザンF') dataScore += 3;
     if ((horse.odds || 0) >= 5.0 && (horse.odds || 0) <= 20.0) dataScore += 5;
     dataScore = Math.min(20, dataScore);
+  } else if (raceName === 'オークス') {
+    // 鉄板データPart2 + 既存ロジック反映
+    // ①継続騎乗（10年8勝＋ルメール特例）
+    var prevJockey = horse.prev1jockey || '';
+    if (prevJockey && prevJockey === horse.jockey) dataScore += 5;   // 継続騎乗
+    else if (horse.jockey === 'C.ルメール') dataScore += 5;          // ルメール特例
+    // ②差し脚質（8年7勝）・先行逃げ壊滅
+    if (horse.pace && /差し|追込/.test(horse.pace)) dataScore += 8;
+    else if (horse.pace && /先行|逃げ/.test(horse.pace)) dataScore -= 3;
+    // ③ノーザン+社台
+    if (horse.farm === 'ノーザンF' || horse.farm === '社台F') dataScore += 5;
+    // ④前走G1で4着以内（桜花賞4着内パターン90%データ）
+    if (horse.prev1grade === 'G1' && horse.prev1r >= 1 && horse.prev1r <= 4) dataScore += 8;
+    // ⑤桜花賞5着馬（過去30年で1頭のみ3着内）
+    if (horse.prev1race === '桜花賞' && horse.prev1r === 5) dataScore -= 5;
+    // ⑥前走G2で1〜2着（フローラS最強トライアル）
+    if (horse.prev1grade === 'G2' && horse.prev1r >= 1 && horse.prev1r <= 2) dataScore += 6;
+    // ⑦前走L級で1着（人気薄激走パターン）
+    if (horse.prev1grade === 'L' && horse.prev1r === 1 && horse.popEstimate >= 6) dataScore += 5;
+    // ⑧3番人気の単回222%データ
+    if (horse.popEstimate === 3) dataScore += 4;
+    // ⑨調教評価
+    if (horse.training === 'S') dataScore += 4;
+    else if (horse.training === 'A') dataScore += 2;
+    else if (horse.training === 'C') dataScore -= 3;
+    dataScore = Math.max(0, Math.min(20, dataScore));
+  } else if (raceName === '平安ステークス') {
+    // 過去10年データ反映
+    // ①関西馬（11勝）
+    if (horse.shozo === '栗東') dataScore += 4;
+    else if (horse.shozo === '美浦' && horse.popEstimate >= 6) dataScore -= 3;
+    // ②人気帯（3番人気3着内率90%・1番人気勝率50%）
+    if (horse.popEstimate === 1) dataScore += 6;
+    else if (horse.popEstimate === 3) dataScore += 8;
+    else if (horse.popEstimate === 2) dataScore += 3;
+    else if (horse.popEstimate >= 8) dataScore -= 4;
+    // ③年齢（4-5歳が主流・9/10勝）
+    if (horse.age >= 4 && horse.age <= 5) dataScore += 3;
+    else if (horse.age >= 7) dataScore -= 2;
+    // ④前走重賞2着以内（メイン経路）
+    if ((horse.prev1grade === 'G1' || horse.prev1grade === 'G2' || horse.prev1grade === 'G3') && horse.prev1r >= 1 && horse.prev1r <= 2) dataScore += 5;
+    // ⑤先行脚質（4角3番手以内型）
+    if (horse.pace && /先行|逃げ/.test(horse.pace)) dataScore += 4;
+    // ⑥リピーター（同コース実績）
+    if (horse.heianRegion === true) dataScore += 3;
+    // ⑦騎手評価
+    if (['川田将雅','武豊','C.ルメール','坂井瑠星'].indexOf(horse.jockey) >= 0) dataScore += 2;
+    dataScore = Math.max(0, Math.min(20, dataScore));
   } else {
     dataScore = 10;
   }
