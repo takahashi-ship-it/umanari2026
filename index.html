@@ -10908,26 +10908,66 @@ function computeScoreBreakdown(horse, raceName) {
     else if (horse.training === 'C') dataScore -= 3;
     dataScore = Math.max(0, Math.min(20, dataScore));
   } else if (raceName === '平安ステークス') {
-    // 過去10年データ反映
-    // ①関西馬（11勝）
-    if (horse.shozo === '栗東') dataScore += 4;
-    else if (horse.shozo === '美浦' && horse.popEstimate >= 6) dataScore -= 3;
-    // ②人気帯（3番人気3着内率90%・1番人気勝率50%）
-    if (horse.popEstimate === 1) dataScore += 6;
-    else if (horse.popEstimate === 3) dataScore += 8;
-    else if (horse.popEstimate === 2) dataScore += 3;
-    else if (horse.popEstimate >= 8) dataScore -= 4;
-    // ③年齢（4-5歳が主流・9/10勝）
-    if (horse.age >= 4 && horse.age <= 5) dataScore += 3;
-    else if (horse.age >= 7) dataScore -= 2;
-    // ④前走重賞2着以内（メイン経路）
-    if ((horse.prev1grade === 'G1' || horse.prev1grade === 'G2' || horse.prev1grade === 'G3') && horse.prev1r >= 1 && horse.prev1r <= 2) dataScore += 5;
-    // ⑤先行脚質（4角3番手以内型）
-    if (horse.pace && /先行|逃げ/.test(horse.pace)) dataScore += 4;
-    // ⑥リピーター（同コース実績）
-    if (horse.heianRegion === true) dataScore += 3;
-    // ⑦騎手評価
-    if (['川田将雅','武豊','C.ルメール','坂井瑠星'].indexOf(horse.jockey) >= 0) dataScore += 2;
+    // 画像1: 過去10年データ「勝利の方程式」反映
+
+    // ① 人気帯（黄金トリガー & 軸機能）
+    if (horse.popEstimate === 3) dataScore += 10;        // 複勝率90%・黄金トリガー
+    else if (horse.popEstimate === 1) dataScore += 8;    // 勝率50%・軸機能
+    else if (horse.popEstimate === 2) dataScore += 5;    // 複勝回収率128%
+    else if (horse.popEstimate >= 11) dataScore -= 5;    // 11番人気以下相当の消し
+
+    // ② 年齢（4歳トップ・5歳壊滅・6歳以上ほぼゼロ）
+    if (horse.age === 4) dataScore += 8;                 // 勝率12.5%・全世代トップ
+    else if (horse.age === 5) dataScore -= 5;            // 勝率0%・壊滅
+    else if (horse.age >= 6) dataScore -= 3;             // 勝率3.1%
+
+    // ③ 所属（関西>>関東）
+    if (horse.shozo === '栗東') dataScore += 5;          // 複勝率23.2%
+    else if (horse.shozo === '美浦') dataScore -= 5;     // 複勝率3.1%
+
+    // ④ Risk Profile（美浦＋6歳以上＋3人気以内＝勝率0%）
+    if (horse.shozo === '美浦' && horse.age >= 6 && horse.popEstimate <= 3) {
+      dataScore -= 5;
+    }
+
+    // ⑤ 継続騎乗（乗替15.4%の2.1倍差）
+    var prevJockeyH = horse.prev1jockey || '';
+    if (prevJockeyH && prevJockeyH === horse.jockey) dataScore += 4;
+
+    // ⑥ 脚質（先行が勝利シェア55%・4角5番手以内必須）
+    if (horse.pace && /先行|逃げ/.test(horse.pace)) dataScore += 8;
+    else if (horse.pace && /差し|追込/.test(horse.pace)) dataScore -= 2;
+
+    // ⑦ 前走重賞2着以内（複勝率45%・最強好走データ）
+    if ((horse.prev1grade === 'G1' || horse.prev1grade === 'G2' || horse.prev1grade === 'G3')
+        && horse.prev1r >= 1 && horse.prev1r <= 2) {
+      dataScore += 8;
+    }
+
+    // ⑧ 前走2000m以上からの距離短縮（複勝率39.4%）
+    if (horse.prev1distance && horse.prev1distance >= 2000) dataScore += 6;
+
+    // ⑨ 前走6着以下でも上位人気（巻き返し型・複勝率16.7%）
+    if (horse.prev1r >= 6 && horse.prev1pop && horse.prev1pop <= 5) dataScore += 4;
+
+    // ⑩ 前走3勝クラス昇級組（複勝率6.7%・消し）
+    if (horse.prev1class === '3勝' || horse.prev1grade === '3勝C') dataScore -= 4;
+
+    // ⑪ 血統系統別（画像1）
+    var bloodTypeH = horse.bloodType || horse.stallionLine || '';
+    if (/ノーザンダンサー|ドレフォン|ダンチヒ|ヌレイエフ/.test(bloodTypeH)) dataScore += 5;
+    else if (/キングカメハメハ|ロードカナロア|キンカメ|Kingmambo/.test(bloodTypeH)) dataScore += 3;
+    else if (/サンデー|ハーツクライ|ディープインパクト|キズナ|SS/.test(bloodTypeH)) dataScore += 1;
+    else if (/ナスルーラ|シニスターミニスター|ボールドルーラー/.test(bloodTypeH)) dataScore -= 3;
+
+    // ⑫ 穴馬の激走条件（6番人気以下＋ノーザンダンサー系＋前走3勝クラス1着）
+    if (horse.popEstimate >= 6
+        && /ノーザンダンサー|ドレフォン/.test(bloodTypeH)
+        && (horse.prev1class === '3勝' || horse.prev1grade === '3勝C')
+        && horse.prev1r === 1) {
+      dataScore += 8;
+    }
+
     dataScore = Math.max(0, Math.min(20, dataScore));
   } else {
     dataScore = 10;
