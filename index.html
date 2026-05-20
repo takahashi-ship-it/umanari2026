@@ -7962,6 +7962,12 @@ function calcOaks(horse, raceName) {
   // 枠番
   if (horse.waku === 1) { pts += 4; labels.push('⭐1枠→3着内率最高+4pt】'); }
   if (horse.waku === 7) { pts += 4; labels.push('⭐7枠→最多勝+4pt】'); }
+  // 桜花賞4着内90%データの今年の対象馬（スターアニス）への特別加点
+  // 過去30年で27回・90%が「桜花賞4着内馬1頭は3着内」のデータ
+  if (horse.prev1race === '桜花賞' && horse.prev1r === 1) {
+    pts += 10;
+    labels.push('⭐桜花賞4着内90%データ該当（過去30年27回・唯一の対象馬）+10pt】');
+  }
   // キャップ
   var _plus = 0, _minus = 0;
   labels.forEach(function(lbl) {
