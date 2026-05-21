@@ -4059,6 +4059,7 @@ const HORSES_BY_RACE = {
   { name:'ドリームコア', age:3, sex:'牝', waku:6, umaban:12, uma:4, hande:55.0,
     father:'エピファネイア', motherFather:'スペシャルウィーク', blood:'SS系',
     shozo:'美浦', stable:'美浦', jockey:'C.ルメール', odds:7.4, popEstimate:4,
+    tokyoWins:3, tokyoStarts:3,
     pace:'先行', leftCourseScore:6,
     prev1race:'桜花賞', prev1grade:'G1', prev1r:9, prev1pop:2,
     tokyoMileG:false, training:'B',
@@ -10515,6 +10516,18 @@ var KAIMOKU_DATA = {
       { name:'アンジュドジョワ',  reason:'SI74・7人気23倍・岩田望来継続騎乗・ドゥラメンテ産駒（22-23オークス連覇血統）／⚠️先行脚質マイナス' },
     ],
     anaHorses: [
+      { name:'ドリームコア', pop:4, odds:7.4, confidence:72,
+        reasons:[
+          '✅ 東京競馬場【3-0-0-0】複勝率100%・左回りでしか勝っていない絶対的コース適性',
+          '✅ 5戦3勝【3-0-1-1】の安定感・東京2400mは未経験だが東京コース自体は完璧',
+          '✅ C.ルメール継続騎乗（10年8勝の鉄板継続データ＋ルメール特例）',
+          '✅ ノーザンファーム生産（馬券内70%独占データ該当）',
+          '✅ エピファネイア産駒（距離延長プラス評価）',
+          '✅ デイリー馬体診断B評価・萩原師「全体的に良かった」',
+          '⚠️ 先行脚質は過去10年壊滅データ・ただし東京の長い直線で持続力発揮型なら克服可能',
+          '⚠️ 桜花賞9着は右回り・東京左回りでの巻き返し期待',
+          '→ 東京コース完璧×ルメール継続騎乗の組み合わせは軸級候補',
+        ] },
       { name:'ジュウリョクピエロ', pop:6, odds:17.0, confidence:70,
         reasons:[
           '✅ 継続騎乗（今村聖奈）・過去10年【8勝】の鉄板継続騎乗データ該当',
@@ -10548,14 +10561,6 @@ var KAIMOKU_DATA = {
         ] },
     ],
     caveatHorses: [
-      { name:'ドリームコア', uma:12, pop:4, odds:7.4, label:'⚡ 伏兵注意',
-        caveatNote:'ルメール継続騎乗の特例＋ノーザンF生産で2つのデータ該当。ただし先行脚質は壊滅データに抵触。',
-        reasons:[
-          'ルメール継続騎乗・過去10年8勝の鉄板継続データ該当',
-          'ノーザンF生産・上位独占70%データ該当',
-          'エピファネイア産駒は距離延長プラス',
-          '⚠️先行脚質は過去10年勝ち馬1頭のみで壊滅データ',
-        ] },
       { name:'エンネ', uma:13, pop:5, odds:13.3, label:'⚡ 伏兵注意',
         caveatNote:'差し〜追込脚質で過去10年主流データ該当。継続騎乗・フローラS2着の安定感も◎',
         reasons:[
@@ -10901,6 +10906,14 @@ function computeScoreBreakdown(horse, raceName) {
     if (horse.training === 'S') dataScore += 4;
     else if (horse.training === 'A') dataScore += 2;
     else if (horse.training === 'C') dataScore -= 3;
+    // ⑩東京コース実績（東京2400m左回り適性）
+    if (horse.tokyoWins && horse.tokyoStarts) {
+      if (horse.tokyoStarts >= 3 && horse.tokyoWins === horse.tokyoStarts) {
+        dataScore += 8;  // 東京3戦以上で全勝（複勝率100%）
+      } else if (horse.tokyoWins / horse.tokyoStarts >= 0.5) {
+        dataScore += 4;  // 東京で勝率50%以上
+      }
+    }
     dataScore = Math.max(0, Math.min(20, dataScore));
   } else if (raceName === '平安ステークス') {
     // 画像1: 過去10年データ「勝利の方程式」反映
