@@ -11108,9 +11108,9 @@ function computeScoreBreakdown(horse, raceName) {
   distScore     = Math.min(8,  Math.max(0, distScore));
   dirScore      = Math.min(5,  Math.max(0, dirScore));
 
-  // 分母を実効最大値115に正規化（複数馬の99%張り付き防止・差別化）
-  // 各項目最大: 20+15+20+10+10+10+10+10+15+8+5 = 133 だが、全項目MAXは現実的でないため115で割る
-  var MAX = 115;
+  // 分母を実効最大値130に正規化（キャップ外加点を含む99%張り付き防止・差別化）
+  // 各項目最大: 20+15+20+10+10+10+10+10+15+8+5 = 133 だが、キャップ外加点（calcOaks/calcHeianS の桜花賞1着+10・1番人気+10・継続騎乗等）を考慮して130で割る
+  var MAX = 130;
   var raw = popScore + wakuScore + dataScore + bloodScore + jockeyScore
           + courseScore + trainingScore + speedScore + babaScore
           + distScore + dirScore + penalty;
