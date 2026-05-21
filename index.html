@@ -9688,11 +9688,18 @@ function calcFukusho(h) {
   return { score: score, rank: rankLetter, ok: ok, breakdown: s, raw: total, max: maxS };
 }
 
-function selectJiku(horses) {
+function selectJiku(horses, raceName) {
+  // 1. 手動選択があればそれを優先
   if (window.selectedJiku) {
     var found = horses.find(function(h){return h.name === window.selectedJiku;});
     if (found) return found;
   }
+  // 2. KAIMOKU_DATA の jiku をデフォルトに（AI推奨軸）
+  if (raceName && typeof KAIMOKU_DATA !== 'undefined' && KAIMOKU_DATA[raceName] && KAIMOKU_DATA[raceName].jiku) {
+    var preset = horses.find(function(h){return h.name === KAIMOKU_DATA[raceName].jiku;});
+    if (preset) return preset;
+  }
+  // 3. 最後の保険としてフォールバック
   var scored = horses.map(function(h) {
     var sc = calcFukusho(h).score;
     var isPopular = (h.popEstimate || 99) <= 3;
@@ -9736,7 +9743,8 @@ function renderKaime() {
   var jikuEl = document.getElementById('jiku-card');
   if (!jikuEl) return;
 
-  var jiku = selectJiku(horses);
+  var raceName = window.currentRaceName || currentRace;
+  var jiku = selectJiku(horses, raceName);
   var himoAll = selectHimo(horses, jiku);
   var jikuR = calcFukusho(jiku);
   var fukushoProb = Math.min(95, Math.round(jikuR.score * 0.85));
@@ -9744,7 +9752,6 @@ function renderKaime() {
   var jikuUmaDisplay = (jiku.umaban != null) ? (jiku.umaban + '番') : '';
 
   // KAIMOKU_DATAから軸馬選定理由を取得
-  var raceName = window.currentRaceName || currentRace;
   var kaimokuData = (typeof KAIMOKU_DATA !== 'undefined') ? KAIMOKU_DATA[raceName] : null;
   var aiJiku = kaimokuData && kaimokuData.jiku;
   var reasonMap = (kaimokuData && kaimokuData.jikuReasonMap) || {};
@@ -11761,7 +11768,7 @@ function sw(t) {
       if (typeof renderAnaScorecard === 'function') renderAnaScorecard();
     }, 100);
   } else if (t === 'kaime') {
-    window.selectedJiku = null;
+    // selectedJiku はタブ切替時にリセットしない（手動選択を維持・レース切替時のみリセット）
     window.excludedHimo = [];
     if (typeof renderKaime === 'function') renderKaime();
     if (typeof renderKaimokuAI === 'function') renderKaimokuAI(window.currentRaceName || currentRace);
