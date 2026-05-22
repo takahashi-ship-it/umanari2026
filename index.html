@@ -7421,7 +7421,11 @@ function calcDistanceExpScore(horse, raceDistance) {
   }
   // 3. ±400m以内
   if (maxDist >= raceDistance - 400) {
-    return { pts: 2, label: '距離±400m経験（' + maxDist + 'm）', level: 'D' };
+    return { pts: 3, label: '距離±400m経験（' + maxDist + 'm）', level: 'D' };
+  }
+  // 4. ±600m以内（オークスのように出走馬の最高距離経験が低い場合の救済）
+  if (maxDist >= raceDistance - 600) {
+    return { pts: 2, label: '距離±600m経験（' + maxDist + 'm）', level: 'D' };
   }
   return { pts: 0, label: '距離経験不足', level: 'none' };
 }
@@ -10937,9 +10941,9 @@ function computeScoreBreakdown(horse, raceName) {
     }
     // ⑪2000m以上の経験回数（オークス2400m対応）
     if (horse.over2000Experience) {
-      if (horse.over2000Experience >= 4) dataScore += 5;
-      else if (horse.over2000Experience >= 3) dataScore += 4;
-      else if (horse.over2000Experience >= 2) dataScore += 2;
+      if (horse.over2000Experience >= 4) dataScore += 8;       // 4戦以上の豊富な経験
+      else if (horse.over2000Experience >= 3) dataScore += 6;   // 3戦
+      else if (horse.over2000Experience >= 2) dataScore += 4;   // 2戦
     }
     dataScore = Math.max(0, Math.min(20, dataScore));
   } else if (raceName === '平安ステークス') {
