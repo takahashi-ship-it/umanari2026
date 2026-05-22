@@ -4082,6 +4082,7 @@ const HORSES_BY_RACE = {
   { name:'ジュウリョクピエロ', age:3, sex:'牝', waku:8, umaban:16, uma:6, hande:55.0,
     father:'ブリックスアンドモルタル', motherFather:'ディープインパクト', blood:'SS系',
     shozo:'栗東', stable:'栗東', jockey:'今村聖奈', odds:16.0, popEstimate:6,
+    over2000Experience:2,
     pace:'差し', leftCourseScore:5,
     prev1race:'忘れな草賞', prev1grade:'L', prev1r:1, prev1pop:1,
     tokyoMileG:false, training:'B',
@@ -4157,6 +4158,7 @@ const HORSES_BY_RACE = {
   { name:'レイクラシック', age:3, sex:'牝', waku:1, umaban:2, uma:14, hande:55.0,
     father:'ドゥラメンテ', motherFather:'ルーラーシップ', blood:'SS系',
     shozo:'栗東', stable:'栗東', jockey:'M.ディー', odds:57.8, popEstimate:11,
+    over2000Experience:4,
     pace:'先行', leftCourseScore:4,
     prev1race:'前走', prev1grade:'L', prev1r:1, prev1pop:8,
     oaksPattern:'other',
@@ -4166,6 +4168,7 @@ const HORSES_BY_RACE = {
   { name:'ロングトールサリー', age:3, sex:'牝', waku:2, umaban:4, uma:15, hande:55.0,
     father:'キズナ', motherFather:'ハービンジャー', blood:'SS系',
     shozo:'美浦', stable:'美浦', jockey:'戸崎圭太', odds:240.0, popEstimate:17,
+    over2000Experience:4,
     pace:'先行', leftCourseScore:5,
     prev1race:'前走', prev1grade:'L', prev1r:1, prev1pop:9,
     oaksPattern:'other',
@@ -4175,6 +4178,7 @@ const HORSES_BY_RACE = {
   { name:'ソルパッサーレ', age:3, sex:'牝', waku:7, umaban:14, uma:16, hande:55.0,
     father:'モーリス', motherFather:'ディープインパクト', blood:'SS系',
     shozo:'栗東', stable:'栗東', jockey:'浜中俊', odds:73.1, popEstimate:13,
+    over2000Experience:2,
     pace:'先行', leftCourseScore:4,
     prev1race:'前走', prev1grade:'L', prev1r:1, prev1pop:10,
     training:'C',
@@ -4208,6 +4212,7 @@ const HORSES_BY_RACE = {
   { name:'スタニングレディ', age:3, sex:'牝', waku:4, umaban:7, uma:20, hande:55.0,
     father:'サトノクラウン', motherFather:'ディープインパクト', blood:'SS系',
     shozo:'美浦', stable:'美浦', jockey:'三浦皇成', odds:532.4, popEstimate:18,
+    over2000Experience:2,
     pace:'先行', leftCourseScore:4,
     prev1race:'前走', prev1grade:'L', prev1r:1, prev1pop:13,
     oaksPattern:'other',
@@ -10578,12 +10583,28 @@ var KAIMOKU_DATA = {
           'ハービンジャー産駒の長距離適性',
           '⚠️脚質によっては逃げ先行壊滅データに抵触',
         ] },
+      { name:'レイクラシック', uma:2, pop:11, odds:57.8, label:'⚡ 距離経験馬',
+        caveatNote:'2000m以上を4戦経験している今回メンバー随一の距離適性馬。11人気・57.8倍は完全に過小評価。',
+        reasons:[
+          '2000m以上4戦経験は今回メンバー最多クラス',
+          'M.ディーラー継続騎乗・栗東新谷功一厩舎',
+          '想定11人気・57.8倍は距離適性を考慮すれば過小評価',
+          '⚠️実績馬不足は懸念だが距離適性の壁を越えている希少な馬',
+        ] },
+      { name:'ロングトールサリー', uma:4, pop:17, odds:240.0, label:'⚡ 距離経験馬',
+        caveatNote:'2000m以上4戦経験の超大穴。戸崎圭太・福永祐一厩舎で17人気だが警戒したい一発候補。',
+        reasons:[
+          '2000m以上4戦経験は今回メンバー最多クラス',
+          '戸崎圭太騎乗・栗東福永祐一厩舎（人気薄でも仕上げる厩舎）',
+          '17人気240倍は完全に無印扱いだが距離経験は本物',
+          '⚠️3連単3列目の押さえ候補として',
+        ] },
     ],
     yumaBaken: {
       trigger: '1〜2番人気（スターアニス・ラフターラインズ）が共倒れの場合',
       patterns: [
-        { label:'5頭BOX', count:5, points:60, cost:18000, desc:'3連単5頭BOX・1点300円（Vマイル教訓で点数厳選）',
-          horses:['ジュウリョクピエロ','アランカール','ドリームコア','エンネ','スマートプリエール'] },
+        { label:'6頭BOX', count:6, points:120, cost:12000, desc:'3連単6頭BOX・1点100円（距離経験馬レイクラシックを追加）',
+          horses:['ジュウリョクピエロ','アランカール','ドリームコア','エンネ','スマートプリエール','レイクラシック'] },
       ],
       horses: [
         { name:'ジュウリョクピエロ', uma:16, odds:16.0, stars:3, label:'筆頭',
@@ -10913,6 +10934,12 @@ function computeScoreBreakdown(horse, raceName) {
       } else if (horse.tokyoWins / horse.tokyoStarts >= 0.5) {
         dataScore += 4;  // 東京で勝率50%以上
       }
+    }
+    // ⑪2000m以上の経験回数（オークス2400m対応）
+    if (horse.over2000Experience) {
+      if (horse.over2000Experience >= 4) dataScore += 5;
+      else if (horse.over2000Experience >= 3) dataScore += 4;
+      else if (horse.over2000Experience >= 2) dataScore += 2;
     }
     dataScore = Math.max(0, Math.min(20, dataScore));
   } else if (raceName === '平安ステークス') {
