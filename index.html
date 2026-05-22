@@ -9686,12 +9686,21 @@ function selectJiku(horses, raceName) {
     var found = horses.find(function(h){return h.name === window.selectedJiku;});
     if (found) return found;
   }
-  // 2. KAIMOKU_DATA の jiku をデフォルトに（AI推奨軸）
+  // 2. 信頼度スコア（pct）1位の馬を優先
+  if (typeof computeScoreBreakdown === 'function') {
+    var scoredByPct = horses.map(function(h) {
+      var bd;
+      try { bd = computeScoreBreakdown(h, raceName); } catch(e) { bd = null; }
+      return { h: h, pct: bd ? bd.pct : 0 };
+    }).sort(function(a, b) { return b.pct - a.pct; });
+    if (scoredByPct[0] && scoredByPct[0].h) return scoredByPct[0].h;
+  }
+  // 3. KAIMOKU_DATA の jiku をフォールバック（保険）
   if (raceName && typeof KAIMOKU_DATA !== 'undefined' && KAIMOKU_DATA[raceName] && KAIMOKU_DATA[raceName].jiku) {
     var preset = horses.find(function(h){return h.name === KAIMOKU_DATA[raceName].jiku;});
     if (preset) return preset;
   }
-  // 3. 最後の保険としてフォールバック
+  // 4. 最後の保険として旧スコアのフォールバック
   var scored = horses.map(function(h) {
     var sc = calcFukusho(h).score;
     var isPopular = (h.popEstimate || 99) <= 3;
