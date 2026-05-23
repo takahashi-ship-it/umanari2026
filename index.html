@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>JRA重賞予想 2026 | 天皇賞・春</title>
+<title>JRA重賞予想 2026 | オークス・日本ダービー</title>
 <style>
   :root {
     --bg: #ffffff;
@@ -2095,7 +2095,7 @@
 
 <script>
 /* 終了レースのリスト（カレンダー初回レンダリング前に定義必須） */
-var FINISHED_RACES = ['天皇賞（春）', '京都新聞杯', 'エプソムC', 'NHKマイルC', '新潟大賞典', 'ヴィクトリアマイル'];
+var FINISHED_RACES = ['天皇賞（春）', '京都新聞杯', 'エプソムC', 'NHKマイルC', '新潟大賞典', 'ヴィクトリアマイル', '平安ステークス'];
 
 /* =====================================================
  * 1) RACE CALENDAR
@@ -2162,7 +2162,7 @@ const RACES = [
   {date:"2026-05-10", name:"NHKマイルC",              grade:"G1", venue:"東京", surface:"芝1600m", status:"upcoming"},
   {date:"2026-05-16", name:"新潟大賞典",              grade:"G3", venue:"新潟", surface:"芝2000m", status:"done"},
   {date:"2026-05-17", name:"ヴィクトリアマイル",      grade:"G1", venue:"東京", surface:"芝1600m", status:"upcoming"},
-  {date:"2026-05-23", name:"平安ステークス",            grade:"G3", venue:"京都", surface:"ダ1900m", status:"upcoming"},
+  {date:"2026-05-23", name:"平安ステークス",            grade:"G3", venue:"京都", surface:"ダ1900m", status:"done"},
   {date:"2026-05-24", name:"オークス",                grade:"G1", venue:"東京", surface:"芝2400m", status:"upcoming"},
   {date:"2026-05-30", name:"葵S",                     grade:"G3", venue:"京都", surface:"芝1200m", status:"upcoming"},
   {date:"2026-05-31", name:"日本ダービー",            grade:"G1", venue:"東京", surface:"芝2400m", status:"current"},
@@ -2245,7 +2245,7 @@ const STATUS_BADGE = {
   upcoming: { label: "準備中", cls: "upcoming" }
 };
 
-const TARGET_RACE_NAME = "天皇賞（春）";
+const TARGET_RACE_NAME = "オークス";
 const SUPPORTED_RACES = new Set(["天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー"]);
 
 let currentMonth = 5;
@@ -4424,7 +4424,7 @@ Object.keys(HORSES_BY_RACE).forEach(function(race) {
   calcPopularity(HORSES_BY_RACE[race]);
 });
 
-let HORSES = HORSES_BY_RACE["天皇賞（春）"];
+let HORSES = HORSES_BY_RACE["オークス"];
 window.HORSES_BY_RACE = HORSES_BY_RACE;
 
 /* =====================================================
@@ -4756,6 +4756,20 @@ const RACE_META = {
   isFinished: false,
   babaPrediction: { status: "良馬場想定", icon: "☀️", color: "#1D9E75", comment: "東京開催・良馬場想定" },
 },
+'平安ステークス': {
+  gradeLine: "G3 / 第29回",
+  title:     "平安ステークス",
+  date:      "2026-05-23 (土)",
+  venue:     "京都競馬場",
+  surface:   "ダ1900m",
+  age:       "4歳上",
+  pageTitle: "JRA重賞予想 2026 | 平安ステークス",
+  distance: 1900,
+  direction: 'right',
+  isFinished: true,
+  resultBanner: '✅ 終了 | 1着：14ロードクロンヌ 2着：5ヴァルツァーシャル 3着：11タイトニット | 3連単33,730円（83人気の大波乱）| 投資6,000円・払戻0円・収支-6,000円（軸◎完璧的中も買い目で外す）',
+  babaPrediction: { status: "良馬場（終了）", icon: "✅", color: "#1D9E75", comment: "京都ダート1900m・良馬場で施行" },
+},
 '日本ダービー': {
   gradeLine: "G1 / 第93回",
   title:     "日本ダービー（東京優駿）",
@@ -4780,7 +4794,7 @@ const RACE_META = {
  *    - RACE_CONDITIONS[race] : レース固有
  *  最終的な good / bad は [...race固有, ...共通] で結合される。
  * ===================================================== */
-let currentRace = "天皇賞（春）";
+let currentRace = "オークス";
 
 /* 共通条件（全レースで常時適用） */
 const COMMON_GOOD_CONDITIONS = [
