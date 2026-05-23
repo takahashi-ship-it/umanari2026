@@ -10907,10 +10907,24 @@ function computeScoreBreakdown(horse, raceName) {
     else if (horse.pace && /先行|逃げ/.test(horse.pace)) dataScore -= 3;
     // ③ノーザン+社台
     if (horse.farm === 'ノーザンF' || horse.farm === '社台F') dataScore += 5;
-    // ④前走G1で4着以内（桜花賞4着内パターン90%データ）
-    if (horse.prev1grade === 'G1' && horse.prev1r >= 1 && horse.prev1r <= 4) dataScore += 8;
-    // ⑤桜花賞5着馬（過去30年で1頭のみ3着内）
-    if (horse.prev1race === '桜花賞' && horse.prev1r === 5) dataScore -= 5;
+    // ④前走G1で4着以内（桜花賞以外のG1）
+    if (horse.prev1grade === 'G1' && horse.prev1race !== '桜花賞' && horse.prev1r >= 1 && horse.prev1r <= 4) dataScore += 8;
+    // ⑤桜花賞組の前走着順別データ（画像「桜花賞組は前走4着以内が中心」反映）
+    if (horse.prev1race === '桜花賞') {
+      if (horse.prev1r === 1) dataScore += 8;       // 複勝率62.5%・最強データ
+      else if (horse.prev1r === 2) dataScore += 5;  // 複勝率42.9%
+      else if (horse.prev1r === 3) dataScore += 5;  // 複勝率44.4%
+      else if (horse.prev1r === 4) dataScore += 3;  // 複勝率33.3%
+      else if (horse.prev1r >= 5) {
+        // 5着以下は複勝率8.9%・基本減点
+        // ただし桜花賞で4番人気以内に支持されていた馬は巻き返し対象（チェルヴィニア型）
+        if (horse.prev1pop && horse.prev1pop <= 4) {
+          dataScore += 3;  // 巻き返し対象
+        } else {
+          dataScore -= 5;  // 完全消し寄り
+        }
+      }
+    }
     // ⑥前走G2で1〜2着（フローラS最強トライアル）
     if (horse.prev1grade === 'G2' && horse.prev1r >= 1 && horse.prev1r <= 2) dataScore += 6;
     // ⑦前走L級で1着（人気薄激走パターン）
