@@ -1335,7 +1335,7 @@
         font-size:11px;
         color:#888;
       ">
-        <span>投資 <strong id="header-invest" style="color:#333">263,200円</strong></span>
+        <span>投資 <strong id="header-invest" style="color:#333">269,200円</strong></span>
         <span style="color:#ccc">→</span>
         <span>払戻 <strong id="header-payout" style="color:#0F6E56">408,860円</strong></span>
         <span style="color:#ccc">|</span>
@@ -1492,7 +1492,7 @@
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
           <div>
             <div style="font-size:13px;font-weight:500;color:#085041;margin-bottom:2px">2026年 通算収支</div>
-            <div style="font-size:11px;color:#3B6D11">9レース（皐月賞・青葉賞・フローラS・マイラーズC・天皇賞春・京都新聞杯・エプソムC・NHKマイルC・ヴィクトリアマイル）</div>
+            <div style="font-size:11px;color:#3B6D11">10レース（皐月賞・青葉賞・フローラS・マイラーズC・天皇賞春・京都新聞杯・エプソムC・NHKマイルC・ヴィクトリアマイル・平安S）</div>
           </div>
           <div style="text-align:right">
             <div style="font-size:24px;font-weight:800;color:#0F6E56">+145,660円</div>
@@ -1963,6 +1963,51 @@
           </div>
           <div style="color:#c0392b;font-size:11px;margin-top:4px">
             ⚠️ 完璧的中（スコア1位×AI推奨×義英真本命の三位一体）だが、相手13頭の156点購入で点数過多。1〜3番人気決着の3,670円配当では回収不可。次回は相手6〜8頭に絞る運用へ
+          </div>
+        </div>
+      </div>
+
+      <!-- 平安ステークス -->
+      <div class="card" style="border:1.5px solid #c0392b">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">平安ステークス</div>
+            <div style="font-size:11px;color:var(--text-mute)">5/23（土）京都 ダ1900m G3</div>
+          </div>
+          <span style="background:#FBEAF0;color:#c0392b;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">✗ ハズレ（軸◎1着・買い目外2着）</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          3連単5頭BOX　03,09,11,14,16番（5頭・60点）各100円　合計6,000円
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">6,000円</div>
+          </div>
+          <div style="background:#FBEAF0;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#A32D2D">払戻</div>
+            <div style="font-size:13px;font-weight:700;color:#A32D2D">0円</div>
+          </div>
+          <div style="background:#FBEAF0;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#A32D2D">収支</div>
+            <div style="font-size:13px;font-weight:700;color:#A32D2D">-6,000円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('heianstakes')"
+          style="width:100%;padding:6px;border:1px solid #c0392b;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#c0392b;font-weight:500">
+          結果を見る ▼
+        </button>
+        <div id="result-heianstakes" style="display:none;margin-top:8px;padding:10px;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
+          <div style="font-weight:500;margin-bottom:4px;color:#0F6E56">✅ 軸◎は完璧的中（ただし3連単ハズレ）</div>
+          <div>🥇 1着：14番 ロードクロンヌ（横山和生・1番人気2.9倍）</div>
+          <div>🥈 2着：5番 ヴァルツァーシャル（9番人気・買い目外）</div>
+          <div>🥉 3着：11番 タイトニット（4番人気）</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #f5b7c9">
+            3連単 14→5→11：<strong style="font-size:15px;color:#c0392b">33,730円</strong>（83番人気の大波乱）<br>
+            ※3連複 14-5-11なら<strong>7,770円</strong>的中だった
+          </div>
+          <div style="color:#A32D2D;font-size:11px;margin-top:4px">
+            軸◎ロードクロンヌ1着・穴馬リスト◎タイトニット3着で軸馬予想は完璧的中。ただし2着に9人気ヴァルツァーシャル（買い目外）が突っ込み3連単83人気の大波乱に。3連複14-5-11なら7,770円的中だった。買い目構成の課題が残るレース
           </div>
         </div>
       </div>
@@ -9089,6 +9134,8 @@ const SEISEKI_DATA = [
   { race:'京都新聞杯',   date:'5/9',  invest:16800, payout:74860,  grade:'G2' },
   { race:'エプソムC',    date:'5/9',  invest:16800, payout:0,      grade:'G3' },
   { race:'NHKマイルC', date:'5/10', invest:42000, payout:52300,  grade:'G1' },
+  { race:'ヴィクトリアマイル', date:'5/17', invest:46800, payout:11010,  grade:'G1' },
+  { race:'平安S',         date:'5/23', invest:6000,  payout:0,      grade:'G3' },
 ];
 
 function renderSeisekiGraph() {
@@ -9104,7 +9151,8 @@ function renderSeisekiGraph() {
     { race:'京都新聞杯',       date:'5/9',  invest:16800, payout:74860,  grade:'G2', hit:true  },
     { race:'エプソムC',        date:'5/9',  invest:16800, payout:0,      grade:'G3', hit:false },
     { race:'NHKマイルC',       date:'5/10', invest:42000, payout:52300,  grade:'G1', hit:true  },
-    { race:'ヴィクトリアマイル', date:'5/17', invest:46800, payout:11010,  grade:'G1', hit:true  }
+    { race:'ヴィクトリアマイル', date:'5/17', invest:46800, payout:11010,  grade:'G1', hit:true  },
+    { race:'平安S',             date:'5/23', invest:6000,  payout:0,      grade:'G3', hit:false }
   ];
 
   var totalInvest = data.reduce(function(s,r){ return s + r.invest; }, 0);
