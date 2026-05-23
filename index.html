@@ -8392,6 +8392,17 @@ function rankFromTotal(total) {
   return { key: 'rank-keshi', label: '×消し', mark: '×' };
 }
 
+// スコア順位ベースの印付け（表示用・rankFromTotalの閾値ベースより優先）
+// 1位:◎本命 / 2位:○対抗 / 3位:▲単穴 / 4-5位:△連下 / 6位:×押さえ / 7位以下:無印
+function getMarkByRank(rank) {
+  if (rank === 1) return { key: 'rank-honmei', label: '◎本命', mark: '◎' };
+  if (rank === 2) return { key: 'rank-taikou', label: '○対抗', mark: '○' };
+  if (rank === 3) return { key: 'rank-tanana', label: '▲単穴', mark: '▲' };
+  if (rank === 4 || rank === 5) return { key: 'rank-renka', label: '△連下', mark: '△' };
+  if (rank === 6) return { key: 'rank-keshi', label: '×押さえ', mark: '×' };
+  return { key: '', label: '', mark: '' };  // 7位以下は無印
+}
+
 function renderHorses() {
   const grid = document.getElementById('horseGrid');
   grid.innerHTML = '';
@@ -8406,11 +8417,10 @@ function renderHorses() {
     e._pct = Math.max(0, Math.min(99, _bd.pct));
     e._bd = _bd;
   });
-  // pct 順にソート（同点時は sumScore で副次ソート）
-  enriched.sort((a, b) => (b._pct - a._pct) || (sumScore(b.score) - sumScore(a.score)));
-
-  // 80% 以上の馬数を集計（◎本命の重複防止用）
-  const honmeiCount = enriched.filter(e => e._pct >= 80).length;
+  // pct 降順ソート（同点時：人気が高い方が上位＝popEstimate昇順、次に馬番昇順）
+  enriched.sort((a, b) => (b._pct - a._pct)
+    || ((a.h.popEstimate || 99) - (b.h.popEstimate || 99))
+    || ((a.h.umaban || 99) - (b.h.umaban || 99)));
 
   enriched.forEach(({ h, score, _pct, _bd }, idx) => {
     const siVal = score._siValue;
@@ -8420,11 +8430,8 @@ function renderHorses() {
     const total = breakdown.total;
     const maxS = breakdown.max;
     const pct = _pct;
-    let rank = rankFromTotal(pct);
-    // 80% 以上が複数いる場合：最高スコア（idx===0）のみ ◎本命、残りは ○対抗 に降格
-    if (honmeiCount >= 2 && pct >= 80 && idx > 0) {
-      rank = { key:'rank-taikou', label:'○対抗', mark:'○' };
-    }
+    // 順位ベースで印を割り当て（1:◎ / 2:○ / 3:▲ / 4-5:△ / 6:× / 7以下:無印）
+    let rank = getMarkByRank(idx + 1);
     const wakuClass = h.waku ? `waku-${h.waku}` : 'waku-tbd';
     const wakuText = (h.waku != null) ? h.waku : '';
     const prevRankNum = h.prev1r ?? h.prevRank;
