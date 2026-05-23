@@ -10904,18 +10904,9 @@ function computeScoreBreakdown(horse, raceName) {
   var isNHK = !!(raceName && raceName.indexOf('NHKマイル') !== -1);
 
   // 1. 人気 (max:20)
+  // 1人気=20, 2人気=18, 3人気=16, ... 2点ずつ減点・11人気以下=0
   var pop = horse.popEstimate || 99;
-  var popScore = 0;
-  if      (pop === 1)  popScore = 8;
-  else if (pop === 2)  popScore = 15;
-  else if (pop === 3)  popScore = 12;
-  else if (pop === 4)  popScore = 8;
-  else if (pop === 5)  popScore = 6;
-  else if (pop <= 9)   popScore = 3;
-  // ヴィクトリアマイル: 1番人気複勝率70%・ルメール×1番人気100% → 1番人気を高評価
-  if (raceName && raceName.indexOf('ヴィクトリアマイル') !== -1 && pop === 1) {
-    popScore = 18;
-  }
+  var popScore = Math.max(20 - (pop - 1) * 2, 0);
   // 新潟大賞典: ハンデ戦の1番人気は0勝 → 1番人気を相対的に下げ、6〜9番人気を上げる
   if (raceName && raceName.indexOf('新潟大賞典') !== -1) {
     if (pop === 1)                  popScore = 4;
@@ -11284,9 +11275,9 @@ function computeScoreBreakdown(horse, raceName) {
   distScore     = Math.min(8,  Math.max(0, distScore));
   dirScore      = Math.min(5,  Math.max(0, dirScore));
 
-  // 分母を実効最大値130に正規化（キャップ外加点を含む99%張り付き防止・差別化）
-  // 各項目最大: 20+15+20+10+10+10+10+10+15+8+5 = 133 だが、キャップ外加点（calcOaks/calcHeianS の桜花賞1着+10・1番人気+10・継続騎乗等）を考慮して130で割る
-  var MAX = 130;
+  // 分母を実効最大値140に正規化（人気スコア線形化＋キャップ外加点を含む99%張り付き防止・差別化）
+  // 各項目最大: 20+15+20+10+10+10+10+10+15+8+5 = 133 だが、キャップ外加点（calcOaks/calcHeianS の桜花賞1着+10・1番人気+10・継続騎乗等）を考慮して140で割る
+  var MAX = 140;
   var raw = popScore + wakuScore + dataScore + bloodScore + jockeyScore
           + courseScore + trainingScore + speedScore + babaScore
           + distScore + dirScore + penalty;
