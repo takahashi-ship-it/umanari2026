@@ -11046,6 +11046,14 @@ function computeScoreBreakdown(horse, raceName) {
       else if (horse.over2000Experience >= 3) dataScore += 6;   // 3戦
       else if (horse.over2000Experience >= 2) dataScore += 4;   // 2戦
     }
+    // ⑫前走桜花賞×差し/追込（4角5番手以下相当）→ 過去10年【7-5-5-44】複勝率28%データ
+    if (horse.prev1race === '桜花賞' && horse.pace && /差し|追込/.test(horse.pace)) {
+      dataScore += 3;
+    }
+    // ⑬前走重賞（G2/G3/L級）1着 → 過去10年オークスで4年連続馬券内データ
+    if ((horse.prev1grade === 'G2' || horse.prev1grade === 'G3' || horse.prev1grade === 'L') && horse.prev1r === 1) {
+      dataScore += 3;
+    }
     dataScore = Math.max(0, Math.min(20, dataScore));
   } else if (raceName === '平安ステークス') {
     // 画像1: 過去10年データ「勝利の方程式」反映
