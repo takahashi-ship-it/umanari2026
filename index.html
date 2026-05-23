@@ -2165,7 +2165,7 @@ const RACES = [
   {date:"2026-05-23", name:"平安ステークス",            grade:"G3", venue:"京都", surface:"ダ1900m", status:"upcoming"},
   {date:"2026-05-24", name:"オークス",                grade:"G1", venue:"東京", surface:"芝2400m", status:"upcoming"},
   {date:"2026-05-30", name:"葵S",                     grade:"G3", venue:"京都", surface:"芝1200m", status:"upcoming"},
-  {date:"2026-05-31", name:"日本ダービー",            grade:"G1", venue:"東京", surface:"芝2400m", status:"upcoming"},
+  {date:"2026-05-31", name:"日本ダービー",            grade:"G1", venue:"東京", surface:"芝2400m", status:"current"},
   {date:"2026-05-31", name:"目黒記念",                grade:"G2", venue:"東京", surface:"芝2500m", status:"upcoming"},
   // 6月
   {date:"2026-06-06", name:"鳴尾記念",                grade:"G3", venue:"阪神", surface:"芝2000m", status:"upcoming"},
@@ -2246,7 +2246,7 @@ const STATUS_BADGE = {
 };
 
 const TARGET_RACE_NAME = "天皇賞（春）";
-const SUPPORTED_RACES = new Set(["天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス"]);
+const SUPPORTED_RACES = new Set(["天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー"]);
 
 let currentMonth = 5;
 let currentGrade = "G1";
@@ -4365,6 +4365,29 @@ const HORSES_BY_RACE = {
     heianRegion:false, note:'4歳・美浦・菅原明良' }
 ],
 
+'日本ダービー': [
+  { name:'ロブチェン',         age:3, sex:'牡', waku:1, umaban:1,  uma:1,  hande:57.0, jockey:'松山弘平',     stable:'栗東杉山晴', odds:3.3,   popEstimate:1,  note:'※5/28枠順確定前の仮登録' },
+  { name:'リアライズシリウス', age:3, sex:'牡', waku:1, umaban:2,  uma:2,  hande:57.0, jockey:'津村明秀',     stable:'美浦手塚久', odds:5.5,   popEstimate:2,  note:'※5/28枠順確定前の仮登録' },
+  { name:'グリーンエナジー',   age:3, sex:'牡', waku:2, umaban:3,  uma:3,  hande:57.0, jockey:'戸崎圭太',     stable:'美浦上原佑', odds:10.2,  popEstimate:3,  note:'※5/28枠順確定前の仮登録' },
+  { name:'ベレシート',         age:3, sex:'牡', waku:2, umaban:4,  uma:4,  hande:57.0, jockey:'北村友一',     stable:'栗東斉藤崇', odds:10.3,  popEstimate:4,  note:'※5/28枠順確定前の仮登録' },
+  { name:'ライヒスアドラー',   age:3, sex:'牡', waku:2, umaban:5,  uma:5,  hande:57.0, jockey:'佐々木大輔',   stable:'美浦上原佑', odds:13.6,  popEstimate:5,  note:'※5/28枠順確定前の仮登録' },
+  { name:'ゴーイントゥスカイ', age:3, sex:'牡', waku:3, umaban:6,  uma:6,  hande:57.0, jockey:'武豊',         stable:'美浦上原佑', odds:13.6,  popEstimate:6,  note:'※5/28枠順確定前の仮登録' },
+  { name:'アウダーシア',       age:3, sex:'牡', waku:3, umaban:7,  uma:7,  hande:57.0, jockey:'D.レーン',     stable:'美浦手塚久', odds:13.7,  popEstimate:7,  note:'※5/28枠順確定前の仮登録' },
+  { name:'コンジェスタス',     age:3, sex:'牡', waku:4, umaban:8,  uma:8,  hande:57.0, jockey:'西村淳也',     stable:'栗東高野',   odds:16.5,  popEstimate:8,  note:'※5/28枠順確定前の仮登録' },
+  { name:'バステール',         age:3, sex:'牡', waku:4, umaban:9,  uma:9,  hande:57.0, jockey:'川田将雅',     stable:'栗東斉藤崇', odds:21.8,  popEstimate:9,  note:'※5/28枠順確定前の仮登録' },
+  { name:'フォルテアンジェロ', age:3, sex:'牡', waku:4, umaban:10, uma:10, hande:57.0, jockey:'荻野極',       stable:'美浦上原佑', odds:23.9,  popEstimate:10, note:'※5/28枠順確定前の仮登録' },
+  { name:'アスクエジンバラ',   age:3, sex:'牡', waku:5, umaban:11, uma:11, hande:57.0, jockey:'岩田康誠',     stable:'栗東福永',   odds:28.9,  popEstimate:11, note:'※5/28枠順確定前の仮登録' },
+  { name:'パントルナイーフ',   age:3, sex:'牡', waku:5, umaban:12, uma:12, hande:57.0, jockey:'C.ルメール',   stable:'美浦木村',   odds:31.4,  popEstimate:12, note:'※5/28枠順確定前の仮登録' },
+  { name:'マテンロウゲイル',   age:3, sex:'牡', waku:6, umaban:13, uma:13, hande:57.0, jockey:'横山和生',     stable:'栗東野中',   odds:31.7,  popEstimate:13, note:'※5/28枠順確定前の仮登録' },
+  { name:'ジャスティンビスタ', age:3, sex:'牡', waku:6, umaban:14, uma:14, hande:57.0, jockey:'坂井瑠星',     stable:'栗東吉岡',   odds:33.5,  popEstimate:14, note:'※5/28枠順確定前の仮登録' },
+  { name:'エムズビギン',       age:3, sex:'牡', waku:6, umaban:15, uma:15, hande:57.0, jockey:'F.ゴンサルベス', stable:'栗東友道', odds:39.8,  popEstimate:15, note:'※5/28枠順確定前の仮登録' },
+  { name:'メイショウハチコウ', age:3, sex:'牡', waku:7, umaban:16, uma:16, hande:57.0, jockey:'M.デムーロ',   stable:'栗東牧浦',   odds:69.8,  popEstimate:16, note:'※5/28枠順確定前の仮登録' },
+  { name:'カフジエメンタール', age:3, sex:'牡', waku:7, umaban:17, uma:17, hande:57.0, jockey:'未定',         stable:'栗東矢作',   odds:78.6,  popEstimate:17, note:'※5/28枠順確定前の仮登録' },
+  { name:'アルトラムス',       age:3, sex:'牡', waku:8, umaban:18, uma:18, hande:57.0, jockey:'横山武史',     stable:'栗東野中',   odds:81.7,  popEstimate:18, note:'※5/28枠順確定前の仮登録' },
+  { name:'ケントン',           age:3, sex:'牡', waku:8, umaban:19, uma:19, hande:57.0, jockey:'丹内祐次',     stable:'美浦田島',   odds:192.7, popEstimate:19, note:'※5/28枠順確定前の仮登録' },
+  { name:'ショウナンガルフ',   age:3, sex:'牡', waku:8, umaban:20, uma:20, hande:57.0, jockey:'浜中俊',       stable:'栗東須貝',   odds:234.0, popEstimate:20, note:'※5/28枠順確定前の仮登録' },
+],
+
 };
 
 // 人気表示ヘルパー（出馬表・信頼度スコア・危険馬チェックで共通利用）
@@ -4732,6 +4755,20 @@ const RACE_META = {
   direction: 'left',
   isFinished: false,
   babaPrediction: { status: "良馬場想定", icon: "☀️", color: "#1D9E75", comment: "東京開催・良馬場想定" },
+},
+'日本ダービー': {
+  gradeLine: "G1 / 第93回",
+  title:     "日本ダービー（東京優駿）",
+  date:      "2026-05-31 (日)",
+  venue:     "東京競馬場",
+  surface:   "芝2400m",
+  age:       "3歳",
+  pageTitle: "JRA重賞予想 2026 | 日本ダービー",
+  distance: 2400,
+  direction: 'left',
+  isFinished: false,
+  notice: "⚠ 5/28（木）枠順確定前。馬番は仮（人気順）、確定後に更新予定",
+  babaPrediction: { status: "良馬場想定", icon: "☀️", color: "#1D9E75", comment: "東京開催・1週前データから良馬場想定" },
 },
 };
 
