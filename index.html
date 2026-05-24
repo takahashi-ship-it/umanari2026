@@ -4857,6 +4857,177 @@ const RACE_META = {
   isFinished: false,
   notice: "⚠ 5/28（木）枠順確定前。馬番は仮（人気順）、確定後に更新予定",
   babaPrediction: { status: "良馬場想定", icon: "☀️", color: "#1D9E75", comment: "東京開催・1週前データから良馬場想定" },
+
+  // 過去10年の優勝馬・2着・3着・3連単配当
+  pastResults: [
+    { year:2025, first:{name:'クロワデュノール',  pop:1,  odds:2.1},  second:{name:'マスカレードボール',pop:3, odds:5.6},  third:{name:'ショウヘイ',       pop:6,  odds:14.5}, sanrentan:18460 },
+    { year:2024, first:{name:'ダノンデサイル',    pop:9,  odds:46.6}, second:{name:'ジャスティンミラノ', pop:1, odds:2.4},  third:{name:'シンエンペラー',   pop:7,  odds:17.5}, sanrentan:229910 },
+    { year:2023, first:{name:'タスティエーラ',    pop:4,  odds:8.3},  second:{name:'ソールオリエンス',   pop:1, odds:2.4},  third:{name:'ハーツコンチェルト',pop:6,  odds:18.0}, sanrentan:29810 },
+    { year:2022, first:{name:'ドウデュース',      pop:3,  odds:4.2},  second:{name:'イクイノックス',     pop:2, odds:4.1},  third:{name:'アスクビクターモア',pop:7,  odds:15.6}, sanrentan:15770 },
+    { year:2021, first:{name:'シャフリヤール',    pop:4,  odds:11.7}, second:{name:'エフフォーリア',     pop:1, odds:2.0},  third:{name:'ステラヴェローチェ',pop:9,  odds:31.7}, sanrentan:58980 },
+    { year:2020, first:{name:'コントレイル',      pop:1,  odds:1.4},  second:{name:'サリオス',           pop:2, odds:2.7},  third:{name:'ヴェルトライゼンデ',pop:10, odds:24.4}, sanrentan:5140 },
+    { year:2019, first:{name:'ロジャーバローズ',  pop:12, odds:93.1}, second:{name:'ダノンキングリー',   pop:3, odds:6.7},  third:{name:'ヴェロックス',     pop:2,  odds:4.6},  sanrentan:199060 },
+    { year:2018, first:{name:'ワグネリアン',      pop:5,  odds:12.5}, second:{name:'エポカドーロ',       pop:4, odds:8.2},  third:{name:'コズミックフォース',pop:16, odds:218.6},sanrentan:2856300 },
+    { year:2017, first:{name:'レイデオロ',        pop:2,  odds:5.3},  second:{name:'スワーヴリチャード', pop:3, odds:6.4},  third:{name:'アドミラブル',     pop:1,  odds:1.6},  sanrentan:11870 },
+    { year:2016, first:{name:'マカヒキ',          pop:3,  odds:4.0},  second:{name:'サトノダイヤモンド', pop:2, odds:3.9},  third:{name:'ディーマジェスティ',pop:1,  odds:3.5},  sanrentan:4600 },
+  ],
+
+  // 注目データポイント
+  anaPoints: [
+    // ===== レース特徴 =====
+    '🏟️【コース特徴】東京芝2400m・スタートから1コーナーまで350m・大箱コースで枠順差は少なめ',
+    '⭐G1とは思えない超スローも、瞬発力勝負の重要レース',
+    '⭐3歳牡馬最高峰のクラシック・1着賞金3億円',
+    // ===== 人気データ =====
+    '⭐1番人気【2-3-2-3】複勝率70%→堅実だが過信は禁物',
+    '⚠️2番人気【1-3-1-5】3着以下が半数→過剰人気トラップ',
+    '⭐3番人気【2-2-1-5】複勝率50%→軸として面白い',
+    '⚠️6番人気以下の優勝は2回のみ（19ロジャーバローズ12人気・24ダノンデサイル9人気）',
+    // ===== 前走別 =====
+    '🏆【最強】前走皐月賞組【8-9-7-74】複勝率24.5%・3着以内馬30頭中24頭を独占',
+    '⭐皐月賞1着【2-4-1-3】複勝率70%・2着【2-2-1-5】50%・3着【1-2-1-5】44.4%',
+    '⚠️【危険】皐月賞4着【0-0-0-8】完全壊滅・10着以下【0-0-0-25】も壊滅',
+    '⭐皐月賞4着以下からの巻き返し7頭は全員「皐月賞6人気以内」かつ「ダービー7人気以内」',
+    '⭐京都新聞杯組【1-1-0-15】複勝率11.8%・19年ロジャーバローズが優勝',
+    '⭐毎日杯組【1-0-0-7】複勝率12.5%・21年シャフリヤールが優勝',
+    '⚠️青葉賞組【0-0-2-19】連対馬ゼロ・3着が限界',
+    '⚠️NHKマイルC組【0-0-0-12】完全壊滅・距離不適性',
+    // ===== 馬体重（オークスと真逆）=====
+    '🏆【最強】馬体重500〜519kg【2-3-1-17】複勝率26.1%・牡馬戦らしい馬格優位',
+    '⚠️【危険】馬体重439kg以下【0-0-0-5】完全壊滅・小柄馬は不利',
+    '⭐【プラス】前走比マイナス体重で7勝（過去10年）・複勝率22.4%',
+    '⚠️【マイナス】前走比プラス体重は16年マカヒキの1勝のみ・複勝率9.5%',
+    // ===== 枠順・馬番 =====
+    '🏆6枠【2-2-3-13】複勝率35%→最強枠',
+    '⚠️5枠【1-0-0-19】複勝率5%→最悪枠',
+    '⭐12番・13番【2-2-0-6/2-0-2-6】複勝率40%→最強馬番',
+    '⚠️9番・14番・16番【0-0-0-10】複勝率ゼロ',
+    // ===== 騎手 =====
+    '🏆福永祐一（引退済）過去10年勝率37.5%・3勝で歴代最多',
+    '⭐ルメール【1-2-1-5】複勝率44.4%・現役トップクラス',
+    '⭐レーン【1-1-0-2】複勝率50%・短期免許でも強い',
+    '⚠️戸崎圭太【0-3-0-4】連対率42.9%も勝利ゼロの「2着男」',
+    '⭐継続騎乗【8-9-8-89】複勝率21.9%・乗り替わり【2-1-2-59】7.8%の3倍',
+    // ===== 種牡馬 =====
+    '🏆ディープインパクト産駒【5-3-3-25】複勝率30.6%・過去10年最強種牡馬',
+    '⭐キングカメハメハ産駒【2-0-1-8】複勝率27.3%',
+    '⭐ハーツクライ産駒【1-2-1-13】複勝率23.5%',
+    '⭐エピファネイア産駒【1-1-0-0】100%（24ダノンデサイル・21エフフォーリア）',
+    '⭐キタサンブラック産駒【0-2-0-1】66.7%（25クロワデュノール・23ソールオリエンス）',
+    '⭐父サンデーサイレンス系が3着以内の7割を占める',
+    // ===== 脚質 =====
+    '🏆先行【5-2-2-25】複勝率26.5%→最強脚質',
+    '⭐中団差し【3-6-7-68】複勝率19%',
+    '⚠️後方一気【1-1-1-42】複勝率6.7%→東京の長い直線でも届きにくい',
+    '🏆上がり3F 1位【2-2-3-5】複勝率58.3%・2位【3-1-2-7】複勝率46.2%',
+    // ===== 調教 =====
+    '⭐「馬ナリ」追切が圧倒的（連対馬20頭中17頭）',
+    '⭐優勝馬はマカヒキ以外全て馬ナリ追切',
+    // ===== 配当傾向 =====
+    '⭐3連単配当の傾向：10万円超3回（18年285万・19年20万・24年23万）',
+    '⭐平均配当は3〜5万円・荒れる時は徹底的に荒れる',
+    // ===== 選定基準まとめ =====
+    '🏆【軸馬】前走皐月賞1-3着×1-5番人気×馬体重500-519kg×ディープ系or父サンデー系×継続騎乗',
+    '⭐【相手】皐月賞4-5着×ダービー7番人気以内 or 京都新聞杯・毎日杯1着',
+    '★【消し】前走皐月賞4着or10着以下、青葉賞組、439kg以下、5枠、6番人気以下',
+  ],
+
+  // 過去10年データの表セクション
+  sections: [
+    {
+      type: "table",
+      title: "人気別 成績（過去10年）",
+      headers: ["人気","成績","複勝率","傾向"],
+      rows: [
+        { cells: ["1番人気", "2-3-2-3", "70%", "⭐堅実だが過信禁物"], highlight: true,
+          matchFn: function(h){ return h.popEstimate === 1; } },
+        { cells: ["2番人気", "1-3-1-5", "50%", "⚠️過剰人気トラップ"],
+          matchFn: function(h){ return h.popEstimate === 2; } },
+        { cells: ["3番人気", "2-2-1-5", "50%", "⭐軸として面白い"], highlight: true,
+          matchFn: function(h){ return h.popEstimate === 3; } },
+        { cells: ["4-5番人気", "3-2-0-15", "25%", "中穴ゾーン"],
+          matchFn: function(h){ return h.popEstimate >= 4 && h.popEstimate <= 5; } },
+        { cells: ["6-9番人気", "1-0-3-36", "10%", "⚠️激穴のみ"],
+          matchFn: function(h){ return h.popEstimate >= 6 && h.popEstimate <= 9; } },
+        { cells: ["10番人気以下", "1-0-3-46", "8%", "⚠️ロマンのみ"],
+          matchFn: function(h){ return h.popEstimate >= 10; } },
+      ]
+    },
+    {
+      type: "table",
+      title: "前走別 成績（過去10年）",
+      headers: ["前走","成績","複勝率","傾向"],
+      rows: [
+        { cells: ["皐月賞", "8-9-7-74", "24.5%", "🏆圧倒的・3着内30頭中24頭"], highlight: true,
+          matchFn: function(h){ return h.prevRace === "皐月賞"; } },
+        { cells: ["京都新聞杯", "1-1-0-15", "11.8%", "⭐19ロジャーバローズ"],
+          matchFn: function(h){ return h.prevRace === "京都新聞杯"; } },
+        { cells: ["毎日杯", "1-0-0-7", "12.5%", "⭐21シャフリヤール"],
+          matchFn: function(h){ return h.prevRace === "毎日杯"; } },
+        { cells: ["青葉賞", "0-0-2-19", "9.5%", "⚠️連対馬ゼロ"],
+          matchFn: function(h){ return h.prevRace === "青葉賞"; } },
+        { cells: ["NHKマイルC", "0-0-0-12", "0%", "❌全滅"],
+          matchFn: function(h){ return h.prevRace === "NHKマイルC" || h.prevRace === "NHKマイルカップ"; } },
+      ]
+    },
+    {
+      type: "table",
+      title: "皐月賞組 前走着順別（過去10年）",
+      headers: ["皐月賞着順","成績","複勝率","傾向"],
+      rows: [
+        { cells: ["1着", "2-4-1-3", "70%", "🏆鉄板"], highlight: true,
+          matchFn: function(h){ return h.prevRace === "皐月賞" && h.prevRank === 1; } },
+        { cells: ["2着", "2-2-1-5", "50%", "⭐有力"], highlight: true,
+          matchFn: function(h){ return h.prevRace === "皐月賞" && h.prevRank === 2; } },
+        { cells: ["3着", "1-2-1-5", "44.4%", "⭐連下圏"],
+          matchFn: function(h){ return h.prevRace === "皐月賞" && h.prevRank === 3; } },
+        { cells: ["4着", "0-0-0-8", "0%", "❌壊滅"],
+          matchFn: function(h){ return h.prevRace === "皐月賞" && h.prevRank === 4; } },
+        { cells: ["5着", "1-0-2-6", "33.3%", "⭐巻き返しあり"],
+          matchFn: function(h){ return h.prevRace === "皐月賞" && h.prevRank === 5; } },
+        { cells: ["6-9着", "1-1-2-22", "15.4%", "⚠️激穴のみ"],
+          matchFn: function(h){ return h.prevRace === "皐月賞" && h.prevRank >= 6 && h.prevRank <= 9; } },
+        { cells: ["10着以下", "0-0-0-25", "0%", "❌完全壊滅"],
+          matchFn: function(h){ return h.prevRace === "皐月賞" && h.prevRank >= 10; } },
+      ]
+    },
+    {
+      type: "table",
+      title: "馬体重別（過去10年）※牡馬戦・オークスとは逆",
+      headers: ["馬体重","成績","複勝率","傾向"],
+      rows: [
+        { cells: ["439kg以下", "0-0-0-5", "0%", "❌壊滅"],
+          matchFn: function(h){ return h.weight && h.weight.current <= 439; } },
+        { cells: ["440-459kg", "2-2-0-18", "18.2%", "標準"],
+          matchFn: function(h){ return h.weight && h.weight.current >= 440 && h.weight.current <= 459; } },
+        { cells: ["460-479kg", "2-1-4-46", "13.2%", "標準"],
+          matchFn: function(h){ return h.weight && h.weight.current >= 460 && h.weight.current <= 479; } },
+        { cells: ["480-499kg", "4-3-5-55", "17.9%", "⭐"],
+          matchFn: function(h){ return h.weight && h.weight.current >= 480 && h.weight.current <= 499; } },
+        { cells: ["500-519kg", "2-3-1-17", "26.1%", "🏆最強帯"], highlight: true,
+          matchFn: function(h){ return h.weight && h.weight.current >= 500 && h.weight.current <= 519; } },
+        { cells: ["520kg以上", "0-1-0-7", "12.5%", "重め"],
+          matchFn: function(h){ return h.weight && h.weight.current >= 520; } },
+      ]
+    },
+    {
+      type: "table",
+      title: "種牡馬別（過去10年）",
+      headers: ["種牡馬","成績","複勝率","傾向"],
+      rows: [
+        { cells: ["ディープインパクト", "5-3-3-25", "30.6%", "🏆最強"], highlight: true,
+          matchFn: function(h){ return h.father === "ディープインパクト"; } },
+        { cells: ["キングカメハメハ", "2-0-1-8", "27.3%", "⭐"],
+          matchFn: function(h){ return h.father === "キングカメハメハ"; } },
+        { cells: ["ハーツクライ", "1-2-1-13", "23.5%", "⭐"],
+          matchFn: function(h){ return h.father === "ハーツクライ"; } },
+        { cells: ["エピファネイア", "1-1-0-0", "100%", "🏆全頭好走"], highlight: true,
+          matchFn: function(h){ return h.father === "エピファネイア"; } },
+        { cells: ["キタサンブラック", "0-2-0-1", "66.7%", "⭐高確率連対"],
+          matchFn: function(h){ return h.father === "キタサンブラック"; } },
+      ]
+    },
+  ],
 },
 };
 
@@ -5204,6 +5375,55 @@ const RACE_DANGER_LOGIC = {
             + '❌ 8歳以上（好走例極少・1勝のみ）<br>'
             + '❌ 53kg以下の軽ハンデ（過去10年馬券圏外）',
     },
+  },
+
+  "日本ダービー": {
+    good: [
+      { label: "前走皐月賞1〜3着（複勝率50-70%・最強ローテ）",
+        match: h => h.prevRace === "皐月賞" && h.prevRank >= 1 && h.prevRank <= 3 },
+      { label: "前走皐月賞5番人気以内の好走馬（圏内馬23頭中19頭）",
+        match: h => h.prevRace === "皐月賞" && (h.prev1pop || 99) <= 5 && h.prevRank <= 5 },
+      { label: "馬体重500〜519kg（複勝率26.1%の最強帯）",
+        match: h => h.weight && h.weight.current >= 500 && h.weight.current <= 519 },
+      { label: "前走比マイナス体重（過去10年7勝・複勝率22.4%）",
+        match: h => h.weight && h.weight.diff != null && h.weight.diff < 0 },
+      { label: "ディープインパクト系産駒（複勝率30.6%・過去5勝）",
+        match: h => h.father === "ディープインパクト" || h.fatherSire === "ディープインパクト" },
+      { label: "キタサンブラック産駒（過去3頭中2頭連対）",
+        match: h => h.father === "キタサンブラック" },
+      { label: "騎手継続騎乗（複勝率21.9%）",
+        match: h => h.jockeyContinue === true },
+      { label: "1〜5番人気（連対馬20頭中18頭）",
+        match: h => h.popEstimate >= 1 && h.popEstimate <= 5 },
+      { label: "先行脚質（複勝率26.5%・最強脚質）",
+        match: h => h.style === "先行" },
+      { label: "ルメール・レーン・福永騎手（複勝率高）",
+        match: h => ["C.ルメール","D.レーン","福永祐一"].includes(h.jockey) },
+    ],
+    bad: [
+      { label: "前走皐月賞4着【0-0-0-8】壊滅",
+        match: h => h.prevRace === "皐月賞" && h.prevRank === 4 },
+      { label: "前走皐月賞10着以下【0-0-0-25】壊滅",
+        match: h => h.prevRace === "皐月賞" && h.prevRank >= 10 },
+      { label: "前走青葉賞組（連対馬ゼロ・複勝率9.5%）",
+        match: h => h.prevRace === "青葉賞" },
+      { label: "前走NHKマイルC組【0-0-0-12】全滅",
+        match: h => h.prevRace === "NHKマイルカップ" || h.prevRace === "NHKマイルC" },
+      { label: "馬体重439kg以下【0-0-0-5】壊滅",
+        match: h => h.weight && h.weight.current <= 439 },
+      { label: "5枠【1-0-0-19】複勝率5%の鬼門",
+        match: h => h.waku === 5 },
+      { label: "9番・14番・16番【0-0-0-10】複勝率ゼロ",
+        match: h => h.umaban === 9 || h.umaban === 14 || h.umaban === 16 },
+      { label: "後方脚質（複勝率6.7%・東京の長い直線でも届きにくい）",
+        match: h => h.style === "後方" || h.style === "追込" },
+      { label: "前走比プラス体重（複勝率9.5%・過去10年1勝のみ）",
+        match: h => h.weight && h.weight.diff != null && h.weight.diff > 0 },
+      { label: "騎手乗り替わり（複勝率7.8%・継続騎乗の3分の1）",
+        match: h => h.jockeyContinue === false },
+      { label: "6番人気以下（過去10年で連対馬2頭のみ）",
+        match: h => h.popEstimate >= 6 },
+    ],
   },
 };
 
