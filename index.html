@@ -6,6 +6,41 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
+<!-- ===== キャッシュ強制クリア（緊急用）===== -->
+<script>
+(function() {
+  // バージョンキー（HTMLが更新されるたびに変更）
+  var CURRENT_VERSION = '20260526-1330';
+  var savedVersion = localStorage.getItem('app_version');
+
+  if (savedVersion !== CURRENT_VERSION) {
+    console.log('[Cache] Version changed:', savedVersion, '→', CURRENT_VERSION);
+
+    // 1. Service Worker登録解除
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(regs) {
+        regs.forEach(function(reg) { reg.unregister(); });
+      });
+    }
+
+    // 2. Cache API のキャッシュ削除
+    if ('caches' in window) {
+      caches.keys().then(function(names) {
+        names.forEach(function(name) { caches.delete(name); });
+      });
+    }
+
+    // 3. localStorage で新バージョンを記録
+    localStorage.setItem('app_version', CURRENT_VERSION);
+
+    // 4. ?v=タイムスタンプ で再読み込み（URLパラメータでCDNキャッシュも回避）
+    var url = window.location.href.split('?')[0] + '?v=' + Date.now();
+    console.log('[Cache] Forcing reload:', url);
+    window.location.replace(url);
+  }
+})();
+</script>
+<!-- ===== /キャッシュ強制クリア ===== -->
 <title>JRA重賞予想 2026 | オークス・日本ダービー</title>
 <style>
   :root {
