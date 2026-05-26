@@ -11903,8 +11903,10 @@ function calcWeightScore(currentKg, popularity, horse, raceName) {
       return { score: 1, label: '標準(440-459kg)', warning: null };
     } else if (currentKg < 440) {
       return { score: -3, label: '❌苦戦帯', warning: '439kg以下は過去10年【0-0-0-5】壊滅' };
-    } else if (currentKg >= 520) {
-      return { score: 1, label: '重め(520kg以上)', warning: null };
+    } else if (currentKg >= 520 && currentKg <= 539) {
+      return { score: 3, label: '⭐大型馬OK(520-539kg)', warning: null };
+    } else if (currentKg >= 540) {
+      return { score: 0, label: '超大型(540kg以上)', warning: null };
     }
   }
   var score = 0, warning = null, label = '';
@@ -12213,6 +12215,57 @@ function computeScoreBreakdown(horse, raceName) {
     }
 
     dataScore = Math.max(0, Math.min(20, dataScore));
+  } else if (raceName === '日本ダービー' || raceName === '東京優駿') {
+    // 🏆 究極の鉄板ルール：皐月賞0.1秒差以上勝利×1番人気（複勝率100%・8-2-4-0）
+    if (horse.prevRace === '皐月賞' && horse.prevRank === 1 &&
+        horse.prev1MarginToSecond != null && horse.prev1MarginToSecond >= 0.1 &&
+        horse.popEstimate === 1) {
+      dataScore += 20;
+    }
+    // 🏆 鉄板ルール：皐月賞3着以内×上がり3F33秒台（過去10年連対率100%）
+    if (horse.prevRace === '皐月賞' && horse.prevRank >= 1 && horse.prevRank <= 3 &&
+        horse.prev1Last3F != null && horse.prev1Last3F < 34.0) {
+      dataScore += 12;
+    }
+    // ⭐ 前走3着以内×4番人気以内（連対率42.5%）
+    if (horse.prevRank != null && horse.prevRank >= 1 && horse.prevRank <= 3 &&
+        horse.popEstimate >= 1 && horse.popEstimate <= 4) {
+      dataScore += 8;
+    } else if (horse.prevRank != null && horse.prevRank >= 1 && horse.prevRank <= 3) {
+      dataScore += 4;
+    }
+    // ⭐ 前走2着馬（勝率12.1%・最多4勝）
+    if (horse.prevRank === 2) dataScore += 3;
+    // 🔥 栗東所属馬（単勝回収率156.8%）
+    if (horse.trainerArea === '栗東' || (horse.stable && horse.stable.indexOf('栗東') >= 0)) {
+      dataScore += 4;
+    }
+    // ⭐ ノーザンファーム生産
+    if (horse.breeder === 'ノーザンファーム' || horse.breeder === 'ノーザンF') {
+      dataScore += 3;
+    }
+    // ⭐ キングカメハメハ系
+    if (horse.bloodlineSystem === 'キングカメハメハ系' ||
+        horse.father === 'キングカメハメハ' ||
+        (horse.fatherSire && horse.fatherSire.indexOf('キングカメハメハ') >= 0)) {
+      dataScore += 3;
+    }
+    // ⭐ リーディング上位騎手
+    var topJockeysDb = ['C.ルメール','戸崎圭太','武豊','川田将雅','松山弘平',
+                        '横山武史','横山和生','坂井瑠星','佐々木大輔','D.レーン'];
+    if (topJockeysDb.indexOf(horse.jockey) >= 0) dataScore += 3;
+    // ❌ 前走4着【0-0-0-13】
+    if (horse.prevRank === 4) dataScore -= 8;
+    // ❌ 前走9着以下
+    if (horse.prevRank != null && horse.prevRank >= 9) dataScore -= 5;
+    // ❌ NHKマイル組
+    if (horse.prevRace === 'NHKマイルC' || horse.prevRace === 'NHKマイルカップ') dataScore -= 8;
+    // ⭐ 同コース勝ち系
+    if (horse.prevRace === '青葉賞' && horse.prevRank === 1) dataScore += 5;
+    if (horse.prevRace === '京都新聞杯' && horse.prevRank === 1) dataScore += 3;
+    if (horse.prevRace === 'プリンシパルS' && horse.prevRank === 1) dataScore += 3;
+    if (horse.prevRace === 'スプリングS' && horse.prevRank === 1) dataScore += 3;
+    dataScore = Math.max(0, Math.min(20, dataScore));
   } else {
     dataScore = 10;
   }
@@ -12240,6 +12293,19 @@ function computeScoreBreakdown(horse, raceName) {
     '斎藤新':3,'佐々木大輔':2,'武豊':8
   };
   var jockeyScore = jockeyScores[horse.jockey] || 3;
+
+  // 日本ダービー専用：松山弘平・武豊 等を高評価
+  if (raceName === '日本ダービー' || raceName === '東京優駿') {
+    var derbyJockeyScores = {
+      '松山弘平': 9, '武豊': 9, 'C.ルメール': 8, '川田将雅': 8, 'D.レーン': 8,
+      '戸崎圭太': 7, '横山武史': 7, '横山和生': 6, '坂井瑠星': 6, '西村淳也': 6,
+      '津村明秀': 5, '岩田望来': 5, '佐々木大輔': 4, 'M.デムーロ': 6,
+      '岩田康誠': 5, 'F.ゴンサルベス': 4, '荻野極': 4, '丹内祐次': 3, '浜中俊': 5, '横山典弘': 6
+    };
+    if (derbyJockeyScores[horse.jockey] != null) {
+      jockeyScore = derbyJockeyScores[horse.jockey];
+    }
+  }
 
   // 6. コース (max:10) - 全レース対応
   var courseScore = (typeof calcCourseScoreByRace === 'function')
