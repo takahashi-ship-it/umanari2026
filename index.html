@@ -7853,6 +7853,16 @@ function calcLeftCourseBonus(horse) {
   if (!horse) return { pts: 0, label: '' };
   var score = horse.leftCourseScore;
   var lc = horse.leftCourse || '';
+  // Derby 馬（tokyoExp あり）は 0-5 スケール → 直接マッピング
+  if (horse.tokyoExp != null && score != null) {
+    var s5 = Math.min(5, Math.max(0, score));
+    if (s5 >= 5) return { pts: 5,  label: '左回り◎（東京経験豊富）' };
+    if (s5 >= 4) return { pts: 4,  label: '左回り○（連対経験あり）' };
+    if (s5 === 3) return { pts: 2, label: '左回り△（複勝経験）' };
+    if (s5 === 2) return { pts: 0, label: '左回り経験あり' };
+    if (s5 === 1) return { pts: -1, label: '⚠️左回り凡走' };
+    return { pts: -2, label: '⚠️左回り未経験' };
+  }
   // 未設定なら前走から自動補完
   if ((score === undefined || score === null) && typeof LEFT_COURSE_RACES === 'object') {
     var lcb = LEFT_COURSE_RACES[horse.prevRace];
@@ -9215,7 +9225,19 @@ function computeScore(h) {
     ? getRaceDirection(currentRace || '')
     : (raceInfoForCourse.direction || 'right');
   let course = 0;
-  if (courseDirection === 'left') {
+  // 日本ダービー専用：tokyoExp ベースの東京コーススコア
+  if ((currentRace === '日本ダービー' || currentRace === '東京優駿') && h.tokyoExp) {
+    var _t = h.tokyoExp;
+    var _s = _t.starts || 0, _w = _t.wins || 0, _p = _t.place || 0, _sh = _t.show || 0;
+    if (_s === 0)                          course = 3;
+    else if ((_w + _p + _sh) === _s && (_s >= 3 || _w === _s)) course = 10;
+    else if ((_w + _p + _sh) === _s && _s >= 2) course = 10;
+    else if (_w >= 1 && (_w + _p + _sh) === _s) course = 9;
+    else if (_w >= 1)                      course = 8;
+    else if (_p >= 1)                      course = 7;
+    else if (_sh >= 1)                     course = 5;
+    else                                   course = 1;
+  } else if (courseDirection === 'left') {
     var lcs = h.leftCourseScore;
     if      (lcs >= 10) course = 10;
     else if (lcs >= 7)  course = 7;
@@ -12283,11 +12305,11 @@ function computeScoreBreakdown(horse, raceName) {
       else if (horse.prevRank >= 6 && horse.prevRank <= 9) dataScore -= 2; // ⚠️【1-1-2-22】15.4%
       else if (horse.prevRank >= 10)  dataScore -= 15;  // ❌【0-0-0-25】完全壊滅
     }
-    // ⚠️ 青葉賞組減点（過去10年【0-0-2-18】複勝率10%・勝率0%）
+    // ⚠️ 青葉賞組（過去10年【0-0-2-18】複勝率10%・勝率0%）— 1着馬は3着候補で加点
     if (horse.prevRace === '青葉賞') {
-      if (horse.prevRank === 1)      dataScore += 2;
-      else if (horse.prevRank <= 3)  dataScore -= 2;
-      else                            dataScore -= 8;
+      if (horse.prevRank === 1)      dataScore += 4;
+      else if (horse.prevRank <= 3)  dataScore -= 1;
+      else                            dataScore -= 6;
     }
     // 🏆 究極の鉄板ルール：皐月賞0.1秒差以上勝利×1番人気
     if (horse.prevRace === '皐月賞' && horse.prevRank === 1 &&
