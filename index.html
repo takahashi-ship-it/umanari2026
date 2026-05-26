@@ -8408,6 +8408,43 @@ function calcDistanceExpScore(horse, raceDistance) {
     else if (maxDist >= raceDistance - 600) { basePts = 2; baseLabel = '距離±600m経験（' + maxDist + 'm）'; baseLevel = 'D'; }
   }
 
+  // ★ 新ロジック：maxDistExp 未設定時に前走レースから距離経験を自動判定
+  if (basePts === 0 && horse.prevRace) {
+    var raceDistMap = {
+      '日本ダービー': 2400, '東京優駿': 2400, 'オークス': 2400, '優駿牝馬': 2400,
+      '青葉賞': 2400, 'ジャパンC': 2400, 'ジャパンカップ': 2400,
+      '京都新聞杯': 2200, '京都記念': 2200, '宝塚記念': 2200, 'AJCC': 2200,
+      '皐月賞': 2000, 'ホープフルS': 2000, 'ホープフルステークス': 2000,
+      '弥生賞': 2000, 'プリンシパルS': 2000, 'プリンシパルステークス': 2000,
+      '中山記念': 1800, '共同通信杯': 1800, '毎日杯': 1800, 'きさらぎ賞': 1800,
+      'スプリングS': 1800, 'スプリングステークス': 1800,
+      '菊花賞': 3000, '天皇賞春': 3200, '天皇賞（春）': 3200, 'ダイヤモンドS': 3400
+    };
+    var prevDist = raceDistMap[horse.prevRace] || 0;
+    if (prevDist > 0) {
+      if (prevDist >= raceDistance) {
+        if      (horse.prevRank === 1) { basePts = 8; baseLabel = '🏆同距離以上勝利（' + horse.prevRace + ' 1着）'; baseLevel = 'A'; }
+        else if (horse.prevRank <= 3)  { basePts = 6; baseLabel = '⭐同距離以上3着以内（' + horse.prevRace + ' ' + horse.prevRank + '着）'; baseLevel = 'B'; }
+        else if (horse.prevRank <= 6)  { basePts = 4; baseLabel = '同距離以上6着以内（' + horse.prevRace + '）'; baseLevel = 'C'; }
+        else                            { basePts = 2; baseLabel = '同距離以上経験（' + horse.prevRace + '）'; baseLevel = 'D'; }
+      } else if (prevDist >= raceDistance - 200) {
+        if      (horse.prevRank === 1) { basePts = 6; baseLabel = '⭐2200m勝利（' + horse.prevRace + '）'; baseLevel = 'B'; }
+        else if (horse.prevRank <= 3)  { basePts = 4; baseLabel = '2200m3着以内（' + horse.prevRace + '）'; baseLevel = 'C'; }
+        else if (horse.prevRank <= 6)  { basePts = 3; baseLabel = '2200m経験（' + horse.prevRace + '）'; baseLevel = 'C'; }
+        else                            { basePts = 2; baseLabel = '2200m経験（' + horse.prevRace + '）'; baseLevel = 'D'; }
+      } else if (prevDist >= raceDistance - 400) {
+        if      (horse.prevRank === 1) { basePts = 5; baseLabel = '⭐皐月賞級2000m勝利（' + horse.prevRace + '）'; baseLevel = 'B'; }
+        else if (horse.prevRank <= 3)  { basePts = 4; baseLabel = '⭐2000m3着以内（' + horse.prevRace + '）'; baseLevel = 'C'; }
+        else if (horse.prevRank <= 6)  { basePts = 2; baseLabel = '2000m6着以内（' + horse.prevRace + '）'; baseLevel = 'D'; }
+        else                            { basePts = 1; baseLabel = '2000m経験（' + horse.prevRace + '）'; baseLevel = 'D'; }
+      } else if (prevDist >= raceDistance - 600) {
+        if      (horse.prevRank === 1) { basePts = 3; baseLabel = '⭐1800m勝利（' + horse.prevRace + '）'; baseLevel = 'C'; }
+        else if (horse.prevRank <= 3)  { basePts = 2; baseLabel = '1800m3着以内'; baseLevel = 'D'; }
+        else                            { basePts = 1; baseLabel = '1800m経験'; baseLevel = 'D'; }
+      }
+    }
+  }
+
   // ② 〜 ⑤ 新ロジック：distanceExp オブジェクトからの追加加点
   var bonus = 0;
   var bonusLabels = [];
