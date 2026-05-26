@@ -12253,56 +12253,81 @@ function computeScoreBreakdown(horse, raceName) {
 
     dataScore = Math.max(0, Math.min(20, dataScore));
   } else if (raceName === '日本ダービー' || raceName === '東京優駿') {
-    // 🏆 究極の鉄板ルール：皐月賞0.1秒差以上勝利×1番人気（複勝率100%・8-2-4-0）
+    // 🏆 過去10年データの主流ロジック：前走皐月賞組×着順別【7-10-6-76】複勝率23.2%
+    if (horse.prevRace === '皐月賞') {
+      if (horse.prevRank === 1)       dataScore += 15;  // 🏆複勝率70%
+      else if (horse.prevRank === 2)  dataScore += 12;  // ⭐複勝率50%
+      else if (horse.prevRank === 3)  dataScore += 10;  // ⭐複勝率44.4%
+      else if (horse.prevRank === 4)  dataScore -= 15;  // ❌【0-0-0-13】完全壊滅
+      else if (horse.prevRank === 5)  dataScore += 6;   // ⭐【1-0-2-6】複勝率33.3%
+      else if (horse.prevRank >= 6 && horse.prevRank <= 9) dataScore -= 2; // ⚠️【1-1-2-22】15.4%
+      else if (horse.prevRank >= 10)  dataScore -= 15;  // ❌【0-0-0-25】完全壊滅
+    }
+    // ⚠️ 青葉賞組減点（過去10年【0-0-2-18】複勝率10%・勝率0%）
+    if (horse.prevRace === '青葉賞') {
+      if (horse.prevRank === 1)      dataScore += 2;
+      else if (horse.prevRank <= 3)  dataScore -= 2;
+      else                            dataScore -= 8;
+    }
+    // 🏆 究極の鉄板ルール：皐月賞0.1秒差以上勝利×1番人気
     if (horse.prevRace === '皐月賞' && horse.prevRank === 1 &&
         horse.prev1MarginToSecond != null && horse.prev1MarginToSecond >= 0.1 &&
         horse.popEstimate === 1) {
-      dataScore += 20;
+      dataScore += 8;
     }
-    // 🏆 鉄板ルール：皐月賞3着以内×上がり3F33秒台（過去10年連対率100%）
+    // 🏆 鉄板ルール：皐月賞3着以内×上がり3F33秒台
     if (horse.prevRace === '皐月賞' && horse.prevRank >= 1 && horse.prevRank <= 3 &&
         horse.prev1Last3F != null && horse.prev1Last3F < 34.0) {
-      dataScore += 12;
+      dataScore += 6;
     }
-    // ⭐ 前走3着以内×4番人気以内（連対率42.5%）
-    if (horse.prevRank != null && horse.prevRank >= 1 && horse.prevRank <= 3 &&
-        horse.popEstimate >= 1 && horse.popEstimate <= 4) {
-      dataScore += 8;
-    } else if (horse.prevRank != null && horse.prevRank >= 1 && horse.prevRank <= 3) {
-      dataScore += 4;
+    // 🏆 トライアル組（皐月賞・青葉賞以外）
+    if (horse.prevRace === '京都新聞杯') {
+      if (horse.prevRank === 1)       dataScore += 5;
+      else if (horse.prevRank <= 3)   dataScore += 2;
+      else                             dataScore -= 5;
     }
-    // ⭐ 前走2着馬（勝率12.1%・最多4勝）
-    if (horse.prevRank === 2) dataScore += 3;
+    if (horse.prevRace === 'プリンシパルS') {
+      if (horse.prevRank === 1)       dataScore += 3;
+      else                             dataScore -= 5;
+    }
+    if (horse.prevRace === 'スプリングS') {
+      if (horse.prevRank === 1)       dataScore += 2;
+      else                             dataScore -= 3;
+    }
+    if (horse.prevRace === 'ホープフルS') {
+      if (horse.prevRank <= 3)        dataScore += 2;
+      else                             dataScore -= 5;
+    }
+    if (horse.prevRace === 'きさらぎ賞') {
+      if (horse.prevRank === 1)       dataScore += 2;
+      else                             dataScore -= 6;
+    }
+    // ⭐ 4番人気以内（連対率42.5%）
+    if (horse.popEstimate >= 1 && horse.popEstimate <= 4) dataScore += 4;
     // 🔥 栗東所属馬（単勝回収率156.8%）
     if (horse.trainerArea === '栗東' || (horse.stable && horse.stable.indexOf('栗東') >= 0)) {
-      dataScore += 4;
+      dataScore += 3;
     }
     // ⭐ ノーザンファーム生産
     if (horse.breeder === 'ノーザンファーム' || horse.breeder === 'ノーザンF') {
-      dataScore += 3;
+      dataScore += 2;
     }
     // ⭐ キングカメハメハ系
     if (horse.bloodlineSystem === 'キングカメハメハ系' ||
         horse.father === 'キングカメハメハ' ||
         (horse.fatherSire && horse.fatherSire.indexOf('キングカメハメハ') >= 0)) {
-      dataScore += 3;
+      dataScore += 2;
     }
     // ⭐ リーディング上位騎手
     var topJockeysDb = ['C.ルメール','戸崎圭太','武豊','川田将雅','松山弘平',
                         '横山武史','横山和生','坂井瑠星','佐々木大輔','D.レーン'];
-    if (topJockeysDb.indexOf(horse.jockey) >= 0) dataScore += 3;
-    // ❌ 前走4着【0-0-0-13】
-    if (horse.prevRank === 4) dataScore -= 8;
-    // ❌ 前走9着以下
-    if (horse.prevRank != null && horse.prevRank >= 9) dataScore -= 5;
-    // ❌ NHKマイル組
-    if (horse.prevRace === 'NHKマイルC' || horse.prevRace === 'NHKマイルカップ') dataScore -= 8;
-    // ⭐ 同コース勝ち系
-    if (horse.prevRace === '青葉賞' && horse.prevRank === 1) dataScore += 5;
-    if (horse.prevRace === '京都新聞杯' && horse.prevRank === 1) dataScore += 3;
-    if (horse.prevRace === 'プリンシパルS' && horse.prevRank === 1) dataScore += 3;
-    if (horse.prevRace === 'スプリングS' && horse.prevRank === 1) dataScore += 3;
-    dataScore = Math.max(0, Math.min(20, dataScore));
+    if (topJockeysDb.indexOf(horse.jockey) >= 0) dataScore += 2;
+    // ❌ NHKマイル組【0-0-0-12】
+    if (horse.prevRace === 'NHKマイルC' || horse.prevRace === 'NHKマイルカップ') {
+      dataScore -= 10;
+    }
+    // マイナス側を保持（合計で Math.max(0, ...) ガード）
+    dataScore = Math.max(-20, Math.min(20, dataScore));
   } else {
     dataScore = 10;
   }
