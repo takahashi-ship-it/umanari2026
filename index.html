@@ -1462,7 +1462,7 @@
       <div class="section">
         <h3>信頼度スコアシステム</h3>
         <p class="lead">
-          人気(20)＋枠順(15)＋データ適合(20)＋血統(15)＋騎手(10)＋同レース実績(10)＋調教(10)＋スピード(10) = <strong>110点満点</strong>（表示は100%に正規化）
+          人気(20)＋枠順(15)＋データ適合(20)＋血統(10)＋騎手(10)＋コース(10)＋調教(10)＋上がり3F(10)＋馬場適性(15)＋距離経験(8)＋左/右回り(5)＋馬体重(5)＋鉄板ルール(+α) = <strong>145点満点</strong>（表示は100%に正規化）
         </p>
         <div class="horse-grid" id="horseGrid"></div>
       </div>
@@ -7851,8 +7851,19 @@ function calcTokyoExp(horse, raceVenue) {
 // 左回りコース適性スコア（東京・中京・新潟／最大+5点・最小-2点）
 function calcLeftCourseBonus(horse) {
   if (!horse) return { pts: 0, label: '' };
-  var score = horse.leftCourseScore || 0;
+  var score = horse.leftCourseScore;
   var lc = horse.leftCourse || '';
+  // 未設定なら前走から自動補完
+  if ((score === undefined || score === null) && typeof LEFT_COURSE_RACES === 'object') {
+    var lcb = LEFT_COURSE_RACES[horse.prevRace];
+    if (lcb) {
+      if (horse.prevRank === 1)              { score = lcb; lc = horse.prevRace + '1着'; }
+      else if (horse.prevRank && horse.prevRank <= 3) { score = Math.max(5, lcb - 3); lc = horse.prevRace + horse.prevRank + '着'; }
+      else if (horse.prevRank && horse.prevRank <= 6) { score = Math.max(3, lcb - 5); lc = horse.prevRace + horse.prevRank + '着'; }
+      else                                            { score = 3; lc = horse.prevRace + '出走'; }
+    }
+  }
+  score = score || 0;
   if (score >= 10) return { pts: 5, label: '左回り◎（' + lc + '）' };
   if (score >= 7)  return { pts: 3, label: '左回り○（' + lc + '）' };
   if (score >= 5)  return { pts: 1, label: '左回り△（' + lc + '）' };
@@ -7895,11 +7906,29 @@ function calcWakuScoreByRace(waku, raceName) {
 }
 
 // 全レース対応：コーススコア（左/右回り別・最大10）
+// 東京左回りの主要レースを前走に持つ馬は leftCourseScore 未設定でも自動補完
+var LEFT_COURSE_RACES = {
+  '青葉賞': 10, 'プリンシパルS': 9, 'NHKマイル': 9, 'ヴィクトリアマイル': 9,
+  '日本ダービー': 10, '東京優駿': 10, 'オークス': 10, '優駿牝馬': 10,
+  '東京新聞杯': 8, '共同通信杯': 9, 'フローラS': 9, '東京スポーツ杯2歳S': 9,
+  'ジャパンC': 10, '天皇賞秋': 10, 'アルテミスS': 8, '東京2歳S': 7,
+  'サウジアラビアRC': 8, 'ニュージーランドT': 8, '京王杯2歳S': 7
+};
 function calcCourseScoreByRace(horse, raceName, raceInfo) {
   var direction = (raceInfo && raceInfo.direction) ||
     (typeof getRaceDirection === 'function' ? getRaceDirection(raceName) : 'right');
   if (direction === 'left') {
     var lcs = horse && horse.leftCourseScore;
+    // 未設定なら前走から自動補完（青葉賞1着など）
+    if ((lcs === undefined || lcs === null) && horse) {
+      var lcb = LEFT_COURSE_RACES[horse.prevRace];
+      if (lcb) {
+        if (horse.prevRank === 1) lcs = lcb;
+        else if (horse.prevRank && horse.prevRank <= 3) lcs = Math.max(5, lcb - 3);
+        else if (horse.prevRank && horse.prevRank <= 6) lcs = Math.max(3, lcb - 5);
+        else lcs = 3;
+      }
+    }
     if (lcs === undefined || lcs === null) return 3;
     if (lcs >= 10) return 10;
     if (lcs >= 7)  return 7;
@@ -8390,6 +8419,20 @@ function calcDistanceExpScore(horse, raceDistance) {
     if (exp.goodRunAtDistance)     { bonus += 1; bonusLabels.push('当該距離以上で好走+1'); }
   }
 
+  // ⑥ 日本ダービー専用：青葉賞勝ち＝東京2400m同コース勝ち、京都新聞杯（2200m）も評価
+  var isDerbyCtx = (raceDistance === 2400) ||
+    (typeof currentRace !== 'undefined' && (currentRace === '日本ダービー' || currentRace === '東京優駿'));
+  if (isDerbyCtx) {
+    if (horse.prevRace === '青葉賞' && horse.prevRank === 1) {
+      basePts = 8; baseLabel = '🏆青葉賞1着＝東京2400m同コース勝ち';
+      bonus = 0; bonusLabels = [];
+    } else if (horse.prevRace === '青葉賞' && horse.prevRank && horse.prevRank <= 3) {
+      bonus += 6; bonusLabels.push('青葉賞3着以内＝同コース好走+6');
+    } else if (horse.prevRace === '京都新聞杯' && horse.prevRank === 1) {
+      bonus += 4; bonusLabels.push('京都新聞杯1着＝2200m勝ち+4');
+    }
+  }
+
   var total = Math.min(8, basePts + bonus);
   var combinedLabel = baseLabel + (bonusLabels.length ? ' / ' + bonusLabels.join('・') : '');
   return { pts: total, label: combinedLabel, level: baseLevel };
@@ -8501,6 +8544,19 @@ function getCurrentRaceDistance() {
 
 // 馬体重評価（最大+1点 / 最小-2点）
 function calcBodyWeightScore(h) {
+  // ===== 日本ダービー専用ロジック =====
+  if (typeof currentRace !== 'undefined' &&
+      (currentRace === '日本ダービー' || currentRace === '東京優駿')) {
+    var kg = (h && h.weight && h.weight.current) != null ? h.weight.current : (h && h.bodyWeight);
+    if (kg == null) return 0;
+    if (kg >= 500 && kg <= 519) return 5;   // 🏆最強帯（複勝率26.1%）
+    if (kg >= 480 && kg <= 499) return 3;   // 好走帯
+    if (kg >= 460 && kg <= 479) return 2;   // 標準
+    if (kg >= 440 && kg <= 459) return 1;
+    if (kg <  440)               return -3;  // 苦戦帯
+    if (kg >= 520 && kg <= 539) return 3;   // 大型馬OK
+    return 0;
+  }
   if (h == null || (h.bodyWeightDiff == null)) return 0;
   var diff = h.bodyWeightDiff;
   if (Math.abs(diff) <= 6) return 1;            // 微増減 = 普通
@@ -9047,8 +9103,15 @@ function computeScore(h) {
   const nhkData = calcDataScoreNHK(h, currentRace);
   if (nhkData !== null) dataFit = nhkData;
 
+  // bloodRank が設定されていれば優先（S/A+/A/A-/B+/B☆/B/B-/C+/C/C-/D）
   const kettoMap = { "KK系孫":10, "キタサンブラック系":9, "欧州長距離":8, "ステイゴールド系":7, "ディープ系":6 };
-  let ketto = kettoMap[h.blood] ?? 5;
+  const bloodRankMap = { "S":10, "A+":9, "A":8, "A-":7, "B+":7, "B☆":7, "B":6, "B-":5, "C+":4, "C":3, "C-":2, "D":1 };
+  let ketto;
+  if (h.bloodRank && bloodRankMap[h.bloodRank] != null) {
+    ketto = bloodRankMap[h.bloodRank];
+  } else {
+    ketto = kettoMap[h.blood] ?? 5;
+  }
   ketto = Math.min(10, Math.max(0, ketto));
 
   const eliteJockeys = ["武豊","C.ルメール","D.レーン"];
@@ -9122,8 +9185,15 @@ function computeScore(h) {
 
   const chokyo = ({S:10,A:8,B:5,C:2})[h.training] ?? 5;
 
+  // 上がり3Fが入っていれば優先、なければ従来のSI線形式にフォールバック
   const si = (h.speedIndex !== null && h.speedIndex !== undefined) ? h.speedIndex : calcSpeedIndex(h);
-  const speed = speedIndexPoints(si);
+  let speed;
+  if ((h.prev1Last3F != null || h.prev1Last3FRank != null) && typeof calcLastFScore === 'function') {
+    var lastFResult = calcLastFScore(h);
+    speed = lastFResult.score;
+  } else {
+    speed = speedIndexPoints(si);
+  }
 
   // 馬場適性（h.babaScore + 現在選択中の馬場 → -3〜+15 点）
   // babaScore 未設定時は leftCourseScore / rightCourseScore からデフォルト導出
@@ -9324,13 +9394,17 @@ function renderHorses() {
     const prevRankNum = h.prev1r ?? h.prevRank;
     const prevRankText = (prevRankNum != null && prevRankNum > 0) ? `${prevRankNum}着` : '出走前';
     const prevRaceText = h.prev1race || h.prevRace || '前走不明';
-    const siLabelText = siAvailable
-      ? `⚡ SI: ${siVal}`
-      : `⚡ SI: ―`;
-    const siBadgeTitle = siAvailable
-      ? `スピード指数（${speedIndexLabel(siVal)}）`
-      : `スピード指数 未入力（前走タイム/コース未確定）`;
-    const siDetailText = siAvailable ? `${score.speed}/10` : `―/10`;
+    // 上がり3F 優先・SI フォールバック
+    const hasLastF = (h.prev1Last3F != null || h.prev1Last3FRank != null);
+    const lastFText = hasLastF
+      ? '⚡ 上がり: ' + (h.prev1Last3F != null ? h.prev1Last3F.toFixed(1) + '秒' : '―') + (h.prev1Last3FRank ? '/' + h.prev1Last3FRank + '位' : '')
+      : (siAvailable ? `⚡ SI: ${siVal}` : `⚡ 上がり: 未集計`);
+    const siLabelText = lastFText;
+    const siBadgeTitle = hasLastF
+      ? `前走上がり3F（${h.prev1Last3F != null ? h.prev1Last3F + '秒' : '?'}・${h.prev1Last3FRank || '?'}位）`
+      : (siAvailable ? `スピード指数（${speedIndexLabel(siVal)}）` : `上がり3F・SI 共に未集計`);
+    const lastFCellScore = (bdItems.speed && bdItems.speed.score != null) ? bdItems.speed.score : (siAvailable ? score.speed : 0);
+    const siDetailText = (hasLastF || siAvailable) ? `${lastFCellScore}/10` : `―/10`;
 
     const oddsStr = h.odds ? (+h.odds).toFixed(1) + '倍' : '--';
     const popBadge = h.popEstimate
@@ -9339,14 +9413,21 @@ function renderHorses() {
     const oddsBadge = h.odds
       ? `<span style="background:#1a2744;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap;flex-shrink:0">${oddsStr}</span>`
       : '';
-    // SIバッジ（色分け：S級赤・A級緑・B級青・C級オレンジ・D級グレー）
-    const siBadge = (siAvailable && siVal > 0)
+    // 上がり3F or SIバッジ（前走上がり3F優先）
+    const siBadge = hasLastF
       ? (function(){
-          const c = siVal >= 95 ? '#A32D2D' : siVal >= 88 ? '#1D9E75' : siVal >= 82 ? '#185FA5' : siVal >= 75 ? '#EF9F27' : '#888';
-          const tier = siVal >= 95 ? 'S' : siVal >= 88 ? 'A' : siVal >= 82 ? 'B' : siVal >= 75 ? 'C' : 'D';
-          return `<span style="background:${c};color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap;flex-shrink:0" title="スピード指数 ${siVal}（${tier}級）">⚡SI:${siVal}</span>`;
+          const t = h.prev1Last3F;
+          const r = h.prev1Last3FRank;
+          const c = (t != null && t < 33.5) ? '#A32D2D' : (t != null && t < 34.0) ? '#1D9E75' : (t != null && t < 34.5) ? '#185FA5' : (t != null && t < 35.0) ? '#EF9F27' : '#888';
+          return `<span style="background:${c};color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap;flex-shrink:0" title="前走上がり3F ${t!=null?t+'秒':'?'}・${r||'?'}位">⚡上${t!=null?t.toFixed(1):'?'}/${r||'?'}位</span>`;
         })()
-      : `<span style="background:#ccc;color:#555;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap;flex-shrink:0">SI:—</span>`;
+      : (siAvailable && siVal > 0)
+        ? (function(){
+            const c = siVal >= 95 ? '#A32D2D' : siVal >= 88 ? '#1D9E75' : siVal >= 82 ? '#185FA5' : siVal >= 75 ? '#EF9F27' : '#888';
+            const tier = siVal >= 95 ? 'S' : siVal >= 88 ? 'A' : siVal >= 82 ? 'B' : siVal >= 75 ? 'C' : 'D';
+            return `<span style="background:${c};color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap;flex-shrink:0" title="スピード指数 ${siVal}（${tier}級）">⚡SI:${siVal}</span>`;
+          })()
+        : `<span style="background:#ccc;color:#555;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap;flex-shrink:0">⚡未集計</span>`;
     const umaText = (h.umaban != null) ? `<span class="uma-num">${h.umaban}番</span>` : '';
 
     // 手動印 (機能4) — 設定されていれば自動印を上書き
@@ -9407,7 +9488,7 @@ function renderHorses() {
           <div class="score-item"><div class="si-label">騎手</div><div class="si-val">${(bdItems.jockey && bdItems.jockey.score) || 0}/10</div></div>
           <div class="score-item"><div class="si-label">コース</div><div class="si-val">${(bdItems.course && bdItems.course.score) || 0}/10</div></div>
           <div class="score-item" title="${(h.trainingNote || '').replace(/"/g,'&quot;')}"><div class="si-label">調教</div><div class="si-val">${h.trainingBadge ? '<span style="color:#A32D2D;font-weight:700">'+h.trainingBadge+'</span> ' : ''}${(bdItems.training && bdItems.training.score) || 0}/10</div></div>
-          <div class="score-item"><div class="si-label">スピード</div><div class="si-val">${siDetailText}</div></div>
+          <div class="score-item"><div class="si-label">${hasLastF ? '上がり3F' : 'スピード'}</div><div class="si-val">${siDetailText}</div></div>
           ${(function(){var b=(bdItems.baba && bdItems.baba.score)||0;var c=b>=15?'#A32D2D':b>=8?'#0F6E56':b>=4?'#2563eb':b>=0?'#EF9F27':'#A32D2D';var ic=b>=15?'★':b>=8?'◎':b>=4?'○':b>=0?'△':'×';return '<div class="score-item"><div class="si-label">馬場適性</div><div class="si-val" style="color:'+c+'">'+b+'/15 '+ic+'</div></div>';})()}
           ${(function(){var d=(bdItems.distance && bdItems.distance.score)||0;var c=d>=8?'#0F6E56':d>=4?'#2563eb':d>0?'#888':'#bbb';return '<div class="score-item" title="'+((breakdown.distLabel||'').replace(/"/g,'&quot;'))+'"><div class="si-label">距離経験</div><div class="si-val" style="color:'+c+'">'+(d>0?'+'+d:'0')+'/8</div></div>';})()}
           ${(function(){var p=(bdItems.direction && bdItems.direction.score)||0;var lbl=(bdItems.direction && bdItems.direction.label)||'左回り';var c=p>=5?'#A32D2D':p>=3?'#0F6E56':p>0?'#2563eb':p<0?'#A32D2D':'#888';return '<div class="score-item" title="'+((breakdown.dirLabel||'').replace(/"/g,'&quot;'))+'"><div class="si-label">'+lbl+'</div><div class="si-val" style="color:'+c+'">'+(p>0?'+'+p:p)+'/5</div></div>';})()}
@@ -11807,9 +11888,25 @@ function calcRightCourseBonus(horse) {
  *   - 加点項目とペナルティを分離
  *   - getJikuScore など UI 表示用に使用
  * ===================================================== */
-// 馬体重スコア計算（5点満点〜-4点・オークス過去データ反映）
-function calcWeightScore(currentKg, popularity, horse) {
+// 馬体重スコア計算（5点満点〜-4点・レース別ロジック）
+function calcWeightScore(currentKg, popularity, horse, raceName) {
   if (currentKg == null) return { score: 0, label: '未発表', warning: null };
+  // ===== 日本ダービー専用ロジック（牡馬戦・オークスとは真逆）=====
+  if (raceName === '日本ダービー' || raceName === '東京優駿') {
+    if (currentKg >= 500 && currentKg <= 519) {
+      return { score: 5, label: '🏆最強帯(500-519kg・複勝率26.1%)', warning: null };
+    } else if (currentKg >= 480 && currentKg < 500) {
+      return { score: 3, label: '⭐好走帯(480-499kg)', warning: null };
+    } else if (currentKg >= 460 && currentKg < 480) {
+      return { score: 2, label: '標準(460-479kg)', warning: null };
+    } else if (currentKg >= 440 && currentKg < 460) {
+      return { score: 1, label: '標準(440-459kg)', warning: null };
+    } else if (currentKg < 440) {
+      return { score: -3, label: '❌苦戦帯', warning: '439kg以下は過去10年【0-0-0-5】壊滅' };
+    } else if (currentKg >= 520) {
+      return { score: 1, label: '重め(520kg以上)', warning: null };
+    }
+  }
   var score = 0, warning = null, label = '';
   if (currentKg >= 500) {
     score = -3;
@@ -12120,10 +12217,19 @@ function computeScoreBreakdown(horse, raceName) {
     dataScore = 10;
   }
 
-  // 4. 血統 (max:10)
+  // 4. 血統 (max:10) — bloodRank があれば最優先、なければ stallionBonus
   var stallionBonus = (typeof calcStallionScore === 'function')
     ? calcStallionScore(horse, raceDist) : { pts: 3, label: '' };
-  var bloodScore = Math.min(10, Math.max(0, stallionBonus ? stallionBonus.pts : 3));
+  var bloodScore;
+  if (horse.bloodRank) {
+    var _br = String(horse.bloodRank).trim();
+    var bloodRankMap = { 'S':10, 'A+':9, 'A':8, 'A-':7, 'B☆':7, 'B+':7, 'B':6, 'B-':5, 'C+':4, 'C':3, 'C-':2, 'D':1 };
+    bloodScore = bloodRankMap[_br] != null ? bloodRankMap[_br] : 3;
+    // 種牡馬距離適性ボーナスがあれば上乗せ（cap 10）
+    if (stallionBonus && stallionBonus.pts) bloodScore = Math.min(10, bloodScore + Math.min(2, stallionBonus.pts));
+  } else {
+    bloodScore = Math.min(10, Math.max(0, stallionBonus ? stallionBonus.pts : 3));
+  }
 
   // 5. 騎手 (max:10)
   var jockeyScores = {
@@ -12253,7 +12359,7 @@ function computeScoreBreakdown(horse, raceName) {
 
   // 12. 馬体重 (max:+5・min:-4) — オークス過去10年データ反映
   var weightObj = (typeof calcWeightScore === 'function')
-    ? calcWeightScore(horse.weight && horse.weight.current, pop, horse)
+    ? calcWeightScore(horse.weight && horse.weight.current, pop, horse, raceName)
     : { score: 0, label: '', warning: null };
   var weightScore = Math.max(-4, Math.min(5, weightObj.score || 0));
 
