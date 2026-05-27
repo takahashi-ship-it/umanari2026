@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260527-0130';
+  var CURRENT_VERSION = '20260527-0230';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -4475,25 +4475,25 @@ const HORSES_BY_RACE = {
 ],
 
 '日本ダービー': [
-  { name:'ロブチェン',         age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'松山弘平',     stable:'栗東杉山晴', odds:3.3,   popEstimate:1,  father:'ワールドプレミア', motherFather:"Giant's Causeway", bloodRank:'A', prevRace:'皐月賞', prevRank:1, prev1MarginToSecond:0.2, prev1pop:1, prev1Last3F:34.2, prev1Last3FRank:9, prev1Time:'1:56.5', prev1Diff:-0.2, prev1Position:'01-01-01-01', weight:{current:520, previous:518, diff:2}, jockeyContinue:true, trainerArea:'栗東', breeder:'ノーザンファーム', bloodlineSystem:'キングカメハメハ系', leftCourseScore:3, tokyoExp:{starts:1,wins:0,place:0,show:1}, courseNote:'東京1戦3着・複勝経験あり', note:'※5/28枠順確定前の仮登録・★皐月賞0.1秒差以上勝利×1人気100%ルール候補' },
-  { name:'リアライズシリウス', age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'津村明秀',     stable:'美浦手塚久', odds:5.5,   popEstimate:2,  bloodRank:'C', prevRace:'皐月賞', prevRank:2, prev1pop:4, prev1Last3F:34.4, prev1Last3FRank:12, prev1Time:'1:56.7', prev1Diff:0.2, prev1Position:'02-02-02-02', weight:{current:528, previous:530, diff:-2}, jockeyContinue:true, trainerArea:'美浦', leftCourseScore:5, tokyoExp:{starts:2,wins:2,place:0,show:0}, courseNote:'🏆東京2戦2勝・複勝率100%', note:'※5/28枠順確定前の仮登録・前走3着以内ボーナス該当' },
-  { name:'グリーンエナジー',   age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'戸崎圭太',     stable:'美浦上原佑', odds:10.2,  popEstimate:3,  bloodRank:'B', prevRace:'皐月賞', prevRank:7, prev1Last3F:33.6, prev1Last3FRank:2, prev1Time:'1:57.0', prev1Diff:0.5, prev1Position:'13-14-13-10', weight:{current:490, previous:490, diff:0}, trainerArea:'美浦', leftCourseScore:5, tokyoExp:{starts:2,wins:1,place:0,show:0}, courseNote:'⭐東京2戦1勝', note:'※5/28枠順確定前の仮登録・⭐鉄板ルール：皐月賞上がり2位タイ（過去10年複勝率100%）・上がり33.6秒3位' },
-  { name:'ライヒスアドラー',   age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'佐々木大輔',   stable:'美浦上原佑', odds:13.6,  popEstimate:5,  bloodRank:'C+', prevRace:'皐月賞', prevRank:3, prev1Last3F:33.8, prev1Last3FRank:5, prev1pop:9, prev1Time:'1:56.8', prev1Diff:0.3, prev1Position:'10-09-09-08', weight:{current:510, previous:512, diff:-2}, jockeyContinue:true, trainerArea:'美浦', leftCourseScore:3, tokyoExp:{starts:1,wins:0,place:0,show:1}, courseNote:'東京1戦3着・複勝経験あり', note:'※5/28枠順確定前の仮登録・★鉄板ルール該当（皐月賞3着×上がり33.8秒）' },
-  { name:'ゴーイントゥスカイ', age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'武豊',         stable:'美浦上原佑', odds:13.6,  popEstimate:6,  father:'コントレイル', motherFather:'Tapit', bloodRank:'S', prevRace:'青葉賞', prevRank:1, prev1Last3F:33.4, prev1Last3FRank:1, prev1Time:'2:23.0', prev1Diff:-0.1, prev1Position:'10-08-08-07', weight:{current:504, previous:512, diff:-8}, trainerArea:'美浦', leftCourseScore:5, tokyoExp:{starts:2,wins:2,place:0,show:0}, courseNote:'🏆東京2戦2勝・複勝率100%', note:'※5/28枠順確定前の仮登録・🏆上がり33.4秒1位の末脚最強' },
-  { name:'アウダーシア',       age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'D.レーン',     stable:'美浦手塚久', odds:13.7,  popEstimate:7,  father:'キズナ', motherFather:'ルーラーシップ', bloodRank:'B☆', prevRace:'スプリングS', prevRank:1, prev1pop:8, prev1Last3F:34.0, prev1Last3FRank:8, prev1Time:'1:46.0', prev1Diff:0.0, prev1Position:'13-13-13-10', weight:{current:500, previous:500, diff:0}, jockeyContinue:false, trainerArea:'美浦', breeder:'ノーザンファーム', bloodlineSystem:'ディープインパクト系', leftCourseScore:5, tokyoExp:{starts:3,wins:1,place:2,show:0}, courseNote:'🏆東京3戦1勝2着2回・複勝率100%', note:'※5/28枠順確定前の仮登録・前走3着以内ボーナス該当' },
-  { name:'コンジェスタス',     age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'西村淳也',     stable:'栗東高野',   odds:16.5,  popEstimate:8,  father:'コントレイル', motherFather:'Alamosa', bloodRank:'B+', prevRace:'京都新聞杯', prevRank:1, prev1Last3F:35.3, prev1Last3FRank:15, prev1Time:'2:09.9', prev1Diff:0.0, prev1Position:'06-07-09-07', weight:{current:518, previous:524, diff:-6}, trainerArea:'栗東', leftCourseScore:0, tokyoExp:{starts:0,wins:0,place:0,show:0}, courseNote:'⚠️東京初・左回り初', note:'※5/28枠順確定前の仮登録・前走3着以内ボーナス該当・栗東所属' },
-  { name:'バステール',         age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'川田将雅',     stable:'栗東斉藤崇', odds:21.8,  popEstimate:9,  father:'キタサンブラック', motherFather:'Aldebaran', bloodRank:'B+', prevRace:'皐月賞', prevRank:11, prev1Last3F:33.6, prev1Last3FRank:2, prev1Time:'1:57.5', prev1Diff:1.0, prev1Position:'18-18-18-17', weight:{current:460, previous:456, diff:4}, trainerArea:'栗東', leftCourseScore:4, tokyoExp:{starts:1,wins:0,place:1,show:0}, courseNote:'東京1戦2着・連対経験あり', note:'※5/28枠順確定前の仮登録・⭐鉄板ルール：皐月賞上がり2位タイ（過去10年複勝率100%）・11着は展開の不運' },
-  { name:'フォルテアンジェロ', age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'荻野極',       stable:'美浦上原佑', odds:23.9,  popEstimate:10, bloodRank:'C+', prevRace:'皐月賞', prevRank:5, prev1Last3F:33.4, prev1Last3FRank:1, prev1Time:'1:57.0', prev1Diff:0.5, prev1Position:'17-16-15-13', weight:{current:450, previous:450, diff:0}, trainerArea:'美浦', leftCourseScore:4, tokyoExp:{starts:1,wins:0,place:1,show:0}, courseNote:'東京1戦2着・連対経験あり', note:'※5/28枠順確定前の仮登録・🏆鉄板ルール：皐月賞上がり1位（過去10年複勝率100%・10/10頭）・5着は出遅れの不運' },
-  { name:'アスクエジンバラ',   age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'岩田康誠',     stable:'栗東福永',   odds:28.9,  popEstimate:11, bloodRank:'C', prevRace:'皐月賞', prevRank:4, prev1Last3F:34.2, prev1Last3FRank:9, prev1Time:'1:56.8', prev1Diff:0.3, prev1Position:'05-05-03-03', weight:{current:458, previous:458, diff:0}, trainerArea:'栗東', leftCourseScore:1, tokyoExp:{starts:1,wins:0,place:0,show:0}, courseNote:'⚠️東京1戦7着・凡走経験', note:'※5/28枠順確定前の仮登録・❌前走4着【0-0-0-13】鬼門ゾーン' },
-  { name:'パントルナイーフ',   age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'C.ルメール',   stable:'美浦木村',   odds:31.4,  popEstimate:12, bloodRank:'B-', prevRace:'皐月賞', prevRank:14, prev1Last3F:34.5, prev1Last3FRank:13, prev1Time:'1:57.8', prev1Diff:1.3, prev1Position:'12-12-11-17', weight:{current:510, previous:512, diff:-2}, trainerArea:'美浦', leftCourseScore:5, tokyoExp:{starts:1,wins:1,place:0,show:0}, courseNote:'⭐東京1戦1勝', note:'※5/28枠順確定前の仮登録・前走14着で危険ゾーン' },
-  { name:'マテンロウゲイル',   age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'横山和生',     stable:'栗東野中',   odds:31.7,  popEstimate:13, bloodRank:'B-', prevRace:'皐月賞', prevRank:10, prev1Last3F:33.8, prev1Last3FRank:5, prev1Time:'1:57.5', prev1Diff:1.0, prev1Position:'15-17-17-13', weight:{current:494, previous:502, diff:-8}, trainerArea:'栗東', leftCourseScore:0, tokyoExp:{starts:0,wins:0,place:0,show:0}, courseNote:'⚠️東京初・左回り初', note:'※5/28枠順確定前の仮登録・前走10着だが上がり33.8秒5位の末脚' },
-  { name:'ジャスティンビスタ', age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'坂井瑠星',     stable:'栗東吉岡',   odds:33.5,  popEstimate:14, bloodRank:'B', prevRace:'ホープフルS', prevRank:8, prev1Last3F:34.6, prev1Last3FRank:14, prev1Time:'2:01.7', prev1Diff:0.7, prev1Position:'12-13-12-13', weight:{current:516, previous:516, diff:0}, trainerArea:'栗東', leftCourseScore:0, tokyoExp:{starts:0,wins:0,place:0,show:0}, courseNote:'⚠️東京初・左回り初', note:'※5/28枠順確定前の仮登録・前走8着で危険ゾーン' },
-  { name:'エムズビギン',       age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'F.ゴンサルベス', stable:'栗東友道', odds:39.8,  popEstimate:15, father:'キタサンブラック', motherFather:'Galileo', bloodRank:'A', prevRace:'京都新聞杯', prevRank:7, prev1Last3F:35.8, prev1Last3FRank:16, prev1Time:'2:10.6', prev1Diff:0.7, prev1Position:'09-10-10-11', weight:{current:508, previous:508, diff:0}, trainerArea:'栗東', leftCourseScore:5, tokyoExp:{starts:1,wins:1,place:0,show:0}, courseNote:'⭐東京1戦1勝', note:'※5/28枠順確定前の仮登録・前走7着' },
-  { name:'メイショウハチコウ', age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'M.デムーロ',   stable:'栗東牧浦',   odds:69.8,  popEstimate:16, father:'ロジャーバローズ', motherFather:'アグネスデジタル', bloodRank:'B+', prevRace:'プリンシパルS', prevRank:1, prev1Last3F:33.8, prev1Last3FRank:5, prev1Time:'1:58.5', prev1Diff:-0.1, prev1Position:'05-05-04', weight:{current:510, previous:508, diff:2}, trainerArea:'栗東', leftCourseScore:5, tokyoExp:{starts:1,wins:1,place:0,show:0}, courseNote:'⭐東京1戦1勝', note:'※5/28枠順確定前の仮登録・前走3着以内ボーナス該当・上がり33.8秒5位' },
-  { name:'カフジエメンタール', age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'未定',         stable:'栗東矢作',   odds:78.6,  popEstimate:17, bloodRank:'C-', prevRace:'京都新聞杯', prevRank:9, prev1Last3F:35.9, prev1Last3FRank:18, prev1Time:'2:10.8', prev1Diff:0.9, prev1Position:'11-10-10-11', weight:{current:526, previous:528, diff:-2}, trainerArea:'栗東', leftCourseScore:0, tokyoExp:{starts:0,wins:0,place:0,show:0}, courseNote:'⚠️東京初・左回り初', note:'※5/28枠順確定前の仮登録・前走9着で危険ゾーン' },
-  { name:'アルトラムス',       age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'横山武史',     stable:'栗東野中',   odds:81.7,  popEstimate:18, bloodRank:'C-', prevRace:'皐月賞', prevRank:18, prev1Last3F:35.8, prev1Last3FRank:16, prev1Time:'1:58.8', prev1Diff:2.3, prev1Position:'10-09-09-15', weight:{current:468, previous:474, diff:-6}, trainerArea:'栗東', leftCourseScore:0, tokyoExp:{starts:0,wins:0,place:0,show:0}, courseNote:'⚠️東京初・左回り初', note:'※5/28枠順確定前の仮登録・前走18着で完全消し' },
-  { name:'ケントン',           age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'丹内祐次',     stable:'美浦田島',   odds:192.7, popEstimate:19, bloodRank:'C', prevRace:'青葉賞', prevRank:10, prev1Last3F:36.0, prev1Last3FRank:19, prev1Time:'2:24.9', prev1Diff:1.9, prev1Position:'05-04-02-03', weight:{current:494, previous:492, diff:2}, trainerArea:'美浦', leftCourseScore:0, tokyoExp:{starts:1,wins:0,place:0,show:0}, courseNote:'❌東京1戦10着・凡走経験', note:'※5/28枠順確定前の仮登録・前走10着で危険ゾーン' },
-  { name:'ショウナンガルフ',   age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'浜中俊',       stable:'栗東須貝',   odds:234.0, popEstimate:20, bloodRank:'C-', prevRace:'きさらぎ賞', prevRank:9, prev1Last3F:34.3, prev1Last3FRank:11, prev1Time:'1:49.0', prev1Diff:1.0, prev1Position:'03-04', weight:{current:480, previous:492, diff:-12}, trainerArea:'栗東', leftCourseScore:0, tokyoExp:{starts:0,wins:0,place:0,show:0}, courseNote:'⚠️東京初・左回り初', note:'※5/28枠順確定前の仮登録・前走9着で危険ゾーン' },
+  { name:'ロブチェン',         age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'松山弘平',     stable:'栗東杉山晴', odds:3.3,   popEstimate:1,  father:'ワールドプレミア', motherFather:"Giant's Causeway", bloodRank:'A', prevRace:'皐月賞', prevRank:1, prevRaceClass:'GI', prev1MarginToSecond:0.2, prev1pop:1, prev1Last3F:34.2, prev1Last3FRank:9, prev1Time:'1:56.5', prev1Diff:-0.2, prev1Position:'01-01-01-01', weight:{current:520, previous:518, diff:2}, jockeyContinue:true, trainerArea:'栗東', breeder:'ノーザンファーム', bloodlineSystem:'キングカメハメハ系', leftCourseScore:3, tokyoExp:{starts:1,wins:0,place:0,show:1}, courseNote:'東京1戦3着・複勝経験あり', note:'※5/28枠順確定前の仮登録・★皐月賞0.1秒差以上勝利×1人気100%ルール候補' },
+  { name:'リアライズシリウス', age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'津村明秀',     stable:'美浦手塚久', odds:5.5,   popEstimate:2,  bloodRank:'C', prevRace:'皐月賞', prevRank:2, prevRaceClass:'GI', prev1pop:4, prev1Last3F:34.4, prev1Last3FRank:12, prev1Time:'1:56.7', prev1Diff:0.2, prev1Position:'02-02-02-02', weight:{current:528, previous:530, diff:-2}, jockeyContinue:true, trainerArea:'美浦', leftCourseScore:5, tokyoExp:{starts:2,wins:2,place:0,show:0}, courseNote:'🏆東京2戦2勝・複勝率100%', note:'※5/28枠順確定前の仮登録・前走3着以内ボーナス該当' },
+  { name:'グリーンエナジー',   age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'戸崎圭太',     stable:'美浦上原佑', odds:10.2,  popEstimate:3,  bloodRank:'B', prevRace:'皐月賞', prevRank:7, prevRaceClass:'GI', prev1Last3F:33.6, prev1Last3FRank:2, prev1Time:'1:57.0', prev1Diff:0.5, prev1Position:'13-14-13-10', weight:{current:490, previous:490, diff:0}, trainerArea:'美浦', leftCourseScore:5, tokyoExp:{starts:2,wins:1,place:0,show:0}, courseNote:'⭐東京2戦1勝', note:'※5/28枠順確定前の仮登録・⭐鉄板ルール：皐月賞上がり2位タイ（過去10年複勝率100%）・上がり33.6秒3位' },
+  { name:'ライヒスアドラー',   age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'佐々木大輔',   stable:'美浦上原佑', odds:13.6,  popEstimate:5,  bloodRank:'C+', prevRace:'皐月賞', prevRank:3, prevRaceClass:'GI', prev1Last3F:33.8, prev1Last3FRank:5, prev1pop:9, prev1Time:'1:56.8', prev1Diff:0.3, prev1Position:'10-09-09-08', weight:{current:510, previous:512, diff:-2}, jockeyContinue:true, trainerArea:'美浦', leftCourseScore:3, tokyoExp:{starts:1,wins:0,place:0,show:1}, courseNote:'東京1戦3着・複勝経験あり', note:'※5/28枠順確定前の仮登録・★鉄板ルール該当（皐月賞3着×上がり33.8秒）' },
+  { name:'ゴーイントゥスカイ', age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'武豊',         stable:'美浦上原佑', odds:13.6,  popEstimate:6,  father:'コントレイル', motherFather:'Tapit', bloodRank:'S', prevRace:'青葉賞', prevRank:1, prevRaceClass:'GII', prev1Last3F:33.4, prev1Last3FRank:1, prev1Time:'2:23.0', prev1Diff:-0.1, prev1Position:'10-08-08-07', weight:{current:504, previous:512, diff:-8}, trainerArea:'美浦', leftCourseScore:5, tokyoExp:{starts:2,wins:2,place:0,show:0}, courseNote:'🏆東京2戦2勝・複勝率100%', note:'※5/28枠順確定前の仮登録・🏆上がり33.4秒1位の末脚最強' },
+  { name:'アウダーシア',       age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'D.レーン',     stable:'美浦手塚久', odds:13.7,  popEstimate:7,  father:'キズナ', motherFather:'ルーラーシップ', bloodRank:'B☆', prevRace:'スプリングS', prevRank:1, prevRaceClass:'GII', prev1pop:8, prev1Last3F:34.0, prev1Last3FRank:8, prev1Time:'1:46.0', prev1Diff:0.0, prev1Position:'13-13-13-10', weight:{current:500, previous:500, diff:0}, jockeyContinue:false, trainerArea:'美浦', breeder:'ノーザンファーム', bloodlineSystem:'ディープインパクト系', leftCourseScore:5, tokyoExp:{starts:3,wins:1,place:2,show:0}, courseNote:'🏆東京3戦1勝2着2回・複勝率100%', note:'※5/28枠順確定前の仮登録・前走3着以内ボーナス該当' },
+  { name:'コンジェスタス',     age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'西村淳也',     stable:'栗東高野',   odds:16.5,  popEstimate:8,  father:'コントレイル', motherFather:'Alamosa', bloodRank:'B+', prevRace:'京都新聞杯', prevRank:1, prevRaceClass:'GII', prev1Last3F:35.3, prev1Last3FRank:15, prev1Time:'2:09.9', prev1Diff:0.0, prev1Position:'06-07-09-07', weight:{current:518, previous:524, diff:-6}, trainerArea:'栗東', leftCourseScore:0, tokyoExp:{starts:0,wins:0,place:0,show:0}, courseNote:'⚠️東京初・左回り初', note:'※5/28枠順確定前の仮登録・前走3着以内ボーナス該当・栗東所属' },
+  { name:'バステール',         age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'川田将雅',     stable:'栗東斉藤崇', odds:21.8,  popEstimate:9,  father:'キタサンブラック', motherFather:'Aldebaran', bloodRank:'B+', prevRace:'皐月賞', prevRank:11, prevRaceClass:'GI', prev1Last3F:33.6, prev1Last3FRank:2, prev1Time:'1:57.5', prev1Diff:1.0, prev1Position:'18-18-18-17', weight:{current:460, previous:456, diff:4}, trainerArea:'栗東', leftCourseScore:4, tokyoExp:{starts:1,wins:0,place:1,show:0}, courseNote:'東京1戦2着・連対経験あり', note:'※5/28枠順確定前の仮登録・⭐鉄板ルール：皐月賞上がり2位タイ（過去10年複勝率100%）・11着は展開の不運' },
+  { name:'フォルテアンジェロ', age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'荻野極',       stable:'美浦上原佑', odds:23.9,  popEstimate:10, bloodRank:'C+', prevRace:'皐月賞', prevRank:5, prevRaceClass:'GI', prev1Last3F:33.4, prev1Last3FRank:1, prev1Time:'1:57.0', prev1Diff:0.5, prev1Position:'17-16-15-13', weight:{current:450, previous:450, diff:0}, trainerArea:'美浦', leftCourseScore:4, tokyoExp:{starts:1,wins:0,place:1,show:0}, courseNote:'東京1戦2着・連対経験あり', note:'※5/28枠順確定前の仮登録・🏆鉄板ルール：皐月賞上がり1位（過去10年複勝率100%・10/10頭）・5着は出遅れの不運' },
+  { name:'アスクエジンバラ',   age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'岩田康誠',     stable:'栗東福永',   odds:28.9,  popEstimate:11, bloodRank:'C', prevRace:'皐月賞', prevRank:4, prevRaceClass:'GI', prev1Last3F:34.2, prev1Last3FRank:9, prev1Time:'1:56.8', prev1Diff:0.3, prev1Position:'05-05-03-03', weight:{current:458, previous:458, diff:0}, trainerArea:'栗東', leftCourseScore:1, tokyoExp:{starts:1,wins:0,place:0,show:0}, courseNote:'⚠️東京1戦7着・凡走経験', note:'※5/28枠順確定前の仮登録・❌前走4着【0-0-0-13】鬼門ゾーン' },
+  { name:'パントルナイーフ',   age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'C.ルメール',   stable:'美浦木村',   odds:31.4,  popEstimate:12, bloodRank:'B-', prevRace:'皐月賞', prevRank:14, prevRaceClass:'GI', prev1Last3F:34.5, prev1Last3FRank:13, prev1Time:'1:57.8', prev1Diff:1.3, prev1Position:'12-12-11-17', weight:{current:510, previous:512, diff:-2}, trainerArea:'美浦', leftCourseScore:5, tokyoExp:{starts:1,wins:1,place:0,show:0}, courseNote:'⭐東京1戦1勝', note:'※5/28枠順確定前の仮登録・前走14着で危険ゾーン' },
+  { name:'マテンロウゲイル',   age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'横山和生',     stable:'栗東野中',   odds:31.7,  popEstimate:13, bloodRank:'B-', prevRace:'皐月賞', prevRank:10, prevRaceClass:'GI', prev1Last3F:33.8, prev1Last3FRank:5, prev1Time:'1:57.5', prev1Diff:1.0, prev1Position:'15-17-17-13', weight:{current:494, previous:502, diff:-8}, trainerArea:'栗東', leftCourseScore:0, tokyoExp:{starts:0,wins:0,place:0,show:0}, courseNote:'⚠️東京初・左回り初', note:'※5/28枠順確定前の仮登録・前走10着だが上がり33.8秒5位の末脚' },
+  { name:'ジャスティンビスタ', age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'坂井瑠星',     stable:'栗東吉岡',   odds:33.5,  popEstimate:14, bloodRank:'B', prevRace:'ホープフルS', prevRank:8, prevRaceClass:'GI', prev1Last3F:34.6, prev1Last3FRank:14, prev1Time:'2:01.7', prev1Diff:0.7, prev1Position:'12-13-12-13', weight:{current:516, previous:516, diff:0}, trainerArea:'栗東', leftCourseScore:0, tokyoExp:{starts:0,wins:0,place:0,show:0}, courseNote:'⚠️東京初・左回り初', note:'※5/28枠順確定前の仮登録・前走8着で危険ゾーン' },
+  { name:'エムズビギン',       age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'F.ゴンサルベス', stable:'栗東友道', odds:39.8,  popEstimate:15, father:'キタサンブラック', motherFather:'Galileo', bloodRank:'A', prevRace:'京都新聞杯', prevRank:7, prevRaceClass:'GII', prev1Last3F:35.8, prev1Last3FRank:16, prev1Time:'2:10.6', prev1Diff:0.7, prev1Position:'09-10-10-11', weight:{current:508, previous:508, diff:0}, trainerArea:'栗東', leftCourseScore:5, tokyoExp:{starts:1,wins:1,place:0,show:0}, courseNote:'⭐東京1戦1勝', note:'※5/28枠順確定前の仮登録・前走7着' },
+  { name:'メイショウハチコウ', age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'M.デムーロ',   stable:'栗東牧浦',   odds:69.8,  popEstimate:16, father:'ロジャーバローズ', motherFather:'アグネスデジタル', bloodRank:'B+', prevRace:'プリンシパルS', prevRank:1, prevRaceClass:'L', prev1Last3F:33.8, prev1Last3FRank:5, prev1Time:'1:58.5', prev1Diff:-0.1, prev1Position:'05-05-04', weight:{current:510, previous:508, diff:2}, trainerArea:'栗東', leftCourseScore:5, tokyoExp:{starts:1,wins:1,place:0,show:0}, courseNote:'⭐東京1戦1勝', note:'※5/28枠順確定前の仮登録・前走3着以内ボーナス該当・上がり33.8秒5位' },
+  { name:'カフジエメンタール', age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'未定',         stable:'栗東矢作',   odds:78.6,  popEstimate:17, bloodRank:'C-', prevRace:'京都新聞杯', prevRank:9, prevRaceClass:'GII', prev1Last3F:35.9, prev1Last3FRank:18, prev1Time:'2:10.8', prev1Diff:0.9, prev1Position:'11-10-10-11', weight:{current:526, previous:528, diff:-2}, trainerArea:'栗東', leftCourseScore:0, tokyoExp:{starts:0,wins:0,place:0,show:0}, courseNote:'⚠️東京初・左回り初', note:'※5/28枠順確定前の仮登録・前走9着で危険ゾーン' },
+  { name:'アルトラムス',       age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'横山武史',     stable:'栗東野中',   odds:81.7,  popEstimate:18, bloodRank:'C-', prevRace:'皐月賞', prevRank:18, prevRaceClass:'GI', prev1Last3F:35.8, prev1Last3FRank:16, prev1Time:'1:58.8', prev1Diff:2.3, prev1Position:'10-09-09-15', weight:{current:468, previous:474, diff:-6}, trainerArea:'栗東', leftCourseScore:0, tokyoExp:{starts:0,wins:0,place:0,show:0}, courseNote:'⚠️東京初・左回り初', note:'※5/28枠順確定前の仮登録・前走18着で完全消し' },
+  { name:'ケントン',           age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'丹内祐次',     stable:'美浦田島',   odds:192.7, popEstimate:19, bloodRank:'C', prevRace:'青葉賞', prevRank:10, prevRaceClass:'GII', prev1Last3F:36.0, prev1Last3FRank:19, prev1Time:'2:24.9', prev1Diff:1.9, prev1Position:'05-04-02-03', weight:{current:494, previous:492, diff:2}, trainerArea:'美浦', leftCourseScore:0, tokyoExp:{starts:1,wins:0,place:0,show:0}, courseNote:'❌東京1戦10着・凡走経験', note:'※5/28枠順確定前の仮登録・前走10着で危険ゾーン' },
+  { name:'ショウナンガルフ',   age:3, sex:'牡', waku:null, umaban:null, uma:null, hande:57.0, jockey:'浜中俊',       stable:'栗東須貝',   odds:234.0, popEstimate:20, bloodRank:'C-', prevRace:'きさらぎ賞', prevRank:9, prevRaceClass:'GIII', prev1Last3F:34.3, prev1Last3FRank:11, prev1Time:'1:49.0', prev1Diff:1.0, prev1Position:'03-04', weight:{current:480, previous:492, diff:-12}, trainerArea:'栗東', leftCourseScore:0, tokyoExp:{starts:0,wins:0,place:0,show:0}, courseNote:'⚠️東京初・左回り初', note:'※5/28枠順確定前の仮登録・前走9着で危険ゾーン' },
 ],
 
 '葵ステークス': [
@@ -7000,6 +7000,45 @@ const RACE_PAST_DATA = {
     anaPoints: [
       '',
       '━━━━━━━━━━━━━━━━━━━━━━━━━━',
+      '🎯【消去法・最終分析】極めて低い好走率馬を排除',
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━',
+      '',
+      '❌【消去対象①】前走9着以下の馬【複勝率0.0%】',
+      '  過去10年で42頭該当・3着以内ゼロ',
+      '  今年該当：アルトラムス・カフジエメンタール・ケントン・',
+      '           バステール・マテンロウゲイル・パントルナイーフ',
+      '',
+      '❌【消去対象②】前走G2で3着以下の馬【複勝率0.0%】',
+      '  中3〜4週返し困難',
+      '  今年該当：エムズビギン（京都新聞杯7着）',
+      '',
+      '❌【消去対象③】前走G1で6着以下の馬【複勝率2.3%】',
+      '  43頭中1勝のみ・絶望的データ（半年ぶりも割引）',
+      '  今年該当：グリーンエナジー（皐月賞7着）・ジャスティンビスタ（ホープフルS8着）',
+      '',
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━',
+      '⭕【精鋭9頭】馬券圏内候補（フィルター突破馬＋前走成績）',
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━',
+      '⭐前走G1で5着以内 または 前走G2/Lで1着の馬',
+      '',
+      '◎ ロブチェン（皐月賞1着）',
+      '○ リアライズシリウス（皐月賞2着）',
+      '▲ ライヒスアドラー（皐月賞3着）',
+      '△ アスクエジンバラ（皐月賞4着）',
+      '△ フォルテアンジェロ（皐月賞5着）',
+      '○ アウダーシア（スプリングS L 1着）',
+      '○ コンジェスタス(京都新聞杯 1着)',
+      '○ ゴーイントゥスカイ(青葉賞 1着)',
+      '○ メイショウハチコウ(プリンシパルS L 1着)',
+      '',
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━',
+      '🚨【枠順確定後の注意点】',
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━',
+      '❌ 4枠（勝率0.0%）',
+      '❌ 5枠（2・3着実績ゼロ・複勝率5%）',
+      '→ 期待馬が4枠・5枠に入った場合は評価を下げる必要あり',
+      '',
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━',
       '🚨【最強鉄板ルール】皐月賞上がり1位or2位＝ダービー3着以内（複勝率100%）',
       '━━━━━━━━━━━━━━━━━━━━━━━━━━',
       '⭐過去10年の該当馬10頭全てがダービー3着以内（複勝率100%）',
@@ -7326,6 +7365,40 @@ const RACE_PAST_DATA = {
             matchFn: function(h){ return h.father === "エピファネイア"; } },
           { cells: ["キタサンブラック", "0-2-0-1", "66.7%", "⭐高確率連対"],
             matchFn: function(h){ return h.father === "キタサンブラック"; } },
+        ]
+      },
+      {
+        type: "table",
+        title: "前走クラス×着順 消去法フィルター（過去10年）",
+        headers: ["条件","成績","複勝率","判定"],
+        rows: [
+          { cells: ["前走9着以下", "0-0-0-42", "0%", "❌完全消し"],
+            matchFn: function(h){ return h.prevRank >= 9; } },
+          { cells: ["前走G2で3着以下", "0-0-0-?", "0%", "❌完全消し"],
+            matchFn: function(h){ return h.prevRaceClass === 'GII' && h.prevRank >= 4; } },
+          { cells: ["前走G1で6着以下", "1-0-0-42", "2.3%", "❌絶望的"],
+            matchFn: function(h){ return h.prevRaceClass === 'GI' && h.prevRank >= 6; } },
+          { cells: ["前走G1で5着以内", "?-?-?-?", "高", "🏆精鋭"], highlight: true,
+            matchFn: function(h){ return h.prevRaceClass === 'GI' && h.prevRank >= 1 && h.prevRank <= 5; } },
+          { cells: ["前走G2/L/GIIIで1着", "?-?-?-?", "高", "⭐精鋭"], highlight: true,
+            matchFn: function(h){ return (h.prevRaceClass === 'GII' || h.prevRaceClass === 'GIII' || h.prevRaceClass === 'L') && h.prevRank === 1; } },
+        ]
+      },
+      {
+        type: "table",
+        title: "枠順別 危険度（過去10年）",
+        headers: ["枠","勝率/複勝率","判定"],
+        rows: [
+          { cells: ["1〜3枠（内枠）", "複勝率18.3%", "⭐経済コース優位"],
+            matchFn: function(h){ return h.waku >= 1 && h.waku <= 3; } },
+          { cells: ["4枠", "勝率0.0%", "❌危険"],
+            matchFn: function(h){ return h.waku === 4; } },
+          { cells: ["5枠", "複勝率5%", "❌魔の枠"],
+            matchFn: function(h){ return h.waku === 5; } },
+          { cells: ["6枠", "複勝率35%", "🏆最強"], highlight: true,
+            matchFn: function(h){ return h.waku === 6; } },
+          { cells: ["7-8枠", "中庸", "△"],
+            matchFn: function(h){ return h.waku === 7 || h.waku === 8; } },
         ]
       },
     ],
@@ -12580,6 +12653,25 @@ function computeScoreBreakdown(horse, raceName) {
     // ❌ NHKマイル組【0-0-0-12】
     if (horse.prevRace === 'NHKマイルC' || horse.prevRace === 'NHKマイルカップ') {
       dataScore -= 10;
+    }
+    // ❌ 前走G2で3着以下【複勝率0.0%】中3〜4週返し困難
+    if (horse.prevRaceClass === 'GII' && horse.prevRank >= 4) {
+      dataScore -= 10;
+    }
+    // ❌ 前走G1で6着以下【複勝率2.3%】43頭中1勝のみ・絶望的データ
+    if (horse.prevRaceClass === 'GI' && horse.prevRank >= 6) {
+      dataScore -= 8;
+    }
+    // ⭐ 精鋭フィルター：前走G1で5着以内 OR 前走G2/L/GIIIで1着
+    var isElite = false;
+    if (horse.prevRaceClass === 'GI' && horse.prevRank >= 1 && horse.prevRank <= 5) {
+      isElite = true;
+    } else if ((horse.prevRaceClass === 'GII' || horse.prevRaceClass === 'GIII' || horse.prevRaceClass === 'L') &&
+               horse.prevRank === 1) {
+      isElite = true;
+    }
+    if (isElite) {
+      dataScore += 3;
     }
     // マイナス側を保持（合計で Math.max(0, ...) ガード）
     dataScore = Math.max(-20, Math.min(20, dataScore));
