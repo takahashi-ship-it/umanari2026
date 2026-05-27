@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260527-2000';
+  var CURRENT_VERSION = '20260527-2100';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -9874,7 +9874,38 @@ function renderHorses() {
         <div class="score-bar">
           <div class="score-bar-fill ${rank.key}" style="width:${pct}%"></div>
         </div>
-        ${bdItems._v2 ? (function(){
+        ${bdItems._v3 ? (function(){
+          // V3（葵ステークス）専用：15項目を3グループで表示
+          var v = bdItems._v3;
+          function row(label, score, max, hi){
+            var pct = max > 0 ? score / max : 0;
+            var c = score < 0 ? '#A32D2D' : hi && score > 0 ? '#B8600C' : pct >= 0.7 ? '#0F6E56' : pct >= 0.4 ? '#2563eb' : score > 0 ? '#888' : '#bbb';
+            return '<div class="score-item"><div class="si-label">'+label+'</div><div class="si-val" style="color:'+c+'">'+score+'/'+max+'</div></div>';
+          }
+          var wkg = (h.weight && h.weight.current) ? h.weight.current+'kg' : '未発表';
+          var wd = (h.weight && h.weight.diff != null) ? (h.weight.diff>=0?'+':'')+h.weight.diff : '';
+          return '<div class="score-detail">'
+            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:2px">📊 過去データ準拠 (55点)</div>'
+            + row('🚺性別', v.sex, 15, true)
+            + row('🏃脚質', v.style, 15, true)
+            + row('人気別', v.pop, 10)
+            + row('前走クラス', v.prevClass, 10)
+            + row('短距離血統', v.blood, 5)
+            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🐴 馬個別 (45点)</div>'
+            + row('🏆鉄板ルール', v.tetsuban, 15, true)
+            + row('⚡上がり3F', v.lastF, 10)
+            + row('距離経験', v.dist, 5)
+            + '<div class="score-item" title="'+wkg+(wd?' ('+wd+')':'')+'"><div class="si-label">馬体重</div><div class="si-val" style="color:'+(v.weight>=5?'#0F6E56':v.weight>=3?'#2563eb':'#888')+'">'+wkg+' '+v.weight+'/5</div></div>'
+            + row('同コース実績', v.course, 5)
+            + row('前走着順', v.prevRank, 5)
+            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🌍 環境要因 (30点)</div>'
+            + row('騎手', v.jockey, 10)
+            + row('調教', v.training, 10)
+            + row('枠順', v.waku, 5)
+            + row('同レース', v.repeat, 5)
+            + '<div class="score-item" style="grid-column:1/-1;border-top:1px solid #ddd;margin-top:4px;padding-top:4px"><div class="si-label" style="font-weight:700">合計</div><div class="si-val" style="font-weight:700;font-size:14px">'+total+'/'+maxS+' ('+pct+'%)</div></div>'
+            + '</div>';
+        })() : bdItems._v2 ? (function(){
           // V2（日本ダービー）専用：14項目を3グループで表示
           var v = bdItems._v2;
           function row(label, score, max, hi){
@@ -12631,11 +12662,190 @@ function computeScoreBreakdownV2(horse, raceName) {
   };
 }
 
+/**
+ * V3: 葵ステークス専用（130点満点）
+ * 性別15点・脚質15点を最重要（過去8年データ準拠）
+ */
+function computeScoreBreakdownAoiV3(horse, raceName) {
+  // === 1. 性別 (15点) ★ 葵S最重要 ===
+  var sexScore = 0;
+  if (horse.sex === '牝') sexScore = 15;
+  else if (horse.sex === '牡' || horse.sex === 'せん') sexScore = 5;
+  else sexScore = 7;
+
+  // === 2. 脚質 (15点) ★ 葵S最重要 ===
+  var styleScore = 0;
+  var s = horse.style || horse.runStyle || '';
+  if (s === '逃げ') styleScore = 15;
+  else if (s === '先行') styleScore = 9;
+  else if (s === '差し') styleScore = 4;
+  else if (s === '追込') styleScore = -5;
+  else styleScore = 5;
+
+  // === 3. 人気別 (10点) ===
+  var popScore = 5;
+  if (horse.popEstimate >= 1 && horse.popEstimate <= 5) popScore = 6;
+  else if (horse.popEstimate >= 6 && horse.popEstimate <= 7) popScore = 8;
+  else if (horse.popEstimate >= 8 && horse.popEstimate <= 12) popScore = 10;
+  else if (horse.popEstimate >= 13) popScore = 6;
+
+  // === 4. 前走クラス (10点) ===
+  var prevClassScore = 3;
+  var pc = horse.prevRaceClass;
+  if (pc === 'L' || pc === 'OP') prevClassScore = 10;
+  else if (pc === 'GIII') prevClassScore = 5;
+  else if (pc === 'GII' || pc === 'GI') prevClassScore = 4;
+  else if (pc === '1勝') prevClassScore = 4;
+  else if (pc === '未勝利') prevClassScore = 0;
+  else if (pc === '地方') prevClassScore = -5;
+
+  // === 5. 短距離血統 (5点) ===
+  var bloodScoreV3 = 1;
+  if (horse.father === 'ファインニードル') bloodScoreV3 = 5;
+  else if (horse.father === 'ドレフォン' || horse.father === 'モーリス' || horse.father === 'タワーオブロンドン') bloodScoreV3 = 4;
+  else if (horse.motherFather === 'ロードカナロア' || horse.father === 'ロードカナロア') bloodScoreV3 = 3;
+
+  // === 6. 鉄板ルール (15点) ===
+  var tetsuban = 0;
+  var isMaeNigeOrSakou = (s === '逃げ' || s === '先行');
+  if (horse.sex === '牝' && isMaeNigeOrSakou && (pc === 'L' || pc === 'OP') && horse.prevRank === 1) {
+    tetsuban += 15;  // 三冠該当
+  } else if (horse.sex === '牝' && s === '逃げ') {
+    tetsuban += 10;
+  } else if (horse.sex === '牝' && s === '先行') {
+    tetsuban += 6;
+  } else if ((horse.sex === '牡' || horse.sex === 'せん') && s === '逃げ') {
+    tetsuban += 8;
+  }
+  if (horse.popEstimate >= 8 && isMaeNigeOrSakou) {
+    tetsuban = Math.min(15, tetsuban + 3);
+  }
+  tetsuban = Math.min(15, tetsuban);
+
+  // === 7. 上がり3F (10点) ===
+  var lastFScore = 0;
+  if (typeof calcLastFScore === 'function') {
+    var lf = calcLastFScore(horse);
+    lastFScore = lf.score || 0;
+  }
+
+  // === 8. 距離経験 (5点) ===
+  var distScore = 2;
+  if (horse.prevRace) {
+    if (/1200/.test(horse.prevRace) || (horse.prev1Time && /1:0[789]/.test(horse.prev1Time))) distScore = 5;
+    else if (/1400/.test(horse.prevRace) || (horse.prev1Time && /1:(1[89]|2[01])/.test(horse.prev1Time))) distScore = 4;
+    else if (/1600|マイル/.test(horse.prevRace)) distScore = 2;
+  }
+
+  // === 9. 馬体重 (5点) ===
+  var weightScore = 3;
+  if (horse.weight && horse.weight.current) {
+    var kg = horse.weight.current;
+    if (kg >= 460 && kg <= 499) weightScore = 5;
+    else if (kg >= 440 && kg <= 459) weightScore = 4;
+    else if (kg >= 500 && kg <= 520) weightScore = 4;
+    else if (kg < 440) weightScore = 2;
+    else if (kg > 520) weightScore = 3;
+  }
+
+  // === 10. 同コース実績 (5点) ===
+  var courseScore = 2;
+  if (horse.kyotoExp || horse.sprintExp) courseScore = 5;
+  else if (horse.prevRace && /京都/.test(horse.prevRace)) courseScore = 3;
+
+  // === 11. 前走着順 (5点) ===
+  var prevRankScore = 0;
+  if (horse.prevRank === 1) prevRankScore = 5;
+  else if (horse.prevRank === 2) prevRankScore = 4;
+  else if (horse.prevRank === 3) prevRankScore = 3;
+  else if (horse.prevRank >= 4 && horse.prevRank <= 6) prevRankScore = 2;
+  else if (horse.prevRank >= 7 && horse.prevRank <= 10) prevRankScore = 0;
+  else if (horse.prevRank >= 11) prevRankScore = -3;
+
+  // === 12. 騎手 (10点) ===
+  var aoiTopJockeys = {
+    'C.ルメール':9, '川田将雅':9, '武豊':8, 'D.レーン':8,
+    '戸崎圭太':7, '横山武史':7, '松山弘平':7,
+    '坂井瑠星':6, '西村淳也':6, '岩田望来':6, '鮫島克駿':6,
+    '津村明秀':5, '荻野極':5, '原優介':4, '池添謙一':5,
+    '佐々木大輔':3, '丸山元気':3, '小沢大仁':3,
+    '吉村誠之助':3, '丹内祐次':4, '高杉吏麒':3, '松岡正海':3,
+    '川又賢治':3, '古川奈穂':3, '斎藤新':3, 'M.ディー':4,
+    '浜中俊':5, '岩田康誠':5, '松本大輝':3, '吉田豊':4, '菅原明良':4,
+    '横山和生':6, '幸英明':4, '菊沢一樹':3, '藤岡佑介':7
+  };
+  var jockeyScoreV3 = aoiTopJockeys[horse.jockey] != null ? aoiTopJockeys[horse.jockey] : 3;
+
+  // === 13. 調教 (10点) ===
+  var trainingScoreV3 = 5;
+  if (horse.training === 'S' || horse.training === 'A+') trainingScoreV3 = 9;
+  else if (horse.training === 'A') trainingScoreV3 = 8;
+  else if (horse.training === 'B+') trainingScoreV3 = 7;
+  else if (horse.training === 'B') trainingScoreV3 = 6;
+  else if (horse.training === 'C') trainingScoreV3 = 3;
+
+  // === 14. 枠順 (5点) ===
+  var wakuScoreV3 = 3;
+  if (horse.waku != null && horse.waku > 0) {
+    if (horse.waku >= 4 && horse.waku <= 6) wakuScoreV3 = 5;
+    else if (horse.waku >= 1 && horse.waku <= 3) wakuScoreV3 = 4;
+    else wakuScoreV3 = 3;
+  }
+
+  // === 15. 同レース実績 (5点) — 3歳G3で経験なし ===
+  var repeatScore = 2;
+
+  // === 合計 ===
+  var totalScore = sexScore + styleScore + popScore + prevClassScore +
+                   bloodScoreV3 + tetsuban + lastFScore + distScore +
+                   weightScore + courseScore + prevRankScore + jockeyScoreV3 +
+                   trainingScoreV3 + wakuScoreV3 + repeatScore;
+  totalScore = Math.max(0, totalScore);
+  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 130 * 100)));
+
+  return {
+    total: totalScore,
+    max: 130,
+    pct: pct,
+    items: {
+      popularity: { score: popScore,        max: 10, label: '人気別' },
+      waku:       { score: wakuScoreV3,     max: 5,  label: '枠順' },
+      data:       { score: prevClassScore + tetsuban + prevRankScore, max: 30, label: '前走+鉄板+着順' },
+      blood:      { score: bloodScoreV3,    max: 5,  label: '短距離血統' },
+      jockey:     { score: jockeyScoreV3,   max: 10, label: '騎手' },
+      course:     { score: courseScore,     max: 5,  label: '同コース実績' },
+      training:   { score: trainingScoreV3, max: 10, label: '調教' },
+      speed:      { score: lastFScore,      max: 10, label: '⚡ 上がり3F',
+                    lastFLabel: '',
+                    lastFTime: horse.prev1Last3F != null ? horse.prev1Last3F : null,
+                    lastFRank: horse.prev1Last3FRank != null ? horse.prev1Last3FRank : null },
+      distance:   { score: distScore,       max: 5,  label: '距離経験' },
+      direction:  { score: styleScore,      max: 15, label: '🏃脚質' },
+      weight:     { score: weightScore,     max: 5,  label: '馬体重', weightLabel: '', warning: null },
+      _v3: {
+        sex: sexScore, style: styleScore, pop: popScore, prevClass: prevClassScore,
+        blood: bloodScoreV3, tetsuban: tetsuban, lastF: lastFScore, dist: distScore,
+        weight: weightScore, course: courseScore, prevRank: prevRankScore,
+        jockey: jockeyScoreV3, training: trainingScoreV3, waku: wakuScoreV3, repeat: repeatScore
+      }
+    },
+    penalty: 0,
+    stallionLabel: '',
+    distLabel: '',
+    dirLabel: ''
+  };
+}
+
 function computeScoreBreakdown(horse, raceName) {
-  // 日本ダービーは新ロジック V2 を使用
+  // 日本ダービーは V2
   if (raceName === '日本ダービー' || raceName === '東京優駿') {
     if (!horse) return { total: 0, max: 130, pct: 0, items: {}, penalty: 0 };
     return computeScoreBreakdownV2(horse, raceName);
+  }
+  // 葵ステークスは V3
+  if (raceName === '葵ステークス' || raceName === '葵S') {
+    if (!horse) return { total: 0, max: 130, pct: 0, items: {}, penalty: 0 };
+    return computeScoreBreakdownAoiV3(horse, raceName);
   }
   if (!horse) return { total: 0, max: 113, pct: 0, items: {}, penalty: 0 };
   var raceInfo = (typeof RACE_META !== 'undefined' && RACE_META[raceName]) || {};
