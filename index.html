@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260527-1830';
+  var CURRENT_VERSION = '20260527-2000';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -9874,7 +9874,39 @@ function renderHorses() {
         <div class="score-bar">
           <div class="score-bar-fill ${rank.key}" style="width:${pct}%"></div>
         </div>
-        <div class="score-detail">
+        ${bdItems._v2 ? (function(){
+          // V2（日本ダービー）専用：14項目を3グループで表示
+          var v = bdItems._v2;
+          function row(label, score, max, hi){
+            var pct = max > 0 ? score / max : 0;
+            var c = score < 0 ? '#A32D2D' : hi && score > 0 ? '#B8600C' : pct >= 0.7 ? '#0F6E56' : pct >= 0.4 ? '#2563eb' : score > 0 ? '#888' : '#bbb';
+            var sgn = score > 0 ? '' : (score < 0 ? '' : '');
+            return '<div class="score-item"><div class="si-label">'+label+'</div><div class="si-val" style="color:'+c+'">'+score+'/'+max+'</div></div>';
+          }
+          var wkg = (h.weight && h.weight.current) ? h.weight.current+'kg' : '未発表';
+          var wd = (h.weight && h.weight.diff != null) ? (h.weight.diff>=0?'+':'')+h.weight.diff : '';
+          var lastFLabel = (h.prev1Last3F != null) ? h.prev1Last3F.toFixed(1)+'秒/'+(h.prev1Last3FRank||'?')+'位' : '';
+          return '<div class="score-detail">'
+            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:2px">📊 過去データ準拠 (60点)</div>'
+            + row('人気別', v.pop, 15)
+            + row('前走別', v.prevRace, 12)
+            + row('前走着順', v.prevRank, 12)
+            + row('脚質', v.style, 8)
+            + row('種牡馬', v.blood, 7)
+            + row('枠順', v.waku, 6)
+            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🐴 馬個別 (45点)</div>'
+            + row('🏆鉄板ルール', v.tetsuban, 15, true)
+            + '<div class="score-item"><div class="si-label">⚡上がり3F</div><div class="si-val" style="color:'+(v.lastF>=8?'#0F6E56':v.lastF>=5?'#2563eb':'#888')+'" title="'+lastFLabel+'">'+v.lastF+'/10</div></div>'
+            + row('距離経験', v.dist, 8)
+            + row('東京コース', v.course, 7)
+            + '<div class="score-item" title="'+wkg+(wd?' ('+wd+')':'')+'"><div class="si-label">馬体重</div><div class="si-val" style="color:'+(v.weight>=5?'#0F6E56':v.weight>=3?'#2563eb':v.weight>0?'#888':'#A32D2D')+'">'+wkg+' '+v.weight+'/5</div></div>'
+            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🌍 環境要因 (25点)</div>'
+            + row('騎手', v.jockey, 10)
+            + row('調教', v.training, 10)
+            + row('同レース', v.repeat, 5)
+            + '<div class="score-item" style="grid-column:1/-1;border-top:1px solid #ddd;margin-top:4px;padding-top:4px"><div class="si-label" style="font-weight:700">合計</div><div class="si-val" style="font-weight:700;font-size:14px">'+total+'/'+maxS+' ('+pct+'%)</div></div>'
+            + '</div>';
+        })() : `<div class="score-detail">
           <div class="score-item"><div class="si-label">人気</div><div class="si-val">${(bdItems.popularity && bdItems.popularity.score) || 0}/20</div></div>
           <div class="score-item"><div class="si-label">枠順</div><div class="si-val">${(bdItems.waku && bdItems.waku.score) || 0}/15</div></div>
           <div class="score-item"><div class="si-label">データ</div><div class="si-val">${(bdItems.data && bdItems.data.score) || 0}/20</div></div>
@@ -9888,7 +9920,7 @@ function renderHorses() {
           ${(function(){var p=(bdItems.direction && bdItems.direction.score)||0;var lbl=(bdItems.direction && bdItems.direction.label)||'左回り';var c=p>=5?'#A32D2D':p>=3?'#0F6E56':p>0?'#2563eb':p<0?'#A32D2D':'#888';return '<div class="score-item" title="'+((breakdown.dirLabel||'').replace(/"/g,'&quot;'))+'"><div class="si-label">'+lbl+'</div><div class="si-val" style="color:'+c+'">'+(p>0?'+'+p:p)+'/5</div></div>';})()}
           ${(function(){var w=(bdItems.weight && bdItems.weight.score)!=null?bdItems.weight.score:0;var wLbl=(bdItems.weight && bdItems.weight.weightLabel)||'';var wWarn=(bdItems.weight && bdItems.weight.warning)||'';var wkg=(h.weight && h.weight.current)?h.weight.current+'kg':'未発表';var wd=(h.weight && h.weight.diff!=null)?(h.weight.diff>=0?'+':'')+h.weight.diff:'';var c=w>=5?'#0F6E56':w>=3?'#2563eb':w>0?'#888':w<0?'#A32D2D':'#888';var tip=(wWarn||wLbl).replace(/"/g,'&quot;');return '<div class="score-item" title="'+tip+'"><div class="si-label">馬体重</div><div class="si-val" style="color:'+c+'">'+wkg+(wd?' ('+wd+')':'')+' '+(w>0?'+'+w:w)+'/5</div></div>';})()}
           <div class="score-item"><div class="si-label">合計</div><div class="si-val">${total}/${maxS}</div></div>
-        </div>
+        </div>`}
       </div>
       ${(function(){var bm=calcBakenMiyami(h,pct);return bm.label?'<div style="margin-top:8px;padding:6px 10px;background:'+bm.color+'18;border-left:3px solid '+bm.color+';border-radius:var(--border-radius-md);font-size:11px;font-weight:600;color:'+bm.color+'">'+bm.label+'</div>':'';})()}
       ${h.trainingNote ? `<div style="margin-top:8px;padding:6px 10px;background:#FAEEDA;border-left:3px solid #B8600C;border-radius:var(--border-radius-md);font-size:11px;color:#854F0B;line-height:1.6"><span style="font-weight:700">🏃 最終追切：</span>${h.trainingBadge ? `<span style="color:#A32D2D;font-weight:700;margin-right:4px">${h.trainingBadge}</span>` : ''}${h.trainingNote}${h.trainingTime ? ` <span style="color:#888;font-size:10px">(${h.trainingTime})</span>` : ''}</div>` : ''}
