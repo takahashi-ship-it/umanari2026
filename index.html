@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260528-1300';
+  var CURRENT_VERSION = '20260528-1400';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -11254,13 +11254,149 @@ function calcFukusho(h) {
   return { score: score, rank: rankLetter, ok: ok, breakdown: s, raw: total, max: maxS };
 }
 
+/**
+ * 軸向きスコア計算（複勝率・安定性重視・100点満点）
+ * 予想スコア（強さ）とは別軸で、3着以内の堅実性を評価
+ */
+function getPopFukuRate(horse, raceName) {
+  var pop = horse.popEstimate || 99;
+  var rates = {
+    '日本ダービー': {1:70,2:50,3:50,4:30,5:10,6:45,7:45,8:45,9:45,10:45,11:35,12:35,13:35,14:35,15:35,16:20,17:20,18:20},
+    '東京優駿':     {1:70,2:50,3:50,4:30,5:10,6:45,7:45,8:45,9:45,10:45,11:35,12:35,13:35,14:35,15:35,16:20,17:20,18:20},
+    '葵ステークス': {1:32,2:32,3:32,4:32,5:32,6:14,7:14,8:14,9:14,10:14,11:14,12:14,13:14,14:14,15:14,16:14},
+    '葵S':          {1:32,2:32,3:32,4:32,5:32,6:14,7:14,8:14,9:14,10:14,11:14,12:14,13:14,14:14,15:14,16:14},
+    '目黒記念':     {1:70,2:30,3:20,4:10,5:10,6:30,7:30,8:30,9:30,10:5,11:5,12:5,13:5,14:5,15:5,16:5}
+  };
+  var rr = rates[raceName];
+  if (!rr) return 20;
+  return rr[pop] != null ? rr[pop] : 5;
+}
+function getPrevRaceFukuRate(horse, raceName) {
+  if (!horse.prevRace) return 5;
+  var pr = horse.prevRace;
+  if (raceName === '日本ダービー' || raceName === '東京優駿') {
+    if (pr.indexOf('皐月賞') >= 0) return 23.2;
+    if (pr.indexOf('青葉賞') >= 0) return 10;
+    if (pr.indexOf('京都新聞杯') >= 0) return 11.8;
+    if (pr.indexOf('スプリングS') >= 0) return 12;
+    return 5;
+  }
+  if (raceName === '目黒記念') {
+    if (pr.indexOf('日経賞') >= 0) return 31.8;
+    if (pr.indexOf('ハンブルク') >= 0) return 23.1;
+    if (pr.indexOf('ダイヤモンド') >= 0) return 20;
+    if (pr.indexOf('メトロポリタン') >= 0) return 17.4;
+    if (pr.indexOf('日経新春') >= 0) return 22.2;
+    if (pr.indexOf('天皇賞') >= 0) return 10;
+    if (pr.indexOf('阪神大賞典') >= 0) return 12;
+    return 5;
+  }
+  if (raceName === '葵ステークス' || raceName === '葵S') {
+    if (horse.prevRaceClass === 'L' || horse.prevRaceClass === 'OP') return 24;
+    if (horse.prevRaceClass === 'GIII' || horse.prevRaceClass === 'GII') return 14;
+    return 10;
+  }
+  return 5;
+}
+function getTetsubanFlag(horse, raceName) {
+  var count = 0;
+  if (raceName === '日本ダービー' || raceName === '東京優駿') {
+    if (horse.prevRace === '皐月賞' && horse.prevRank === 1 &&
+        horse.prev1MarginToSecond >= 0.1 && horse.popEstimate === 1) count++;
+    if (horse.prevRace === '皐月賞' && horse.prevRank <= 3 && horse.prev1Last3F < 34.0) count++;
+    if (horse.prevRace === '皐月賞' && horse.prev1Last3FRank <= 2) count++;
+  }
+  if (raceName === '葵ステークス' || raceName === '葵S') {
+    if (horse.sex === '牝' && (horse.style === '逃げ' || horse.style === '先行') &&
+        (horse.prevRaceClass === 'L' || horse.prevRaceClass === 'OP') && horse.prevRank === 1) count++;
+    if (horse.sex === '牝' && horse.style === '逃げ') count++;
+  }
+  if (raceName === '目黒記念') {
+    var kinkame = (horse.bloodlineSystem && horse.bloodlineSystem.indexOf('キングカメハメハ') >= 0);
+    var heavyHande = (horse.hande >= 57.0);
+    var longExp = (horse.longCourseExperience === true);
+    if (kinkame && heavyHande && longExp) count += 2;
+    else if ((kinkame && heavyHande) || (kinkame && longExp) || (heavyHande && longExp)) count++;
+  }
+  return count;
+}
+function computeJikuScore(horse, raceName) {
+  var score = 0;
+  // 複勝率系（50点）
+  var popFuku = getPopFukuRate(horse, raceName);
+  if (popFuku >= 70) score += 20;
+  else if (popFuku >= 50) score += 16;
+  else if (popFuku >= 40) score += 13;
+  else if (popFuku >= 30) score += 10;
+  else if (popFuku >= 20) score += 6;
+  else if (popFuku >= 10) score += 3;
+  if (horse.prevRank === 1) score += 15;
+  else if (horse.prevRank === 2) score += 14;
+  else if (horse.prevRank === 3) score += 11;
+  else if (horse.prevRank === 4) score += 6;
+  else if (horse.prevRank === 5) score += 4;
+  else if (horse.prevRank >= 6 && horse.prevRank <= 9) score += 5;
+  else if (horse.prevRank >= 10) score += 2;
+  var prFuku = getPrevRaceFukuRate(horse, raceName);
+  if (prFuku >= 30) score += 15;
+  else if (prFuku >= 20) score += 12;
+  else if (prFuku >= 15) score += 9;
+  else if (prFuku >= 10) score += 5;
+  else score += 2;
+  // 安定性系（30点）
+  var st = horse.style || horse.runStyle;
+  if (st === '先行') score += 15;
+  else if (st === '逃げ') score += 11;
+  else if (st === '差し') score += 9;
+  else if (st === '追込') score += 3;
+  else score += 7;
+  if (horse.sameCourseExp === true) score += 8;
+  else if (horse.tokyoExp && horse.tokyoExp.starts >= 1) {
+    var t = horse.tokyoExp;
+    var rate = (t.wins + t.place + t.show) / Math.max(1, t.starts);
+    if (rate >= 0.8) score += 8;
+    else if (rate >= 0.5) score += 6;
+    else if (rate > 0) score += 4;
+    else score += 1;
+  } else score += 3;
+  if (horse.longCourseExperience === true) score += 7;
+  else if (horse.distExpOK === true) score += 5;
+  else score += 3;
+  // 信頼の根拠（20点）
+  var tetsuban = getTetsubanFlag(horse, raceName);
+  if (tetsuban >= 2) score += 12;
+  else if (tetsuban === 1) score += 8;
+  // 調教
+  if (horse.training === 'S' || horse.training === 'A+') score += 8;
+  else if (horse.training === 'A') score += 7;
+  else if (horse.training === 'B+') score += 6;
+  else if (horse.training === 'B') score += 5;
+  else if (horse.training === 'B-') score += 3;
+  else if (horse.training === 'C') score += 2;
+  else score += 4;
+  return Math.round(score);
+}
+function getAutoJiku(raceName, horses) {
+  if (!horses || !horses.length) return null;
+  var scored = horses.map(function(h) {
+    return { horse: h, jScore: computeJikuScore(h, raceName) };
+  }).sort(function(a, b) { return b.jScore - a.jScore; });
+  return scored[0];
+}
+
 function selectJiku(horses, raceName) {
   // 1. 手動選択があればそれを優先
   if (window.selectedJiku) {
     var found = horses.find(function(h){return h.name === window.selectedJiku;});
     if (found) return found;
   }
-  // 2. 信頼度スコア（pct）1位の馬を優先
+  // 2. 軸向きスコア（複勝率・安定性）1位を優先
+  var auto = getAutoJiku(raceName, horses);
+  if (auto && auto.horse) {
+    window._lastJikuScore = auto.jScore;  // UI 表示用
+    return auto.horse;
+  }
+  // 3. 信頼度スコア（pct）1位の馬を優先（フォールバック）
   if (typeof computeScoreBreakdown === 'function') {
     var scoredByPct = horses.map(function(h) {
       var bd;
@@ -11386,6 +11522,14 @@ function renderKaime() {
   jikuHtml += '<div style="font-size:10px;color:#AAC;margin-top:2px">信頼度 ' + jikuR.score + '%</div>';
   jikuHtml += '</div>';
   jikuHtml += '</div>';
+  // 軸向きスコア（複勝率・安定性）表示
+  var _jikuStability = (typeof computeJikuScore === 'function') ? computeJikuScore(jiku, raceName) : null;
+  if (_jikuStability != null) {
+    jikuHtml += '<div style="margin-top:8px;padding:6px 10px;background:rgba(122,230,181,0.08);border-left:3px solid #7AE6B5;border-radius:6px;font-size:11px;color:#C0D0E8">'
+              + '🎯 <strong style="color:#7AE6B5">軸向きスコア</strong>（複勝率・安定性）: <strong>' + _jikuStability + '/100</strong>'
+              + '<br><span style="font-size:10px;color:#888">※予想タブの能力スコア（強さ）とは別軸で、3着以内の堅実性を評価</span>'
+              + '</div>';
+  }
 
   // 選定理由
   jikuHtml += memoHtml;
