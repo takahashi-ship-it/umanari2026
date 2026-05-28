@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260528-1400';
+  var CURRENT_VERSION = '20260528-1430';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -14225,19 +14225,29 @@ function getJikuScore(raceName) {
 }
 
 // 信頼度スコア順に相手馬を動的ソート（computeScoreBreakdown 統合版）
-// _preserveOrder: true がセットされていればソートせず KAIMOKU_DATA の順序を維持
+// 相手（ヒモ）は常にV2/V3/V4スコア降順で自動ランキング（_preserveOrder は無視）
+// 軸は selectJiku() の結果（手動選択 → 軸向きスコア1位 → 信頼度1位）と整合
 function getAiteRanked(raceName) {
   var data = KAIMOKU_DATA[raceName];
-  if (!data) return [];
   var horses = (window.HORSES_BY_RACE || HORSES_BY_RACE || {})[raceName] || [];
-  var aiteAll = data.aiteAll || [];
+  var aiteAll = (data && data.aiteAll) || [];
   if (!horses.length) return aiteAll.slice();
 
-  var jikuName = data.jiku;
+  // 軸馬名の決定: selectJiku() があれば優先（手動選択・軸向きスコア反映）
+  var jikuName = null;
+  if (typeof selectJiku === 'function') {
+    try {
+      var jh = selectJiku(horses, raceName);
+      if (jh && jh.name) jikuName = jh.name;
+    } catch(e) {}
+  }
+  if (!jikuName && data && data.jiku) jikuName = data.jiku;
+
+  // KAIMOKU_DATA.aiteAll の reason を name → reason の辞書化（説明文は手動データを維持）
   var reasonByName = {};
   aiteAll.forEach(function(a){ reasonByName[a.name] = a.reason || ''; });
 
-  // 全出走馬から軸馬を除いた全頭をランキング対象に（aiteAll不足を補完）
+  // 全出走馬から軸馬を除いた全頭をスコア順にランキング
   var ranked = horses
     .filter(function(h){ return h.name !== jikuName; })
     .map(function(horse) {
@@ -14248,16 +14258,7 @@ function getAiteRanked(raceName) {
       return { name: horse.name, reason: reasonByName[horse.name] || '', score: score };
     });
 
-  if (data._preserveOrder) {
-    // 元のaiteAll順序を維持しつつ、残りの馬はスコア順で末尾に追加
-    var inAite = {};
-    var primary = aiteAll.map(function(a){ inAite[a.name] = true;
-      var r = ranked.find(function(x){ return x.name === a.name; });
-      return r || { name:a.name, reason:a.reason||'', score:0 };
-    });
-    var extras = ranked.filter(function(r){ return !inAite[r.name]; }).sort(function(a,b){ return b.score - a.score; });
-    return primary.concat(extras);
-  }
+  // 強制スコア降順（_preserveOrder は無視）
   ranked.sort(function(a, b) { return b.score - a.score; });
   return ranked;
 }
