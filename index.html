@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260528-1430';
+  var CURRENT_VERSION = '20260528-1500';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -14253,7 +14253,12 @@ function getAiteRanked(raceName) {
     .map(function(horse) {
       var score = 0;
       if (typeof computeScoreBreakdown === 'function') {
-        try { score = computeScoreBreakdown(horse, raceName).total; } catch(e) { score = 0; }
+        try {
+          var _bd = computeScoreBreakdown(horse, raceName);
+          score = (_bd && _bd.totalScore != null) ? _bd.totalScore
+                : (_bd && _bd.total != null) ? _bd.total
+                : 0;
+        } catch(e) { score = 0; }
       }
       return { name: horse.name, reason: reasonByName[horse.name] || '', score: score };
     });
