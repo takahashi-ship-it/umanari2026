@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260528-1500';
+  var CURRENT_VERSION = '20260528-1530';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -11456,7 +11456,27 @@ function renderKaime() {
 
   var raceName = window.currentRaceName || currentRace;
   var jiku = selectJiku(horses, raceName);
-  var himoAll = selectHimo(horses, jiku);
+  // 相手リストは V2/V3/V4 スコア順（getAiteRanked）を優先。フォールバックで selectHimo（旧 calcFukusho）
+  var himoAll;
+  if (typeof getAiteRanked === 'function') {
+    var rankedAite = getAiteRanked(raceName);
+    // getAiteRanked は軸を内部除外するが、selectJiku の自動軸と data.jiku が異なる場合に備えて再フィルタ
+    himoAll = rankedAite
+      .map(function(r) {
+        var horse = horses.find(function(h){ return h.name === r.name; });
+        return horse ? {
+          h: horse,
+          score: r.score || 0,
+          rank: '',
+          isPopular: ((horse.popEstimate || 99) <= 3),
+          reason: r.reason || ''
+        } : null;
+      })
+      .filter(function(x){ return x && x.h && x.h.name && x.h.name !== jiku.name; });
+  }
+  if (!himoAll || !himoAll.length) {
+    himoAll = selectHimo(horses, jiku);  // フォールバック（旧ロジック）
+  }
   var jikuR = calcFukusho(jiku);
   var fukushoProb = Math.min(95, Math.round(jikuR.score * 0.85));
   var jikuUmaban = jiku.umaban != null ? jiku.umaban + '番 ' : '';
