@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260530-1910';
+  var CURRENT_VERSION = '20260530-2000';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -4520,7 +4520,7 @@ const HORSES_BY_RACE = {
   { umaban:11, waku:7, name:'ダノンシーマ', age:4, style:'先行', runStyle:'先行', sameCourseExp:false, father:'キタサンブラック', mother:'インクルードベティ', motherFather:'Include', bloodlineSystem:'キタサンブラック系', bloodNote:'⭐父キタサンブラック（ステイゴールド系）',        odds:5.0,   popEstimate:2,  jockey:'川田将雅',   prevRace:'阪神大賞典',       prevRank:3, prev1Last3F:34.7, prev1Last3FRank:12, prev1pop:2, prev1Weight:492, prev1WeightDiff:-2, prev1Position:'06-06-05-06', prev1Time:'3:02.7', prev1Diff:0.7, hande:57.5, longCourseExperience:true, weight:{current:492, previous:494, diff:-2} },
   { umaban:4, waku:3, name:'ファイアンクランツ', age:4, style:'差し', runStyle:'差し', sameCourseExp:true, father:'ドゥラメンテ', mother:'カラフルブラッサム', motherFather:'ハーツクライ', bloodlineSystem:'キングカメハメハ系', bloodNote:'🏆父ドゥラメンテ（キンカメ系）×母父ハーツクライ',   odds:5.6,   popEstimate:3,  jockey:'D.レーン',   prevRace:'ダイヤモンドS',    prevRank:2, prev1Last3F:34.4, prev1Last3FRank:11, prev1pop:3, prev1Weight:470, prev1WeightDiff:10, prev1Position:'09-10-10-08', prev1Time:'3:32.2', prev1Diff:0.2, hande:56.0, longCourseExperience:true, weight:{current:470, previous:460, diff:10} },
   { umaban:1, waku:1, name:'アマキヒ', age:4, style:'先行', runStyle:'先行', distExpRace:'松籟S', distExpRank:1, maxDistExp:3000, father:'ブラックタイド', mother:'アパパネ', motherFather:'キングカメハメハ', bloodlineSystem:'ディープインパクト系×母父キングカメハメハ系', bloodNote:'⭐母父キングカメハメハ',            odds:10.6,   popEstimate:7,  jockey:'武豊',       prevRace:'大阪-ハンブルクC', prevRank:3, prev1Last3F:33.8, prev1Last3FRank:5, prev1pop:2, prev1Weight:498, prev1WeightDiff:2, prev1Position:'04-04-03-04', prev1Time:'2:37.3', prev1Diff:0.4, hande:56.5, longCourseExperience:true, weight:{current:498, previous:496, diff:2} },
-  { umaban:9, waku:6, name:'ハーツコンチェルト', age:6, style:'追込', runStyle:'追込', sameCourseExp:true, note2023:'🏆2023年日本ダービー3着の経験（東京芝2400m G1）', father:'ハーツクライ', mother:'ナスノシベリウス', motherFather:"Unbridled's Song", bloodlineSystem:'ハーツクライ系', bloodNote:'⚠️父ハーツクライ（複勝率10.5%・苦戦傾向）',   odds:8.7,  popEstimate:4,  jockey:'横山武史',   prevRace:'六社S',            prevRank:3, prev1Last3F:32.9, prev1Last3FRank:1, prev1pop:3, prev1Weight:516, prev1WeightDiff:0, prev1Position:'12-13-13-14', prev1Time:'2:23.3', prev1Diff:0.2, hande:57.5, longCourseExperience:false, weight:{current:516, previous:516, diff:0}, prev1SameCourse:true },
+  { umaban:9, waku:6, name:'ハーツコンチェルト', age:6, style:'追込', runStyle:'追込', sameCourseExp:true, pastG1Results:[{race:'日本ダービー', rank:3}], note2023:'🏆2023年日本ダービー3着の経験（東京芝2400m G1）', father:'ハーツクライ', mother:'ナスノシベリウス', motherFather:"Unbridled's Song", bloodlineSystem:'ハーツクライ系', bloodNote:'⚠️父ハーツクライ（複勝率10.5%・苦戦傾向）',   odds:8.7,  popEstimate:4,  jockey:'横山武史',   prevRace:'六社S',            prevRank:3, prev1Last3F:32.9, prev1Last3FRank:1, prev1pop:3, prev1Weight:516, prev1WeightDiff:0, prev1Position:'12-13-13-14', prev1Time:'2:23.3', prev1Diff:0.2, hande:57.5, longCourseExperience:false, weight:{current:516, previous:516, diff:0}, prev1SameCourse:true },
   { umaban:8, waku:5, name:'ミラージュナイト', age:4, style:'差し', runStyle:'差し', father:'バゴ', mother:'ラキシス', motherFather:'ディープインパクト', bloodlineSystem:'バゴ系×母父ディープインパクト', bloodNote:'母父ディープインパクト',     odds:9.9,  popEstimate:5,  jockey:'藤岡佑介',   prevRace:'飛鳥S',            prevRank:1, prev1Last3F:34.8, prev1Last3FRank:13, prev1pop:1, prev1Weight:504, prev1WeightDiff:-2, prev1Position:'05-06-05-03', prev1Time:'1:59.5', prev1Diff:-0.1, hande:55.0, longCourseExperience:false, weight:{current:504, previous:506, diff:-2} },
   { umaban:14, waku:8, name:'キングスコール', age:4, style:'差し', runStyle:'差し', sameCourseExp:true, father:'ドゥラメンテ', mother:'レインオンザデューン', motherFather:'Frankel', bloodlineSystem:'キングカメハメハ系', bloodNote:'🏆父ドゥラメンテ（キンカメ系）',       odds:9.9,  popEstimate:6,  jockey:'吉田豊',     prevRace:'六社S',            prevRank:1, prev1Last3F:33.3, prev1Last3FRank:3, prev1pop:5, prev1Weight:490, prev1WeightDiff:-8, prev1Position:'09-08-09-09', prev1Time:'2:23.1', prev1Diff:-0.2, hande:55.5, longCourseExperience:true, weight:{current:490, previous:498, diff:-8}, prev1SameCourse:true },
   { umaban:5, waku:4, name:'ギャンブルルーム', age:5, style:'差し', runStyle:'差し', father:'キズナ', mother:'シャンデリアハウス', motherFather:'ヴァーミリアン', bloodlineSystem:'ディープインパクト系',     odds:20.3,  popEstimate:8,  jockey:'幸英明',     prevRace:'御堂筋S',          prevRank:1, prev1Last3F:33.9, prev1Last3FRank:8, prev1pop:6, prev1Weight:504, prev1WeightDiff:0, prev1Position:'07-07-07-06', prev1Time:'2:23.2', prev1Diff:-0.3, hande:55.0, longCourseExperience:false, weight:{current:504, previous:504, diff:0} },
@@ -9883,6 +9883,7 @@ function renderHorses() {
             + row('人気別', v.pop, 15)
             + row('前走着順', v.prevRank, 6)
             + row('🎂年齢', v.age != null ? v.age : 3, 5)
+            + (v.pastG1 != null ? row('🏆過去G1実績', v.pastG1, 5, true) : '')
             + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🐴 馬個別 (45点)</div>'
             + row('🏆2500m+実績', v.longCourse, 15, true)
             + row('⚡上がり3F', v.lastF, 10)
@@ -13592,6 +13593,20 @@ function computeScoreBreakdownMeguroV4(horse, raceName) {
   else if (rate >= 5) prevRaceScore = 0;
   else prevRaceScore = -5;
   if (horse.prev1Surface === 'ダート') prevRaceScore = Math.min(prevRaceScore, -8);
+  // ★レイヤーA: 3勝クラス組への正当評価（3勝クラス代表S級レースは未マッチで0だった層）
+  var _prn = horse.prevRace || '';
+  var _prRank = horse.prevRank || 99;
+  var _is3kuClass = (/3勝クラス|3勝C/.test(_prn) ||
+    /六社S|府中S|御堂筋S|飛鳥S|烏丸S|早春S|湾岸S|緑風S|グレイトフルS|白富士S|メトロポリタンS/.test(_prn));
+  if (_is3kuClass && prevRaceScore < 8) {
+    if (_prRank === 1) prevRaceScore = Math.max(prevRaceScore, 8);
+    else if (_prRank <= 3) prevRaceScore = Math.max(prevRaceScore, 6);
+  }
+  // ★レイヤーB: 東京2400m経験ボーナス（コース直結+2点）
+  if ((/府中S|六社S|青葉賞|プリンシパル/.test(_prn)) && _prRank <= 3) {
+    prevRaceScore += 2;
+  }
+  prevRaceScore = Math.min(prevRaceScore, 12);
 
   // === 2. 馬体重 (12点) ★最重要 ===
   var weightScore = 0;
@@ -13789,16 +13804,33 @@ function computeScoreBreakdownMeguroV4(horse, raceName) {
   else if (ageM >= 8) ageScore = 0;
   else ageScore = 3;
 
+  // === 18. レイヤーC: 過去G1上位入着ボーナス (5点) ===
+  var pastG1Score = 0;
+  var pastG1Results = horse.pastG1Results || [];
+  if (Array.isArray(pastG1Results) && pastG1Results.length > 0) {
+    pastG1Results.forEach(function(r) {
+      if (!r || !r.race) return;
+      if (r.race === 'ダービー' || r.race === '日本ダービー' || r.race === '東京優駿') {
+        if (r.rank <= 3) pastG1Score = Math.max(pastG1Score, 5);
+        else if (r.rank <= 5) pastG1Score = Math.max(pastG1Score, 2);
+      } else if (r.race.indexOf('G1') >= 0 && r.rank <= 5) {
+        pastG1Score = Math.max(pastG1Score, 2);
+      }
+    });
+  }
+  pastG1Score = Math.min(pastG1Score, 5);
+
   var totalScore = prevRaceScore + weightScore + bloodScore + wakuScore +
                    popScore + prevRankScore + longCourseScore + lastFScore +
                    distScore + handeScore + tetsubanScore + jockeyScore +
-                   trainingScore + repeatScore + courseScore + styleScoreM + ageScore;
+                   trainingScore + repeatScore + courseScore + styleScoreM + ageScore +
+                   pastG1Score;
   totalScore = Math.max(0, totalScore);
-  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 149 * 100)));
+  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 154 * 100)));
 
   return {
     total: totalScore,
-    max: 149,
+    max: 154,
     pct: pct,
     items: {
       popularity: { score: popScore,        max: 15, label: '人気別' },
@@ -13820,7 +13852,7 @@ function computeScoreBreakdownMeguroV4(horse, raceName) {
         pop: popScore, prevRank: prevRankScore, longCourse: longCourseScore, lastF: lastFScore,
         dist: distScore, hande: handeScore, tetsuban: tetsubanScore, jockey: jockeyScore,
         training: trainingScore, repeat: repeatScore, course: courseScore, style: styleScoreM,
-        age: ageScore
+        age: ageScore, pastG1: pastG1Score
       }
     },
     penalty: 0,
