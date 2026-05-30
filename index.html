@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260530-1515';
+  var CURRENT_VERSION = '20260530-1525';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13377,13 +13377,17 @@ function computeScoreBreakdownAoiV3(horse, raceName) {
   else if (horse.training === 'B') trainingScoreV3 = 6;
   else if (horse.training === 'C') trainingScoreV3 = 3;
 
-  // === 14. 枠順 (5点) ===
+  // === 14. 枠順 (5点) ★葵S過去10年データ準拠 ===
+  // 1枠29%★/3枠27%★/7枠28%★/2枠21%/4枠13%/5枠13%/6枠13%/8枠11%
   var wakuScoreV3 = 3;
-  if (horse.waku != null && horse.waku > 0) {
-    if (horse.waku >= 4 && horse.waku <= 6) wakuScoreV3 = 5;
-    else if (horse.waku >= 1 && horse.waku <= 3) wakuScoreV3 = 4;
-    else wakuScoreV3 = 3;
-  }
+  if (horse.waku === 1) wakuScoreV3 = 5;
+  else if (horse.waku === 3) wakuScoreV3 = 5;
+  else if (horse.waku === 7) wakuScoreV3 = 5;
+  else if (horse.waku === 2) wakuScoreV3 = 4;
+  else if (horse.waku === 4) wakuScoreV3 = 2;
+  else if (horse.waku === 5) wakuScoreV3 = 2;
+  else if (horse.waku === 6) wakuScoreV3 = 2;
+  else if (horse.waku === 8) wakuScoreV3 = 1;
 
   // === 15. 同レース実績 (5点) — 3歳G3で経験なし ===
   var repeatScore = 2;
