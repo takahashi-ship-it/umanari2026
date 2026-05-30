@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260531-0700';
+  var CURRENT_VERSION = '20260531-0730';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1288,6 +1288,7 @@
   .rank-a { border-color: #4dabf7; background: rgba(77,171,247,0.08); }
   .rank-b { border-color: #ffd43b; background: rgba(255,212,59,0.08); }
   .rank-c { border-color: #51cf66; background: rgba(81,207,102,0.08); }
+  .rank-d { border-color: #9775fa; background: rgba(151,117,250,0.10); }
   .rank-container ul {
     margin: 6px 0 8px;
     padding-left: 20px;
@@ -11847,16 +11848,38 @@ function renderRankStrategy(raceName) {
   var strategy = data && data.rankStrategy;
   if (!strategy || !strategy.S || !strategy.S.length) return '';
 
+  var unitPrice = (data && data.rankUnitPrice) || { A: 1000, B: 500, C: 200, D: 100 };
+
   var aList = strategy.A || [];
   var bList = strategy.B || [];
   var cList = strategy.C || [];
+  var dList = strategy.D || [];
 
   // 3連単マルチ点数：S軸1頭+相手n頭 = nC2 × 6 = 3n(n-1)
   function calcMulti(n) { return n < 2 ? 0 : 3 * n * (n - 1); }
 
-  var pointsA   = calcMulti(aList.length);
-  var pointsAB  = calcMulti(aList.length + bList.length);
-  var pointsABC = calcMulti(aList.length + bList.length + cList.length);
+  var pointsA    = calcMulti(aList.length);
+  var pointsAB   = calcMulti(aList.length + bList.length);
+  var pointsABC  = calcMulti(aList.length + bList.length + cList.length);
+  var pointsABCD = calcMulti(aList.length + bList.length + cList.length + dList.length);
+
+  var costA    = pointsA    * (unitPrice.A || 0);
+  var costAB   = pointsAB   * (unitPrice.B || 0);
+  var costABC  = pointsABC  * (unitPrice.C || 0);
+  var costABCD = pointsABCD * (unitPrice.D || 0);
+  var costTotal = costA + costAB + costABC + costABCD;
+
+  function rankBlock(cls, head, list, label, pts, unit, cost) {
+    if (!list.length) return '';
+    var h = '<div class="rank-container ' + cls + '">';
+    h += '<h4>' + head + '</h4>';
+    h += '<ul>';
+    list.forEach(function(name){ h += '<li>' + name + '</li>'; });
+    h += '</ul>';
+    h += '<div class="rank-points">' + label + ' 3連単マルチ：<strong>' + pts + '点</strong>（' + unit.toLocaleString() + '円）<strong>' + cost.toLocaleString() + '円</strong></div>';
+    h += '</div>';
+    return h;
+  }
 
   var html = '';
   html += '<div class="rank-strategy-section">';
@@ -11866,37 +11889,14 @@ function renderRankStrategy(raceName) {
   html += '<h4>⭐ S軸: ' + strategy.S.join('、') + '</h4>';
   html += '</div>';
 
-  html += '<div class="rank-container rank-a">';
-  html += '<h4>🅰️ A群（人気上位）</h4>';
-  html += '<ul>';
-  aList.forEach(function(name){ html += '<li>' + name + '</li>'; });
-  html += '</ul>';
-  html += '<div class="rank-points">S軸+A群 3連単マルチ：<strong>' + pointsA + '点</strong></div>';
-  html += '</div>';
+  html += rankBlock('rank-a', '🅰️ A群（人気上位）', aList, 'S軸+A群',    pointsA,    unitPrice.A || 0, costA);
+  html += rankBlock('rank-b', '🅱️ B群',            bList, 'S軸+A~B群',  pointsAB,   unitPrice.B || 0, costAB);
+  html += rankBlock('rank-c', '🅲 C群',             cList, 'S軸+A~C群',  pointsABC,  unitPrice.C || 0, costABC);
+  html += rankBlock('rank-d', '🆑 D群（大穴）',     dList, 'S軸+A~D群',  pointsABCD, unitPrice.D || 0, costABCD);
 
-  html += '<div class="rank-container rank-b">';
-  html += '<h4>🅱️ B群（中穴ゾーン）</h4>';
-  html += '<ul>';
-  bList.forEach(function(name){ html += '<li>' + name + '</li>'; });
-  html += '</ul>';
-  html += '<div class="rank-points">S軸+A~B群 3連単マルチ：<strong>' + pointsAB + '点</strong></div>';
-  html += '</div>';
-
-  html += '<div class="rank-container rank-c">';
-  html += '<h4>🅲 C群（大穴）</h4>';
-  html += '<ul>';
-  cList.forEach(function(name){ html += '<li>' + name + '</li>'; });
-  html += '</ul>';
-  html += '<div class="rank-points">S軸+A~C群 3連単マルチ：<strong>' + pointsABC + '点</strong></div>';
-  html += '</div>';
-
-  var totalCost = pointsA * 1000 + pointsAB * 500 + pointsABC * 100;
   html += '<div class="rank-investment">';
-  html += '<h4>💰 投資例</h4>';
-  html += '<p>A群: ' + pointsA + '点 × 1,000円 = ' + (pointsA * 1000).toLocaleString() + '円</p>';
-  html += '<p>B群: ' + pointsAB + '点 × 500円 = ' + (pointsAB * 500).toLocaleString() + '円</p>';
-  html += '<p>C群: ' + pointsABC + '点 × 100円 = ' + (pointsABC * 100).toLocaleString() + '円</p>';
-  html += '<p><strong>合計: ' + totalCost.toLocaleString() + '円</strong></p>';
+  html += '<h4>💰 投資合計</h4>';
+  html += '<p><strong>' + costTotal.toLocaleString() + '円</strong></p>';
   html += '</div>';
 
   html += '</div>';
@@ -12100,9 +12100,11 @@ var KAIMOKU_DATA = {
     rankStrategy: {
       S: ['ロブチェン'],
       A: ['ゴーイントゥスカイ', 'フォルテアンジェロ', 'リアライズシリウス'],
-      B: ['ライヒスアドラー', 'アウダーシア', 'コンジェスタス', 'グリーンエナジー'],
-      C: ['バステール', 'メイショウハチコウ', 'パントルナイーフ'],
+      B: ['ライヒスアドラー', 'アウダーシア'],
+      C: ['コンジェスタス', 'グリーンエナジー', 'パントルナイーフ'],
+      D: ['バステール', 'メイショウハチコウ', 'アスクエジンバラ'],
     },
+    rankUnitPrice: { A: 2000, B: 600, C: 200, D: 100 },
     jiku: 'ロブチェン',
     jikuNote: '8枠17番・1番人気3.1倍・調教A・皐月賞0.1秒差勝利×1人気100%ルール該当・信頼度72%',
     jikuScore: 93,
@@ -12335,9 +12337,11 @@ var KAIMOKU_DATA = {
     rankStrategy: {
       S: ['ウィクトルウェルス'],
       A: ['ファイアンクランツ', 'アマキヒ'],
-      B: ['ハーツコンチェルト', 'キングスコール', 'ミラージュナイト'],
-      C: ['ダノンシーマ', 'ヴェルミセル'],
+      B: ['ハーツコンチェルト', 'キングスコール'],
+      C: ['ミラージュナイト', 'ダノンシーマ'],
+      D: ['ヴェルミセル', 'ギャンブルルーム'],
     },
+    rankUnitPrice: { A: 2000, B: 600, C: 200, D: 100 },
     jiku: 'ウィクトルウェルス',
     jikuNote: '1番人気2.9倍・4枠6番(複勝率30%最強枠)・57kg・ルメール・ハンブルクC1着・末脚33.1秒・軸向きスコア84/100で頭一つ抜けた本命',
     jikuScore: 95,
