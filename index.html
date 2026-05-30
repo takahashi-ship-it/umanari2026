@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260531-0100';
+  var CURRENT_VERSION = '20260531-0130';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13905,13 +13905,27 @@ function computeScoreBreakdownMeguroV4(horse, raceName) {
   var manualPenalty = horse.manualPenalty || 0;
   var manualPenaltyReason = horse.manualPenaltyReason || '';
 
+  // === 伏兵ゴールデンゾーンスコア（-8〜+8点）★過去10年データ ===
+  // 6番人気以下の3着内16頭中13頭(81%)が単勝オッズ10-20倍台
+  // 30倍以上の超大穴はほぼ来ない
+  var _odds = horse.odds || 0;
+  var _pop = horse.popEstimate || 99;
+  var fukuheiScore = 0;
+  if (_pop >= 6) {
+    if (_odds >= 10 && _odds <= 20) fukuheiScore = 8;
+    else if (_odds >= 20.1 && _odds <= 25) fukuheiScore = 4;
+    else if (_odds >= 25.1 && _odds <= 30) fukuheiScore = 0;
+    else if (_odds >= 30.1 && _odds <= 50) fukuheiScore = -4;
+    else if (_odds > 50) fukuheiScore = -8;
+  }
+
   var totalScore = prevRaceScore + weightScore + bloodScore + wakuScore +
                    popScore + prevRankScore + longCourseScore + lastFScore +
                    distScore + handeScore + tetsubanScore + jockeyScore +
                    trainingScore + repeatScore + courseScore + styleScoreM + ageScore +
-                   pastG1Score + umabanPenalty + manualPenalty;
+                   pastG1Score + umabanPenalty + manualPenalty + fukuheiScore;
   totalScore = Math.max(0, totalScore);
-  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 154 * 100)));
+  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 162 * 100)));
 
   var _items = {
     popularity: { score: popScore,        max: 15, label: '人気別' },
@@ -13929,12 +13943,24 @@ function computeScoreBreakdownMeguroV4(horse, raceName) {
     direction:  { score: handeScore,      max: 7,  label: '斤量適性' },
     weight:     { score: weightScore,     max: 12, label: '馬体重', weightLabel: '', warning: null },
     umabanPenalty: { score: umabanPenalty, max: 0, label: '⚠️外枠ペナルティ' },
+    fukuhei: {
+      score: fukuheiScore,
+      max: 8,
+      label: '🎯伏兵ゴールデンゾーン',
+      detail: _pop >= 6 ?
+        ((_odds >= 10 && _odds <= 20) ? '★10-20倍台（過去10年伏兵13/16頭該当）' :
+         _odds > 50 ? '⚠️50倍超は過去10年ほぼ来ない' :
+         _odds > 30 ? '⚠️30倍超は来づらい' :
+         'オッズ範囲') :
+        '上位人気（伏兵判定外）'
+    },
     _v4: {
       prevRace: prevRaceScore, weight: weightScore, blood: bloodScore, waku: wakuScore,
       pop: popScore, prevRank: prevRankScore, longCourse: longCourseScore, lastF: lastFScore,
       dist: distScore, hande: handeScore, tetsuban: tetsubanScore, jockey: jockeyScore,
       training: trainingScore, repeat: repeatScore, course: courseScore, style: styleScoreM,
-      age: ageScore, pastG1: pastG1Score, umabanPenalty: umabanPenalty, manualPenalty: manualPenalty
+      age: ageScore, pastG1: pastG1Score, umabanPenalty: umabanPenalty, manualPenalty: manualPenalty,
+      fukuhei: fukuheiScore
     }
   };
   if (manualPenalty < 0) {
@@ -13947,7 +13973,7 @@ function computeScoreBreakdownMeguroV4(horse, raceName) {
   }
   return {
     total: totalScore,
-    max: 154,
+    max: 162,
     pct: pct,
     items: _items,
     penalty: 0,
