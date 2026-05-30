@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260530-1830';
+  var CURRENT_VERSION = '20260530-1900';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2134,8 +2134,8 @@
         <div id="himo-list" style="display:none"></div>
         <div id="kaime-summary" style="display:none"></div>
 
-        <!-- AI予想買い目 + AI推奨穴馬 -->
-        <div id="ai-kaimoku-container"></div>
+        <!-- AI予想買い目セクションは削除（軸馬と重複のため・2026-05-30） -->
+        <div id="ai-kaimoku-container" style="display:none"></div>
 
         <!-- 投資額の目安 -->
         <div class="card">
