@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260530-1720';
+  var CURRENT_VERSION = '20260530-1800';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13200,23 +13200,33 @@ function computeScoreBreakdownV2(horse, raceName) {
   if (_tj.yasuda) trainerJudgeTotal += _trainerRankScore(_tj.yasuda);
   trainerJudgeTotal = Math.min(trainerJudgeTotal, 5);
 
-  // === 17. ダービー血統適性 (max:10 / min:-10) ===
+  // === 17. ダービー血統適性 (max:10 / min:-10) ★父血統最優先・厳格化 ===
   var _staminaSires = ['ディープインパクト','ワールドプレミア','フィエールマン','エピファネイア','キタサンブラック','コントレイル','オルフェーヴル','マンハッタンカフェ','ステイゴールド','ゴールドシップ','ハーツクライ','ジャスタウェイ'];
   var _middleSires  = ['ロジャーバローズ','キズナ','スワーヴリチャード','サートゥルナーリア','リアルスティール','ドゥラメンテ'];
-  var _sprintSires  = ['シスキン','ロードカナロア','キンシャサノキセキ','ドレフォン','リオンディーズ','ハービンジャー','ルーラーシップ','モーリス','イスラボニータ'];
+  var _sprintSires  = ['シスキン','ポエティックフレア','ロードカナロア','キンシャサノキセキ','ドレフォン','リオンディーズ','ハービンジャー','ルーラーシップ','モーリス','イスラボニータ'];
   var _sire = horse.sire || horse.father || '';
   var _msire = horse.motherSire || horse.motherFather || '';
   var derbyBloodScore;
-  if (_staminaSires.indexOf(_sire) >= 0 || _staminaSires.indexOf(_msire) >= 0) {
+  // 父がマイラー血統 → 必ず-5から評価開始
+  if (_sprintSires.indexOf(_sire) >= 0) {
+    derbyBloodScore = -5;
+    if (_staminaSires.indexOf(_msire) >= 0) derbyBloodScore = 0;       // 母父スタミナで救済
+    else if (_sprintSires.indexOf(_msire) >= 0) derbyBloodScore = -10; // 母父もマイラーで大幅減点
+  }
+  // 父がスタミナ系G1 → 最高評価
+  else if (_staminaSires.indexOf(_sire) >= 0) {
     derbyBloodScore = 10;
-  } else if (_middleSires.indexOf(_sire) >= 0) {
+  }
+  // 父が中距離G1 → 中庸評価（母父スタミナで+10昇格）
+  else if (_middleSires.indexOf(_sire) >= 0) {
     derbyBloodScore = (_staminaSires.indexOf(_msire) >= 0) ? 10 : 5;
-  } else if (_sprintSires.indexOf(_sire) >= 0) {
-    if (_staminaSires.indexOf(_msire) >= 0) derbyBloodScore = 0;
-    else if (_sprintSires.indexOf(_msire) >= 0) derbyBloodScore = -10;
-    else derbyBloodScore = -5;
-  } else {
-    derbyBloodScore = 0;
+  }
+  // 父データなし or 評価対象外 → 母父で判定
+  else {
+    if (_staminaSires.indexOf(_msire) >= 0) derbyBloodScore = 10;
+    else if (_middleSires.indexOf(_msire) >= 0) derbyBloodScore = 5;
+    else if (_sprintSires.indexOf(_msire) >= 0) derbyBloodScore = -5;
+    else derbyBloodScore = 0;
   }
 
   // === 合計 (150点満点) ===
