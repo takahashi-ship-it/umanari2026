@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260531-0010';
+  var CURRENT_VERSION = '20260531-0100';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -4577,10 +4577,10 @@ const HORSES_BY_RACE = {
   { umaban:14, waku:8, name:'キングスコール', age:4, style:'差し', runStyle:'差し', sameCourseExp:true, father:'ドゥラメンテ', mother:'レインオンザデューン', motherFather:'Frankel', bloodlineSystem:'キングカメハメハ系', bloodNote:'🏆父ドゥラメンテ（キンカメ系）',       odds:9.9,  popEstimate:6,  jockey:'吉田豊',     prevRace:'六社S',            prevRank:1, prev1Last3F:33.3, prev1Last3FRank:3, prev1pop:5, prev1Weight:490, prev1WeightDiff:-8, prev1Position:'09-08-09-09', prev1Time:'2:23.1', prev1Diff:-0.2, hande:55.5, longCourseExperience:true, weight:{current:490, previous:498, diff:-8}, prev1SameCourse:true },
   { umaban:5, waku:4, name:'ギャンブルルーム', age:5, style:'差し', runStyle:'差し', father:'キズナ', mother:'シャンデリアハウス', motherFather:'ヴァーミリアン', bloodlineSystem:'ディープインパクト系',     odds:20.3,  popEstimate:8,  jockey:'幸英明',     prevRace:'御堂筋S',          prevRank:1, prev1Last3F:33.9, prev1Last3FRank:8, prev1pop:6, prev1Weight:504, prev1WeightDiff:0, prev1Position:'07-07-07-06', prev1Time:'2:23.2', prev1Diff:-0.3, hande:55.0, longCourseExperience:false, weight:{current:504, previous:504, diff:0} },
   { umaban:7, waku:5, name:'アスクセクシーモア', age:4, style:'差し', runStyle:'差し', father:'キタサンブラック', mother:'アイムオールレディセクシー', motherFather:"Ready's Image", bloodlineSystem:'キタサンブラック系', bloodNote:'父キタサンブラック（ステイゴールド系）',   odds:27.4,  popEstimate:9, jockey:'岩田康誠',   prevRace:'府中S',            prevRank:1, prev1Last3F:34.0, prev1Last3FRank:9, prev1pop:1, prev1Weight:480, prev1WeightDiff:6, prev1Position:'07-07-07', prev1Time:'1:57.1', prev1Diff:-0.0, hande:54.0, longCourseExperience:false, weight:{current:480, previous:474, diff:6}, prev1SameCourse:true },
-  { umaban:12, waku:7, name:'キングズパレス', age:7, style:'追込', runStyle:'追込', sameCourseExp:true, father:'キングカメハメハ', mother:'ドバウィハイツ', motherFather:'Dubawi', bloodlineSystem:'キングカメハメハ系', bloodNote:'🏆父キングカメハメハ（純キンカメ系）',       odds:36.5,  popEstimate:11, jockey:'菊沢一樹',   prevRace:'金鯱賞',           prevRank:8, prev1Last3F:33.7, prev1Last3FRank:4, prev1pop:11, prev1Weight:504, prev1WeightDiff:-6, prev1Position:'14-14-14-13', prev1Time:'1:58.6', prev1Diff:0.5, hande:58.0, longCourseExperience:true, weight:{current:504, previous:510, diff:-6} },
+  { umaban:12, waku:7, name:'キングズパレス', age:7, style:'追込', runStyle:'追込', sameCourseExp:true, father:'キングカメハメハ', mother:'ドバウィハイツ', motherFather:'Dubawi', bloodlineSystem:'キングカメハメハ系', bloodNote:'🏆父キングカメハメハ（純キンカメ系）',       odds:36.5,  popEstimate:11, jockey:'菊沢一樹',   prevRace:'金鯱賞',           prevRank:8, prev1Last3F:33.7, prev1Last3FRank:4, prev1pop:11, prev1Weight:504, prev1WeightDiff:-6, prev1Position:'14-14-14-13', prev1Time:'1:58.6', prev1Diff:0.5, hande:58.0, longCourseExperience:true, weight:{current:504, previous:510, diff:-6}, carriedWeight:57.5, seniorNotQualified:true, heavyWeightNotQualified:true, manualPenalty:-13, manualPenaltyReason:'7歳×57.5kg×当該距離重賞4着以内経験なし（過去10年データ）' },
   { umaban:10, waku:6, name:'マイネルケレリウス', age:6, style:'追込', runStyle:'追込', father:'ルーラーシップ', mother:'マイネカンナ', motherFather:'アグネスタキオン', bloodlineSystem:'キングカメハメハ系', bloodNote:'🏆父ルーラーシップ（キンカメ系）',   odds:47.3,  popEstimate:12, jockey:'松岡正海',   prevRace:'メトロポリタンS',  prevRank:4, prev1Last3F:33.8, prev1Last3FRank:5, prev1pop:4, prev1Weight:438, prev1WeightDiff:-4, prev1Position:'08-08-07-07', prev1Time:'2:23.5', prev1Diff:0.4, hande:54.0, longCourseExperience:false, weight:{current:438, previous:442, diff:-4}, prev1SameCourse:true },
   { umaban:13, waku:8, name:'ヴェルミセル', age:6, style:'差し', runStyle:'差し', sameRaceExp:true, father:'ゴールドシップ', mother:'マルーンドロップ', motherFather:'コンデュイット', bloodlineSystem:'ステイゴールド系', bloodNote:'⭐父ゴールドシップ（ステイゴールド系）',         odds:29.9,  popEstimate:10, jockey:'鮫島克駿',   prevRace:'天皇賞春',         prevRank:9, prev1Last3F:36.1, prev1Last3FRank:14, prev1pop:9, prev1Weight:470, prev1WeightDiff:0, prev1Position:'06-07-07-06', prev1Time:'3:15.0', prev1Diff:1.3, hande:54.0, longCourseExperience:true, weight:{current:470, previous:470, diff:0} },
-  { umaban:3, waku:3, name:'ボーンディスウェイ', age:7, style:'追込', runStyle:'追込', father:'ハーツクライ', mother:'ウィンドハック', motherFather:'Platini', bloodlineSystem:'ハーツクライ系', bloodNote:'⚠️父ハーツクライ（苦戦傾向）',   odds:83.6,  popEstimate:13, jockey:'松山弘平',   prevRace:'大阪-ハンブルクC', prevRank:6, prev1Last3F:34.0, prev1Last3FRank:9, prev1pop:6, prev1Weight:496, prev1WeightDiff:-6, prev1Position:'06-06-05-06', prev1Time:'2:37.8', prev1Diff:0.9, hande:55.0, longCourseExperience:true, weight:{current:496, previous:502, diff:-6} },
+  { umaban:3, waku:3, name:'ボーンディスウェイ', age:7, style:'追込', runStyle:'追込', father:'ハーツクライ', mother:'ウィンドハック', motherFather:'Platini', bloodlineSystem:'ハーツクライ系', bloodNote:'⚠️父ハーツクライ（苦戦傾向）',   odds:83.6,  popEstimate:13, jockey:'松山弘平',   prevRace:'大阪-ハンブルクC', prevRank:6, prev1Last3F:34.0, prev1Last3FRank:9, prev1pop:6, prev1Weight:496, prev1WeightDiff:-6, prev1Position:'06-06-05-06', prev1Time:'2:37.8', prev1Diff:0.9, hande:55.0, longCourseExperience:true, weight:{current:496, previous:502, diff:-6}, seniorNotQualified:true, manualPenalty:-8, manualPenaltyReason:'7歳×当該距離G1/G2で4着以内経験なし（過去10年データ）' },
   { umaban:2, waku:2, name:'ショウナンバシット', age:6, style:'先行', runStyle:'先行', father:'シルバーステート', mother:'ギエム', motherFather:"Medaglia d'Oro", bloodlineSystem:'ディープインパクト系',   odds:95.5, popEstimate:14, jockey:'横山和生',   prevRace:'ダイヤモンドS',    prevRank:6, prev1Last3F:36.3, prev1Last3FRank:15, prev1pop:6, prev1Weight:494, prev1WeightDiff:4, prev1Position:'02-02-03-05', prev1Time:'3:34.0', prev1Diff:1.8, hande:55.0, longCourseExperience:true, weight:{current:494, previous:490, diff:4} },
 ],
 
@@ -13901,42 +13901,55 @@ function computeScoreBreakdownMeguroV4(horse, raceName) {
   if (_umaban >= 11) umabanPenalty = -10;
   else if (_umaban >= 9) umabanPenalty = -5;
 
+  // === 手動ペナルティ（過去10年データ準拠の個別判定）===
+  var manualPenalty = horse.manualPenalty || 0;
+  var manualPenaltyReason = horse.manualPenaltyReason || '';
+
   var totalScore = prevRaceScore + weightScore + bloodScore + wakuScore +
                    popScore + prevRankScore + longCourseScore + lastFScore +
                    distScore + handeScore + tetsubanScore + jockeyScore +
                    trainingScore + repeatScore + courseScore + styleScoreM + ageScore +
-                   pastG1Score + umabanPenalty;
+                   pastG1Score + umabanPenalty + manualPenalty;
   totalScore = Math.max(0, totalScore);
   var pct = Math.max(0, Math.min(99, Math.round(totalScore / 154 * 100)));
 
+  var _items = {
+    popularity: { score: popScore,        max: 15, label: '人気別' },
+    waku:       { score: wakuScore,       max: 8,  label: '枠順' },
+    data:       { score: prevRaceScore + longCourseScore + tetsubanScore, max: 35, label: '前走+長距離+鉄板' },
+    blood:      { score: bloodScore,      max: 8,  label: '種牡馬' },
+    jockey:     { score: jockeyScore,     max: 12, label: '騎手' },
+    course:     { score: courseScore,     max: 3,  label: '東京コース' },
+    training:   { score: trainingScore,   max: 10, label: '調教' },
+    speed:      { score: lastFScore,      max: 10, label: '⚡ 上がり3F',
+                  lastFLabel: '',
+                  lastFTime: horse.prev1Last3F != null ? horse.prev1Last3F : null,
+                  lastFRank: horse.prev1Last3FRank != null ? horse.prev1Last3FRank : null },
+    distance:   { score: distScore,       max: 8,  label: '距離経験' },
+    direction:  { score: handeScore,      max: 7,  label: '斤量適性' },
+    weight:     { score: weightScore,     max: 12, label: '馬体重', weightLabel: '', warning: null },
+    umabanPenalty: { score: umabanPenalty, max: 0, label: '⚠️外枠ペナルティ' },
+    _v4: {
+      prevRace: prevRaceScore, weight: weightScore, blood: bloodScore, waku: wakuScore,
+      pop: popScore, prevRank: prevRankScore, longCourse: longCourseScore, lastF: lastFScore,
+      dist: distScore, hande: handeScore, tetsuban: tetsubanScore, jockey: jockeyScore,
+      training: trainingScore, repeat: repeatScore, course: courseScore, style: styleScoreM,
+      age: ageScore, pastG1: pastG1Score, umabanPenalty: umabanPenalty, manualPenalty: manualPenalty
+    }
+  };
+  if (manualPenalty < 0) {
+    _items.manualPenalty = {
+      score: manualPenalty,
+      max: 0,
+      label: '⚠️過去10年データ消去',
+      detail: manualPenaltyReason
+    };
+  }
   return {
     total: totalScore,
     max: 154,
     pct: pct,
-    items: {
-      popularity: { score: popScore,        max: 15, label: '人気別' },
-      waku:       { score: wakuScore,       max: 8,  label: '枠順' },
-      data:       { score: prevRaceScore + longCourseScore + tetsubanScore, max: 35, label: '前走+長距離+鉄板' },
-      blood:      { score: bloodScore,      max: 8,  label: '種牡馬' },
-      jockey:     { score: jockeyScore,     max: 12, label: '騎手' },
-      course:     { score: courseScore,     max: 3,  label: '東京コース' },
-      training:   { score: trainingScore,   max: 10, label: '調教' },
-      speed:      { score: lastFScore,      max: 10, label: '⚡ 上がり3F',
-                    lastFLabel: '',
-                    lastFTime: horse.prev1Last3F != null ? horse.prev1Last3F : null,
-                    lastFRank: horse.prev1Last3FRank != null ? horse.prev1Last3FRank : null },
-      distance:   { score: distScore,       max: 8,  label: '距離経験' },
-      direction:  { score: handeScore,      max: 7,  label: '斤量適性' },
-      weight:     { score: weightScore,     max: 12, label: '馬体重', weightLabel: '', warning: null },
-      umabanPenalty: { score: umabanPenalty, max: 0, label: '⚠️外枠ペナルティ' },
-      _v4: {
-        prevRace: prevRaceScore, weight: weightScore, blood: bloodScore, waku: wakuScore,
-        pop: popScore, prevRank: prevRankScore, longCourse: longCourseScore, lastF: lastFScore,
-        dist: distScore, hande: handeScore, tetsuban: tetsubanScore, jockey: jockeyScore,
-        training: trainingScore, repeat: repeatScore, course: courseScore, style: styleScoreM,
-        age: ageScore, pastG1: pastG1Score, umabanPenalty: umabanPenalty
-      }
-    },
+    items: _items,
     penalty: 0,
     stallionLabel: '',
     distLabel: '',
