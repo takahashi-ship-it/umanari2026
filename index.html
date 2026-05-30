@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260531-0330';
+  var CURRENT_VERSION = '20260531-0400';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -4568,19 +4568,19 @@ const HORSES_BY_RACE = {
 ],
 
 '目黒記念': [
-  { umaban:6, waku:4, name:'ウィクトルウェルス', sex:'牡', carriedWeight:56, sire:'リアルスティール', g1Experience:[], age:4, style:'先行', runStyle:'先行', father:'リアルスティール', mother:'ウィクトーリア', motherFather:'ヴィクトワールピサ', bloodlineSystem:'ディープインパクト系',   odds:3.7,   popEstimate:1,  jockey:'C.ルメール', prevRace:'大阪-ハンブルクC', prevRank:1, prev1Last3F:33.1, prev1Last3FRank:2, prev1pop:1, prev1Weight:510, prev1WeightDiff:-14, prev1Position:'10-11-08-06', prev1Time:'2:36.9', prev1Diff:-0.0, hande:57.0, longCourseExperience:true, weight:{current:510, previous:524, diff:-14} },
+  { umaban:6, waku:4, name:'ウィクトルウェルス', sex:'牡', carriedWeight:56, sire:'リアルスティール', g1Experience:[], proPicks:{yoshi:'▲'}, age:4, style:'先行', runStyle:'先行', father:'リアルスティール', mother:'ウィクトーリア', motherFather:'ヴィクトワールピサ', bloodlineSystem:'ディープインパクト系',   odds:3.7,   popEstimate:1,  jockey:'C.ルメール', prevRace:'大阪-ハンブルクC', prevRank:1, prev1Last3F:33.1, prev1Last3FRank:2, prev1pop:1, prev1Weight:510, prev1WeightDiff:-14, prev1Position:'10-11-08-06', prev1Time:'2:36.9', prev1Diff:-0.0, hande:57.0, longCourseExperience:true, weight:{current:510, previous:524, diff:-14} },
   { umaban:11, waku:7, name:'ダノンシーマ', sex:'牡', carriedWeight:57.5, sire:'キタサンブラック', g1Experience:[], age:4, style:'先行', runStyle:'先行', sameCourseExp:false, father:'キタサンブラック', mother:'インクルードベティ', motherFather:'Include', bloodlineSystem:'キタサンブラック系', bloodNote:'⭐父キタサンブラック（ステイゴールド系）',        odds:4.9,   popEstimate:3,  jockey:'川田将雅',   prevRace:'阪神大賞典',       prevRank:3, prev1Last3F:34.7, prev1Last3FRank:12, prev1pop:2, prev1Weight:492, prev1WeightDiff:-2, prev1Position:'06-06-05-06', prev1Time:'3:02.7', prev1Diff:0.7, hande:57.5, longCourseExperience:true, weight:{current:492, previous:494, diff:-2} },
   { umaban:4, waku:3, name:'ファイアンクランツ', sex:'牡', carriedWeight:57.5, sire:'ドゥラメンテ', g1Experience:[], age:4, style:'差し', runStyle:'差し', sameCourseExp:true, father:'ドゥラメンテ', mother:'カラフルブラッサム', motherFather:'ハーツクライ', bloodlineSystem:'キングカメハメハ系', bloodNote:'🏆父ドゥラメンテ（キンカメ系）×母父ハーツクライ',   odds:4.9,   popEstimate:2,  jockey:'D.レーン',   prevRace:'ダイヤモンドS',    prevRank:2, prev1Last3F:34.4, prev1Last3FRank:11, prev1pop:3, prev1Weight:470, prev1WeightDiff:10, prev1Position:'09-10-10-08', prev1Time:'3:32.2', prev1Diff:0.2, hande:56.0, longCourseExperience:true, weight:{current:470, previous:460, diff:10} },
-  { umaban:1, waku:1, name:'アマキヒ', sex:'牡', carriedWeight:55, sire:'ブラックタイド', g1Experience:[], age:4, style:'先行', runStyle:'先行', distExpRace:'松籟S', distExpRank:1, maxDistExp:3000, father:'ブラックタイド', mother:'アパパネ', motherFather:'キングカメハメハ', bloodlineSystem:'ディープインパクト系×母父キングカメハメハ系', bloodNote:'⭐母父キングカメハメハ',            odds:11.6,   popEstimate:7,  jockey:'武豊',       prevRace:'大阪-ハンブルクC', prevRank:3, prev1Last3F:33.8, prev1Last3FRank:5, prev1pop:2, prev1Weight:498, prev1WeightDiff:2, prev1Position:'04-04-03-04', prev1Time:'2:37.3', prev1Diff:0.4, hande:56.5, longCourseExperience:true, weight:{current:498, previous:496, diff:2} },
+  { umaban:1, waku:1, name:'アマキヒ', sex:'牡', carriedWeight:55, sire:'ブラックタイド', g1Experience:[], proPicks:{yoshi:'◎'}, age:4, style:'先行', runStyle:'先行', distExpRace:'松籟S', distExpRank:1, maxDistExp:3000, father:'ブラックタイド', mother:'アパパネ', motherFather:'キングカメハメハ', bloodlineSystem:'ディープインパクト系×母父キングカメハメハ系', bloodNote:'⭐母父キングカメハメハ',            odds:11.6,   popEstimate:7,  jockey:'武豊',       prevRace:'大阪-ハンブルクC', prevRank:3, prev1Last3F:33.8, prev1Last3FRank:5, prev1pop:2, prev1Weight:498, prev1WeightDiff:2, prev1Position:'04-04-03-04', prev1Time:'2:37.3', prev1Diff:0.4, hande:56.5, longCourseExperience:true, weight:{current:498, previous:496, diff:2} },
   { umaban:9, waku:6, name:'ハーツコンチェルト', sex:'牡', carriedWeight:57, sire:'ハーツクライ', g1Experience:['日本ダービー'], age:6, style:'追込', runStyle:'追込', sameCourseExp:true, pastG1Results:[{race:'日本ダービー', rank:3}], note2023:'🏆2023年日本ダービー3着の経験（東京芝2400m G1）', father:'ハーツクライ', mother:'ナスノシベリウス', motherFather:"Unbridled's Song", bloodlineSystem:'ハーツクライ系', bloodNote:'⚠️父ハーツクライ（複勝率10.5%・苦戦傾向）',   odds:9.0,  popEstimate:4,  jockey:'横山武史',   prevRace:'六社S',            prevRank:3, prev1Last3F:32.9, prev1Last3FRank:1, prev1pop:3, prev1Weight:516, prev1WeightDiff:0, prev1Position:'12-13-13-14', prev1Time:'2:23.3', prev1Diff:0.2, hande:57.5, longCourseExperience:false, weight:{current:516, previous:516, diff:0}, prev1SameCourse:true },
-  { umaban:8, waku:5, name:'ミラージュナイト', sex:'牡', carriedWeight:56, sire:'', g1Experience:[], age:4, style:'差し', runStyle:'差し', father:'バゴ', mother:'ラキシス', motherFather:'ディープインパクト', bloodlineSystem:'バゴ系×母父ディープインパクト', bloodNote:'母父ディープインパクト',     odds:10.9, popEstimate:5,  jockey:'藤岡佑介',   prevRace:'飛鳥S',            prevRank:1, prev1Last3F:34.8, prev1Last3FRank:13, prev1pop:1, prev1Weight:504, prev1WeightDiff:-2, prev1Position:'05-06-05-03', prev1Time:'1:59.5', prev1Diff:-0.1, hande:55.0, longCourseExperience:false, weight:{current:504, previous:506, diff:-2} },
+  { umaban:8, waku:5, name:'ミラージュナイト', sex:'牡', carriedWeight:56, sire:'', g1Experience:[], proPicks:{yoshi:'○'}, age:4, style:'差し', runStyle:'差し', father:'バゴ', mother:'ラキシス', motherFather:'ディープインパクト', bloodlineSystem:'バゴ系×母父ディープインパクト', bloodNote:'母父ディープインパクト',     odds:10.9, popEstimate:5,  jockey:'藤岡佑介',   prevRace:'飛鳥S',            prevRank:1, prev1Last3F:34.8, prev1Last3FRank:13, prev1pop:1, prev1Weight:504, prev1WeightDiff:-2, prev1Position:'05-06-05-03', prev1Time:'1:59.5', prev1Diff:-0.1, hande:55.0, longCourseExperience:false, weight:{current:504, previous:506, diff:-2} },
   { umaban:14, waku:8, name:'キングスコール', sex:'牡', carriedWeight:56, sire:'ドゥラメンテ', g1Experience:[], age:4, style:'差し', runStyle:'差し', sameCourseExp:true, father:'ドゥラメンテ', mother:'レインオンザデューン', motherFather:'Frankel', bloodlineSystem:'キングカメハメハ系', bloodNote:'🏆父ドゥラメンテ（キンカメ系）',       odds:11.2, popEstimate:6,  jockey:'吉田豊',     prevRace:'六社S',            prevRank:1, prev1Last3F:33.3, prev1Last3FRank:3, prev1pop:5, prev1Weight:490, prev1WeightDiff:-8, prev1Position:'09-08-09-09', prev1Time:'2:23.1', prev1Diff:-0.2, hande:55.5, longCourseExperience:true, weight:{current:490, previous:498, diff:-8}, prev1SameCourse:true },
-  { umaban:5, waku:4, name:'ギャンブルルーム', sex:'牡', carriedWeight:55, sire:'', g1Experience:[], age:5, style:'差し', runStyle:'差し', father:'キズナ', mother:'シャンデリアハウス', motherFather:'ヴァーミリアン', bloodlineSystem:'ディープインパクト系',     odds:18.8,  popEstimate:8,  jockey:'幸英明',     prevRace:'御堂筋S',          prevRank:1, prev1Last3F:33.9, prev1Last3FRank:8, prev1pop:6, prev1Weight:504, prev1WeightDiff:0, prev1Position:'07-07-07-06', prev1Time:'2:23.2', prev1Diff:-0.3, hande:55.0, longCourseExperience:false, weight:{current:504, previous:504, diff:0} },
+  { umaban:5, waku:4, name:'ギャンブルルーム', sex:'牡', carriedWeight:55, sire:'', g1Experience:[], proPicks:{yoshi:'☆'}, age:5, style:'差し', runStyle:'差し', father:'キズナ', mother:'シャンデリアハウス', motherFather:'ヴァーミリアン', bloodlineSystem:'ディープインパクト系',     odds:18.8,  popEstimate:8,  jockey:'幸英明',     prevRace:'御堂筋S',          prevRank:1, prev1Last3F:33.9, prev1Last3FRank:8, prev1pop:6, prev1Weight:504, prev1WeightDiff:0, prev1Position:'07-07-07-06', prev1Time:'2:23.2', prev1Diff:-0.3, hande:55.0, longCourseExperience:false, weight:{current:504, previous:504, diff:0} },
   { umaban:7, waku:5, name:'アスクセクシーモア', sex:'牡', carriedWeight:55, sire:'', g1Experience:[], age:4, style:'差し', runStyle:'差し', father:'キタサンブラック', mother:'アイムオールレディセクシー', motherFather:"Ready's Image", bloodlineSystem:'キタサンブラック系', bloodNote:'父キタサンブラック（ステイゴールド系）',   odds:27.8,  popEstimate:9, jockey:'岩田康誠',   prevRace:'府中S',            prevRank:1, prev1Last3F:34.0, prev1Last3FRank:9, prev1pop:1, prev1Weight:480, prev1WeightDiff:6, prev1Position:'07-07-07', prev1Time:'1:57.1', prev1Diff:-0.0, hande:54.0, longCourseExperience:false, weight:{current:480, previous:474, diff:6}, prev1SameCourse:true },
   { umaban:12, waku:7, name:'キングズパレス', sex:'牡', sire:'', g1Experience:['天皇賞秋'], age:7, style:'追込', runStyle:'追込', sameCourseExp:true, father:'キングカメハメハ', mother:'ドバウィハイツ', motherFather:'Dubawi', bloodlineSystem:'キングカメハメハ系', bloodNote:'🏆父キングカメハメハ（純キンカメ系）',       odds:35.6,  popEstimate:11, jockey:'菊沢一樹',   prevRace:'金鯱賞',           prevRank:8, prev1Last3F:33.7, prev1Last3FRank:4, prev1pop:11, prev1Weight:504, prev1WeightDiff:-6, prev1Position:'14-14-14-13', prev1Time:'1:58.6', prev1Diff:0.5, hande:58.0, longCourseExperience:true, weight:{current:504, previous:510, diff:-6}, carriedWeight:57.5, seniorNotQualified:true, heavyWeightNotQualified:true, manualPenalty:-13, manualPenaltyReason:'7歳×57.5kg×当該距離重賞4着以内経験なし（過去10年データ）' },
   { umaban:10, waku:6, name:'マイネルケレリウス', sex:'牡', carriedWeight:54, sire:'', g1Experience:[], age:6, style:'追込', runStyle:'追込', father:'ルーラーシップ', mother:'マイネカンナ', motherFather:'アグネスタキオン', bloodlineSystem:'キングカメハメハ系', bloodNote:'🏆父ルーラーシップ（キンカメ系）',   odds:41.7,  popEstimate:12, jockey:'松岡正海',   prevRace:'メトロポリタンS',  prevRank:4, prev1Last3F:33.8, prev1Last3FRank:5, prev1pop:4, prev1Weight:438, prev1WeightDiff:-4, prev1Position:'08-08-07-07', prev1Time:'2:23.5', prev1Diff:0.4, hande:54.0, longCourseExperience:false, weight:{current:438, previous:442, diff:-4}, prev1SameCourse:true },
   { umaban:13, waku:8, name:'ヴェルミセル', sex:'牝', carriedWeight:54, sire:'ゴールドシップ', g1Experience:['天皇賞春'], age:6, style:'差し', runStyle:'差し', sameRaceExp:true, father:'ゴールドシップ', mother:'マルーンドロップ', motherFather:'コンデュイット', bloodlineSystem:'ステイゴールド系', bloodNote:'⭐父ゴールドシップ（ステイゴールド系）',         odds:29.8,  popEstimate:10, jockey:'鮫島克駿',   prevRace:'天皇賞春',         prevRank:9, prev1Last3F:36.1, prev1Last3FRank:14, prev1pop:9, prev1Weight:470, prev1WeightDiff:0, prev1Position:'06-07-07-06', prev1Time:'3:15.0', prev1Diff:1.3, hande:54.0, longCourseExperience:true, weight:{current:470, previous:470, diff:0} },
-  { umaban:3, waku:3, name:'ボーンディスウェイ', sex:'牡', carriedWeight:56, sire:'', g1Experience:['ホープフルS','皐月賞'], age:7, style:'追込', runStyle:'追込', father:'ハーツクライ', mother:'ウィンドハック', motherFather:'Platini', bloodlineSystem:'ハーツクライ系', bloodNote:'⚠️父ハーツクライ（苦戦傾向）',   odds:79.7,  popEstimate:13, jockey:'松山弘平',   prevRace:'大阪-ハンブルクC', prevRank:6, prev1Last3F:34.0, prev1Last3FRank:9, prev1pop:6, prev1Weight:496, prev1WeightDiff:-6, prev1Position:'06-06-05-06', prev1Time:'2:37.8', prev1Diff:0.9, hande:55.0, longCourseExperience:true, weight:{current:496, previous:502, diff:-6}, seniorNotQualified:true, manualPenalty:-8, manualPenaltyReason:'7歳×当該距離G1/G2で4着以内経験なし（過去10年データ）' },
+  { umaban:3, waku:3, name:'ボーンディスウェイ', sex:'牡', carriedWeight:56, sire:'', g1Experience:['ホープフルS','皐月賞'], proPicks:{yoshi:'※'}, age:7, style:'追込', runStyle:'追込', father:'ハーツクライ', mother:'ウィンドハック', motherFather:'Platini', bloodlineSystem:'ハーツクライ系', bloodNote:'⚠️父ハーツクライ（苦戦傾向）',   odds:79.7,  popEstimate:13, jockey:'松山弘平',   prevRace:'大阪-ハンブルクC', prevRank:6, prev1Last3F:34.0, prev1Last3FRank:9, prev1pop:6, prev1Weight:496, prev1WeightDiff:-6, prev1Position:'06-06-05-06', prev1Time:'2:37.8', prev1Diff:0.9, hande:55.0, longCourseExperience:true, weight:{current:496, previous:502, diff:-6}, seniorNotQualified:true, manualPenalty:-8, manualPenaltyReason:'7歳×当該距離G1/G2で4着以内経験なし（過去10年データ）' },
   { umaban:2, waku:2, name:'ショウナンバシット', sex:'牡', carriedWeight:55, sire:'', g1Experience:[], age:6, style:'先行', runStyle:'先行', father:'シルバーステート', mother:'ギエム', motherFather:"Medaglia d'Oro", bloodlineSystem:'ディープインパクト系',   odds:94.0, popEstimate:14, jockey:'横山和生',   prevRace:'ダイヤモンドS',    prevRank:6, prev1Last3F:36.3, prev1Last3FRank:15, prev1pop:6, prev1Weight:494, prev1WeightDiff:4, prev1Position:'02-02-03-05', prev1Time:'3:34.0', prev1Diff:1.8, hande:55.0, longCourseExperience:true, weight:{current:494, previous:490, diff:4} },
 ],
 
@@ -13939,14 +13939,29 @@ function computeScoreBreakdownMeguroV4(horse, raceName) {
   if (_g1Experience.length >= 2) g1ExpBonus = 5;
   else if (_g1Experience.length >= 1) g1ExpBonus = 3;
 
+  // === プロ予想印スコア（max 7点）===
+  function _proMarkScoreM(mk){
+    if (mk === '◎' || mk === '本命') return 3;
+    if (mk === '○' || mk === '▲' || mk === '☆') return 2;
+    if (mk === '※' || mk === '△') return 1;
+    return 0;
+  }
+  var _ppM = horse.proPicks || {};
+  var proMarkTotal = 0;
+  if (_ppM.tahara)   proMarkTotal += _proMarkScoreM(_ppM.tahara);
+  if (_ppM.yoshi)    proMarkTotal += _proMarkScoreM(_ppM.yoshi);
+  if (_ppM.miyauchi) proMarkTotal += _proMarkScoreM(_ppM.miyauchi);
+  if (Array.isArray(_ppM.others)) _ppM.others.forEach(function(m){ proMarkTotal += _proMarkScoreM(m); });
+  proMarkTotal = Math.min(proMarkTotal, 7);
+
   var totalScore = prevRaceScore + weightScore + bloodScore + wakuScore +
                    popScore + prevRankScore + longCourseScore + lastFScore +
                    distScore + handeScore + tetsubanScore + jockeyScore +
                    trainingScore + repeatScore + courseScore + styleScoreM + ageScore +
                    pastG1Score + umabanPenalty + manualPenalty + fukuheiScore +
-                   hatchiBonus + stayerBonus + g1ExpBonus;
+                   hatchiBonus + stayerBonus + g1ExpBonus + proMarkTotal;
   totalScore = Math.max(0, totalScore);
-  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 175 * 100)));
+  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 182 * 100)));
 
   var _items = {
     popularity: { score: popScore,        max: 15, label: '人気別' },
@@ -13978,13 +13993,15 @@ function computeScoreBreakdownMeguroV4(horse, raceName) {
     hatchi: { score: hatchiBonus, max: 5, label: '🌸牝馬軽量ハンデ' },
     stayer: { score: stayerBonus, max: 3, label: '🐎ステイヤー血統' },
     g1Exp:  { score: g1ExpBonus,  max: 5, label: '🏆GI経験' },
+    proMark: { score: proMarkTotal, max: 7, label: '🎯プロ予想印' },
     _v4: {
       prevRace: prevRaceScore, weight: weightScore, blood: bloodScore, waku: wakuScore,
       pop: popScore, prevRank: prevRankScore, longCourse: longCourseScore, lastF: lastFScore,
       dist: distScore, hande: handeScore, tetsuban: tetsubanScore, jockey: jockeyScore,
       training: trainingScore, repeat: repeatScore, course: courseScore, style: styleScoreM,
       age: ageScore, pastG1: pastG1Score, umabanPenalty: umabanPenalty, manualPenalty: manualPenalty,
-      fukuhei: fukuheiScore, hatchi: hatchiBonus, stayer: stayerBonus, g1Exp: g1ExpBonus
+      fukuhei: fukuheiScore, hatchi: hatchiBonus, stayer: stayerBonus, g1Exp: g1ExpBonus,
+      proMark: proMarkTotal
     }
   };
   if (manualPenalty < 0) {
@@ -13997,7 +14014,7 @@ function computeScoreBreakdownMeguroV4(horse, raceName) {
   }
   return {
     total: totalScore,
-    max: 175,
+    max: 182,
     pct: pct,
     items: _items,
     penalty: 0,
