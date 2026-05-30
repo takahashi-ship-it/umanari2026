@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260530-1525';
+  var CURRENT_VERSION = '20260530-1530';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -11383,8 +11383,11 @@ function computeJikuScore(horse, raceName) {
 }
 function getAutoJiku(raceName, horses) {
   if (!horses || !horses.length) return null;
+  // 予想スコアV3/V4と完全一致：computeScoreBreakdown の total を使う
   var scored = horses.map(function(h) {
-    return { horse: h, jScore: computeJikuScore(h, raceName) };
+    var bd = (typeof computeScoreBreakdown === 'function') ? computeScoreBreakdown(h, raceName) : null;
+    var score = bd ? (bd.total != null ? bd.total : (bd.totalScore != null ? bd.totalScore : 0)) : 0;
+    return { horse: h, jScore: score };
   }).sort(function(a, b) { return b.jScore - a.jScore; });
   return scored[0];
 }
