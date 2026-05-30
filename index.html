@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260530-0400';
+  var CURRENT_VERSION = '20260530-0500';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -4497,7 +4497,7 @@ const HORSES_BY_RACE = {
 ],
 
 '葵ステークス': [
-  { umaban:11, waku:6, name:'タガノアラリア',      odds:5.8,   popEstimate:2,  jockey:'鮫島克駿',   sex:'牡', age:3, hande:57.0, prevRace:'橘S',            prevRank:1, prevRaceClass:'L',    prev1Last3F:33.2, prev1Last3FRank:2, prev1pop:1, prev1Weight:452, prev1WeightDiff:-4, prev1Position:'01-01', prev1Time:'1:19.7', prev1Diff:-0.1, weight:{current:452, previous:456, diff:-4}, style:'先行', runStyle:'先行', note:'★前走オープン特別1着・1人気・先行' },
+  { umaban:11, waku:6, name:'タガノアラリア',      odds:5.8,   popEstimate:2,  jockey:'鮫島克駿',   sex:'牡', age:3, hande:57.0, father:'ミスターメロディ', motherFather:'ディープインパクト', sire:'ミスターメロディ', motherSire:'ディープインパクト', prevRace:'橘S',            prevRank:1, prevRaceClass:'L',    prev1Last3F:33.2, prev1Last3FRank:2, prev1pop:1, prev1Weight:452, prev1WeightDiff:-4, prev1Position:'01-01', prev1Time:'1:19.7', prev1Diff:-0.1, weight:{current:452, previous:456, diff:-4}, style:'先行', runStyle:'先行', note:'★前走オープン特別1着・1人気・先行・父ミスターメロディ（高松宮GI馬）' },
   { umaban:5, waku:3, name:'エイシンディード',     odds:5.1,   popEstimate:1,  jockey:'川又賢治',   sex:'牡', age:3, hande:57.0, prevRace:'ファルコンS',    prevRank:2, prevRaceClass:'GIII', prev1Last3F:34.1, prev1Last3FRank:6, prev1pop:8, prev1Weight:454, prev1WeightDiff:4, prev1Position:'02-02', prev1Time:'1:20.0', prev1Diff:0.2, weight:{current:454, previous:450, diff:4}, style:'逃げ', runStyle:'逃げ', father:'ファインニードル', bloodlineSystem:'日本短距離系', sprintBlood:true, bloodNote:'🏆ファインニードル産駒（葵S2018年勝ち馬の血統）', note:'⚠️前走重賞2着の人気馬（過剰人気注意）' },
   { umaban:12, waku:6, name:'ヒシアイラ',          odds:11.4,   popEstimate:7,  jockey:'荻野極',     sex:'牡', age:3, hande:57.0, prevRace:'マーガレットS',  prevRank:2, prevRaceClass:'L',    prev1Last3F:34.4, prev1Last3FRank:9, prev1pop:1, prev1Weight:460, prev1WeightDiff:-4, prev1Position:'01-01', prev1Time:'1:08.1', prev1Diff:0.1, weight:{current:460, previous:464, diff:-4}, style:'逃げ', runStyle:'逃げ', father:'モーリス', bloodlineSystem:'日本中距離→短距離系', sprintBlood:true, note:'★前走オープン特別2着・逃げ' },
   { umaban:13, waku:7, name:'タマモイカロス',       odds:7.0,   popEstimate:4,  jockey:'高杉吏麒',   sex:'牡', age:3, hande:57.0, prevRace:'ファルコンS',    prevRank:6, prevRaceClass:'GIII', prev1Last3F:33.9, prev1Last3FRank:8, prev1pop:5, prev1Weight:524, prev1WeightDiff:-2, prev1Position:'08-09', prev1Time:'1:20.5', prev1Diff:0.7, weight:{current:524, previous:526, diff:-2}, style:'追込', runStyle:'追込', note:'⚠️追込脚質（過去8年複勝率2.7%）' },
@@ -13257,9 +13257,11 @@ function computeScoreBreakdownAoiV3(horse, raceName) {
   // === 5. 短距離血統 (5点) ★不明を中立扱い ===
   var sire = horse.father || horse.sire || '不明';
   var sprintBloods = {
-    'ファインニードル':5, 'ロードカナロア':4, 'ビッグアーサー':3, 'ミッキーアイル':3,
-    'モーリス':3, 'キズナ':2, 'ルーラーシップ':2, 'シルバーステート':3,
-    'ドレフォン':3, 'タワーオブロンドン':4
+    'ファインニードル':5, 'ミスターメロディ':5,    // ★高松宮GI馬・京都芝1200実績
+    'ロードカナロア':4, 'タワーオブロンドン':4,
+    'ビッグアーサー':3, 'ミッキーアイル':3,
+    'モーリス':3, 'シルバーステート':3, 'ドレフォン':3,
+    'キズナ':2, 'ルーラーシップ':2
   };
   var bloodScoreV3;
   if (sprintBloods[sire]) bloodScoreV3 = sprintBloods[sire];
