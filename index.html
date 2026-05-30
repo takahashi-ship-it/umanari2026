@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260530-1900';
+  var CURRENT_VERSION = '20260530-1910';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2134,8 +2134,8 @@
         <div id="himo-list" style="display:none"></div>
         <div id="kaime-summary" style="display:none"></div>
 
-        <!-- AI予想買い目セクションは削除（軸馬と重複のため・2026-05-30） -->
-        <div id="ai-kaimoku-container" style="display:none"></div>
+        <!-- 穴馬/伏兵/夢馬券を表示（AI軸馬セクションだけ非表示・2026-05-30） -->
+        <div id="ai-kaimoku-container"></div>
 
         <!-- 投資額の目安 -->
         <div class="card">
@@ -14712,7 +14712,8 @@ function renderKaimokuAI(raceName) {
   html += '</div>';
   html += '</div>';
 
-  // 軸馬＋相手の一体型コンテナ（AI予想・青系配色）
+  // AI予想軸馬＋相手の一体型コンテナは非表示（軸馬カードと重複のため・2026-05-30）
+  if (false) {
   html += '<div style="border:2px solid #4a90e2;border-radius:14px;overflow:hidden;margin-bottom:20px">';
 
   // ===== 軸馬部分 =====
@@ -14825,6 +14826,7 @@ function renderKaimokuAI(raceName) {
   html += '</div>';
 
   html += '</div>'; // 一体型コンテナ終わり
+  } // end AI section skip
 
   // AIの推奨穴馬（一体型コンテナの下に配置）
   html += renderAnaHorses(key);
