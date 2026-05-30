@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260531-0200';
+  var CURRENT_VERSION = '20260531-0250';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -14740,78 +14740,76 @@ function renderCaveatHorses(raceName) {
 }
 
 function renderYumaBaken(raceName) {
-  var data = (typeof KAIMOKU_DATA !== 'undefined') ? KAIMOKU_DATA[raceName] : null;
-  if (!data || !data.yumaBaken) return '';
-  var yume = data.yumaBaken;
-  var labelStyles = {
-    '筆頭':    {bg:'#BA7517', color:'#FAEEDA'},
-    '対抗':    {bg:'#0F6E56', color:'#E1F5EE'},
-    '注目':    {bg:'#185FA5', color:'#E6F1FB'},
-    '一発':    {bg:'#993556', color:'#FBEAF0'},
-    '警戒':    {bg:'#5F5E5A', color:'#F1EFE8'},
-    '変わり身':{bg:'#533B0B', color:'#FAEEDA'},
-  };
+  // 夢馬券の本質: 「人気薄から大穴狙い」
+  // 5番人気以下のスコア上位を選定（1-4人気は軸・対抗で買えば良い）
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? HORSES_BY_RACE[raceName] : null;
+  if (!horses || !horses.length) return '';
+
+  var sortedDream = horses
+    .filter(function(h) { return (h.popEstimate || 99) >= 5; })
+    .map(function(h) {
+      var bd = (typeof computeScoreBreakdown === 'function') ? computeScoreBreakdown(h, raceName) : { total: 0 };
+      return { horse: h, score: bd.total || 0 };
+    })
+    .sort(function(a, b) { return b.score - a.score; });
+
+  if (!sortedDream.length) return '';
+
+  var top4 = sortedDream.slice(0, 4);
+  var top6 = sortedDream.slice(0, 6);
+
+  function renderHorseRow(item, mark, isLast) {
+    var h = item.horse;
+    var html = '<div style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;background:var(--color-background-primary);' + (isLast ? '' : 'border-bottom:0.5px solid #0F6E56') + '">';
+    html += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
+    html += '<span style="font-size:14px">' + mark + '</span>';
+    html += '<span style="font-size:13px;font-weight:600;color:var(--color-text-primary)">' + (h.umaban != null ? h.umaban + '番 ' : '') + h.name + '</span>';
+    html += '<span style="font-size:10px;color:#9FE1CB">' + (h.popEstimate || '?') + '人気・' + (h.odds != null ? h.odds + '倍' : '?倍') + '</span>';
+    html += '</div>';
+    html += '<span style="font-size:13px;font-weight:700;color:#FAC775">スコア ' + item.score + '</span>';
+    html += '</div>';
+    return html;
+  }
+
+  function renderCostFooter(label, sanpukuPts, santanPts) {
+    var html = '<div style="background:#085041;padding:10px 14px">';
+    html += '<div style="font-size:10px;color:#9FE1CB;line-height:1.6">';
+    html += '3連複' + label + ': ' + sanpukuPts + '点 × 100円 = <span style="color:#FAC775;font-weight:700">' + (sanpukuPts * 100).toLocaleString() + '円</span><br>';
+    html += '3連単' + label + ': ' + santanPts + '点 × 100円 = <span style="color:#FAC775;font-weight:700">' + (santanPts * 100).toLocaleString() + '円</span>';
+    html += '</div></div>';
+    return html;
+  }
+
   var html = '<div style="border-radius:14px;overflow:hidden;border:1.5px solid #0F6E56;margin-top:20px">';
   // ヘッダー
   html += '<div style="background:#085041;padding:12px 14px;display:flex;align-items:center;gap:10px">';
-  html += '<span style="font-size:20px">✨</span>';
+  html += '<span style="font-size:20px">🌠</span>';
   html += '<div style="flex:1">';
   html += '<div style="font-size:15px;font-weight:500;color:#FAC775;letter-spacing:2px">夢 馬 券</div>';
-  html += '<div style="font-size:10px;color:#9FE1CB">上位人気一掃時の一攫千金シナリオ</div>';
+  html += '<div style="font-size:10px;color:#9FE1CB">5番人気以下のスコア上位（人気薄の大穴狙い）</div>';
   html += '</div>';
   html += '<span style="font-size:10px;background:transparent;color:#FAC775;padding:2px 8px;border-radius:8px;border:0.5px solid #FAC775">ロマン枠</span>';
   html += '</div>';
-  // 発動条件
-  if (yume.trigger) {
-    html += '<div style="padding:10px 14px;border-bottom:0.5px solid #0F6E56;background:var(--color-background-secondary)">';
-    html += '<div style="font-size:10px;color:#0F6E56;font-weight:500;margin-bottom:3px">発動条件</div>';
-    html += '<div style="font-size:11px;color:var(--color-text-secondary);line-height:1.5">' + yume.trigger + '</div>';
-    html += '</div>';
-  }
-  // 候補馬リスト
-  (yume.horses || []).forEach(function(h, idx) {
-    var stars = '⭐'.repeat(h.stars || 1);
-    var ls = labelStyles[h.label] || {bg:'#444441', color:'#F1EFE8'};
-    var isLast = idx === yume.horses.length - 1;
-    html += '<div style="padding:12px 14px;background:var(--color-background-primary);' + (isLast ? '' : 'border-bottom:0.5px solid #0F6E56') + '">';
-    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:4px">';
-    html += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
-    html += '<span style="font-size:10px;background:' + ls.bg + ';color:' + ls.color + ';padding:2px 8px;border-radius:8px;font-weight:600">' + stars + ' ' + h.label + '</span>';
-    html += '<span style="font-size:13px;font-weight:600;color:var(--color-text-primary)">' + h.uma + '番 ' + h.name + '</span>';
-    html += '</div>';
-    html += '<span style="font-size:16px;font-weight:700;color:#BA7517">' + h.odds + '倍</span>';
-    html += '</div>';
-    if (h.scenario) {
-      html += '<div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:8px;line-height:1.6;padding:8px 10px;background:var(--color-background-secondary);border-radius:8px;border-left:3px solid #0F6E56">' + h.scenario + '</div>';
-    }
-    (h.reasons || []).forEach(function(r) {
-      html += '<div style="display:flex;align-items:flex-start;gap:6px;font-size:11px;color:var(--color-text-secondary);margin-bottom:3px;line-height:1.5">';
-      html += '<span style="color:#0F6E56;flex-shrink:0;margin-top:1px">✓</span><span>' + r + '</span></div>';
-    });
-    html += '</div>';
+
+  // 4頭BOX
+  html += '<div style="padding:10px 14px 6px;background:var(--color-background-secondary);border-bottom:0.5px solid #0F6E56">';
+  html += '<div style="font-size:12px;font-weight:700;color:#FAC775">🎯 4頭BOX（5人気以下スコア上位4頭）</div>';
+  html += '</div>';
+  top4.forEach(function(item, i) {
+    html += renderHorseRow(item, '☆', i === top4.length - 1);
   });
-  // 2パターンの買い目フッター
-  if (yume.patterns && yume.patterns.length) {
-    html += '<div style="background:#085041;padding:12px 14px">';
-    html += '<div style="font-size:11px;font-weight:600;color:#FAC775;margin-bottom:10px">🎰 夢馬券・推奨買い目（' + yume.patterns.length + 'パターン）</div>';
-    yume.patterns.forEach(function(p, idx) {
-      var isFirst = idx === 0;
-      html += '<div style="background:' + (isFirst ? '#0F6E56' : '#04342C') + ';border-radius:8px;padding:10px 12px;' + (idx < yume.patterns.length - 1 ? 'margin-bottom:8px' : '') + '">';
-      html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:4px">';
-      html += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
-      html += '<span style="font-size:12px;font-weight:700;color:#FAC775">3連単' + p.label + '</span>';
-      html += '<span style="font-size:10px;color:#9FE1CB">' + (p.desc || '') + '</span>';
-      html += '</div>';
-      html += '<span style="font-size:15px;font-weight:700;color:#FAC775">' + p.cost.toLocaleString() + '円</span>';
-      html += '</div>';
-      if (p.horses && p.horses.length) {
-        html += '<div style="font-size:10px;color:#9FE1CB;margin-bottom:4px;line-height:1.5">' + p.horses.join('・') + '</div>';
-      }
-      html += '<div style="font-size:10px;color:#5DCAA5">100円 × ' + p.points + '点</div>';
-      html += '</div>';
-    });
-    html += '</div>';
-  }
+  html += renderCostFooter('4頭BOX', 4, 24);
+
+  // 6頭BOX
+  html += '<div style="padding:10px 14px 6px;background:var(--color-background-secondary);border-top:0.5px solid #0F6E56;border-bottom:0.5px solid #0F6E56">';
+  html += '<div style="font-size:12px;font-weight:700;color:#FAC775">🎯 6頭BOX（5人気以下スコア上位6頭）</div>';
+  html += '</div>';
+  top6.forEach(function(item, i) {
+    var mark = i < 4 ? '☆' : '🌠';
+    html += renderHorseRow(item, mark, i === top6.length - 1);
+  });
+  html += renderCostFooter('6頭BOX', 20, 120);
+
   html += '</div>';
   return html;
 }
