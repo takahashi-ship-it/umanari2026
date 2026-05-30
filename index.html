@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260530-2330';
+  var CURRENT_VERSION = '20260530-2340';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -15042,25 +15042,19 @@ function renderJikuTracking() {
   var html = '<div class="card" style="margin-top:12px">';
   html += '<div class="ct">🎯 軸馬3着内率トラッキング</div>';
 
-  // ── サマリー3列 ──
-  html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">';
-  // AI推奨軸馬
-  html += '<div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 8px;text-align:center">';
-  html += '<div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px">🤖 AI推奨軸馬</div>';
-  html += '<div style="font-size:20px;font-weight:600;color:var(--color-text-primary)">' + aiHits + '<span style="font-size:12px;color:var(--color-text-tertiary)">/' + total + '</span></div>';
-  html += '<div style="font-size:11px;color:var(--color-text-secondary)">' + Math.round(aiHits/total*100) + '%</div>';
-  html += '</div>';
+  // ── サマリー2列（AI推奨軸馬は削除・買い目AI予想削除に伴い・2026-05-30）──
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">';
   // スコア1位
   html += '<div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 8px;text-align:center">';
-  html += '<div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px">📊 スコア1位</div>';
+  html += '<div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px">📊 スコア1位（軸馬）</div>';
   html += '<div style="font-size:20px;font-weight:600;color:var(--color-text-primary)">' + scoreHits + '<span style="font-size:12px;color:var(--color-text-tertiary)">/' + total + '</span></div>';
   html += '<div style="font-size:11px;color:var(--color-text-secondary)">' + Math.round(scoreHits/total*100) + '%</div>';
   html += '</div>';
-  // 複合的中
+  // 軸複勝的中率
   var comboPct = Math.round(comboHits/total*100);
   var comboColor = comboPct >= 60 ? 'var(--color-text-success)' : 'var(--color-text-primary)';
   html += '<div style="background:var(--color-background-success);border-radius:var(--border-radius-md);padding:10px 8px;text-align:center;border:1px solid var(--color-border-success)">';
-  html += '<div style="font-size:10px;color:var(--color-text-success);margin-bottom:4px;font-weight:600">⚡ 複合的中</div>';
+  html += '<div style="font-size:10px;color:var(--color-text-success);margin-bottom:4px;font-weight:600">⚡ 軸複勝的中率</div>';
   html += '<div style="font-size:20px;font-weight:700;color:' + comboColor + '">' + comboHits + '<span style="font-size:12px;color:var(--color-text-tertiary)">/' + total + '</span></div>';
   html += '<div style="font-size:11px;color:' + comboColor + ';font-weight:600">' + comboPct + '%</div>';
   html += '</div>';
