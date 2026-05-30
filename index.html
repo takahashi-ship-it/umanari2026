@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260530-2400';
+  var CURRENT_VERSION = '20260531-0010';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13892,11 +13892,20 @@ function computeScoreBreakdownMeguroV4(horse, raceName) {
   }
   pastG1Score = Math.min(pastG1Score, 5);
 
+  // === 馬番ペナルティ（-10〜0点）★過去10年データ ===
+  // 1-8番: 連対馬20頭中15頭、3着内馬30頭中20頭(67%)
+  // 9-18番: 2着0回（5勝3着5回のみ）
+  // 11番から外: 出走42回で2着以内0回★
+  var _umaban = horse.umaban || 0;
+  var umabanPenalty = 0;
+  if (_umaban >= 11) umabanPenalty = -10;
+  else if (_umaban >= 9) umabanPenalty = -5;
+
   var totalScore = prevRaceScore + weightScore + bloodScore + wakuScore +
                    popScore + prevRankScore + longCourseScore + lastFScore +
                    distScore + handeScore + tetsubanScore + jockeyScore +
                    trainingScore + repeatScore + courseScore + styleScoreM + ageScore +
-                   pastG1Score;
+                   pastG1Score + umabanPenalty;
   totalScore = Math.max(0, totalScore);
   var pct = Math.max(0, Math.min(99, Math.round(totalScore / 154 * 100)));
 
@@ -13919,12 +13928,13 @@ function computeScoreBreakdownMeguroV4(horse, raceName) {
       distance:   { score: distScore,       max: 8,  label: '距離経験' },
       direction:  { score: handeScore,      max: 7,  label: '斤量適性' },
       weight:     { score: weightScore,     max: 12, label: '馬体重', weightLabel: '', warning: null },
+      umabanPenalty: { score: umabanPenalty, max: 0, label: '⚠️外枠ペナルティ' },
       _v4: {
         prevRace: prevRaceScore, weight: weightScore, blood: bloodScore, waku: wakuScore,
         pop: popScore, prevRank: prevRankScore, longCourse: longCourseScore, lastF: lastFScore,
         dist: distScore, hande: handeScore, tetsuban: tetsubanScore, jockey: jockeyScore,
         training: trainingScore, repeat: repeatScore, course: courseScore, style: styleScoreM,
-        age: ageScore, pastG1: pastG1Score
+        age: ageScore, pastG1: pastG1Score, umabanPenalty: umabanPenalty
       }
     },
     penalty: 0,
