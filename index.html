@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260528-2300';
+  var CURRENT_VERSION = '20260530-0000';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -9959,6 +9959,12 @@ function renderHorses() {
             + row('調教', v.training, 10)
             + row('同レース', v.repeat, 5)
             + row('🏃キャリア', v.career != null ? v.career : 3, 5)
+            + ((breakdown.penalty && breakdown.penalty < 0) ? (
+                '<div style="grid-column:1/-1;margin-top:6px;padding-top:6px;border-top:1px dashed #C44">'
+                + '<div style="font-size:10px;color:#C44;font-weight:700;margin-bottom:3px">⚠️ 過去データ準拠ペナルティ ('+breakdown.penalty+'点)</div>'
+                + (breakdown.penaltyReasons||[]).map(function(r){return '<div style="font-size:10px;color:#A32D2D">'+r+'</div>';}).join('')
+                + '</div>'
+              ) : '')
             + '<div class="score-item" style="grid-column:1/-1;border-top:1px solid #ddd;margin-top:4px;padding-top:4px"><div class="si-label" style="font-weight:700">合計</div><div class="si-val" style="font-weight:700;font-size:14px">'+total+'/'+maxS+' ('+pct+'%)</div></div>'
             + '</div>';
         })() : `<div class="score-detail">
@@ -13384,11 +13390,38 @@ function computeScoreBreakdownAoiV3(horse, raceName) {
   else if (careerV3 === 2) careerScore = 0;
   else careerScore = 3;  // データなしは中庸
 
+  // === ペナルティルール（最大-15点）★過去10年壊滅パターン ===
+  var penaltyScore = 0;
+  var penaltyReasons = [];
+  // ペナルティ1: 3人気【0-0-0-8】複勝率0%
+  if (horse.popEstimate === 3) {
+    penaltyScore -= 15;
+    penaltyReasons.push('⚠️3人気壊滅(-15)');
+  }
+  // ペナルティ2: 追込脚質【0-1-0-36】複勝率3%
+  if (s === '追込') {
+    penaltyScore -= 8;
+    penaltyReasons.push('⚠️追込脚質(-8)');
+  }
+  // ペナルティ3: 牡馬×差し・追込
+  if (horse.sex === '牡' && (s === '差し' || s === '追込')) {
+    penaltyScore -= 5;
+    penaltyReasons.push('⚠️牡馬×差し追込(-5)');
+  }
+  // ペナルティ4: 短距離苦手騎手×1-5人気
+  var weakSprintJockeys = ['坂井瑠星', '鮫島克駿'];
+  if (weakSprintJockeys.indexOf(horse.jockey) >= 0 && horse.popEstimate <= 5) {
+    penaltyScore -= 3;
+    penaltyReasons.push('⚠️短距離苦手騎手×上位人気(-3)');
+  }
+  penaltyScore = Math.max(penaltyScore, -15);
+
   // === 合計 ===
   var totalScore = sexScore + styleScore + popScore + prevClassScore +
                    bloodScoreV3 + tetsuban + lastFScore + distScore +
                    weightScore + courseScore + prevRankScore + jockeyScoreV3 +
-                   trainingScoreV3 + wakuScoreV3 + repeatScore + careerScore;
+                   trainingScoreV3 + wakuScoreV3 + repeatScore + careerScore +
+                   penaltyScore;
   totalScore = Math.max(0, totalScore);
   var pct = Math.max(0, Math.min(99, Math.round(totalScore / 135 * 100)));
 
@@ -13396,6 +13429,8 @@ function computeScoreBreakdownAoiV3(horse, raceName) {
     total: totalScore,
     max: 135,
     pct: pct,
+    penalty: penaltyScore,
+    penaltyReasons: penaltyReasons,
     items: {
       popularity: { score: popScore,        max: 10, label: '人気別' },
       waku:       { score: wakuScoreV3,     max: 5,  label: '枠順' },
