@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260601-0800';
+  var CURRENT_VERSION = '20260601-1000';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -15071,10 +15071,12 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     note: rep.total > 0 ? ('出走' + rep.total + '回・最高' + rep.bestRank + '着') : '初出走'
   };
 
-  // 17. G1経験スコア（max 10）★前走G1組3着内56.7% + G1勝ち馬評価
+  // 17. G1経験スコア（max 10）★前走G1メイン + 着順に応じた段階加点
   var g1Score = 0;
   var g1Notes = [];
-  var g1History = { won:[], placed:[], total:0 };
+  var g1History = {
+    won:[], rentai:[], fukusho:[], topHalf:[], lower:[], total:0
+  };
   (horse.raceHistory || []).forEach(function(r){
     var nm = r.name || '';
     var isG1 = (
@@ -15091,9 +15093,14 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     if (isG1) {
       g1History.total++;
       if (r.rank === 1) g1History.won.push(nm);
-      if (r.rank <= 3) g1History.placed.push(nm);
+      else if (r.rank === 2) g1History.rentai.push(nm);
+      else if (r.rank === 3) g1History.fukusho.push(nm);
+      else if (r.rank <= 9) g1History.topHalf.push(nm);
+      else g1History.lower.push(nm);
     }
   });
+
+  // (1) 前走G1 +5 ★メイン（過去6年データ3着内率28%）
   var prevR = horse.prevRace || '';
   var isPrevG1 = (
     prevR.indexOf('GⅠ') >= 0 ||
@@ -15104,10 +15111,13 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     prevR.indexOf('ヴィクトリアマイル') >= 0 ||
     prevR.indexOf('ドバイ') >= 0 ||
     prevR.indexOf('香港') >= 0 ||
-    prevR.indexOf('サウジ') >= 0
+    prevR.indexOf('サウジ') >= 0 ||
+    prevR.indexOf('天皇賞') >= 0 ||
+    prevR.indexOf('フェブラリーS') >= 0
   );
-  if (isPrevG1) { g1Score += 4; g1Notes.push('★前走G1'); }
-  if (g1History.won.length >= 1) { g1Score += 4; g1Notes.push('G1勝利歴'); }
+  if (isPrevG1) { g1Score += 5; g1Notes.push('★前走G1'); }
+
+  // (2) 東京1600m G1 勝利 +3
   var hasTokyoMileG1Win = (horse.raceHistory || []).some(function(r){
     return r.course === '東京' && r.distance === 1600 && r.surface === '芝' &&
            r.rank === 1 &&
@@ -15115,12 +15125,34 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
                        r.name.indexOf('安田記念') >= 0 ||
                        r.name.indexOf('ヴィクトリアマイル') >= 0));
   });
-  if (hasTokyoMileG1Win) { g1Score += 4; g1Notes.push('★★東京1600mG1勝利'); }
-  if (g1History.placed.length >= 2) { g1Score += 2; g1Notes.push('G1複数好走'); }
+  if (hasTokyoMileG1Win) { g1Score += 3; g1Notes.push('東京1600mG1勝利'); }
+
+  // (3) G1出走経験ボーナス（着順に応じた段階加点）
+  if (g1History.won.length >= 1 && !hasTokyoMileG1Win) {
+    g1Score += 2; g1Notes.push('G1勝利歴');
+  }
+  if ((g1History.rentai.length + g1History.fukusho.length) >= 1) {
+    g1Score += 2; g1Notes.push('G1連対or3着経験');
+  }
+  if (g1History.topHalf.length >= 1) {
+    g1Score += 1; g1Notes.push('G1上位入着経験');
+  }
+  // 大敗のみ（好走なし）の場合の経験補正 +1
+  var anyGood = (g1History.won.length + g1History.rentai.length +
+                 g1History.fukusho.length + g1History.topHalf.length) > 0;
+  if (g1History.lower.length >= 1 && !anyGood) {
+    g1Score += 1; g1Notes.push('G1出走経験');
+  }
+
+  // (4) G1複数好走（3着内2回以上）+1
+  if ((g1History.won.length + g1History.rentai.length + g1History.fukusho.length) >= 2) {
+    g1Score += 1; g1Notes.push('G1複数好走');
+  }
+
   g1Score = Math.min(g1Score, 10);
   items.g1Exp = {
     score: g1Score, max: 10, label: '🏆G1経験',
-    note: g1Notes.length > 0 ? g1Notes.join('・') : 'G1実績なし'
+    note: g1Notes.length > 0 ? g1Notes.join('・') : 'G1経験なし'
   };
 
   // 合計（メタフラグはスキップ・score 数値のみ加算）
