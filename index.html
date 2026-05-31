@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260531-1800';
+  var CURRENT_VERSION = '20260531-1830';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1464,7 +1464,7 @@
       <button class="month-tab" data-month="2">2月</button>
       <button class="month-tab" data-month="3">3月</button>
       <button class="month-tab" data-month="4">4月</button>
-      <button class="month-tab active" data-month="5">5月</button>
+      <button class="month-tab" data-month="5">5月</button>
       <button class="month-tab" data-month="6">6月</button>
       <button class="month-tab" data-month="7">7月</button>
       <button class="month-tab" data-month="8">8月</button>
@@ -2487,7 +2487,6 @@ const RACES = [
   {date:"2026-05-31", name:"日本ダービー",            grade:"G1", venue:"東京", surface:"芝2400m", status:"current"},
   {date:"2026-05-31", name:"目黒記念",                grade:"G2", venue:"東京", surface:"芝2500m", status:"upcoming"},
   // 6月
-  {date:"2026-06-06", name:"鳴尾記念",                grade:"G3", venue:"阪神", surface:"芝2000m", status:"upcoming"},
   {date:"2026-06-07", name:"安田記念",                grade:"G1", venue:"東京", surface:"芝1600m", status:"upcoming"},
   {date:"2026-06-13", name:"函館スプリントS",         grade:"G3", venue:"函館", surface:"芝1200m", status:"upcoming"},
   {date:"2026-06-14", name:"宝塚記念",                grade:"G1", venue:"阪神", surface:"芝2200m", status:"upcoming"},
@@ -2550,6 +2549,7 @@ const RACES = [
   // 12月
   {date:"2026-12-05", name:"中日新聞杯",              grade:"G3", venue:"中京", surface:"芝2000m", status:"upcoming"},
   {date:"2026-12-05", name:"カペラS",                 grade:"G3", venue:"中山", surface:"ダ1200m", status:"upcoming"},
+  {date:"2026-12-05", name:"鳴尾記念",                grade:"G3", venue:"阪神", surface:"芝1800m", status:"upcoming"},
   {date:"2026-12-06", name:"阪神JF",                  grade:"G1", venue:"阪神", surface:"芝1600m", status:"upcoming"},
   {date:"2026-12-13", name:"朝日杯FS",                grade:"G1", venue:"阪神", surface:"芝1600m", status:"upcoming"},
   {date:"2026-12-13", name:"ターコイズS",             grade:"G3", venue:"中山", surface:"芝1600m", status:"upcoming"},
@@ -2565,9 +2565,25 @@ const STATUS_BADGE = {
 };
 
 const TARGET_RACE_NAME = "オークス";
-const SUPPORTED_RACES = new Set(["天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "鳴尾記念", "安田記念"]);
+const SUPPORTED_RACES = new Set(["天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念"]);
 
-let currentMonth = 5;
+function getDefaultDisplayMonth() {
+  // 直近の「予想中」(SUPPORTED && upcoming) レースの開催月を返す
+  // 該当がなければ今日の月にフォールバック
+  var today = new Date();
+  var supportedUpcoming = RACES
+    .filter(function(r){
+      var d = new Date(r.date);
+      var notFinished = (typeof FINISHED_RACES === 'undefined') || FINISHED_RACES.indexOf(r.name) < 0;
+      return SUPPORTED_RACES.has(r.name) && r.status === 'upcoming' && notFinished && d >= today;
+    })
+    .sort(function(a,b){ return new Date(a.date) - new Date(b.date); });
+  if (supportedUpcoming.length > 0) {
+    return parseInt(supportedUpcoming[0].date.split('-')[1], 10);
+  }
+  return today.getMonth() + 1;
+}
+let currentMonth = getDefaultDisplayMonth();
 let currentGrade = "G1";
 
 function fmtMD(iso) {
@@ -2650,6 +2666,10 @@ function renderCalendar() {
   panel.appendChild(list);
   root.appendChild(panel);
 }
+// 初期月タブの active 状態を currentMonth と一致させる
+document.querySelectorAll('#monthTabs .month-tab').forEach(function(t){
+  t.classList.toggle('active', parseInt(t.dataset.month, 10) === currentMonth);
+});
 renderCalendar();
 
 document.querySelectorAll('#monthTabs .month-tab').forEach(t => {
