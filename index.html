@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260531-1830';
+  var CURRENT_VERSION = '20260531-1900';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -4781,6 +4781,29 @@ const HORSES_BY_RACE = {
   { umaban:13, waku:8, name:'ヴェルミセル', sex:'牝', carriedWeight:54, sire:'ゴールドシップ', g1Experience:['天皇賞春'], age:6, style:'差し', runStyle:'差し', sameRaceExp:true, father:'ゴールドシップ', mother:'マルーンドロップ', motherFather:'コンデュイット', bloodlineSystem:'ステイゴールド系', bloodNote:'⭐父ゴールドシップ（ステイゴールド系）',         odds:40.4,  popEstimate:12, jockey:'鮫島克駿',   prevRace:'天皇賞春',         prevRank:9, prev1Last3F:36.1, prev1Last3FRank:14, prev1pop:9, prev1Weight:470, prev1WeightDiff:0, prev1Position:'06-07-07-06', prev1Time:'3:15.0', prev1Diff:1.3, hande:54.0, longCourseExperience:true, weight:{current:470, previous:470, diff:0} },
   { umaban:3, waku:3, name:'ボーンディスウェイ', sex:'牡', carriedWeight:56, sire:'', g1Experience:['ホープフルS','皐月賞'], proPicks:{yoshi:'※'}, age:7, style:'追込', runStyle:'追込', father:'ハーツクライ', mother:'ウィンドハック', motherFather:'Platini', bloodlineSystem:'ハーツクライ系', bloodNote:'⚠️父ハーツクライ（苦戦傾向）',   odds:85.2,  popEstimate:13, jockey:'松山弘平',   prevRace:'大阪-ハンブルクC', prevRank:6, prev1Last3F:34.0, prev1Last3FRank:9, prev1pop:6, prev1Weight:496, prev1WeightDiff:-6, prev1Position:'06-06-05-06', prev1Time:'2:37.8', prev1Diff:0.9, hande:55.0, longCourseExperience:true, weight:{current:496, previous:502, diff:-6}, seniorNotQualified:true, manualPenalty:-8, manualPenaltyReason:'7歳×当該距離G1/G2で4着以内経験なし（過去10年データ）' },
   { umaban:2, waku:2, name:'ショウナンバシット', sex:'牡', carriedWeight:55, sire:'', g1Experience:[], age:6, style:'先行', runStyle:'先行', father:'シルバーステート', mother:'ギエム', motherFather:"Medaglia d'Oro", bloodlineSystem:'ディープインパクト系',   odds:103.8, popEstimate:14, jockey:'横山和生',   prevRace:'ダイヤモンドS',    prevRank:6, prev1Last3F:36.3, prev1Last3FRank:15, prev1pop:6, prev1Weight:494, prev1WeightDiff:4, prev1Position:'02-02-03-05', prev1Time:'3:34.0', prev1Diff:1.8, hande:55.0, longCourseExperience:true, weight:{current:494, previous:490, diff:4} },
+],
+
+'安田記念': [
+  { name:'アスクイキゴミ',     sex:'牡', age:3, carriedWeight:54, jockey:'未定',       stable:'栗東藤原',   odds:8.1,   popEstimate:4  },
+  { name:'アドマイヤズーム',   sex:'牡', age:4, carriedWeight:58, jockey:'武豊',       stable:'栗東友道',   odds:4.3,   popEstimate:1  },
+  { name:'ウォーターリヒト',   sex:'牡', age:5, carriedWeight:58, jockey:'高杉',       stable:'栗東石橋',   odds:30.4,  popEstimate:12 },
+  { name:'オフトレイル',       sex:'牡', age:5, carriedWeight:58, jockey:'菅原明',     stable:'栗東吉村',   odds:31.5,  popEstimate:13 },
+  { name:'ガイアフォース',     sex:'牡', age:7, carriedWeight:58, jockey:'横山武',     stable:'栗東杉山晴', odds:8.1,   popEstimate:5  },
+  { name:'サクラトゥジュール', sex:'セ', age:9, carriedWeight:58, jockey:'佐々木',     stable:'美浦堀',     odds:100.9, popEstimate:18 },
+  { name:'シックスペンス',     sex:'牡', age:5, carriedWeight:58, jockey:'未定',       stable:'美浦田中博', odds:23.8,  popEstimate:9  },
+  { name:'シャンパンカラー',   sex:'牡', age:6, carriedWeight:58, jockey:'岩田康',     stable:'美浦田中剛', odds:41.0,  popEstimate:15 },
+  { name:'シリウスコルト',     sex:'牡', age:5, carriedWeight:58, jockey:'未定',       stable:'美浦田中勝', odds:102.2, popEstimate:19 },
+  { name:'スズハローム',       sex:'牡', age:6, carriedWeight:58, jockey:'藤懸',       stable:'栗東牧田',   odds:46.6,  popEstimate:17 },
+  { name:'ステレンボッシュ',   sex:'牝', age:5, carriedWeight:56, jockey:'レーン',     stable:'美浦宮田',   odds:18.5,  popEstimate:8  },
+  { name:'セイウンハーデス',   sex:'牡', age:7, carriedWeight:58, jockey:'幸',         stable:'栗東橋口',   odds:26.0,  popEstimate:10 },
+  { name:'セフィロ',           sex:'牝', age:6, carriedWeight:56, jockey:'三浦',       stable:'美浦菊沢',   odds:35.7,  popEstimate:14 },
+  { name:'ドラゴンブースト',   sex:'牡', age:4, carriedWeight:58, jockey:'丹内',       stable:'栗東藤野',   odds:27.7,  popEstimate:11 },
+  { name:'トロヴァトーレ',     sex:'牡', age:5, carriedWeight:58, jockey:'ルメール',   stable:'美浦鹿戸',   odds:6.6,   popEstimate:2  },
+  { name:'パンジャタワー',     sex:'牡', age:4, carriedWeight:58, jockey:'松山',       stable:'栗東橋口',   odds:6.8,   popEstimate:3  },
+  { name:'ルクソールカフェ',   sex:'牡', age:4, carriedWeight:58, jockey:'岩田望',     stable:'美浦堀',     odds:43.0,  popEstimate:16 },
+  { name:'レーベンスティール', sex:'牡', age:6, carriedWeight:58, jockey:'戸崎圭',     stable:'美浦田中博', odds:16.0,  popEstimate:6  },
+  { name:'ロングラン',         sex:'セ', age:8, carriedWeight:58, jockey:'ゴンサルベ', stable:'美浦和田勇', odds:253.2, popEstimate:20 },
+  { name:'ワールズエンド',     sex:'牡', age:5, carriedWeight:58, jockey:'津村',       stable:'栗東池添',   odds:18.1,  popEstimate:7  },
 ],
 
 };
