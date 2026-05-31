@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260531-2100';
+  var CURRENT_VERSION = '20260531-2200';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -8056,6 +8056,228 @@ const RACE_PAST_DATA = {
         ]
       },
     ],
+  },
+  "安田記念": {
+    anaPoints: [
+      '🏟️【コース特徴】東京芝1600m・G1・3歳上・直線525mのスピード持続戦',
+      '🥇 馬体重 480kg未満は危険（勝ち馬は全頭480kg以上）',
+      '🥇 500-519kgが最強帯【4-6-3-38】複勝率25.5%',
+      '🥇 480-499kg【6-3-2-50】複勝率18%',
+      '⚠️ 460kg未満【0-0-1-16】連対馬ゼロ',
+      '🥇 4歳【5-3-2-33】複勝率23.3%・最強世代',
+      '🥇 5歳【2-5-3-39】複勝率20.4%',
+      '⚠️ 7歳以上【0-1-2-26】複勝率10.3%・苦戦',
+      '🥇 上がり3F1位【3-3-3-3】複勝率75%★最強',
+      '🥇 上がり33.0以下経験：勝ち馬12頭中8頭該当',
+      '🥇 1人気【1-3-4-2】複勝率80%（勝率10%・3着内安定）',
+      '🥇 4人気【3-1-0-6】★最多3勝（ソングライン等）',
+      '🥇 7-9人気【4-1-2-22】複勝率24%・穴ゾーン',
+      '❌ 10人気以下【0-0-0-72】完全消し',
+      '🥇 美浦×牝馬【3-4-1-4】複勝率66.7%★★★最強',
+      '🥇 ヴィクトリアマイル組牝馬【2-4-0-10】7年連続連対',
+      '🥇 ドバイターフ組【1-2-1-3】複勝率57%・海外組最強',
+      '⚠️ 大阪杯組【0-0-1-14】複勝率6.7%・苦戦',
+      '🥇 父サンデーサイレンス系・母父サンデー系：3着内率30%★',
+      '🥇 母父Storm Cat系：穴で激走（17サトノアラジン7人気・18モズアスコット9人気・21ダノンキングリー8人気）',
+      '🥇 中枠5-14番が好走帯',
+      '⚠️ 先行【1-2-1-31】複勝率11.4%・苦戦',
+      '🥇 中団・追込が単複回収値高（中団15頭好走・回収値146）',
+      '★【軸】4-5歳×480kg以上×4人気/7-9人気×上がり3F33秒台×中団～追込',
+      '★【穴】美浦×牝馬・母父Storm Cat系・ヴィクトリアマイル組牝馬',
+      '★【消し】10人気以下・460kg未満・7歳以上の不振組',
+    ],
+    sections: [
+      {
+        type: "table",
+        title: "人気別 成績（過去10年）",
+        headers: ["人気","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["1番人気", "1-3-4-2", "80%", "複勝率80%・国内勝利10年なし"], highlight: true,
+            matchFn: function(h){ return h.popEstimate === 1; } },
+          { cells: ["2番人気", "1-1-2-6", "40%", "⚠️12連敗中"],
+            matchFn: function(h){ return h.popEstimate === 2; } },
+          { cells: ["3番人気", "1-0-1-7", "22%", "⚠️標準"],
+            matchFn: function(h){ return h.popEstimate === 3; } },
+          { cells: ["4番人気", "3-1-0-6", "40%", "🏆最多3勝"], highlight: true,
+            matchFn: function(h){ return h.popEstimate === 4; } },
+          { cells: ["5-6番人気", "0-2-0-12", "14%", "やや苦戦"],
+            matchFn: function(h){ return h.popEstimate >= 5 && h.popEstimate <= 6; } },
+          { cells: ["7-9番人気", "4-1-2-22", "24%", "⭐穴ゾーン4勝"], highlight: true,
+            matchFn: function(h){ return h.popEstimate >= 7 && h.popEstimate <= 9; } },
+          { cells: ["10番人気以下", "0-0-0-72", "0%", "❌完全消し"],
+            matchFn: function(h){ return h.popEstimate >= 10; } },
+        ]
+      },
+      {
+        type: "table",
+        title: "馬体重別（過去10年）",
+        headers: ["馬体重","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["500-519kg", "4-6-3-38", "25.5%", "🏆最強帯"], highlight: true,
+            matchFn: function(h){ return h.weight && h.weight.current >= 500 && h.weight.current <= 519; } },
+          { cells: ["480-499kg", "6-3-2-50", "18.0%", "⭐勝ち星最多"], highlight: true,
+            matchFn: function(h){ return h.weight && h.weight.current >= 480 && h.weight.current <= 499; } },
+          { cells: ["520kg以上", "0-0-1-9", "10.0%", "標準"],
+            matchFn: function(h){ return h.weight && h.weight.current >= 520; } },
+          { cells: ["460-479kg", "0-1-3-29", "12.1%", "やや苦戦"],
+            matchFn: function(h){ return h.weight && h.weight.current >= 460 && h.weight.current <= 479; } },
+          { cells: ["460kg未満", "0-0-1-16", "5.9%", "❌連対馬ゼロ"],
+            matchFn: function(h){ return h.weight && h.weight.current < 460; } },
+        ]
+      },
+      {
+        type: "table",
+        title: "年齢別（過去10年）",
+        headers: ["年齢","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["3歳", "0-0-1-3", "25.0%", "参加少"],
+            matchFn: function(h){ return h.age === 3; } },
+          { cells: ["4歳", "5-3-2-33", "23.3%", "🏆最強世代"], highlight: true,
+            matchFn: function(h){ return h.age === 4; } },
+          { cells: ["5歳", "2-5-3-39", "20.4%", "⭐連対多数"],
+            matchFn: function(h){ return h.age === 5; } },
+          { cells: ["6歳", "3-1-2-31", "17.9%", "標準"],
+            matchFn: function(h){ return h.age === 6; } },
+          { cells: ["7歳以上", "0-1-2-26", "10.3%", "❌苦戦"],
+            matchFn: function(h){ return h.age >= 7; } },
+        ]
+      },
+      {
+        type: "table",
+        title: "脚質別（過去10年）",
+        headers: ["脚質","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["逃げ", "—", "—", "単複回収値高・穴狙い"],
+            matchFn: function(h){ return (h.style||h.runStyle) === '逃げ'; } },
+          { cells: ["先行", "1-2-1-31", "11.4%", "❌苦戦"],
+            matchFn: function(h){ return (h.style||h.runStyle) === '先行'; } },
+          { cells: ["中団", "—", "—", "🏆15頭好走・単勝回収値146"], highlight: true,
+            matchFn: function(h){ return (h.style||h.runStyle) === '中団' || (h.style||h.runStyle) === '差し'; } },
+          { cells: ["追込", "—", "—", "⭐8頭好走（勝ち馬2含む）"], highlight: true,
+            matchFn: function(h){ return (h.style||h.runStyle) === '追込'; } },
+        ]
+      },
+      {
+        type: "table",
+        title: "上がり3F順位別（過去10年）",
+        headers: ["上がり順位","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["1位", "3-3-3-3", "75.0%", "🏆★最強"], highlight: true,
+            matchFn: function(h){ return h.prev1Last3FRank === 1; } },
+          { cells: ["2位", "2-0-0-6", "25.0%", "⭐"],
+            matchFn: function(h){ return h.prev1Last3FRank === 2; } },
+          { cells: ["3-5位", "—", "—", "標準"],
+            matchFn: function(h){ return h.prev1Last3FRank >= 3 && h.prev1Last3FRank <= 5; } },
+          { cells: ["33.0秒以下経験", "—", "—", "🏆勝ち馬12頭中8頭該当"], highlight: true,
+            matchFn: function(h){ return h.prev1Last3F && h.prev1Last3F <= 33.0; } },
+        ]
+      },
+      {
+        type: "table",
+        title: "前走別 成績（過去10年）",
+        headers: ["前走","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["ヴィクトリアM(牝)", "2-4-0-10", "37.5%", "🏆7年連続連対"], highlight: true,
+            matchFn: function(h){ return h.sex === '牝' && (h.prevRace||'').indexOf('ヴィクトリアマイル') >= 0; } },
+          { cells: ["ドバイターフ", "1-2-1-3", "57.1%", "🏆海外組最強"], highlight: true,
+            matchFn: function(h){ return (h.prevRace||'').indexOf('ドバイターフ') >= 0; } },
+          { cells: ["ダービー卿CT", "2-0-0-8", "20.0%", "⭐"],
+            matchFn: function(h){ return (h.prevRace||'').indexOf('ダービー卿') >= 0; } },
+          { cells: ["京王杯SC", "2-3-2-32", "17.9%", "上がり2位以内"],
+            matchFn: function(h){ return (h.prevRace||'').indexOf('京王杯') >= 0; } },
+          { cells: ["マイラーズC", "1-0-5-33", "15.4%", "マイル重賞勝歴限定"],
+            matchFn: function(h){ return (h.prevRace||'').indexOf('マイラーズ') >= 0; } },
+          { cells: ["高松宮記念", "2-0-1-8", "27.3%", "⭐"],
+            matchFn: function(h){ return (h.prevRace||'').indexOf('高松宮') >= 0; } },
+          { cells: ["NHKマイルC", "1-0-1-4", "33.3%", "⭐3歳組"],
+            matchFn: function(h){ return (h.prevRace||'').indexOf('NHKマイル') >= 0; } },
+          { cells: ["天皇賞(春/秋)", "—", "—", "—"],
+            matchFn: function(h){ return (h.prevRace||'').indexOf('天皇賞') >= 0; } },
+          { cells: ["大阪杯", "0-0-1-14", "6.7%", "❌苦戦"],
+            matchFn: function(h){ return (h.prevRace||'').indexOf('大阪杯') >= 0; } },
+        ]
+      },
+      {
+        type: "table",
+        title: "性別×所属（過去10年）",
+        headers: ["タイプ","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["美浦×牝馬", "3-4-1-4", "66.7%", "🏆★★★最強"], highlight: true,
+            matchFn: function(h){ return h.sex === '牝' && (h.stable||'').indexOf('美浦') >= 0; } },
+          { cells: ["美浦×牡馬", "—", "27.0%", "⭐標準"],
+            matchFn: function(h){ return h.sex !== '牝' && (h.stable||'').indexOf('美浦') >= 0; } },
+          { cells: ["栗東×牡馬", "—", "18.0%", "標準"],
+            matchFn: function(h){ return h.sex !== '牝' && (h.stable||'').indexOf('栗東') >= 0; } },
+          { cells: ["栗東×牝馬", "—", "15.0%", "やや苦戦"],
+            matchFn: function(h){ return h.sex === '牝' && (h.stable||'').indexOf('栗東') >= 0; } },
+        ]
+      },
+      {
+        type: "table",
+        title: "血統別（過去10年・3着内馬）",
+        headers: ["血統タイプ","複勝率","傾向"],
+        rows: [
+          { cells: ["父サンデー系", "30%", "🏆最強"], highlight: true,
+            matchFn: function(h){
+              var s = ['ディープインパクト','キズナ','ハーツクライ','ダイワメジャー','ドゥラメンテ','リアルスティール','エピファネイア','キタサンブラック','スワーヴリチャード'];
+              return s.indexOf(h.father||h.sire||'') >= 0;
+            } },
+          { cells: ["母父サンデー系", "30%", "🏆最強"], highlight: true,
+            matchFn: function(h){
+              var s = ['ディープインパクト','キズナ','ハーツクライ','ダイワメジャー','ドゥラメンテ','リアルスティール','エピファネイア','キタサンブラック','スワーヴリチャード'];
+              return s.indexOf(h.motherFather||h.motherSire||'') >= 0;
+            } },
+          { cells: ["父ノーザンダンサー系", "16.6%", "標準"] },
+          { cells: ["父ミスタープロスペクター系", "13.3%", "やや苦戦"] },
+          { cells: ["母父Storm Cat系", "16.6%", "⭐穴で激走"], highlight: true,
+            matchFn: function(h){
+              var s = ['ストームキャット','Storm Cat',"Giant's Causeway",'ヘネシー','Hennessy','スキャットダディ'];
+              return s.indexOf(h.motherFather||h.motherSire||'') >= 0;
+            } },
+        ]
+      },
+      {
+        type: "table",
+        title: "枠順別（過去10年）",
+        headers: ["枠","傾向"],
+        rows: [
+          { cells: ['<span class="waku waku-1">1</span>-<span class="waku waku-2">2</span> (1-4番)', "馬群に包まれる不利"],
+            matchFn: function(h){ return h.umaban && h.umaban <= 4; } },
+          { cells: ["中枠 (5-14番)", "🏆勝ち馬が出るゾーン"], highlight: true,
+            matchFn: function(h){ return h.umaban && h.umaban >= 5 && h.umaban <= 14; } },
+          { cells: ['<span class="waku waku-7">7</span>-<span class="waku waku-8">8</span> (15-18番)', "少なめ"],
+            matchFn: function(h){ return h.umaban && h.umaban >= 15; } },
+        ]
+      },
+      {
+        type: "html",
+        title: "🔥 鉄板ルール（過去10年データ）",
+        html:
+          '<div class="pedi-extra">'
+        + '<div>🥇 馬体重 480kg未満は危険（勝ち馬は全頭480kg以上）</div>'
+        + '<div>🥇 500-519kgが最強帯（複勝率25.5%）</div>'
+        + '<div>🥇 4歳が最強年代（複勝率23.3%）</div>'
+        + '<div>🥇 上がり3F1位は複勝率75%★最強</div>'
+        + '<div>🥇 1人気は2-3着が定位置（国内1人気10年勝利なし）</div>'
+        + '<div>🥇 7-9人気で4勝の穴ゾーン</div>'
+        + '<div>🥇 牝馬×美浦【3-4-1-4】複勝率66.7%★★★</div>'
+        + '<div>🥇 ヴィクトリアマイル組牝馬7年連続連対</div>'
+        + '<div>🥇 母父Storm Cat系の穴激走（人気薄勝利の典型）</div>'
+        + '<div>🥇 中枠5-14番が好走帯</div>'
+        + '<div>🥇 中団～追込が有利・先行は苦戦</div>'
+        + '</div>'
+      },
+      {
+        type: "html",
+        title: "❌ 完全消し条件",
+        html:
+          '<div class="pedi-extra">'
+        + '<div>❌ 10人気以下【0-0-0-72】10年連続3着内ゼロ</div>'
+        + '<div>❌ 460kg未満（連対馬ゼロ）</div>'
+        + '<div>❌ 7歳以上の上位人気馬（モーリス以外なし）</div>'
+        + '</div>'
+      },
+    ]
   },
 };
 
