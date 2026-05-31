@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260601-1200';
+  var CURRENT_VERSION = '20260601-1300';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -10533,9 +10533,10 @@ function renderHorses() {
             + row('🎯枠順', v.waku, 8)
             + row('前走別', v.prevRace, 12)
             + rowNote('⚡上がり3F', v.speed, 15, v.speedNote, true)
-            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🐴 馬個別 (73点)</div>'
+            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🐴 馬個別 (76点)</div>'
             + rowNote('🩸血統', v.blood, 10, v.bloodNote, true)
-            + row('🌸牝馬×美浦', v.sexStable, 5, true)
+            + rowNote('🎚️斤量', v.kinryoAdv, 5, v.kinryoNote, true)
+            + row('🌸牝馬×美浦', v.sexStable, 3, true)
             + rowNote('📏距離経験', v.distance, 8, v.distanceNote)
             + row('🔥鉄板ルール', v.teppan, 7, true)
             + rowNote('🎯東京1600m', v.tokyo1600, 10, v.tokyo1600Note, true)
@@ -14904,12 +14905,31 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
   var bloodNote = sire ? ('父' + sire + (motherSire ? '・母父' + motherSire : '')) : '';
   items.blood = { score: bloodScore, max: 10, label: '🩸血統', note: bloodNote };
 
-  // 8. 牝馬×美浦（max 5）★複勝率66.7%
+  // 8a. 斤量アドバンテージ（max 5）★制度的な斤量差を独立評価
+  var kinryoAdvScore = 0;
+  var kinryoNote = '';
+  var _w = horse.carriedWeight || 58;
+  if (_w <= 54) {
+    kinryoAdvScore = 5;
+    kinryoNote = '★54kg(古馬比-4kg)';
+  } else if (_w <= 56) {
+    kinryoAdvScore = 3;
+    kinryoNote = '56kg(古馬比-2kg)';
+  } else if (_w <= 57) {
+    kinryoAdvScore = 1;
+    kinryoNote = '57kg(古馬比-1kg)';
+  } else {
+    kinryoAdvScore = 0;
+    kinryoNote = '58kg(基準)';
+  }
+  items.kinryoAdv = { score: kinryoAdvScore, max: 5, label: '🎚️斤量', note: kinryoNote };
+
+  // 8b. 牝馬×美浦（max 3）★斤量効果は別項目に分離・純粋な美浦×牝馬の地の利のみ
   var sexStableScore = 0;
   var stable = horse.stable || '';
-  if (horse.sex === '牝' && stable.indexOf('美浦') >= 0) sexStableScore = 5;
-  else if (horse.sex === '牝') sexStableScore = 3;
-  items.sexStable = { score: sexStableScore, max: 5, label: '🌸牝馬×美浦' };
+  if (horse.sex === '牝' && stable.indexOf('美浦') >= 0) sexStableScore = 3;
+  else if (horse.sex === '牝') sexStableScore = 1;
+  items.sexStable = { score: sexStableScore, max: 3, label: '🌸牝馬×美浦' };
 
   // 9. 距離経験（max 8）★1400-1800m（マイル前後）の経験を自動算出
   var distStats = {
@@ -15169,7 +15189,7 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     if (it && typeof it.score === 'number') totalScore += it.score;
   });
   totalScore = Math.max(0, totalScore);
-  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 181 * 100)));
+  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 184 * 100)));
 
   // UI向けの内部値（items の外に持つ・items を score 集計用に純化）
   var _v1Detail = {
@@ -15182,6 +15202,7 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     prevRace:   prevScore,
     speed:      speedScore,
     blood:      bloodScore,
+    kinryoAdv:  kinryoAdvScore,
     sexStable:  sexStableScore,
     distance:   distanceScore,
     teppan:     teppanScore,
@@ -15199,12 +15220,13 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     g1ExpNote:     items.g1Exp.note,
     bloodNote:     items.blood.note,
     ratingNote:    items.rating.note,
-    speedNote:     items.speed.note
+    speedNote:     items.speed.note,
+    kinryoNote:    items.kinryoAdv.note
   };
 
   return {
     total: totalScore,
-    max: 181,
+    max: 184,
     pct: pct,
     items: items,
     penalty: 0,
