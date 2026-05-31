@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260601-1100';
+  var CURRENT_VERSION = '20260601-1200';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -4775,13 +4775,13 @@ const HORSES_BY_RACE = {
 ],
 
 '安田記念': [
-  { name:'アスクイキゴミ',     sex:'牡', age:3, carriedWeight:54, jockey:'未定',       stable:'栗東藤原',   odds:8.1,   popEstimate:4,  sire:'ロードカナロア',         motherSire:'Bated Breath',         kyakushitsu:'差し', prevRace:'NHKマイルC',  prevRank:2,  prevWeight:488, notes:'前走NHKマイル2着・近2走でNHKマイル2着＋チャーチル1着',
+  { name:'アスクイキゴミ',     prevLast3f:33.5, sex:'牡', age:3, carriedWeight:54, jockey:'未定',       stable:'栗東藤原',   odds:8.1,   popEstimate:4,  sire:'ロードカナロア',         motherSire:'Bated Breath',         kyakushitsu:'差し', prevRace:'NHKマイルC',  prevRank:2,  prevWeight:488, notes:'前走NHKマイル2着・近2走でNHKマイル2着＋チャーチル1着',
     raceHistory:[
       { date:'2026-05-10', course:'東京', distance:1600, surface:'芝', name:'NHKマイルGⅠ', rank:2, pop:4, rt:116 },
       { date:'2026-04-04', course:'阪神', distance:1600, surface:'芝', name:'チャーチルCGⅢ', rank:1, pop:5, rt:110 },
       { date:'2026-02-01', course:'東京', distance:1600, surface:'芝', name:'3歳新馬', rank:1, pop:3, rt:null },
     ] },
-  { name:'アドマイヤズーム',   sex:'牡', age:4, carriedWeight:58, jockey:'武豊',       stable:'栗東友道',   odds:4.3,   popEstimate:1,  sire:'未確認',                  motherSire:'未確認',                kyakushitsu:'先行', prevRace:'マイラーズC', prevRank:1,  prevWeight:482, notes:'前走マイラーズC1着・朝日杯FS優勝馬',
+  { name:'アドマイヤズーム',   prevLast3f:33.3, sex:'牡', age:4, carriedWeight:58, jockey:'武豊',       stable:'栗東友道',   odds:4.3,   popEstimate:1,  sire:'未確認',                  motherSire:'未確認',                kyakushitsu:'先行', prevRace:'マイラーズC', prevRank:1,  prevWeight:482, notes:'前走マイラーズC1着・朝日杯FS優勝馬',
     raceHistory:[
       { date:'2026-04-26', course:'京都', distance:1600, surface:'芝', name:'マイラーズCGⅡ', rank:1, pop:1, rt:112 },
       { date:'2025-10-13', course:'京都', distance:1400, surface:'芝', name:'MBSスワンGⅡ', rank:6, pop:2, rt:110 },
@@ -4789,7 +4789,7 @@ const HORSES_BY_RACE = {
       { date:'2025-04-12', course:'中山', distance:1600, surface:'芝', name:'NZTGⅡ', rank:2, pop:1, rt:110 },
       { date:'2024-12-15', course:'京都', distance:1600, surface:'芝', name:'朝日杯FSGⅠ', rank:1, pop:5, rt:116 },
     ] },
-  { name:'ウォーターリヒト',   sex:'牡', age:5, carriedWeight:58, jockey:'高杉',       stable:'栗東石橋',   odds:30.4,  popEstimate:12, sire:'ドレフォン',             motherSire:'ヴィクトワールピサ',   kyakushitsu:'差し', prevRace:'マイラーズC', prevRank:13, prevWeight:478, notes:'前走マイラーズC13着で大敗・東京新聞杯3着の実績',
+  { name:'ウォーターリヒト',   prevLast3f:33.2, sex:'牡', age:5, carriedWeight:58, jockey:'高杉',       stable:'栗東石橋',   odds:30.4,  popEstimate:12, sire:'ドレフォン',             motherSire:'ヴィクトワールピサ',   kyakushitsu:'差し', prevRace:'マイラーズC', prevRank:13, prevWeight:478, notes:'前走マイラーズC13着で大敗・東京新聞杯3着の実績',
     raceHistory:[
       { date:'2026-04-26', course:'京都', distance:1600, surface:'芝', name:'マイラーズCGⅡ', rank:13, pop:3, rt:105 },
       { date:'2026-02-10', course:'東京', distance:1600, surface:'芝', name:'東京新聞杯GⅢ', rank:3, pop:3, rt:111 },
@@ -4797,7 +4797,7 @@ const HORSES_BY_RACE = {
       { date:'2025-10-18', course:'東京', distance:1600, surface:'芝', name:'富士SGⅡ', rank:9, pop:5, rt:107 },
       { date:'2025-06-08', course:'東京', distance:1600, surface:'芝', name:'安田記念GⅠ', rank:9, pop:5, rt:112 },
     ] },
-  { name:'オフトレイル',       sex:'牡', age:5, carriedWeight:58, jockey:'菅原明',     stable:'栗東吉村',   odds:31.5,  popEstimate:13, sire:'Farhh',                   motherSire:'Kingmambo',             kyakushitsu:'差し', prevRace:'マイラーズC', prevRank:5,  prevWeight:466, notes:'スワンS1着・前走マイラーズC5着',
+  { name:'オフトレイル',       prevLast3f:32.9, sex:'牡', age:5, carriedWeight:58, jockey:'菅原明',     stable:'栗東吉村',   odds:31.5,  popEstimate:13, sire:'Farhh',                   motherSire:'Kingmambo',             kyakushitsu:'差し', prevRace:'マイラーズC', prevRank:5,  prevWeight:466, notes:'スワンS1着・前走マイラーズC5着',
     raceHistory:[
       { date:'2026-04-26', course:'京都', distance:1600, surface:'芝', name:'マイラーズCGⅡ', rank:5, pop:2, rt:111 },
       { date:'2026-02-10', course:'東京', distance:1600, surface:'芝', name:'東京新聞杯GⅢ', rank:10, pop:6, rt:110 },
@@ -4805,7 +4805,7 @@ const HORSES_BY_RACE = {
       { date:'2025-10-13', course:'京都', distance:1400, surface:'芝', name:'MBSスワンGⅡ', rank:1, pop:5, rt:114 },
       { date:'2025-07-27', course:'新潟', distance:1600, surface:'芝', name:'関屋記念GⅢ', rank:2, pop:10, rt:110 },
     ] },
-  { name:'ガイアフォース',     sex:'牡', age:7, carriedWeight:58, jockey:'横山武',     stable:'栗東杉山晴', odds:8.1,   popEstimate:5,  sire:'キタサンブラック',       motherSire:'クロフネ',              kyakushitsu:'先行', prevRace:'ドバイターフ', prevRank:6, prevWeight:0,   notes:'前走ドバイターフ6着・昨年安田記念2着の実績馬・7歳ペナルティ',
+  { name:'ガイアフォース',     prevLast3f:33.2, prevLast3fNote:'前走海外のため前々走マイルCS', sex:'牡', age:7, carriedWeight:58, jockey:'横山武',     stable:'栗東杉山晴', odds:8.1,   popEstimate:5,  sire:'キタサンブラック',       motherSire:'クロフネ',              kyakushitsu:'先行', prevRace:'ドバイターフ', prevRank:6, prevWeight:0,   notes:'前走ドバイターフ6着・昨年安田記念2着の実績馬・7歳ペナルティ',
     raceHistory:[
       { date:'2026-03-28', course:'海外', distance:1800, surface:'芝', name:'ドバイターフGⅠ', rank:6, rt:111 },
       { date:'2025-11-23', course:'京都', distance:1600, surface:'芝', name:'マイルCSGⅠ', rank:2, pop:4, rt:117 },
@@ -4813,13 +4813,13 @@ const HORSES_BY_RACE = {
       { date:'2025-06-08', course:'東京', distance:1600, surface:'芝', name:'安田記念GⅠ', rank:2, pop:9, rt:117 },
       { date:'2024-06-02', course:'東京', distance:1600, surface:'芝', name:'安田記念GⅠ', rank:4, pop:5, rt:117 },
     ] },
-  { name:'サクラトゥジュール', sex:'セ', age:9, carriedWeight:58, jockey:'佐々木',     stable:'美浦堀',     odds:100.9, popEstimate:18, sire:'ネオユニヴァース',       motherSire:'シンボリクリスエス',   kyakushitsu:'差し', prevRace:'フェブラリーS', prevRank:13, prevWeight:510, notes:'9歳セン馬・データ的に完全消し対象',
+  { name:'サクラトゥジュール', prevLast3f:37.6, sex:'セ', age:9, carriedWeight:58, jockey:'佐々木',     stable:'美浦堀',     odds:100.9, popEstimate:18, sire:'ネオユニヴァース',       motherSire:'シンボリクリスエス',   kyakushitsu:'差し', prevRace:'フェブラリーS', prevRank:13, prevWeight:510, notes:'9歳セン馬・データ的に完全消し対象',
     raceHistory:[
       { date:'2026-02-22', course:'東京', distance:1600, surface:'ダ', name:'フェブラリーGⅠ', rank:13, pop:13, rt:97 },
       { date:'2026-02-10', course:'東京', distance:1600, surface:'芝', name:'東京新聞杯GⅢ', rank:9, pop:14, rt:107 },
       { date:'2025-06-08', course:'東京', distance:1600, surface:'芝', name:'安田記念GⅠ', rank:8, pop:13, rt:113 },
     ] },
-  { name:'シックスペンス',     sex:'牡', age:5, carriedWeight:58, jockey:'未定',       stable:'美浦田中博', odds:23.8,  popEstimate:9,  sire:'キズナ',                  motherSire:'Twirling Candy',        kyakushitsu:'先行', kyakushitsuVariant:'7-8枠なら差し', prevRace:'マイラーズC', prevRank:7,  prevWeight:500, notes:'前走マイラーズC7着・毎日王冠勝ち馬・キズナ産駒',
+  { name:'シックスペンス',     prevLast3f:33.3, sex:'牡', age:5, carriedWeight:58, jockey:'未定',       stable:'美浦田中博', odds:23.8,  popEstimate:9,  sire:'キズナ',                  motherSire:'Twirling Candy',        kyakushitsu:'先行', kyakushitsuVariant:'7-8枠なら差し', prevRace:'マイラーズC', prevRank:7,  prevWeight:500, notes:'前走マイラーズC7着・毎日王冠勝ち馬・キズナ産駒',
     raceHistory:[
       { date:'2026-04-26', course:'京都', distance:1600, surface:'芝', name:'マイラーズCGⅡ', rank:7, pop:4, rt:107 },
       { date:'2026-02-22', course:'東京', distance:1600, surface:'ダ', name:'フェブラリーGⅠ', rank:9, pop:6, rt:109 },
@@ -4827,7 +4827,7 @@ const HORSES_BY_RACE = {
       { date:'2025-03-02', course:'中山', distance:1800, surface:'芝', name:'中山記念GⅡ', rank:1, pop:2, rt:117 },
       { date:'2024-10-06', course:'東京', distance:1800, surface:'芝', name:'毎日王冠GⅡ', rank:1, pop:1, rt:117 },
     ] },
-  { name:'シャンパンカラー',   sex:'牡', age:6, carriedWeight:58, jockey:'岩田康',     stable:'美浦田中剛', odds:41.0,  popEstimate:15, sire:'ドゥラメンテ',           motherSire:'Reckless Abandon',      kyakushitsu:'差し', prevRace:'マイラーズC', prevRank:9,  prevWeight:516, notes:'NHKマイル覇者・近走低迷',
+  { name:'シャンパンカラー',   prevLast3f:33.4, sex:'牡', age:6, carriedWeight:58, jockey:'岩田康',     stable:'美浦田中剛', odds:41.0,  popEstimate:15, sire:'ドゥラメンテ',           motherSire:'Reckless Abandon',      kyakushitsu:'差し', prevRace:'マイラーズC', prevRank:9,  prevWeight:516, notes:'NHKマイル覇者・近走低迷',
     raceHistory:[
       { date:'2026-04-26', course:'京都', distance:1600, surface:'芝', name:'マイラーズCGⅡ', rank:9, pop:11, rt:108 },
       { date:'2026-03-01', course:'中山', distance:1800, surface:'芝', name:'中山記念GⅡ', rank:10, pop:7, rt:110 },
@@ -4835,19 +4835,19 @@ const HORSES_BY_RACE = {
       { date:'2025-10-18', course:'東京', distance:1600, surface:'芝', name:'富士SGⅡ', rank:8, pop:7, rt:109 },
       { date:'2025-06-08', course:'東京', distance:1600, surface:'芝', name:'安田記念GⅠ', rank:6, pop:14, rt:113 },
     ] },
-  { name:'シリウスコルト',     sex:'牡', age:5, carriedWeight:58, jockey:'未定',       stable:'美浦田中勝', odds:102.2, popEstimate:19, sire:'マクフィ',               motherSire:'ゼンノロブロイ',       kyakushitsu:'先行', prevRace:'京王杯SC',    prevRank:5,  prevWeight:494, notes:'新潟大賞典覇者・芝1800実績だがマイル経験少',
+  { name:'シリウスコルト',     prevLast3f:33.4, sex:'牡', age:5, carriedWeight:58, jockey:'未定',       stable:'美浦田中勝', odds:102.2, popEstimate:19, sire:'マクフィ',               motherSire:'ゼンノロブロイ',       kyakushitsu:'先行', prevRace:'京王杯SC',    prevRank:5,  prevWeight:494, notes:'新潟大賞典覇者・芝1800実績だがマイル経験少',
     raceHistory:[
       { date:'2026-05-02', course:'東京', distance:1400, surface:'芝', name:'京王杯SCGⅡ', rank:5, pop:11, rt:104 },
       { date:'2026-04-04', course:'中山', distance:1600, surface:'芝', name:'ダービーCTGⅢ', rank:13, pop:5, rt:94 },
       { date:'2026-02-10', course:'東京', distance:1600, surface:'芝', name:'東京新聞杯GⅢ', rank:5, pop:13, rt:111 },
     ] },
-  { name:'スズハローム',       sex:'牡', age:6, carriedWeight:58, jockey:'藤懸',       stable:'栗東牧田',   odds:46.6,  popEstimate:17, sire:'サトノダイヤモンド',     motherSire:'ローレルゲレイロ',     kyakushitsu:'追込', prevRace:'ダービー卿CT', prevRank:1, prevWeight:464, notes:'★前走ダービー卿CT1着★過去10年データで該当ルート',
+  { name:'スズハローム',       prevLast3f:33.8, sex:'牡', age:6, carriedWeight:58, jockey:'藤懸',       stable:'栗東牧田',   odds:46.6,  popEstimate:17, sire:'サトノダイヤモンド',     motherSire:'ローレルゲレイロ',     kyakushitsu:'追込', prevRace:'ダービー卿CT', prevRank:1, prevWeight:464, notes:'★前走ダービー卿CT1着★過去10年データで該当ルート',
     raceHistory:[
       { date:'2026-04-04', course:'中山', distance:1600, surface:'芝', name:'ダービーCTGⅢ', rank:1, pop:10, rt:109 },
       { date:'2026-02-14', course:'京都', distance:1600, surface:'芝', name:'洛陽Sリステッド', rank:1, pop:7, rt:105 },
       { date:'2026-01-24', course:'京都', distance:1600, surface:'芝', name:'睦月S', rank:9, pop:10, rt:100 },
     ] },
-  { name:'ステレンボッシュ',   sex:'牝', age:5, carriedWeight:56, jockey:'レーン',     stable:'美浦宮田',   odds:18.5,  popEstimate:8,  sire:'エピファネイア',         motherSire:'ルーラーシップ',       kyakushitsu:'差し', prevRace:'エプソムC',    prevRank:2, prevWeight:478, notes:'★牝馬×美浦×差し★前走エプソムC2着・桜花賞馬',
+  { name:'ステレンボッシュ',   prevLast3f:33.1, sex:'牝', age:5, carriedWeight:56, jockey:'レーン',     stable:'美浦宮田',   odds:18.5,  popEstimate:8,  sire:'エピファネイア',         motherSire:'ルーラーシップ',       kyakushitsu:'差し', prevRace:'エプソムC',    prevRank:2, prevWeight:478, notes:'★牝馬×美浦×差し★前走エプソムC2着・桜花賞馬',
     raceHistory:[
       { date:'2026-05-09', course:'東京', distance:1800, surface:'芝', name:'エプソムCGⅢ', rank:2, pop:5, rt:108 },
       { date:'2026-03-07', course:'中山', distance:1800, surface:'芝', name:'中山牝馬SGⅢ', rank:7, pop:9, rt:107 },
@@ -4855,25 +4855,25 @@ const HORSES_BY_RACE = {
       { date:'2025-05-18', course:'東京', distance:1600, surface:'芝', name:'ヴィクトリアGⅠ', rank:8, pop:3, rt:107 },
       { date:'2024-04-07', course:'阪神', distance:1600, surface:'芝', name:'桜花賞GⅠ', rank:1, pop:2, rt:114 },
     ] },
-  { name:'セイウンハーデス',   sex:'牡', age:7, carriedWeight:58, jockey:'幸',         stable:'栗東橋口',   odds:26.0,  popEstimate:10, sire:'シルバーステート',       motherSire:'マンハッタンカフェ',   kyakushitsu:'逃げ', prevRace:'大阪杯',       prevRank:5, prevWeight:474, notes:'7歳ペナルティ・逃げ脚質マイナス・前走大阪杯5着',
+  { name:'セイウンハーデス',   prevLast3f:35.3, sex:'牡', age:7, carriedWeight:58, jockey:'幸',         stable:'栗東橋口',   odds:26.0,  popEstimate:10, sire:'シルバーステート',       motherSire:'マンハッタンカフェ',   kyakushitsu:'逃げ', prevRace:'大阪杯',       prevRank:5, prevWeight:474, notes:'7歳ペナルティ・逃げ脚質マイナス・前走大阪杯5着',
     raceHistory:[
       { date:'2026-04-05', course:'阪神', distance:2000, surface:'芝', name:'大阪杯GⅠ', rank:5, pop:9, rt:116 },
       { date:'2026-03-01', course:'中山', distance:1800, surface:'芝', name:'中山記念GⅡ', rank:12, pop:1, rt:106 },
       { date:'2025-11-30', course:'東京', distance:2400, surface:'芝', name:'ジャパンCGⅠ', rank:12, pop:13, rt:105 },
     ] },
-  { name:'セフィロ',           sex:'牝', age:6, carriedWeight:56, jockey:'三浦',       stable:'美浦菊沢',   odds:35.7,  popEstimate:14, sire:'イスラボニータ',         motherSire:'ハーツクライ',         kyakushitsu:'追込', prevRace:'京王杯SC',    prevRank:2, prevWeight:474, notes:'★前走京王杯SC2着★牝馬×美浦・イスラボニータ産駒（東京1600m妙味）',
+  { name:'セフィロ',           prevLast3f:32.6, sex:'牝', age:6, carriedWeight:56, jockey:'三浦',       stable:'美浦菊沢',   odds:35.7,  popEstimate:14, sire:'イスラボニータ',         motherSire:'ハーツクライ',         kyakushitsu:'追込', prevRace:'京王杯SC',    prevRank:2, prevWeight:474, notes:'★前走京王杯SC2着★牝馬×美浦・イスラボニータ産駒（東京1600m妙味）',
     raceHistory:[
       { date:'2026-05-02', course:'東京', distance:1400, surface:'芝', name:'京王杯SCGⅡ', rank:2, pop:14, rt:106 },
       { date:'2026-03-22', course:'中京', distance:1400, surface:'芝', name:'愛知杯GⅢ', rank:3, pop:13, rt:102 },
       { date:'2026-01-24', course:'京都', distance:1600, surface:'芝', name:'睦月S', rank:8, pop:8, rt:94 },
     ] },
-  { name:'ドラゴンブースト',   sex:'牡', age:4, carriedWeight:58, jockey:'丹内',       stable:'栗東藤野',   odds:27.7,  popEstimate:11, sire:'スクリーンヒーロー',     motherSire:'エンパイアメーカー',   kyakushitsu:'差し', prevRace:'マイラーズC', prevRank:2,  prevWeight:474, notes:'★前走マイラーズC2着★4歳の最強年代',
+  { name:'ドラゴンブースト',   prevLast3f:33.0, sex:'牡', age:4, carriedWeight:58, jockey:'丹内',       stable:'栗東藤野',   odds:27.7,  popEstimate:11, sire:'スクリーンヒーロー',     motherSire:'エンパイアメーカー',   kyakushitsu:'差し', prevRace:'マイラーズC', prevRank:2,  prevWeight:474, notes:'★前走マイラーズC2着★4歳の最強年代',
     raceHistory:[
       { date:'2026-04-26', course:'京都', distance:1600, surface:'芝', name:'マイラーズCGⅡ', rank:2, pop:9, rt:110 },
       { date:'2026-03-08', course:'阪神', distance:1800, surface:'芝', name:'大阪城Sリステッド', rank:1, pop:7, rt:108 },
       { date:'2026-02-07', course:'京都', distance:1900, surface:'ダ', name:'アルデバラン', rank:16, pop:9, rt:49 },
     ] },
-  { name:'トロヴァトーレ',     sex:'牡', age:5, carriedWeight:58, jockey:'ルメール',   stable:'美浦鹿戸',   odds:6.6,   popEstimate:2,  sire:'レイデオロ',             motherSire:'エンパイアメーカー',   kyakushitsu:'差し', prevRace:'エプソムC',    prevRank:1, prevWeight:510, notes:'★前走エプソムC1着・東京新聞杯1着・ダービーCT1着の東京巧者',
+  { name:'トロヴァトーレ',     prevLast3f:33.0, sex:'牡', age:5, carriedWeight:58, jockey:'ルメール',   stable:'美浦鹿戸',   odds:6.6,   popEstimate:2,  sire:'レイデオロ',             motherSire:'エンパイアメーカー',   kyakushitsu:'差し', prevRace:'エプソムC',    prevRank:1, prevWeight:510, notes:'★前走エプソムC1着・東京新聞杯1着・ダービーCT1着の東京巧者',
     raceHistory:[
       { date:'2026-05-09', course:'東京', distance:1800, surface:'芝', name:'エプソムCGⅢ', rank:1, pop:2, rt:113 },
       { date:'2026-02-10', course:'東京', distance:1600, surface:'芝', name:'東京新聞杯GⅢ', rank:1, pop:2, rt:113 },
@@ -4881,32 +4881,32 @@ const HORSES_BY_RACE = {
       { date:'2025-11-01', course:'東京', distance:1600, surface:'ダ', name:'ペルセウスS', rank:3, pop:4, rt:102 },
       { date:'2025-06-08', course:'東京', distance:1600, surface:'芝', name:'安田記念GⅠ', rank:17, pop:8, rt:103 },
     ] },
-  { name:'パンジャタワー',     sex:'牡', age:4, carriedWeight:58, jockey:'松山',       stable:'栗東橋口',   odds:6.8,   popEstimate:3,  sire:'タワーオブロンドン',     motherSire:'ヴィクトワールピサ',   kyakushitsu:'差し', prevRace:'高松宮記念', prevRank:4,  prevWeight:486, notes:'★NHKマイル覇者・キーンランドC1着・4歳の最強年代',
+  { name:'パンジャタワー',     prevLast3f:33.2, sex:'牡', age:4, carriedWeight:58, jockey:'松山',       stable:'栗東橋口',   odds:6.8,   popEstimate:3,  sire:'タワーオブロンドン',     motherSire:'ヴィクトワールピサ',   kyakushitsu:'差し', prevRace:'高松宮記念', prevRank:4,  prevWeight:486, notes:'★NHKマイル覇者・キーンランドC1着・4歳の最強年代',
     raceHistory:[
       { date:'2026-03-29', course:'中京', distance:1200, surface:'芝', name:'高松宮記念GⅠ', rank:4, pop:3, rt:113 },
       { date:'2025-08-24', course:'札幌', distance:1200, surface:'芝', name:'キーンランドGⅢ', rank:1, pop:2, rt:115 },
       { date:'2025-05-11', course:'東京', distance:1600, surface:'芝', name:'NHKマイルGⅠ', rank:1, pop:9, rt:115 },
     ] },
-  { name:'ルクソールカフェ',   sex:'牡', age:4, carriedWeight:58, jockey:'岩田望',     stable:'美浦堀',     odds:43.0,  popEstimate:16, sire:'American Pharoah',        motherSire:'More Than Ready',       kyakushitsu:'先行', prevRace:'サウジカップ', prevRank:5, prevWeight:0,   notes:'武蔵野S覇者・ダート実績馬・芝はやや疑問',
+  { name:'ルクソールカフェ',   prevLast3f:40.1, sex:'牡', age:4, carriedWeight:58, jockey:'岩田望',     stable:'美浦堀',     odds:43.0,  popEstimate:16, sire:'American Pharoah',        motherSire:'More Than Ready',       kyakushitsu:'先行', prevRace:'サウジカップ', prevRank:5, prevWeight:0,   notes:'武蔵野S覇者・ダート実績馬・芝はやや疑問',
     raceHistory:[
       { date:'2025-11-15', course:'東京', distance:1600, surface:'ダ', name:'武蔵野SGⅢ', rank:1, pop:3, rt:115 },
       { date:'2025-12-07', course:'中京', distance:1800, surface:'ダ', name:'チャンピオンGⅠ', rank:15, pop:6, rt:87 },
       { date:'2025-03-29', course:'中山', distance:1800, surface:'ダ', name:'伏竜S', rank:1, pop:1, rt:113 },
     ] },
-  { name:'レーベンスティール', sex:'牡', age:6, carriedWeight:58, jockey:'戸崎圭',     stable:'美浦田中博', odds:16.0,  popEstimate:6,  sire:'リアルスティール',       motherSire:'トウカイテイオー',     kyakushitsu:'先行', kyakushitsuVariant:'外枠なら差し', prevRace:'大阪杯',     prevRank:6,  prevWeight:492, notes:'★★リアルスティール産駒・東京1600m最強種牡馬★前走大阪杯6着・中山記念1着',
+  { name:'レーベンスティール', prevLast3f:35.2, sex:'牡', age:6, carriedWeight:58, jockey:'戸崎圭',     stable:'美浦田中博', odds:16.0,  popEstimate:6,  sire:'リアルスティール',       motherSire:'トウカイテイオー',     kyakushitsu:'先行', kyakushitsuVariant:'外枠なら差し', prevRace:'大阪杯',     prevRank:6,  prevWeight:492, notes:'★★リアルスティール産駒・東京1600m最強種牡馬★前走大阪杯6着・中山記念1着',
     raceHistory:[
       { date:'2026-04-05', course:'阪神', distance:2000, surface:'芝', name:'大阪杯GⅠ', rank:6, pop:5, rt:115 },
       { date:'2026-03-01', course:'中山', distance:1800, surface:'芝', name:'中山記念GⅡ', rank:1, pop:3, rt:117 },
       { date:'2025-11-23', course:'京都', distance:1600, surface:'芝', name:'マイルCSGⅠ', rank:12, pop:5, rt:108 },
       { date:'2025-10-05', course:'東京', distance:1800, surface:'芝', name:'毎日王冠GⅡ', rank:1, pop:5, rt:115 },
     ] },
-  { name:'ロングラン',         sex:'セ', age:8, carriedWeight:58, jockey:'ゴンサルベ', stable:'美浦和田勇', odds:253.2, popEstimate:20, sire:'ヴィクトワールピサ',     motherSire:'Kendargent',            kyakushitsu:'追込', prevRace:'マイラーズC', prevRank:18, prevWeight:474, notes:'8歳セン馬・前走マイラーズC18着・データ的に完全消し対象',
+  { name:'ロングラン',         prevLast3f:33.7, sex:'セ', age:8, carriedWeight:58, jockey:'ゴンサルベ', stable:'美浦和田勇', odds:253.2, popEstimate:20, sire:'ヴィクトワールピサ',     motherSire:'Kendargent',            kyakushitsu:'追込', prevRace:'マイラーズC', prevRank:18, prevWeight:474, notes:'8歳セン馬・前走マイラーズC18着・データ的に完全消し対象',
     raceHistory:[
       { date:'2026-04-26', course:'京都', distance:1600, surface:'芝', name:'マイラーズCGⅡ', rank:18, pop:16, rt:102 },
       { date:'2025-11-23', course:'京都', distance:1600, surface:'芝', name:'マイルCSGⅠ', rank:15, pop:16, rt:105 },
       { date:'2025-06-08', course:'東京', distance:1600, surface:'芝', name:'安田記念GⅠ', rank:13, pop:15, rt:107 },
     ] },
-  { name:'ワールズエンド',     sex:'牡', age:5, carriedWeight:58, jockey:'津村',       stable:'栗東池添',   odds:18.1,  popEstimate:7,  sire:'ロードカナロア',         motherSire:'ゼンノロブロイ',       kyakushitsu:'逃げ', prevRace:'京王杯SC',    prevRank:1, prevWeight:470, notes:'★前走京王杯SC1着★ロードカナロア産駒・逃げ脚質マイナスだが上り調子',
+  { name:'ワールズエンド',     prevLast3f:33.4, sex:'牡', age:5, carriedWeight:58, jockey:'津村',       stable:'栗東池添',   odds:18.1,  popEstimate:7,  sire:'ロードカナロア',         motherSire:'ゼンノロブロイ',       kyakushitsu:'逃げ', prevRace:'京王杯SC',    prevRank:1, prevWeight:470, notes:'★前走京王杯SC1着★ロードカナロア産駒・逃げ脚質マイナスだが上り調子',
     raceHistory:[
       { date:'2026-05-02', course:'東京', distance:1400, surface:'芝', name:'京王杯SCGⅡ', rank:1, pop:3, rt:111 },
       { date:'2025-12-13', course:'阪神', distance:1600, surface:'芝', name:'リゲルSリステッド', rank:2, pop:2, rt:107 },
@@ -10532,7 +10532,7 @@ function renderHorses() {
             + row('🏃脚質', v.kyakushitsu, 8)
             + row('🎯枠順', v.waku, 8)
             + row('前走別', v.prevRace, 12)
-            + row('⚡上がり3F', v.speed, 15)
+            + rowNote('⚡上がり3F', v.speed, 15, v.speedNote, true)
             + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🐴 馬個別 (73点)</div>'
             + rowNote('🩸血統', v.blood, 10, v.bloodNote, true)
             + row('🌸牝馬×美浦', v.sexStable, 5, true)
@@ -14844,16 +14844,24 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
 
   // ===== 🐴 馬個別（45点）=====
 
-  // 6. 上がり3F（max 15）★最重要
-  var lastSpeed = (typeof horse.lastSpeed === 'number') ? horse.lastSpeed :
+  // 6. 上がり3F（max 15）★最重要・過去10年データ：上がり1位は複勝率75%、33.0以下経験は勝ち馬12中8該当
+  var lastSpeed = (typeof horse.prevLast3f === 'number') ? horse.prevLast3f :
+                  (typeof horse.lastSpeed === 'number') ? horse.lastSpeed :
                   (typeof horse.prev1Last3F === 'number') ? horse.prev1Last3F : 99;
   var speedScore;
-  if (lastSpeed <= 33.0) speedScore = 15;
-  else if (lastSpeed <= 33.5) speedScore = 12;
-  else if (lastSpeed <= 34.0) speedScore = 9;
-  else if (lastSpeed <= 34.5) speedScore = 5;
-  else speedScore = 2;
-  items.speed = { score: speedScore, max: 15, label: '⚡上がり3F' };
+  if (lastSpeed <= 32.9)      speedScore = 15;  // ★★最強帯（32秒台）
+  else if (lastSpeed <= 33.0) speedScore = 14;  // ★鉄板ボーダー
+  else if (lastSpeed <= 33.3) speedScore = 12;  // 重賞上位レベル
+  else if (lastSpeed <= 33.5) speedScore = 10;
+  else if (lastSpeed <= 33.8) speedScore = 8;
+  else if (lastSpeed <= 34.0) speedScore = 6;
+  else if (lastSpeed <= 34.5) speedScore = 4;
+  else if (lastSpeed <= 35.0) speedScore = 2;
+  else speedScore = 0;
+  var speedNote = (lastSpeed < 99)
+    ? ('前走上がり ' + lastSpeed + (horse.prevLast3fNote ? '（' + horse.prevLast3fNote + '）' : ''))
+    : '未集計';
+  items.speed = { score: speedScore, max: 15, label: '⚡上がり3F', note: speedNote };
 
   // 7. 血統（max 10）★東京1600m過去5年データのサンプル数×複勝率で再配分
   var sire = horse.sire || horse.father || '';
@@ -15190,7 +15198,8 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     distanceNote:  items.distance.note,
     g1ExpNote:     items.g1Exp.note,
     bloodNote:     items.blood.note,
-    ratingNote:    items.rating.note
+    ratingNote:    items.rating.note,
+    speedNote:     items.speed.note
   };
 
   return {
