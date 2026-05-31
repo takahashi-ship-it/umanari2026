@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260531-2200';
+  var CURRENT_VERSION = '20260531-2300';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -8250,21 +8250,47 @@ const RACE_PAST_DATA = {
         ]
       },
       {
+        type: "table",
+        title: "単勝オッズ別（過去20年）★最重要",
+        headers: ["オッズ","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["1.9倍以下", "2-3-1-0", "100.0%", "🏆★鉄板（歴史的名馬）"], highlight: true,
+            matchFn: function(h){ return h.odds && h.odds <= 1.9; } },
+          { cells: ["2.0-2.9倍", "0-0-1-1", "50.0%", "標準"],
+            matchFn: function(h){ return h.odds && h.odds >= 2.0 && h.odds <= 2.9; } },
+          { cells: ["3.0-4.9倍", "6-2-3-10", "52.4%", "🏆★最強帯"], highlight: true,
+            matchFn: function(h){ return h.odds && h.odds >= 3.0 && h.odds <= 4.9; } },
+          { cells: ["5.0-7.9倍", "3-3-2-23", "25.8%", "標準"],
+            matchFn: function(h){ return h.odds && h.odds >= 5.0 && h.odds <= 7.9; } },
+          { cells: ["8.0-14.9倍", "4-7-3-41", "25.5%", "⭐妙味"], highlight: true,
+            matchFn: function(h){ return h.odds && h.odds >= 8.0 && h.odds <= 14.9; } },
+          { cells: ["15.0-19.9倍", "2-1-1-20", "16.7%", "単回145%"],
+            matchFn: function(h){ return h.odds && h.odds >= 15.0 && h.odds <= 19.9; } },
+          { cells: ["20.0-49.9倍", "3-3-8-79", "15.1%", "⭐中穴妙味"], highlight: true,
+            matchFn: function(h){ return h.odds && h.odds >= 20.0 && h.odds <= 49.9; } },
+          { cells: ["50倍以上", "0-1-1-106", "1.9%", "❌完全消し"],
+            matchFn: function(h){ return h.odds && h.odds >= 50.0; } },
+        ]
+      },
+      {
         type: "html",
-        title: "🔥 鉄板ルール（過去10年データ）",
+        title: "🔥 鉄板ルール（過去20年データ）",
         html:
           '<div class="pedi-extra">'
+        + '<div>🥇 1.9倍以下：複勝率100%★鉄板（歴史的名馬限定）</div>'
+        + '<div>🥇 3.0-4.9倍：勝率28.6%・複勝率52.4%★最強帯</div>'
         + '<div>🥇 馬体重 480kg未満は危険（勝ち馬は全頭480kg以上）</div>'
         + '<div>🥇 500-519kgが最強帯（複勝率25.5%）</div>'
         + '<div>🥇 4歳が最強年代（複勝率23.3%）</div>'
         + '<div>🥇 上がり3F1位は複勝率75%★最強</div>'
-        + '<div>🥇 1人気は2-3着が定位置（国内1人気10年勝利なし）</div>'
-        + '<div>🥇 7-9人気で4勝の穴ゾーン</div>'
+        + '<div>🥇 差し脚質が複勝率19.7%★最強</div>'
+        + '<div>🥇 5枠・7枠が単勝回収率156-206%★最強妙味枠</div>'
+        + '<div>🥇 リアルスティール産駒：複勝率43.3%★東京1600m最強</div>'
         + '<div>🥇 牝馬×美浦【3-4-1-4】複勝率66.7%★★★</div>'
         + '<div>🥇 ヴィクトリアマイル組牝馬7年連続連対</div>'
+        + '<div>🥇 6-9人気の中穴ゾーン単勝回収率194.8%★妙味</div>'
+        + '<div>🥇 4人気の単勝回収率174%（妙味）</div>'
         + '<div>🥇 母父Storm Cat系の穴激走（人気薄勝利の典型）</div>'
-        + '<div>🥇 中枠5-14番が好走帯</div>'
-        + '<div>🥇 中団～追込が有利・先行は苦戦</div>'
         + '</div>'
       },
       {
@@ -8272,9 +8298,12 @@ const RACE_PAST_DATA = {
         title: "❌ 完全消し条件",
         html:
           '<div class="pedi-extra">'
-        + '<div>❌ 10人気以下【0-0-0-72】10年連続3着内ゼロ</div>'
-        + '<div>❌ 460kg未満（連対馬ゼロ）</div>'
-        + '<div>❌ 7歳以上の上位人気馬（モーリス以外なし）</div>'
+        + '<div>⚠️ 単勝50倍以上：複勝率1.9%（過去20年3着内ほぼゼロ）</div>'
+        + '<div>⚠️ 10人気以下【0-0-0-72】10年連続3着内ゼロ</div>'
+        + '<div>⚠️ 460kg未満（連対馬ゼロ）</div>'
+        + '<div>⚠️ 逃げ脚質：ロゴタイプ以外好走例なし★</div>'
+        + '<div>⚠️ 7歳以上の上位人気馬（モーリス以外なし）</div>'
+        + '<div>⚠️ 6枠：複勝率10%★最も低い枠</div>'
         + '</div>'
       },
     ]
@@ -14567,20 +14596,30 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
 
   // ===== 📊 過去データ準拠（55点）=====
 
-  // 1. 人気別（max 15）
+  // 1. 人気別（max 15）★過去20年データ
+  // 1人気は歴史的名馬以外勝てない、6-9人気で6勝の中穴妙味
   var popScore = 0;
   var pop = horse.popEstimate || 99;
+  var _odds = horse.odds || 999;
   if (pop === 1) popScore = 12;
-  else if (pop === 2) popScore = 10;
+  else if (pop === 2) popScore = 9;
   else if (pop === 3) popScore = 10;
-  else if (pop === 4) popScore = 15;
-  else if (pop === 5) popScore = 8;
-  else if (pop === 6) popScore = 7;
-  else if (pop === 7) popScore = 12;
-  else if (pop === 8) popScore = 12;
-  else if (pop === 9) popScore = 10;
-  else popScore = 0;  // 10人気以下完全消し
+  else if (pop === 4) popScore = 14;                          // ★単勝回収率174%
+  else if (pop === 5) popScore = 7;
+  else if (pop >= 6 && pop <= 9) popScore = 13;               // ★中穴ゾーン194.8%
+  else popScore = 0;                                          // 10人気以下完全消し
   items.popularity = { score: popScore, max: 15, label: '人気別' };
+
+  // 1b. 単勝オッズ別ボーナス（max 8 / 最低 -8）★過去20年
+  var oddsBonus = 0;
+  if (_odds <= 1.9)                       oddsBonus = 8;      // 複勝率100%★鉄板
+  else if (_odds >= 3.0 && _odds <= 4.9)  oddsBonus = 7;      // 最強帯52.4%
+  else if (_odds >= 5.0 && _odds <= 7.9)  oddsBonus = 4;
+  else if (_odds >= 8.0 && _odds <= 14.9) oddsBonus = 5;      // 妙味
+  else if (_odds >= 15.0 && _odds <= 19.9) oddsBonus = 6;     // 単回145%
+  else if (_odds >= 20.0 && _odds <= 49.9) oddsBonus = 5;     // 中穴妙味
+  else if (_odds >= 50.0)                 oddsBonus = -8;     // ★完全消し
+  items.oddsZone = { score: oddsBonus, max: 8, label: '💰オッズ妙味' };
 
   // 2. 馬体重（max 12）★
   var _kg = 0;
@@ -14607,16 +14646,32 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
   else if (age >= 8) ageScore = -5;
   items.age = { score: ageScore, max: 8, label: '🎂年齢' };
 
-  // 4. 脚質（max 8）
+  // 4. 脚質（max 8）★差し最強・逃げはロゴタイプ以外なし
   var kyakushitsu = horse.kyakushitsu || horse.style || horse.runStyle || '';
   var kyakushitsuScore;
-  if (kyakushitsu.indexOf('差し') >= 0) kyakushitsuScore = 8;
-  else if (kyakushitsu.indexOf('追込') >= 0) kyakushitsuScore = 7;
-  else if (kyakushitsu === '中団') kyakushitsuScore = 8;
-  else if (kyakushitsu === '逃げ') kyakushitsuScore = 5;
-  else if (kyakushitsu === '先行') kyakushitsuScore = 2;  // ★苦戦
+  if (kyakushitsu === '差し')              kyakushitsuScore = 8;  // ★複勝率19.7%最強
+  else if (kyakushitsu === '中団')         kyakushitsuScore = 7;
+  else if (kyakushitsu === '追込')         kyakushitsuScore = 6;
+  else if (kyakushitsu === '先行')         kyakushitsuScore = 3;  // 複勝率14.5%
+  else if (kyakushitsu === '逃げ')         kyakushitsuScore = 1;  // ★ロゴタイプ以外なし
+  else if (kyakushitsu.indexOf('差し') >= 0) kyakushitsuScore = 7;
+  else if (kyakushitsu.indexOf('追込') >= 0) kyakushitsuScore = 5;
   else kyakushitsuScore = 4;
   items.kyakushitsu = { score: kyakushitsuScore, max: 8, label: '🏃脚質' };
+
+  // 4b. 枠順（max 8）★5・7枠が最強妙味
+  var waku = horse.waku || horse.wakuban || 0;
+  var wakuScore;
+  if (waku === 5)      wakuScore = 8;  // ★単回156%
+  else if (waku === 7) wakuScore = 8;  // ★単回206%
+  else if (waku === 2) wakuScore = 6;
+  else if (waku === 3) wakuScore = 5;
+  else if (waku === 8) wakuScore = 4;
+  else if (waku === 1) wakuScore = 3;
+  else if (waku === 4) wakuScore = 3;
+  else if (waku === 6) wakuScore = 2;  // 複勝率10%★低
+  else wakuScore = 4;
+  items.waku = { score: wakuScore, max: 8, label: '🎯枠順' };
 
   // 5. 前走別（max 12）★ヴィクトリアマイル組牝馬7年連続連対
   var prevScore;
@@ -14645,18 +14700,26 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
   else speedScore = 2;
   items.speed = { score: speedScore, max: 15, label: '⚡上がり3F' };
 
-  // 7. 血統（max 10）
+  // 7. 血統（max 10）★東京1600m過去5年種牡馬別データ
   var sire = horse.sire || horse.father || '';
   var motherSire = horse.motherSire || horse.motherFather || '';
-  var sundaySires = ['ディープインパクト','キズナ','ハーツクライ','ダイワメジャー',
-                     'ドゥラメンテ','リアルスティール','エピファネイア',
-                     'キタサンブラック','スワーヴリチャード'];
+  var bloodScore = 0;
+  if (sire === 'リアルスティール')        bloodScore += 10; // ★複勝率43.3%最強
+  else if (sire === 'エピファネイア')     bloodScore += 8;  // 単回188%
+  else if (sire === 'モーリス')           bloodScore += 8;  // 複回107%
+  else if (sire === 'キタサンブラック')   bloodScore += 7;
+  else if (sire === 'ロードカナロア')     bloodScore += 7;
+  else if (sire === 'キズナ')              bloodScore += 7;
+  else if (sire === 'ドゥラメンテ')       bloodScore += 6;
+  else if (sire === 'ディープインパクト') bloodScore += 6;
+  else if (sire === 'ハービンジャー')     bloodScore += 5;
+  else if (sire === 'イスラボニータ')     bloodScore += 4;
+  else if (sire.indexOf('Storm') >= 0)    bloodScore += 5;
+
+  // 母父Storm Cat系の穴ボーナス
   var stormCatLines = ['ストームキャット','Storm Cat',"Giant's Causeway",
                        'ヘネシー','Hennessy','スキャットダディ'];
-  var bloodScore = 0;
-  if (sundaySires.indexOf(sire) >= 0) bloodScore += 7;
-  else if (sundaySires.indexOf(motherSire) >= 0) bloodScore += 4;
-  if (stormCatLines.indexOf(motherSire) >= 0) bloodScore += 3;  // 穴ボーナス
+  if (stormCatLines.indexOf(motherSire) >= 0) bloodScore += 3;
   bloodScore = Math.min(bloodScore, 10);
   items.blood = { score: bloodScore, max: 10, label: '🩸血統' };
 
@@ -14700,11 +14763,11 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
   var totalScore = 0;
   Object.keys(items).forEach(function(k){ totalScore += items[k].score; });
   totalScore = Math.max(0, totalScore);
-  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 130 * 100)));
+  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 146 * 100)));
 
   return {
     total: totalScore,
-    max: 130,
+    max: 146,
     pct: pct,
     items: items,
     penalty: 0,
