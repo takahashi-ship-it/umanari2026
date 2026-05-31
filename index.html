@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260531-2000';
+  var CURRENT_VERSION = '20260531-2100';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -14338,6 +14338,161 @@ function computeScoreBreakdownMeguroV4(horse, raceName) {
   };
 }
 
+function computeScoreBreakdownYasudaV1(horse, raceName) {
+  if (!horse) return { total: 0, max: 130, pct: 0, items: {}, penalty: 0 };
+
+  var items = {};
+
+  // ===== 📊 過去データ準拠（55点）=====
+
+  // 1. 人気別（max 15）
+  var popScore = 0;
+  var pop = horse.popEstimate || 99;
+  if (pop === 1) popScore = 12;
+  else if (pop === 2) popScore = 10;
+  else if (pop === 3) popScore = 10;
+  else if (pop === 4) popScore = 15;
+  else if (pop === 5) popScore = 8;
+  else if (pop === 6) popScore = 7;
+  else if (pop === 7) popScore = 12;
+  else if (pop === 8) popScore = 12;
+  else if (pop === 9) popScore = 10;
+  else popScore = 0;  // 10人気以下完全消し
+  items.popularity = { score: popScore, max: 15, label: '人気別' };
+
+  // 2. 馬体重（max 12）★
+  var _kg = 0;
+  if (typeof horse.weight === 'number') _kg = horse.weight;
+  else if (horse.weight && horse.weight.current) _kg = horse.weight.current;
+  var weightScore;
+  if (_kg === 0) weightScore = 5;                        // 未計量は中立
+  else if (_kg >= 500 && _kg <= 519) weightScore = 12;   // ★最強帯
+  else if (_kg >= 480 && _kg <= 499) weightScore = 9;
+  else if (_kg >= 520 && _kg <= 539) weightScore = 8;
+  else if (_kg >= 460 && _kg <= 479) weightScore = 3;
+  else if (_kg < 460) weightScore = -5;                  // 連対馬ゼロ
+  else weightScore = 5;
+  items.weight = { score: weightScore, max: 12, label: '⚖️馬体重' };
+
+  // 3. 年齢（max 8）
+  var ageScore = 0;
+  var age = horse.age || 0;
+  if (age === 4) ageScore = 8;
+  else if (age === 5) ageScore = 6;
+  else if (age === 6) ageScore = 5;
+  else if (age === 3) ageScore = 4;
+  else if (age === 7) ageScore = -3;
+  else if (age >= 8) ageScore = -5;
+  items.age = { score: ageScore, max: 8, label: '🎂年齢' };
+
+  // 4. 脚質（max 8）
+  var kyakushitsu = horse.kyakushitsu || horse.style || horse.runStyle || '';
+  var kyakushitsuScore;
+  if (kyakushitsu.indexOf('差し') >= 0) kyakushitsuScore = 8;
+  else if (kyakushitsu.indexOf('追込') >= 0) kyakushitsuScore = 7;
+  else if (kyakushitsu === '中団') kyakushitsuScore = 8;
+  else if (kyakushitsu === '逃げ') kyakushitsuScore = 5;
+  else if (kyakushitsu === '先行') kyakushitsuScore = 2;  // ★苦戦
+  else kyakushitsuScore = 4;
+  items.kyakushitsu = { score: kyakushitsuScore, max: 8, label: '🏃脚質' };
+
+  // 5. 前走別（max 12）★ヴィクトリアマイル組牝馬7年連続連対
+  var prevScore;
+  var prevRace = horse.prevRace || '';
+  if (prevRace.indexOf('ヴィクトリアマイル') >= 0) prevScore = (horse.sex === '牝') ? 12 : 4;
+  else if (prevRace.indexOf('ダービー卿') >= 0) prevScore = 10;
+  else if (prevRace.indexOf('京王杯') >= 0) prevScore = 9;
+  else if (prevRace.indexOf('マイラーズC') >= 0) prevScore = 7;
+  else if (prevRace.indexOf('ドバイターフ') >= 0) prevScore = 12;
+  else if (prevRace.indexOf('高松宮記念') >= 0) prevScore = 8;
+  else if (prevRace.indexOf('天皇賞') >= 0) prevScore = 6;
+  else if (prevRace.indexOf('大阪杯') >= 0) prevScore = 3;
+  else prevScore = 4;
+  items.prevRace = { score: prevScore, max: 12, label: '前走別' };
+
+  // ===== 🐴 馬個別（45点）=====
+
+  // 6. 上がり3F（max 15）★最重要
+  var lastSpeed = (typeof horse.lastSpeed === 'number') ? horse.lastSpeed :
+                  (typeof horse.prev1Last3F === 'number') ? horse.prev1Last3F : 99;
+  var speedScore;
+  if (lastSpeed <= 33.0) speedScore = 15;
+  else if (lastSpeed <= 33.5) speedScore = 12;
+  else if (lastSpeed <= 34.0) speedScore = 9;
+  else if (lastSpeed <= 34.5) speedScore = 5;
+  else speedScore = 2;
+  items.speed = { score: speedScore, max: 15, label: '⚡上がり3F' };
+
+  // 7. 血統（max 10）
+  var sire = horse.sire || horse.father || '';
+  var motherSire = horse.motherSire || horse.motherFather || '';
+  var sundaySires = ['ディープインパクト','キズナ','ハーツクライ','ダイワメジャー',
+                     'ドゥラメンテ','リアルスティール','エピファネイア',
+                     'キタサンブラック','スワーヴリチャード'];
+  var stormCatLines = ['ストームキャット','Storm Cat',"Giant's Causeway",
+                       'ヘネシー','Hennessy','スキャットダディ'];
+  var bloodScore = 0;
+  if (sundaySires.indexOf(sire) >= 0) bloodScore += 7;
+  else if (sundaySires.indexOf(motherSire) >= 0) bloodScore += 4;
+  if (stormCatLines.indexOf(motherSire) >= 0) bloodScore += 3;  // 穴ボーナス
+  bloodScore = Math.min(bloodScore, 10);
+  items.blood = { score: bloodScore, max: 10, label: '🩸血統' };
+
+  // 8. 牝馬×美浦（max 5）★複勝率66.7%
+  var sexStableScore = 0;
+  var stable = horse.stable || '';
+  if (horse.sex === '牝' && stable.indexOf('美浦') >= 0) sexStableScore = 5;
+  else if (horse.sex === '牝') sexStableScore = 3;
+  items.sexStable = { score: sexStableScore, max: 5, label: '🌸牝馬×美浦' };
+
+  // 9. 距離経験（max 8）
+  var distanceScore = horse.distanceExp || 0;
+  items.distance = { score: distanceScore, max: 8, label: '距離経験' };
+
+  // 10. 鉄板ルール（max 7）
+  var teppanScore = horse.teppanScore || 0;
+  items.teppan = { score: teppanScore, max: 7, label: '🔥鉄板ルール' };
+
+  // ===== 🌍 環境要因（30点）=====
+
+  // 11. 騎手（max 12）
+  var jockey = horse.jockey || '';
+  var jockeyScore;
+  if (jockey.indexOf('ルメール') >= 0) jockeyScore = 12;
+  else if (jockey.indexOf('武豊') >= 0) jockeyScore = 11;
+  else if (jockey.indexOf('レーン') >= 0) jockeyScore = 11;
+  else if (jockey.indexOf('松山') >= 0) jockeyScore = 8;
+  else if (jockey.indexOf('戸崎') >= 0) jockeyScore = 8;
+  else if (jockey.indexOf('横山武') >= 0) jockeyScore = 8;
+  else if (jockey.indexOf('津村') >= 0) jockeyScore = 6;
+  else jockeyScore = 4;
+  items.jockey = { score: jockeyScore, max: 12, label: '騎手' };
+
+  // 12. 調教（max 10）
+  items.training = { score: horse.trainingScore || 5, max: 10, label: '調教' };
+
+  // 13. 同コース（max 8）
+  items.course = { score: horse.courseScore || 4, max: 8, label: '同コース' };
+
+  // 合計
+  var totalScore = 0;
+  Object.keys(items).forEach(function(k){ totalScore += items[k].score; });
+  totalScore = Math.max(0, totalScore);
+  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 130 * 100)));
+
+  return {
+    total: totalScore,
+    max: 130,
+    pct: pct,
+    items: items,
+    penalty: 0,
+    stallionLabel: '',
+    distLabel: '',
+    dirLabel: '',
+    _yasudaV1: true
+  };
+}
+
 function computeScoreBreakdown(horse, raceName) {
   // 日本ダービーは V2
   if (raceName === '日本ダービー' || raceName === '東京優駿') {
@@ -14353,6 +14508,10 @@ function computeScoreBreakdown(horse, raceName) {
   if (raceName === '目黒記念') {
     if (!horse) return { total: 0, max: 130, pct: 0, items: {}, penalty: 0 };
     return computeScoreBreakdownMeguroV4(horse, raceName);
+  }
+  // 安田記念は V1
+  if (raceName === '安田記念') {
+    return computeScoreBreakdownYasudaV1(horse, raceName);
   }
   if (!horse) return { total: 0, max: 113, pct: 0, items: {}, penalty: 0 };
   var raceInfo = (typeof RACE_META !== 'undefined' && RACE_META[raceName]) || {};
