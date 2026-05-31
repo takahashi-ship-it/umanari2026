@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260601-0300';
+  var CURRENT_VERSION = '20260601-0400';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -10558,7 +10558,7 @@ function renderHorses() {
             + row('🎯枠順', v.waku, 8)
             + row('前走別', v.prevRace, 12)
             + row('⚡上がり3F', v.speed, 15)
-            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🐴 馬個別 (53点)</div>'
+            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🐴 馬個別 (63点)</div>'
             + row('🩸血統', v.blood, 10, true)
             + row('🌸牝馬×美浦', v.sexStable, 5, true)
             + rowNote('📏距離経験', v.distance, 8, v.distanceNote)
@@ -10566,6 +10566,7 @@ function renderHorses() {
             + rowNote('🎯東京1600m', v.tokyo1600, 10, v.tokyo1600Note, true)
             + rowNote('他場1600m', v.other1600, 5, v.other1600Note)
             + rowNote('🔄リピーター', v.repeater, 8, v.repeaterNote, true)
+            + rowNote('🏆G1経験', v.g1Exp, 10, v.g1ExpNote, true)
             + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🌍 環境要因 (30点)</div>'
             + row('騎手', v.jockey, 12)
             + row('調教', v.training, 10)
@@ -15066,11 +15067,63 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     note: rep.total > 0 ? ('出走' + rep.total + '回・最高' + rep.bestRank + '着') : '初出走'
   };
 
+  // 17. G1経験スコア（max 10）★前走G1組3着内56.7% + G1勝ち馬評価
+  var g1Score = 0;
+  var g1Notes = [];
+  var g1History = { won:[], placed:[], total:0 };
+  (horse.raceHistory || []).forEach(function(r){
+    var nm = r.name || '';
+    var isG1 = (
+      nm.indexOf('GⅠ') >= 0 ||
+      nm.indexOf('G1') >= 0 ||
+      nm.indexOf('GI') >= 0 ||
+      nm.indexOf('JpnI') >= 0 ||
+      nm.indexOf('JpnⅠ') >= 0 ||
+      nm.indexOf('香港') >= 0 ||
+      nm.indexOf('ドバイ') >= 0 ||
+      nm.indexOf('サウジ') >= 0 ||
+      nm.indexOf('ケンタッキ') >= 0
+    );
+    if (isG1) {
+      g1History.total++;
+      if (r.rank === 1) g1History.won.push(nm);
+      if (r.rank <= 3) g1History.placed.push(nm);
+    }
+  });
+  var prevR = horse.prevRace || '';
+  var isPrevG1 = (
+    prevR.indexOf('GⅠ') >= 0 ||
+    prevR.indexOf('G1') >= 0 ||
+    prevR.indexOf('NHKマイルC') >= 0 ||
+    prevR.indexOf('高松宮記念') >= 0 ||
+    prevR.indexOf('大阪杯') >= 0 ||
+    prevR.indexOf('ヴィクトリアマイル') >= 0 ||
+    prevR.indexOf('ドバイ') >= 0 ||
+    prevR.indexOf('香港') >= 0 ||
+    prevR.indexOf('サウジ') >= 0
+  );
+  if (isPrevG1) { g1Score += 4; g1Notes.push('★前走G1'); }
+  if (g1History.won.length >= 1) { g1Score += 4; g1Notes.push('G1勝利歴'); }
+  var hasTokyoMileG1Win = (horse.raceHistory || []).some(function(r){
+    return r.course === '東京' && r.distance === 1600 && r.surface === '芝' &&
+           r.rank === 1 &&
+           (r.name && (r.name.indexOf('NHKマイル') >= 0 ||
+                       r.name.indexOf('安田記念') >= 0 ||
+                       r.name.indexOf('ヴィクトリアマイル') >= 0));
+  });
+  if (hasTokyoMileG1Win) { g1Score += 4; g1Notes.push('★★東京1600mG1勝利'); }
+  if (g1History.placed.length >= 2) { g1Score += 2; g1Notes.push('G1複数好走'); }
+  g1Score = Math.min(g1Score, 10);
+  items.g1Exp = {
+    score: g1Score, max: 10, label: '🏆G1経験',
+    note: g1Notes.length > 0 ? g1Notes.join('・') : 'G1実績なし'
+  };
+
   // 合計（_yasudaV1 集約は合計対象外）
   var totalScore = 0;
   Object.keys(items).forEach(function(k){ totalScore += items[k].score; });
   totalScore = Math.max(0, totalScore);
-  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 169 * 100)));
+  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 179 * 100)));
 
   // UI向けの内部値（V4・V2 と同様の集約オブジェクト）
   items._yasudaV1 = {
@@ -15092,15 +15145,17 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     tokyo1600:  tokyo1600Score,
     other1600:  other1600Score,
     repeater:   repeaterScore,
+    g1Exp:      g1Score,
     repeaterNote: items.repeater.note,
     tokyo1600Note: items.tokyo1600.note,
     other1600Note: items.other1600.note,
-    distanceNote: items.distance.note
+    distanceNote: items.distance.note,
+    g1ExpNote:    items.g1Exp.note
   };
 
   return {
     total: totalScore,
-    max: 169,
+    max: 179,
     pct: pct,
     items: items,
     penalty: 0,
