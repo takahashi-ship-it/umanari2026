@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260531-1600';
+  var CURRENT_VERSION = '20260531-1620';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2219,6 +2219,59 @@
               <strong>✗ 失敗</strong>：3着タマモイカロス（3人気）を「3人気壊滅-15」ペナルティで完全消しにしたのが唯一の誤算。<br>
               <strong>💡 学び</strong>：V3ペナルティルールが効きすぎ。タマモイカロスの1200m連対率100%データを反映できていなかった。<br>
               <strong>🎯 次回</strong>：V3に「該当距離適性」項目追加・完全消しデータを「複勝率0%」のみに限定。馬券購入再開を検討。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 日本ダービー（3連単45,000円→235,250円・回収率523%大爆発） -->
+      <div class="card" style="border:1.5px solid #FFD700;background:#FFFEF5">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">日本ダービー</div>
+            <div style="font-size:11px;color:var(--text-mute)">5/31（日）東京 芝2400m G1</div>
+          </div>
+          <span style="background:#FFE89E;color:#A87800;font-size:11px;font-weight:800;padding:2px 10px;border-radius:9px">★ 3連単的中・回収率523%</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          ◎軸ロブチェン（1人気2.7倍・AIスコア121点ダントツ1位）／3連単1着固定フォーメーション 軸17→相手10頭（90点×500円）
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">45,000円</div>
+          </div>
+          <div style="background:#FFF3C4;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#A87800">払戻</div>
+            <div style="font-size:13px;font-weight:700;color:#A87800">235,250円</div>
+          </div>
+          <div style="background:#FFF3C4;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#A87800">純利益</div>
+            <div style="font-size:13px;font-weight:700;color:#A87800">+190,250円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('derby2026')"
+          style="width:100%;padding:6px;border:1px solid #FFD700;background:#FFF3C4;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#A87800;font-weight:600">
+          結果を見る ▼
+        </button>
+        <div id="result-derby2026" style="display:none;margin-top:8px;padding:10px;background:#FFFEF5;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
+          <div style="font-weight:600;margin-bottom:4px;color:#A87800">✅ 3連単 17→13→5 的中（47,050円 × 5口 = 235,250円）</div>
+          <div>🥇 1着：ロブチェン（1人気2.7倍） ◎本命</div>
+          <div>🥈 2着：パントルナイーフ（4人気9.1倍） フォーメーション相手</div>
+          <div>🥉 3着：バステール（11人気34.0倍） D群押さえ</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #E8C84A">
+            単勝<strong>270円</strong>・複勝[130/250/650]・馬連<strong>1,460円</strong>・馬単<strong>2,290円</strong>・3連複<strong>14,280円</strong>・3連単<strong>47,050円</strong>
+          </div>
+          <div style="margin-top:6px">
+            買い目：3連単1着固定フォーメーション　軸17番ロブチェン　相手1,5,6,7,9,11,13,14,15,16（10頭）各500円・90点
+          </div>
+          <div style="margin-top:8px;padding:8px;background:#fff;border-radius:6px;border-left:3px solid #FFD700">
+            <div style="font-weight:700;color:#A87800;margin-bottom:4px;font-size:11px">📝 日本ダービー2026 振り返り</div>
+            <div style="color:#444;font-size:11px;line-height:1.7">
+              <strong>✅ 成功</strong>：AIスコア121点ダントツ1位ロブチェンが1着完璧的中。ランク戦略D群押さえの11人気バステールが3着に来て大爆発。<br>
+              <strong>✗ 想定外</strong>：対抗○ゴーイン4着・▲フォルテ12着で2-3着候補は来なかったが、フォーメーション10頭の押さえで補完できた。<br>
+              <strong>💡 学び</strong>：「完全消し」より「押さえ」の重要性を実証。当日馬体重448kgフォルテの軽さが響いた。パントルナイーフを完全消しせず押さえて正解。<br>
+              <strong>🎯 次回</strong>：ランク戦略の「ABC全部押さえ」or「フォーメーション10頭」が安定的中型。投資45,000円→払戻235,250円（回収率523%・+190,250円）。
             </div>
           </div>
         </div>
