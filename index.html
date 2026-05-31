@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260601-0100';
+  var CURRENT_VERSION = '20260601-0200';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -10535,7 +10535,44 @@ function renderHorses() {
         <div class="score-bar">
           <div class="score-bar-fill ${rank.key}" style="width:${pct}%"></div>
         </div>
-        ${bdItems._v4 ? (function(){
+        ${bdItems._yasudaV1 ? (function(){
+          // V1（安田記念）専用：18項目を3グループで表示
+          var v = bdItems._yasudaV1;
+          function row(label, score, max, hi){
+            var pct = max > 0 ? score / max : 0;
+            var c = score < 0 ? '#A32D2D' : hi && score > 0 ? '#B8600C' : pct >= 0.7 ? '#0F6E56' : pct >= 0.4 ? '#2563eb' : score > 0 ? '#888' : '#bbb';
+            return '<div class="score-item"><div class="si-label">'+label+'</div><div class="si-val" style="color:'+c+'">'+score+'/'+max+'</div></div>';
+          }
+          function rowNote(label, score, max, note, hi){
+            var pct = max > 0 ? score / max : 0;
+            var c = score < 0 ? '#A32D2D' : hi && score > 0 ? '#B8600C' : pct >= 0.7 ? '#0F6E56' : pct >= 0.4 ? '#2563eb' : score > 0 ? '#888' : '#bbb';
+            return '<div class="score-item" title="'+(note||'')+'"><div class="si-label">'+label+'<span style="font-size:9px;color:#888;margin-left:4px">'+(note||'')+'</span></div><div class="si-val" style="color:'+c+'">'+score+'/'+max+'</div></div>';
+          }
+          return '<div class="score-detail">'
+            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:2px">📊 過去データ準拠 (78点)</div>'
+            + row('人気別', v.pop, 15)
+            + row('💰オッズ妙味', v.oddsZone, 8, true)
+            + row('⚖️馬体重', v.weight, 12)
+            + row('🎂年齢', v.age, 8)
+            + row('🏃脚質', v.kyakushitsu, 8)
+            + row('🎯枠順', v.waku, 8)
+            + row('前走別', v.prevRace, 12)
+            + row('⚡上がり3F', v.speed, 15)
+            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🐴 馬個別 (53点)</div>'
+            + row('🩸血統', v.blood, 10, true)
+            + row('🌸牝馬×美浦', v.sexStable, 5, true)
+            + row('距離経験', v.distance, 8)
+            + row('🔥鉄板ルール', v.teppan, 7, true)
+            + rowNote('🎯東京1600m', v.tokyo1600, 10, v.tokyo1600Note, true)
+            + rowNote('他場1600m', v.other1600, 5, v.other1600Note)
+            + rowNote('🔄リピーター', v.repeater, 8, v.repeaterNote, true)
+            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🌍 環境要因 (30点)</div>'
+            + row('騎手', v.jockey, 12)
+            + row('調教', v.training, 10)
+            + row('同コース', v.course, 8)
+            + '<div class="score-item" style="grid-column:1/-1;border-top:1px solid #ddd;margin-top:4px;padding-top:4px"><div class="si-label" style="font-weight:700">合計</div><div class="si-val" style="font-weight:700;font-size:14px">'+total+'/'+maxS+' ('+pct+'%)</div></div>'
+            + '</div>';
+        })() : bdItems._v4 ? (function(){
           // V4（目黒記念）専用：15項目を3グループで表示
           var v = bdItems._v4;
           function row(label, score, max, hi){
@@ -14849,14 +14886,26 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
   if (sire === 'リアルスティール')        bloodScore += 10; // ★複勝率43.3%最強
   else if (sire === 'エピファネイア')     bloodScore += 8;  // 単回188%
   else if (sire === 'モーリス')           bloodScore += 8;  // 複回107%
+  else if (sire === 'イスラボニータ')     bloodScore += 7;  // 単回249%★超妙味
   else if (sire === 'キタサンブラック')   bloodScore += 7;
   else if (sire === 'ロードカナロア')     bloodScore += 7;
   else if (sire === 'キズナ')              bloodScore += 7;
   else if (sire === 'ドゥラメンテ')       bloodScore += 6;
   else if (sire === 'ディープインパクト') bloodScore += 6;
+  else if (sire === 'レイデオロ')         bloodScore += 6; // ★ダービー馬・東京巧者
+  else if (sire === 'タワーオブロンドン') bloodScore += 6; // ★スプリンター
   else if (sire === 'ハービンジャー')     bloodScore += 5;
-  else if (sire === 'イスラボニータ')     bloodScore += 4;
+  else if (sire === 'スクリーンヒーロー') bloodScore += 5;
+  else if (sire === 'ドレフォン')         bloodScore += 5;
+  else if (sire === 'シルバーステート')   bloodScore += 5;
+  else if (sire === 'ネオユニヴァース')   bloodScore += 4;
+  else if (sire === 'ヴィクトワールピサ') bloodScore += 4;
+  else if (sire === 'サトノダイヤモンド') bloodScore += 4;
+  else if (sire === 'マクフィ')           bloodScore += 3;
+  else if (sire === 'Farhh')              bloodScore += 3;
+  else if (sire === 'American Pharoah')   bloodScore += 3;
   else if (sire.indexOf('Storm') >= 0)    bloodScore += 5;
+  else if (sire)                          bloodScore += 2;  // 未登録種牡馬の最低保証
 
   // 母父Storm Cat系の穴ボーナス
   var stormCatLines = ['ストームキャット','Storm Cat',"Giant's Causeway",
@@ -14977,11 +15026,36 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     note: rep.total > 0 ? ('出走' + rep.total + '回・最高' + rep.bestRank + '着') : '初出走'
   };
 
-  // 合計
+  // 合計（_yasudaV1 集約は合計対象外）
   var totalScore = 0;
   Object.keys(items).forEach(function(k){ totalScore += items[k].score; });
   totalScore = Math.max(0, totalScore);
   var pct = Math.max(0, Math.min(99, Math.round(totalScore / 169 * 100)));
+
+  // UI向けの内部値（V4・V2 と同様の集約オブジェクト）
+  items._yasudaV1 = {
+    pop:        popScore,
+    oddsZone:   oddsBonus,
+    weight:     weightScore,
+    age:        ageScore,
+    kyakushitsu:kyakushitsuScore,
+    waku:       wakuScore,
+    prevRace:   prevScore,
+    speed:      speedScore,
+    blood:      bloodScore,
+    sexStable:  sexStableScore,
+    distance:   distanceScore,
+    teppan:     teppanScore,
+    jockey:     jockeyScore,
+    training:   items.training.score,
+    course:     items.course.score,
+    tokyo1600:  tokyo1600Score,
+    other1600:  other1600Score,
+    repeater:   repeaterScore,
+    repeaterNote: items.repeater.note,
+    tokyo1600Note: items.tokyo1600.note,
+    other1600Note: items.other1600.note
+  };
 
   return {
     total: totalScore,
