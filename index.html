@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260601-0200';
+  var CURRENT_VERSION = '20260601-0300';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -10561,7 +10561,7 @@ function renderHorses() {
             + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🐴 馬個別 (53点)</div>'
             + row('🩸血統', v.blood, 10, true)
             + row('🌸牝馬×美浦', v.sexStable, 5, true)
-            + row('距離経験', v.distance, 8)
+            + rowNote('📏距離経験', v.distance, 8, v.distanceNote)
             + row('🔥鉄板ルール', v.teppan, 7, true)
             + rowNote('🎯東京1600m', v.tokyo1600, 10, v.tokyo1600Note, true)
             + rowNote('他場1600m', v.other1600, 5, v.other1600Note)
@@ -14921,9 +14921,49 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
   else if (horse.sex === '牝') sexStableScore = 3;
   items.sexStable = { score: sexStableScore, max: 5, label: '🌸牝馬×美浦' };
 
-  // 9. 距離経験（max 8）
-  var distanceScore = horse.distanceExp || 0;
-  items.distance = { score: distanceScore, max: 8, label: '距離経験' };
+  // 9. 距離経験（max 8）★1400-1800m（マイル前後）の経験を自動算出
+  var distStats = {
+    mile1600: { total:0, wins:0, rentai:0, fukusho:0 },  // 1600m
+    near1600: { total:0, wins:0, rentai:0, fukusho:0 },  // 1400/1800m
+    far:      { total:0, wins:0, rentai:0, fukusho:0 }   // 1200以下 or 2000以上
+  };
+  (horse.raceHistory || []).forEach(function(r){
+    if (r.surface !== '芝') return;
+    var d = r.distance;
+    var cat = (d === 1600) ? 'mile1600' :
+              (d === 1400 || d === 1800) ? 'near1600' : 'far';
+    distStats[cat].total++;
+    if (r.rank === 1) distStats[cat].wins++;
+    if (r.rank <= 2) distStats[cat].rentai++;
+    if (r.rank <= 3) distStats[cat].fukusho++;
+  });
+  var distanceScore = 0;
+  if (distStats.mile1600.total >= 1) {
+    var mileFuku = distStats.mile1600.fukusho / distStats.mile1600.total;
+    if (mileFuku >= 0.7) distanceScore += 5;
+    else if (mileFuku >= 0.5) distanceScore += 4;
+    else if (mileFuku >= 0.33) distanceScore += 3;
+    else if (mileFuku >= 0.2) distanceScore += 2;
+    else distanceScore += 1;
+    if (distStats.mile1600.wins >= 2) distanceScore += 2;
+    else if (distStats.mile1600.wins >= 1) distanceScore += 1;
+  }
+  if (distStats.near1600.total >= 1) {
+    var nearFuku = distStats.near1600.fukusho / distStats.near1600.total;
+    if (nearFuku >= 0.5) distanceScore += 1;
+  }
+  distanceScore = Math.min(distanceScore, 8);
+
+  function _distRec(s){
+    return '[' + s.wins + '-' + (s.rentai - s.wins) + '-' +
+           (s.fukusho - s.rentai) + '-' + (s.total - s.fukusho) + ']';
+  }
+  var distNote = '';
+  if (distStats.mile1600.total > 0) distNote += '1600m' + _distRec(distStats.mile1600);
+  if (distStats.near1600.total > 0) distNote += (distNote ? ' ' : '') + '1400/1800m' + _distRec(distStats.near1600);
+  if (!distNote) distNote = '芝マイル経験なし';
+
+  items.distance = { score: distanceScore, max: 8, label: '📏距離経験', note: distNote };
 
   // 10. 鉄板ルール（max 7）
   var teppanScore = horse.teppanScore || 0;
@@ -15054,7 +15094,8 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     repeater:   repeaterScore,
     repeaterNote: items.repeater.note,
     tokyo1600Note: items.tokyo1600.note,
-    other1600Note: items.other1600.note
+    other1600Note: items.other1600.note,
+    distanceNote: items.distance.note
   };
 
   return {
