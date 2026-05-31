@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260601-0500';
+  var CURRENT_VERSION = '20260601-0700';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -10535,9 +10535,9 @@ function renderHorses() {
         <div class="score-bar">
           <div class="score-bar-fill ${rank.key}" style="width:${pct}%"></div>
         </div>
-        ${bdItems._yasudaV1 ? (function(){
-          // V1（安田記念）専用：18項目を3グループで表示
-          var v = bdItems._yasudaV1;
+        ${breakdown._yasudaV1 ? (function(){
+          // V1（安田記念）専用：17項目を3グループで表示
+          var v = breakdown._yasudaV1;
           function row(label, score, max, hi){
             var pct = max > 0 ? score / max : 0;
             var c = score < 0 ? '#A32D2D' : hi && score > 0 ? '#B8600C' : pct >= 0.7 ? '#0F6E56' : pct >= 0.4 ? '#2563eb' : score > 0 ? '#888' : '#bbb';
@@ -15117,14 +15117,18 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     note: g1Notes.length > 0 ? g1Notes.join('・') : 'G1実績なし'
   };
 
-  // 合計（_yasudaV1 集約は合計対象外）
+  // 合計（メタフラグはスキップ・score 数値のみ加算）
   var totalScore = 0;
-  Object.keys(items).forEach(function(k){ totalScore += items[k].score; });
+  Object.keys(items).forEach(function(k){
+    if (k === '_yasudaV1') return;
+    var it = items[k];
+    if (it && typeof it.score === 'number') totalScore += it.score;
+  });
   totalScore = Math.max(0, totalScore);
   var pct = Math.max(0, Math.min(99, Math.round(totalScore / 171 * 100)));
 
-  // UI向けの内部値（V4・V2 と同様の集約オブジェクト）
-  items._yasudaV1 = {
+  // UI向けの内部値（items の外に持つ・items を score 集計用に純化）
+  var _v1Detail = {
     pop:        popScore,
     oddsZone:   oddsBonus,
     weight:     weightScore,
@@ -15143,11 +15147,11 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     other1600:  other1600Score,
     repeater:   repeaterScore,
     g1Exp:      g1Score,
-    repeaterNote: items.repeater.note,
+    repeaterNote:  items.repeater.note,
     tokyo1600Note: items.tokyo1600.note,
     other1600Note: items.other1600.note,
-    distanceNote: items.distance.note,
-    g1ExpNote:    items.g1Exp.note
+    distanceNote:  items.distance.note,
+    g1ExpNote:     items.g1Exp.note
   };
 
   return {
@@ -15159,7 +15163,7 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     stallionLabel: '',
     distLabel: '',
     dirLabel: '',
-    _yasudaV1: true
+    _yasudaV1: _v1Detail
   };
 }
 
