@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260531-1000';
+  var CURRENT_VERSION = '20260531-1600';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1596,25 +1596,25 @@
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
           <div>
             <div style="font-size:13px;font-weight:500;color:#085041;margin-bottom:2px">2026年 通算収支</div>
-            <div style="font-size:11px;color:#3B6D11">12レース（皐月賞・青葉賞・フローラS・マイラーズC・天皇賞春・京都新聞杯・エプソムC・NHKマイルC・ヴィクトリアマイル・平安S・オークス・葵S※）</div>
+            <div style="font-size:11px;color:#3B6D11">13レース（皐月賞・青葉賞・フローラS・マイラーズC・天皇賞春・京都新聞杯・エプソムC・NHKマイルC・ヴィクトリアマイル・平安S・オークス・葵S※・日本ダービー）</div>
           </div>
           <div style="text-align:right">
-            <div style="font-size:24px;font-weight:800;color:#0F6E56">+122,860円</div>
-            <div style="font-size:12px;color:#3B6D11">回収率 <strong>143%</strong> ✅ 黒字</div>
+            <div style="font-size:24px;font-weight:800;color:#0F6E56">+313,110円</div>
+            <div style="font-size:12px;color:#3B6D11">回収率 <strong>195%</strong> ✅ 黒字</div>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">
           <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
             <div style="font-size:10px;color:var(--text-mute)">総投資</div>
-            <div style="font-size:14px;font-weight:700;color:var(--text)">286,000円</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text)">331,000円</div>
           </div>
           <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
             <div style="font-size:10px;color:var(--text-mute)">総払戻</div>
-            <div style="font-size:14px;font-weight:700;color:#0F6E56">408,860円</div>
+            <div style="font-size:14px;font-weight:700;color:#0F6E56">644,110円</div>
           </div>
           <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
             <div style="font-size:10px;color:var(--text-mute)">的中率（予想含む）</div>
-            <div style="font-size:14px;font-weight:700;color:#185FA5">6/12</div>
+            <div style="font-size:14px;font-weight:700;color:#185FA5">7/13</div>
             <div style="font-size:9px;color:var(--text-mute)">※葵Sは予想的中・馬券購入なし</div>
           </div>
         </div>
@@ -10813,7 +10813,9 @@ function renderSeisekiGraph() {
     { race:'NHKマイルC',       date:'5/10', invest:42000, payout:52300,  grade:'G1', hit:true  },
     { race:'ヴィクトリアマイル', date:'5/17', invest:46800, payout:11010,  grade:'G1', hit:true  },
     { race:'平安S',             date:'5/23', invest:6000,  payout:0,      grade:'G3', hit:false },
-    { race:'オークス',           date:'5/24', invest:16800, payout:0,      grade:'G1', hit:false }
+    { race:'オークス',           date:'5/24', invest:16800, payout:0,      grade:'G1', hit:false },
+    { race:'葵ステークス',       date:'5/30', invest:0,     payout:0,      grade:'G3', hit:true  },
+    { race:'日本ダービー',       date:'5/31', invest:45000, payout:235250, grade:'G1', hit:true  }
   ];
 
   var totalInvest = data.reduce(function(s,r){ return s + r.invest; }, 0);
@@ -15287,6 +15289,18 @@ var JIKU_TRACKING = [
       '🎯 次回：V3に「該当距離適性」項目追加・完全消しデータを「複勝率0%」のみに限定',
       '🎯 馬券購入再開を検討（信頼度高いレースに絞る）',
     ] },
+  { race: '日本ダービー',       aiJiku: 'ロブチェン',         scoreJiku: 'ロブチェン',
+    result: '1着（軸◎完璧的中・3連単大爆発）', aiHit: true, scoreHit: true, comboHit: true,
+    note: 'ロブチェン1着✅（1番人気2.7倍）AI推奨軸×V2スコア121点ダントツ1位／2着パントルナイーフ(4人気9.1倍)・3着バステール(11人気34.0倍/Dランク押さえ的中)／3連単 17→13→5 47,050円・5口で235,250円払戻し（投資45,000円→回収率523%・利益+190,250円）',
+    failReason: [
+      '✅ AIスコア121点ダントツ1位ロブチェンが1着完璧的中',
+      '✅ ランク戦略Dランクで押さえた11人気バステールが3着に来て大爆発',
+      '✅ 1着固定フォーメーション（相手10頭・90点×500円）が機能',
+      '✗ 対抗○ゴーイン4着・▲フォルテ12着で2-3着候補は来なかったが押さえで補完',
+      '💡 「完全消し」より「押さえ」の重要性を実証。当日馬体重448kgフォルテの軽さが響いた',
+      '💡 パントルナイーフを完全消しじゃなく押さえて正解',
+      '🎯 次回：ランク戦略「ABC全部押さえ」or「フォーメーション10頭」が安定的中型',
+    ] },
 ];
 
 function renderJikuTracking() {
@@ -15584,6 +15598,10 @@ function updateHeaderStats() {
     { invest: 16800, payout: 0,      name: 'エプソムC' },
     { invest: 42000, payout: 52300,  name: 'NHKマイルC' },
     { invest: 46800, payout: 11010,  name: 'ヴィクトリアマイル' },
+    { invest: 6000,  payout: 0,      name: '平安ステークス' },
+    { invest: 16800, payout: 0,      name: 'オークス' },
+    { invest: 0,     payout: 0,      name: '葵ステークス' },
+    { invest: 45000, payout: 235250, name: '日本ダービー' },
   ];
 
   const totalInvest = seisekiData.reduce((s,r) => s + r.invest, 0);
