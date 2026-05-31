@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260531-1900';
+  var CURRENT_VERSION = '20260531-2000';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1494,15 +1494,6 @@
         <span>🐎 4歳上</span>
       </div>
       <div id="raceBabaPrediction"></div>
-
-      <!-- 馬場状態選択ボタン（全タブ共通・常設） -->
-      <div id="baba-buttons-global" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center">
-        <span style="font-size:10px;color:var(--text-mute);margin-right:2px">馬場切替：</span>
-        <button class="baba-btn on" data-baba="good"        onclick="setBaba('good')">🌞 良馬場</button>
-        <button class="baba-btn"    data-baba="slightHeavy" onclick="setBaba('slightHeavy')">🌥 稍重</button>
-        <button class="baba-btn"    data-baba="heavy"       onclick="setBaba('heavy')">🌧 重馬場</button>
-        <button class="baba-btn"    data-baba="veryHeavy"   onclick="setBaba('veryHeavy')">⛈ 不良</button>
-      </div>
     </div>
 
     <div class="race-notice" id="raceNotice" hidden></div>
@@ -5200,7 +5191,7 @@ const RACE_META = {
   direction: 'left',
   isFinished: false,
   notice: "⚠ 5/24・ベレシート出走取消（浅屈腱故障）→19頭。5/28（木）枠順確定で最終18頭。馬番は仮（人気順）、確定後に更新予定",
-  babaPrediction: { status: "良馬場想定", icon: "☀️", color: "#1D9E75", comment: "東京開催・1週前データから良馬場想定" },
+  babaPrediction: { status: "良馬場想定", icon: "☀️", color: "#1D9E75", comment: "東京芝2400m・1週前データ参照" },
 
 },
 '葵ステークス': {
@@ -5229,7 +5220,20 @@ const RACE_META = {
   direction: 'left',
   isFinished: false,
   notice: "⚠ ハンデGⅡ。日本ダービー終了後の東京最終レース。",
-  babaPrediction: { status: "良馬場想定", icon: "☀️", color: "#1D9E75", comment: "東京開催・良馬場想定" },
+  babaPrediction: { status: "良馬場想定", icon: "☀️", color: "#1D9E75", comment: "東京芝2500m" },
+},
+'安田記念': {
+  gradeLine: "G1 / 第76回",
+  title:     "安田記念",
+  date:      "2026-06-07 (日)",
+  venue:     "東京競馬場",
+  surface:   "芝1600m",
+  age:       "3歳上",
+  pageTitle: "JRA重賞予想 2026 | 安田記念",
+  distance: 1600,
+  direction: 'left',
+  isFinished: false,
+  babaPrediction: { status: "良馬場想定", icon: "☀️", color: "#1D9E75", comment: "東京芝1600m" },
 },
 };
 
