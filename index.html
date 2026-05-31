@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260601-0400';
+  var CURRENT_VERSION = '20260601-0500';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -10567,10 +10567,9 @@ function renderHorses() {
             + rowNote('他場1600m', v.other1600, 5, v.other1600Note)
             + rowNote('🔄リピーター', v.repeater, 8, v.repeaterNote, true)
             + rowNote('🏆G1経験', v.g1Exp, 10, v.g1ExpNote, true)
-            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🌍 環境要因 (30点)</div>'
+            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🌍 環境要因 (22点)</div>'
             + row('騎手', v.jockey, 12)
             + row('調教', v.training, 10)
-            + row('同コース', v.course, 8)
             + '<div class="score-item" style="grid-column:1/-1;border-top:1px solid #ddd;margin-top:4px;padding-top:4px"><div class="si-label" style="font-weight:700">合計</div><div class="si-val" style="font-weight:700;font-size:14px">'+total+'/'+maxS+' ('+pct+'%)</div></div>'
             + '</div>';
         })() : bdItems._v4 ? (function(){
@@ -14988,8 +14987,7 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
   // 12. 調教（max 10）
   items.training = { score: horse.trainingScore || 5, max: 10, label: '調教' };
 
-  // 13. 同コース（max 8）
-  items.course = { score: horse.courseScore || 4, max: 8, label: '同コース' };
+  // ※ 旧「同コース」項目は東京1600m実績（自動算出）に統合・削除
 
   // === raceHistory 由来の自動計算 ===
   var rh = Array.isArray(horse.raceHistory) ? horse.raceHistory : [];
@@ -15123,7 +15121,7 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
   var totalScore = 0;
   Object.keys(items).forEach(function(k){ totalScore += items[k].score; });
   totalScore = Math.max(0, totalScore);
-  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 179 * 100)));
+  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 171 * 100)));
 
   // UI向けの内部値（V4・V2 と同様の集約オブジェクト）
   items._yasudaV1 = {
@@ -15141,7 +15139,6 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     teppan:     teppanScore,
     jockey:     jockeyScore,
     training:   items.training.score,
-    course:     items.course.score,
     tokyo1600:  tokyo1600Score,
     other1600:  other1600Score,
     repeater:   repeaterScore,
@@ -15155,7 +15152,7 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
 
   return {
     total: totalScore,
-    max: 179,
+    max: 171,
     pct: pct,
     items: items,
     penalty: 0,
