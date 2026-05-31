@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260601-0700';
+  var CURRENT_VERSION = '20260601-0800';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -10559,7 +10559,7 @@ function renderHorses() {
             + row('前走別', v.prevRace, 12)
             + row('⚡上がり3F', v.speed, 15)
             + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🐴 馬個別 (63点)</div>'
-            + row('🩸血統', v.blood, 10, true)
+            + rowNote('🩸血統', v.blood, 10, v.bloodNote, true)
             + row('🌸牝馬×美浦', v.sexStable, 5, true)
             + rowNote('📏距離経験', v.distance, 8, v.distanceNote)
             + row('🔥鉄板ルール', v.teppan, 7, true)
@@ -14879,40 +14879,46 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
   else speedScore = 2;
   items.speed = { score: speedScore, max: 15, label: '⚡上がり3F' };
 
-  // 7. 血統（max 10）★東京1600m過去5年種牡馬別データ
+  // 7. 血統（max 10）★東京1600m過去5年データのサンプル数×複勝率で再配分
   var sire = horse.sire || horse.father || '';
   var motherSire = horse.motherSire || horse.motherFather || '';
   var bloodScore = 0;
-  if (sire === 'リアルスティール')        bloodScore += 10; // ★複勝率43.3%最強
-  else if (sire === 'エピファネイア')     bloodScore += 8;  // 単回188%
-  else if (sire === 'モーリス')           bloodScore += 8;  // 複回107%
-  else if (sire === 'イスラボニータ')     bloodScore += 7;  // 単回249%★超妙味
-  else if (sire === 'キタサンブラック')   bloodScore += 7;
-  else if (sire === 'ロードカナロア')     bloodScore += 7;
-  else if (sire === 'キズナ')              bloodScore += 7;
-  else if (sire === 'ドゥラメンテ')       bloodScore += 6;
-  else if (sire === 'ディープインパクト') bloodScore += 6;
-  else if (sire === 'レイデオロ')         bloodScore += 6; // ★ダービー馬・東京巧者
-  else if (sire === 'タワーオブロンドン') bloodScore += 6; // ★スプリンター
-  else if (sire === 'ハービンジャー')     bloodScore += 5;
+  if (sire === 'ロードカナロア')          bloodScore += 10; // 169戦・複率33.7%★1位
+  else if (sire === 'エピファネイア')     bloodScore += 10; // 141戦・複率34.7%・単回188%
+  else if (sire === 'モーリス')           bloodScore += 10; // 142戦・複率34.0%・複回107%
+  else if (sire === 'リアルスティール')   bloodScore += 9;  // 複率43.3%だが38戦
+  else if (sire === 'キタサンブラック')   bloodScore += 8;  // 59戦・複率33.7%
+  else if (sire === 'キズナ')              bloodScore += 8; // 101戦・複率31.3%
+  else if (sire === 'イスラボニータ')     bloodScore += 8;  // 単回249%★穴妙味
+  else if (sire === 'ドゥラメンテ')       bloodScore += 7;  // 96戦・複率30.9%
+  else if (sire === 'ディープインパクト') bloodScore += 7;  // 92戦・複率26.4%
+  else if (sire === 'ハービンジャー')     bloodScore += 6;  // 80戦・複率26.6%
+  else if (sire === 'レイデオロ')         bloodScore += 6;  // ダービー馬・東京巧者
+  else if (sire === 'タワーオブロンドン') bloodScore += 6;  // スプリンター
   else if (sire === 'スクリーンヒーロー') bloodScore += 5;
   else if (sire === 'ドレフォン')         bloodScore += 5;
-  else if (sire === 'シルバーステート')   bloodScore += 5;
-  else if (sire === 'ネオユニヴァース')   bloodScore += 4;
-  else if (sire === 'ヴィクトワールピサ') bloodScore += 4;
+  else if (sire === 'シルバーステート')   bloodScore += 4;
   else if (sire === 'サトノダイヤモンド') bloodScore += 4;
+  else if (sire === 'ヴィクトワールピサ') bloodScore += 4;
+  else if (sire === 'ネオユニヴァース')   bloodScore += 3;
   else if (sire === 'マクフィ')           bloodScore += 3;
   else if (sire === 'Farhh')              bloodScore += 3;
   else if (sire === 'American Pharoah')   bloodScore += 3;
-  else if (sire.indexOf('Storm') >= 0)    bloodScore += 5;
-  else if (sire)                          bloodScore += 2;  // 未登録種牡馬の最低保証
+  else                                    bloodScore += 2;
 
-  // 母父Storm Cat系の穴ボーナス
-  var stormCatLines = ['ストームキャット','Storm Cat',"Giant's Causeway",
-                       'ヘネシー','Hennessy','スキャットダディ'];
+  // 母父Storm Cat系（人気薄勝利の典型）+3
+  var stormCatLines = ['ストームキャット','Storm Cat','Hennessy','スキャットダディ',
+                       "Giant's Causeway",'ヘネシー'];
   if (stormCatLines.indexOf(motherSire) >= 0) bloodScore += 3;
+
+  // 母父サンデー系 +2
+  var sundayMotherSires = ['ハーツクライ','ディープインパクト','ダイワメジャー',
+                            'マンハッタンカフェ','ステイゴールド','シンボリクリスエス'];
+  if (sundayMotherSires.indexOf(motherSire) >= 0) bloodScore += 2;
+
   bloodScore = Math.min(bloodScore, 10);
-  items.blood = { score: bloodScore, max: 10, label: '🩸血統' };
+  var bloodNote = sire ? ('父' + sire + (motherSire ? '・母父' + motherSire : '')) : '';
+  items.blood = { score: bloodScore, max: 10, label: '🩸血統', note: bloodNote };
 
   // 8. 牝馬×美浦（max 5）★複勝率66.7%
   var sexStableScore = 0;
@@ -15151,7 +15157,8 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     tokyo1600Note: items.tokyo1600.note,
     other1600Note: items.other1600.note,
     distanceNote:  items.distance.note,
-    g1ExpNote:     items.g1Exp.note
+    g1ExpNote:     items.g1Exp.note,
+    bloodNote:     items.blood.note
   };
 
   return {
