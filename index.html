@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-1200';
+  var CURRENT_VERSION = '20260602-1300';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -8706,6 +8706,55 @@ const RACE_PAST_DATA = {
         summary: '安田記念は生産者の支配率が顕著に出るレース。ノーザンファーム生産馬は複勝率34.2%で他を圧倒。さらに「中4-9週の外厩調整馬」は複勝率121.2%という隠れた鉄板データを記録している。今年の出走馬では、ノーザンファーム生産馬5頭（シックスペンス・ステレンボッシュ・トロヴァトーレ・レーベンスティール・ワールズエンド）が該当する。ただし他のデータ（前走人気・前走G3等）との組み合わせで最終判断する必要がある。ステレン・トロヴァ・レーベンはノーザンFだが前走G3 or 前走阪神で消去対象。シックスペンスも前走マイラーズC5着以下で消去対象。クリア組のワールズエンドのみがノーザンF×データクリアの組み合わせ。'
       }
     },
+    anaUmaAnalysis: {
+      title: '🌠 穴馬・伏兵・夢馬券 妙味候補',
+      subtitle: 'ランクスコアでは下位だが、データ的根拠ある妙味馬',
+      candidates: [
+        {
+          category: '🏇 伏兵（中穴・データクリア組）',
+          name: 'ワールズエンド', popularity:'7番人気', odds:'18.1倍',
+          score: 49, total: 96, stars: 3,
+          reasons: [
+            { icon:'✅', text:'🏆 データクリア5頭の1頭' },
+            { icon:'✅', text:'🏭 ノーザンファーム生産（唯一）' },
+            { icon:'✅', text:'前走京王杯SC 1着（3人気）' },
+            { icon:'✅', text:'🩸 父ロードカナロア（1位サンプル最多）' },
+            { icon:'⚠️', text:'東京1600m実績なし' }
+          ],
+          strategy: '3列目押さえ',
+          description: 'クリア組5頭の中で唯一の中穴。データ的に勝負馬の資格あり。'
+        },
+        {
+          category: '🌸 妙味（葵Sのデア型）',
+          name: 'ステレンボッシュ', popularity:'8番人気', odds:'18.5倍',
+          score: 53, total: 102, stars: 2,
+          reasons: [
+            { icon:'✅', text:'🌸 美浦×牝馬（複勝率66.7%★★★）' },
+            { icon:'✅', text:'🩸 父エピファネイア（単勝回収188%）' },
+            { icon:'✅', text:'🎚️ 56kg（軽斤量）' },
+            { icon:'✅', text:'⚡ 前走上がり33.1（重賞上位）' },
+            { icon:'⚠️', text:'前走G3で消去対象（1-0-0-14）' }
+          ],
+          strategy: '3列目押さえ',
+          description: '美浦×牝馬の構造的有利。葵Sのデアヴェローチェ型（6人気軸的中）の再現を狙うなら。'
+        },
+        {
+          category: '💎 夢馬券(大穴・データ矛盾極端)',
+          name: 'セフィロ', popularity:'14番人気', odds:'35.7倍',
+          score: 37, total: 71, stars: 5,
+          reasons: [
+            { icon:'⚡', text:'上がり32.6秒（出走馬中最速・異次元末脚）' },
+            { icon:'💎', text:'父イスラボニータ（単勝回収249%）' },
+            { icon:'🌸', text:'美浦×牝馬（複勝率66.7%）' },
+            { icon:'🩸', text:'母父ハーツクライ（サンデー系）' },
+            { icon:'⚠️', text:'前走14人気で消去対象（0-1-0-47）' }
+          ],
+          strategy: '夢の3列目（消しても良いレベル）',
+          description: '好走要素3つvs致命的消去1つの「データ矛盾型」。35.7倍の妙味は捨て難いが、データ的には完全消し対象。'
+        }
+      ],
+      summary: 'ランクスコアでの「△以下」評価馬から、データ的根拠ある妙味馬を3頭ピックアップ。ワールズエンドは「データクリア5頭の中穴」、ステレンボッシュは「美浦×牝馬の構造的有利」、セフィロは「上がり3F最速＋イスラボニータ妙味」。葵Sのデアヴェローチェ（6人気軸的中）、ダービーのバステール（11人気3列目）の成功例から、データ的根拠ある中穴を3列目に組み込むランク戦略が有効。'
+    },
     anaPoints: [
       '🏟️【コース特徴】東京芝1600m・G1・3歳上・直線525mのスピード持続戦',
       '🥇 馬体重 480kg未満は危険（勝ち馬は全頭480kg以上）',
@@ -13663,7 +13712,55 @@ function renderKaime() {
 
   // ランク戦略買い目（S軸+A/B/C群の3連単マルチ）
   var rankEl = document.getElementById('rank-strategy-container');
-  if (rankEl) rankEl.innerHTML = renderRankStrategy(raceName);
+  if (rankEl) {
+    var html = renderRankStrategy(raceName);
+    // 穴馬・伏兵・夢馬券セクションを ランク戦略の下に挿入
+    var anaData = (typeof RACE_PAST_DATA !== 'undefined' && RACE_PAST_DATA[raceName])
+                  ? RACE_PAST_DATA[raceName].anaUmaAnalysis : null;
+    if (anaData) html += renderAnaUmaSection(anaData);
+    rankEl.innerHTML = html;
+  }
+}
+
+function renderAnaUmaSection(d) {
+  if (!d) return '';
+  var html = '<div class="ana-uma-section">';
+  html += '<h3 style="font-size:16px;font-weight:bold;color:#ffd700;margin:24px 0 8px;">' + d.title + '</h3>';
+  html += '<div style="font-size:11px;color:#a0a8c8;margin-bottom:16px;">' + d.subtitle + '</div>';
+
+  (d.candidates || []).forEach(function(c){
+    var starStr = '★'.repeat(c.stars) + '☆'.repeat(5 - c.stars);
+    html += '<div class="ana-card" style="background:linear-gradient(135deg,rgba(255,215,0,0.05),rgba(192,143,255,0.05));border-left:4px solid #ffd700;border-radius:10px;padding:14px 16px;margin-bottom:12px;">';
+    html += '<div style="font-size:12px;color:#ffd700;font-weight:bold;margin-bottom:6px;">' + c.category + '</div>';
+    html += '<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;margin-bottom:8px;">'
+         + '<div>'
+         + '<span style="font-size:18px;font-weight:bold;color:#fff;">⭐ ' + c.name + '</span>'
+         + '<span style="font-size:12px;color:#a0a8c8;margin-left:8px;">(' + c.popularity + '・' + c.odds + ')</span>'
+         + '</div>'
+         + '<div style="font-size:14px;color:#ffd700;">妙味度 ' + starStr + '</div>'
+         + '</div>';
+    html += '<div style="background:rgba(0,0,0,0.2);border-radius:6px;padding:6px 10px;margin-bottom:8px;display:flex;justify-content:space-between;">'
+         + '<span style="font-size:11px;color:#a0a8c8;">3着内予想</span>'
+         + '<span style="font-size:14px;font-weight:bold;color:#7AE6B5;">' + c.score + '% (' + c.total + '/194)</span>'
+         + '</div>';
+    html += '<ul style="margin:0;padding:0 0 0 8px;list-style:none;">';
+    (c.reasons || []).forEach(function(r){
+      var color = r.icon === '⚠️' ? '#ff8080' : '#ccd0e0';
+      html += '<li style="font-size:12px;color:' + color + ';line-height:1.7;">' + r.icon + ' ' + r.text + '</li>';
+    });
+    html += '</ul>';
+    html += '<div style="font-size:11px;color:#a0a8c8;margin-top:8px;padding:6px 10px;background:rgba(0,0,0,0.15);border-radius:4px;line-height:1.5;">' + c.description + '</div>';
+    html += '<div style="margin-top:8px;padding:6px 10px;background:rgba(255,215,0,0.1);border-left:2px solid #ffd700;border-radius:4px;font-size:11px;color:#ffd700;">🎯 推奨買い目: <strong>' + c.strategy + '</strong></div>';
+    html += '</div>';
+  });
+
+  if (d.summary) {
+    html += '<div style="margin-top:16px;padding:12px;background:rgba(255,215,0,0.05);border-top:2px solid #ffd700;border-radius:6px;font-size:11px;line-height:1.6;color:#ccd0e0;">';
+    html += '<strong style="color:#ffd700;">💡 戦略まとめ：</strong>' + d.summary;
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
 }
 
 function renderRankStrategy(raceName) {
