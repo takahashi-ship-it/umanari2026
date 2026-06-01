@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260601-2200';
+  var CURRENT_VERSION = '20260601-2300';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1442,6 +1442,25 @@
     .data-badge { font-size:10px; padding:2px 6px; }
   }
   .horse-card .horse-data-badges { background:rgba(0,0,0,0.05); border-left-color:#ffb300; }
+  /* ===== その他データ統合カード ===== */
+  .other-section { margin:14px 0; padding:10px 12px; background:rgba(255,255,255,0.03); border-radius:6px; border-left:3px solid #4a9eff; }
+  .other-section-header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
+  .other-section-title { font-size:14px; font-weight:bold; color:#ffd700; }
+  .other-section-subtitle { font-size:10px; color:#a0a8c8; }
+  .other-table { width:100%; font-size:11px; border-collapse:collapse; }
+  .other-table td { padding:4px 6px; vertical-align:middle; }
+  .other-label { width:25%; }
+  .other-record { width:25%; color:#ccd0e0; }
+  .other-rate { width:15%; color:#fff; text-align:right; }
+  .other-desc { color:#a0a8c8; font-size:10px; }
+  .match-row td { padding:4px 6px 8px; background:rgba(255,255,255,0.02); }
+  .match-prefix { font-size:10px; color:#a0a8c8; margin-right:6px; }
+  .mini-badge { display:inline-block; padding:2px 7px; border-radius:8px; font-size:10px; font-weight:600; margin:2px 3px 2px 0; white-space:nowrap; }
+  .mini-badge-best { background:#ffd700; color:#5a4500; border:1px solid #ffb300; }
+  .mini-badge-iron { background:#4a9eff; color:#fff; border:1px solid #2a7edd; }
+  .mini-badge-warn { background:#ff9933; color:#fff; border:1px solid #cc6600; }
+  .mini-badge-kill { background:#ff6666; color:#fff; border:1px solid #cc3333; text-decoration:line-through; }
+  .empty-mark { font-size:10px; color:#6a7090; font-style:italic; }
   .badge-empty { font-size:11px; color:#6a7090; font-style:italic; }
 </style>
 </head>
@@ -8444,6 +8463,80 @@ const RACE_PAST_DATA = {
         summary: '安田記念で「美浦×牝馬」が複勝率66.7%★★★を記録する異常な強さの裏には、4つの構造的必然がある。①制度的に牝馬は斤量56kgで牡馬より2kg軽い、②マイル戦は牝馬の瞬発力が最も活きる距離、③6月の高速馬場で軽い斤量がさらに加速、④美浦は東京近郊で輸送ストレスが少なく、調教コースも東京と類似。これらの要因が重なって、ヴィクトリアマイル経由馬は7年連続連対を達成している。今年の出走馬では牝馬2頭（ステレンボッシュ・セフィロ）が該当する。同じ斤量論理で3歳牡馬54kgのアスクイキゴミも制度的アドバンテージを持ち、軽斤量で考えるとさらに有利な立場にいる。'
       }
     },
+    otherDataAnalysis: {
+      title: '安田記念 その他データ 統合分析カード',
+      subtitle: '年齢・脚質・前走・馬体重・枠順をまとめて',
+      sections: [
+        {
+          title: '🎂 年齢別', subtitle: '過去10年データ', matchKey:'age',
+          rows: [
+            { label:'3歳',     record:'0-0-1-3',  rate:25.0, tag:'rare', desc:'挑戦例少' },
+            { label:'4歳',     record:'5-3-2-33', rate:23.3, tag:'best', desc:'★最強年代' },
+            { label:'5歳',     record:'2-5-3-39', rate:20.4, tag:'iron', desc:'安定' },
+            { label:'6歳',     record:'3-1-2-31', rate:17.9, tag:'iron', desc:'中位' },
+            { label:'7歳以上', record:'0-1-2-26', rate:10.3, tag:'kill', desc:'❌苦戦' }
+          ]
+        },
+        {
+          title: '🏃 脚質別', subtitle: '過去20年データ', matchKey:'kyakushitsu',
+          rows: [
+            { label:'差し', record:'12-8-11-126', rate:19.7, tag:'best', desc:'★最強脚質' },
+            { label:'追込', record:'2-6-7-79',    rate:16.0, tag:'iron', desc:'差し届く' },
+            { label:'中団', record:'-',           rate:null, tag:'iron', desc:'差しに準ず' },
+            { label:'先行', record:'5-3-2-59',    rate:14.5, tag:'warn', desc:'苦戦傾向' },
+            { label:'逃げ', record:'1-3-0-16',    rate:20.0, tag:'kill', desc:'ロゴ以外なし' }
+          ]
+        },
+        {
+          title: '📜 前走別', subtitle: '過去10年データ', matchKey:'prevRace',
+          rows: [
+            { label:'ヴィクトリアM(牝)', record:'2-4-0-10', rate:37.5, tag:'best', desc:'★7年連続連対' },
+            { label:'ドバイターフ',      record:'1-2-1-3',  rate:57.0, tag:'best', desc:'★海外組最強' },
+            { label:'NHKマイル',         record:'1-0-1-1',  rate:67.0, tag:'iron', desc:'3歳組基準' },
+            { label:'エプソムC連対',     record:'2-0-0-8',  rate:20.0, tag:'iron', desc:'前走G3連対' },
+            { label:'高松宮記念',        record:'2-0-1-8',  rate:27.0, tag:'iron', desc:'距離延長' },
+            { label:'ダービー卿CT',      record:'2-0-0-8',  rate:20.0, tag:'iron', desc:'東京1600m' },
+            { label:'京王杯SC',          record:'2-3-2-32', rate:17.9, tag:'iron', desc:'距離延長組' },
+            { label:'マイラーズC',       record:'1-0-5-33', rate:15.4, tag:'warn', desc:'マイル重賞勝必要' },
+            { label:'大阪杯',            record:'0-0-1-14', rate:6.7,  tag:'kill', desc:'苦戦' }
+          ]
+        },
+        {
+          title: '⚖️ 馬体重別', subtitle: '過去10年データ', matchKey:'weight',
+          rows: [
+            { label:'500-519kg', record:'4-6-3-38', rate:25.5, tag:'best', desc:'★最強帯' },
+            { label:'480-499kg', record:'6-3-2-50', rate:18.0, tag:'iron', desc:'安定' },
+            { label:'520kg以上', record:'0-0-1-9',  rate:10.0, tag:'warn', desc:'やや重' },
+            { label:'460-479kg', record:'0-1-3-29', rate:12.0, tag:'warn', desc:'やや軽' },
+            { label:'460kg未満', record:'0-0-1-16', rate:6.0,  tag:'kill', desc:'❌連対馬0' }
+          ]
+        },
+        {
+          title: '🎯 枠順別', subtitle: '過去20年データ', matchKey:'wakuban',
+          rows: [
+            { label:'7枠', record:'5-2-4-42', rate:20.8, tag:'best', desc:'★単勝回収206%' },
+            { label:'5枠', record:'5-2-1-32', rate:20.0, tag:'best', desc:'★単勝回収156%' },
+            { label:'2枠', record:'3-3-3-28', rate:24.3, tag:'iron', desc:'連対率高' },
+            { label:'3枠', record:'3-3-1-32', rate:17.9, tag:'iron', desc:'安定' },
+            { label:'8枠', record:'2-2-5-46', rate:16.4, tag:'iron', desc:'中位' },
+            { label:'1枠', record:'1-3-2-31', rate:16.2, tag:'warn', desc:'内詰まり' },
+            { label:'4枠', record:'1-3-2-33', rate:15.4, tag:'warn', desc:'回収率低' },
+            { label:'6枠', record:'0-2-2-36', rate:10.0, tag:'kill', desc:'★複勝率最低' }
+          ]
+        }
+      ],
+      finalStrategy: {
+        title: '🎯 統合戦略まとめ',
+        items: [
+          '①4歳の差し馬を中心に評価',
+          '②前走ヴィクトリアM・ドバイターフ・NHKマイル組を優先',
+          '③馬体重500-519kg帯を加点（当日確認）',
+          '④5枠・7枠を妙味として加点（枠順確定後）',
+          '⑤7歳以上・逃げ脚質・460kg未満は割引'
+        ],
+        summary: '個別データでは「年齢4歳」「差し脚質」「馬体重500-519kg」「5・7枠」が鉄板帯。逆に「7歳以上」「逃げ脚質」「460kg未満」「6枠」は割引対象。前走別ではヴィクトリアM・ドバイターフ・NHKマイル組が圧倒的に強い。これらを総合して評価すれば、ピークの組み合わせを持つ馬が浮上する。'
+      }
+    },
     anaPoints: [
       '🏟️【コース特徴】東京芝1600m・G1・3歳上・直線525mのスピード持続戦',
       '🥇 馬体重 480kg未満は危険（勝ち馬は全頭480kg以上）',
@@ -9117,6 +9210,117 @@ function renderSexStableAnalysis(d) {
   return html;
 }
 
+function renderOtherDataAnalysis(d) {
+  if (!d) return '';
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['安田記念'] || []) : [];
+
+  function matchHorses(sec, row){
+    var matched = [];
+    horses.forEach(function(h){
+      var ok = false;
+      if (sec.matchKey === 'age') {
+        var a = h.age || 0;
+        if (row.label === '3歳' && a === 3) ok = true;
+        else if (row.label === '4歳' && a === 4) ok = true;
+        else if (row.label === '5歳' && a === 5) ok = true;
+        else if (row.label === '6歳' && a === 6) ok = true;
+        else if (row.label === '7歳以上' && a >= 7) ok = true;
+      } else if (sec.matchKey === 'kyakushitsu') {
+        var k = h.kyakushitsu || h.style || h.runStyle || '';
+        if (row.label === '差し' && k === '差し') ok = true;
+        else if (row.label === '追込' && k === '追込') ok = true;
+        else if (row.label === '中団' && k === '中団') ok = true;
+        else if (row.label === '先行' && k === '先行') ok = true;
+        else if (row.label === '逃げ' && k === '逃げ') ok = true;
+      } else if (sec.matchKey === 'prevRace') {
+        var pr = h.prevRace || '';
+        if (row.label.indexOf('ヴィクトリアM') >= 0 && pr.indexOf('ヴィクトリアマイル') >= 0 && h.sex === '牝') ok = true;
+        else if (row.label.indexOf('ドバイ') >= 0 && pr.indexOf('ドバイ') >= 0) ok = true;
+        else if (row.label.indexOf('NHKマイル') >= 0 && pr.indexOf('NHKマイル') >= 0) ok = true;
+        else if (row.label.indexOf('エプソム') >= 0 && pr.indexOf('エプソムC') >= 0 && (h.prevRank || 99) <= 2) ok = true;
+        else if (row.label.indexOf('高松宮') >= 0 && pr.indexOf('高松宮') >= 0) ok = true;
+        else if (row.label.indexOf('ダービー卿') >= 0 && pr.indexOf('ダービー卿') >= 0) ok = true;
+        else if (row.label.indexOf('京王杯') >= 0 && pr.indexOf('京王杯') >= 0) ok = true;
+        else if (row.label.indexOf('マイラーズ') >= 0 && pr.indexOf('マイラーズ') >= 0) ok = true;
+        else if (row.label.indexOf('大阪杯') >= 0 && pr.indexOf('大阪杯') >= 0) ok = true;
+      } else if (sec.matchKey === 'weight') {
+        var w = (h.weight && typeof h.weight === 'object') ? h.weight.current : (typeof h.weight === 'number' ? h.weight : 0);
+        if (!w) return;
+        if (row.label === '500-519kg' && w >= 500 && w <= 519) ok = true;
+        else if (row.label === '480-499kg' && w >= 480 && w <= 499) ok = true;
+        else if (row.label === '520kg以上' && w >= 520) ok = true;
+        else if (row.label === '460-479kg' && w >= 460 && w <= 479) ok = true;
+        else if (row.label === '460kg未満' && w < 460) ok = true;
+      } else if (sec.matchKey === 'wakuban') {
+        var wk = h.wakuban || h.waku || 0;
+        if (!wk) return;
+        for (var i = 1; i <= 8; i++) {
+          if (row.label === (i + '枠') && wk === i) { ok = true; break; }
+        }
+      }
+      if (ok) matched.push(h.name);
+    });
+    return matched;
+  }
+
+  function renderBadgesInline(names, tag){
+    if (!names || names.length === 0) return '<span class="empty-mark">（該当なし）</span>';
+    var cls = 'mini-badge';
+    if (tag === 'best') cls += ' mini-badge-best';
+    else if (tag === 'iron') cls += ' mini-badge-iron';
+    else if (tag === 'kill') cls += ' mini-badge-kill';
+    else if (tag === 'warn') cls += ' mini-badge-warn';
+    var html = '';
+    names.forEach(function(n){ html += '<span class="' + cls + '">' + n + '</span>'; });
+    return html;
+  }
+  function tagToColor(t){
+    if (t === 'best') return 'green';
+    if (t === 'iron') return 'blue';
+    if (t === 'warn') return 'red';
+    if (t === 'kill') return 'red';
+    if (t === 'rare') return 'purple';
+    return 'blue';
+  }
+
+  var html = '<div class="analysis-card">';
+  html += '<h3>📋 ' + d.title + '</h3>';
+  html += '<div class="subtitle">' + d.subtitle + '</div>';
+
+  d.sections.forEach(function(sec){
+    html += '<div class="other-section">';
+    html += '<div class="other-section-header"><span class="other-section-title">' + sec.title + '</span><span class="other-section-subtitle">' + sec.subtitle + '</span></div>';
+    html += '<table class="other-table"><tbody>';
+    sec.rows.forEach(function(r){
+      var matched = matchHorses(sec, r);
+      var rateStr = r.rate !== null ? r.rate + '%' : '-';
+      html += '<tr>'
+           + '<td class="other-label"><span class="label-pill label-pill-' + tagToColor(r.tag) + '">' + r.label + '</span></td>'
+           + '<td class="other-record">' + r.record + '</td>'
+           + '<td class="other-rate"><strong>' + rateStr + '</strong></td>'
+           + '<td class="other-desc">' + r.desc + '</td>'
+           + '</tr>';
+      if (matched.length > 0) {
+        html += '<tr class="match-row"><td colspan="4">'
+             + '<span class="match-prefix">該当' + matched.length + '頭：</span>'
+             + renderBadgesInline(matched, r.tag)
+             + '</td></tr>';
+      }
+    });
+    html += '</tbody></table></div>';
+  });
+
+  if (d.finalStrategy) {
+    var fs = d.finalStrategy;
+    html += '<div class="final-strategy"><div class="final-strategy-title">' + fs.title + '</div><ol>';
+    fs.items.forEach(function(s){ html += '<li>' + s + '</li>'; });
+    html += '</ol></div>';
+    html += '<div class="summary-text"><strong>総括</strong>：' + fs.summary + '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
 function renderPastData() {
   var root = document.getElementById('pastDataRoot');
   if (!root) return;
@@ -9217,6 +9421,9 @@ function renderPastData() {
   }
   if (data.sexStableAnalysis) {
     html += renderSexStableAnalysis(data.sexStableAnalysis);
+  }
+  if (data.otherDataAnalysis) {
+    html += renderOtherDataAnalysis(data.otherDataAnalysis);
   }
   data.sections.forEach(function(sec) {
     html += '<div class="section">';
