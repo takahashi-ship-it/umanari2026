@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-0100';
+  var CURRENT_VERSION = '20260602-0200';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1667,14 +1667,6 @@
     <div class="panel active" id="tab-shutsuba">
       <div class="section">
         <div id="shutsuba-race-header"><!-- renderShutsubaTable() で動的生成 --></div>
-
-        <!-- 馬体重入力パネル -->
-        <div style="background:#F8F8F8;border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:14px">
-          <div style="font-size:12px;font-weight:700;color:#1a2744;margin-bottom:4px">⚖️ 馬体重入力（当日確定後に入力）</div>
-          <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">前走比 ±8kg 以上は赤字で警告表示されます</div>
-          <div id="bw-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px"></div>
-        </div>
-
         <div id="shutsuba-container"><!-- renderShutsubaTable() で動的生成 --></div>
       </div>
 
@@ -2848,7 +2840,6 @@ document.querySelectorAll('#contentTabs .tab').forEach(t => {
     if (t.dataset.target === 'tab-kaime' && typeof sw === 'function') sw('kaime');
     if (t.dataset.target === 'tab-shutsuba') {
       renderShutsubaTable();
-      initBwGrid();
       setTimeout(function(){ renderPacePredict(); }, 50);
     }
     if (t.dataset.target === 'tab-odds' && typeof renderOddsTab === 'function') {
@@ -11705,7 +11696,6 @@ function setCurrentRace(name) {
 
   // Refresh 出馬表 if shutsuba tab is active (or always — table is cheap)
   if (document.getElementById('shutsuba-container')) renderShutsubaTable();
-  if (document.getElementById('bw-grid')) initBwGrid();
   if (document.getElementById('pace-predict')) renderPacePredict();
 
   // Refresh baba prediction with current selection
@@ -11755,7 +11745,6 @@ if (document.getElementById('goodList')) renderCriteria();
 window.horses = HORSES;
 window.currentRaceName = currentRace;
 renderShutsubaTable();
-initBwGrid();
 renderPacePredict();
 renderSeisekiGraph();
 
@@ -12121,40 +12110,6 @@ function renderPacePredict() {
   html += '</div>';
 
   div.innerHTML = html;
-}
-
-/* ==== 機能2: 馬体重入力 ==== */
-function initBwGrid() {
-  var grid = document.getElementById('bw-grid');
-  if (!grid) return;
-  var horses = window.horses || (typeof HORSES !== 'undefined' ? HORSES : []);
-  if (!horses.length) return;
-  var sorted = horses.slice().sort(function(a,b){ return (a.umaban||99) - (b.umaban||99); });
-  var html = '';
-  sorted.forEach(function(h, i){
-    var prevBw = h.bodyWeight || 0;
-    html += '<div style="display:flex;align-items:center;gap:6px;background:#fff;' +
-            'border:0.5px solid var(--border);padding:6px 10px;border-radius:var(--border-radius-md)">' +
-            '<span style="font-size:11px;font-weight:500;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' +
-            (h.umaban != null ? h.umaban + '番 ' : '') + h.name + '</span>' +
-            '<input type="number" id="bw_' + i + '" placeholder="' + (prevBw || '480') + '" min="380" max="600"' +
-            ' style="width:64px;padding:4px;border:0.5px solid var(--border);' +
-            'border-radius:var(--border-radius-md);font-size:11px;text-align:right"' +
-            ' oninput="checkBw(' + i + ',' + (prevBw || 0) + ',this.value)">' +
-            '<span id="bw_diff_' + i + '" style="font-size:10px;min-width:42px;text-align:right;color:var(--text-mute)">' +
-            (prevBw ? '前走' + prevBw : '') + '</span>' +
-            '</div>';
-  });
-  grid.innerHTML = html;
-}
-function checkBw(idx, prevBw, val) {
-  var diffEl = document.getElementById('bw_diff_' + idx);
-  if (!diffEl || !val || !prevBw) return;
-  var diff = parseInt(val, 10) - parseInt(prevBw, 10);
-  var color = Math.abs(diff) >= 8 ? '#A32D2D' : Math.abs(diff) >= 4 ? '#EF9F27' : '#0F6E56';
-  diffEl.style.color = color;
-  diffEl.textContent = (diff >= 0 ? '+' : '') + diff + 'kg';
-  diffEl.title = Math.abs(diff) >= 8 ? (diff > 0 ? '太め残り注意' : '絞りすぎ注意') : '';
 }
 
 /* ==== 機能3: 騎手乗り替わり警告バッジ ==== */
@@ -17344,7 +17299,6 @@ function sw(t) {
   } else if (t === 'shutsuba') {
     setTimeout(function() {
       if (typeof renderShutsubaTable === 'function') renderShutsubaTable();
-      if (typeof initBwGrid === 'function') initBwGrid();
       if (typeof renderPacePredict === 'function') renderPacePredict();
     }, 100);
   }
