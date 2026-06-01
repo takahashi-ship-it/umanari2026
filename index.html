@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-1800';
+  var CURRENT_VERSION = '20260602-1900';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13687,6 +13687,8 @@ function renderKaime() {
     html += renderRankClassification(raceName);
     // 🎯 推奨フォーメーション 3パターン
     html += renderRecommendedFormations(raceName);
+    // 🛠 カスタムフォーメーション（チェックボックスで自由選択）
+    html += renderCustomFormation(raceName);
     // 穴馬・伏兵・夢馬券セクションを ランク戦略の下に挿入
     var anaData = (typeof RACE_PAST_DATA !== 'undefined' && RACE_PAST_DATA[raceName])
                   ? RACE_PAST_DATA[raceName].anaUmaAnalysis : null;
@@ -13852,6 +13854,117 @@ function renderRecommendedFormations(raceName) {
   html += '<div style="margin-top:12px;padding:10px;background:#fff3cd;border-left:3px solid #ffc107;border-radius:4px;font-size:11px;color:#856404;line-height:1.6;">'
        + '💡 <strong>3連単フォーメーションの利点</strong>：1着・2着・3着を別々に予想することで、不要な組み合わせを排除。マルチより少ない点数で効率的に的中を狙えます。同馬の重複は自動除外されます。'
        + '</div>';
+  html += '</div>';
+  return html;
+}
+
+function renderCustomFormation(raceName) {
+  if (typeof HORSES_BY_RACE === 'undefined') return '';
+  var horses = HORSES_BY_RACE[raceName];
+  if (!horses || !horses.length) return '';
+
+  var ranked = horses.map(function(h){
+    var bd = computeScoreBreakdown(h, raceName);
+    var rank;
+    if (bd.pct >= 60) rank = 'S';
+    else if (bd.pct >= 55) rank = 'A';
+    else if (bd.pct >= 48) rank = 'B';
+    else if (bd.pct >= 35) rank = 'C';
+    else rank = 'D';
+    return { horse:h, bd:bd, rank:rank, pct:bd.pct };
+  }).sort(function(a,b){ return b.pct - a.pct; });
+
+  var rankColors = { S:'#b8860b', A:'#e65100', B:'#1565c0', C:'#424242', D:'#6a1b9a' };
+  var rankBgs    = { S:'#fff8e1', A:'#fff3e0', B:'#e3f2fd', C:'#f5f5f5', D:'#f3e5f5' };
+
+  function makeCheckboxes(columnId){
+    var h2 = '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
+    ranked.forEach(function(x){
+      var h = x.horse;
+      var color = rankColors[x.rank];
+      var bg = rankBgs[x.rank];
+      var safeName = h.name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      var umabanHtml = h.umaban
+        ? '<span style="display:inline-flex;justify-content:center;align-items:center;width:18px;height:18px;background:' + color + ';color:#fff;border-radius:50%;font-size:9px;font-weight:bold;margin-right:4px;">' + h.umaban + '</span>'
+        : '';
+      h2 += '<label class="custom-checkbox" data-column="' + columnId + '" data-name="' + safeName + '" data-rank="' + x.rank + '" style="display:inline-flex;align-items:center;background:' + bg + ';border:1.5px solid ' + color + ';border-radius:14px;padding:5px 10px 5px 8px;font-size:11px;font-weight:bold;color:#1a2744;cursor:pointer;user-select:none;">'
+         + '<input type="checkbox" class="custom-cb" data-column="' + columnId + '" data-name="' + safeName + '" style="margin-right:6px;cursor:pointer;" onchange="updateCustomFormation()">'
+         + umabanHtml
+         + '<span style="margin-right:6px;">' + h.name + '</span>'
+         + '<span style="font-size:9px;color:' + color + ';background:#fff;border-radius:8px;padding:1px 5px;">' + x.rank + ' ' + x.pct + '%</span>'
+         + '</label>';
+    });
+    h2 += '</div>';
+    return h2;
+  }
+
+  var html = '<div class="custom-formation" style="margin:24px 0;">';
+  html += '<h3 style="font-size:16px;font-weight:bold;color:#1a2744;margin:0 0 8px;">🛠 カスタムフォーメーション</h3>';
+  html += '<div style="font-size:11px;color:#666;margin-bottom:16px;">1着・2着・3着候補を自由に選択。点数・金額をリアルタイム計算</div>';
+
+  // 推奨パターン適用ボタン
+  html += '<div style="margin-bottom:16px;display:flex;flex-wrap:wrap;gap:6px;">'
+       + '<button onclick="applyPattern(\'A\')" style="background:#e8f5e9;border:1.5px solid #2e7d32;border-radius:6px;padding:6px 12px;font-size:11px;font-weight:bold;color:#2e7d32;cursor:pointer;">🛡 堅実A適用</button>'
+       + '<button onclick="applyPattern(\'B\')" style="background:#e3f2fd;border:1.5px solid #1565c0;border-radius:6px;padding:6px 12px;font-size:11px;font-weight:bold;color:#1565c0;cursor:pointer;">⚖️ 標準B適用</button>'
+       + '<button onclick="applyPattern(\'C\')" style="background:#fff8e1;border:1.5px solid #b8860b;border-radius:6px;padding:6px 12px;font-size:11px;font-weight:bold;color:#b8860b;cursor:pointer;">💎 妙味C適用</button>'
+       + '<button onclick="clearCustomFormation()" style="background:#f5f5f5;border:1.5px solid #999;border-radius:6px;padding:6px 12px;font-size:11px;font-weight:bold;color:#666;cursor:pointer;">🗑 全クリア</button>'
+       + '</div>';
+
+  // 1列目
+  html += '<div style="background:#fff;border:2px solid #ff6b6b;border-radius:8px;padding:12px;margin-bottom:10px;">'
+       + '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;flex-wrap:wrap;gap:6px;">'
+       + '<div style="font-size:13px;font-weight:bold;color:#ff6b6b;">🥇 1列目（1着候補）</div>'
+       + '<div style="font-size:11px;color:#666;">選択中：<span id="col1-count" style="font-weight:bold;color:#ff6b6b;">0</span>頭</div>'
+       + '</div>'
+       + makeCheckboxes('col1')
+       + '</div>';
+
+  // 2列目
+  html += '<div style="background:#fff;border:2px solid #4dabf7;border-radius:8px;padding:12px;margin-bottom:10px;">'
+       + '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;flex-wrap:wrap;gap:6px;">'
+       + '<div style="font-size:13px;font-weight:bold;color:#4dabf7;">🥈 2列目（2着候補）</div>'
+       + '<div style="font-size:11px;color:#666;">選択中：<span id="col2-count" style="font-weight:bold;color:#4dabf7;">0</span>頭</div>'
+       + '</div>'
+       + makeCheckboxes('col2')
+       + '</div>';
+
+  // 3列目
+  html += '<div style="background:#fff;border:2px solid #51cf66;border-radius:8px;padding:12px;margin-bottom:10px;">'
+       + '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;flex-wrap:wrap;gap:6px;">'
+       + '<div style="font-size:13px;font-weight:bold;color:#51cf66;">🥉 3列目（3着候補）</div>'
+       + '<div style="font-size:11px;color:#666;">選択中：<span id="col3-count" style="font-weight:bold;color:#51cf66;">0</span>頭</div>'
+       + '</div>'
+       + makeCheckboxes('col3')
+       + '</div>';
+
+  // 結果表示
+  html += '<div id="custom-result" style="background:linear-gradient(135deg,#1a2744,#2c3e50);color:#fff;border-radius:10px;padding:16px;margin-top:16px;">';
+  html += '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;flex-wrap:wrap;gap:6px;">'
+       + '<div style="font-size:14px;font-weight:bold;">📊 計算結果</div>'
+       + '<div style="font-size:11px;color:#aac;">同馬重複は自動除外</div>'
+       + '</div>';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">'
+       + '<div style="background:rgba(255,255,255,0.1);border-radius:6px;padding:10px;text-align:center;">'
+       + '<div style="font-size:10px;color:#aac;margin-bottom:4px;">3連単点数</div>'
+       + '<div id="custom-points" style="font-size:24px;font-weight:bold;color:#7AE6B5;">0点</div>'
+       + '</div>'
+       + '<div style="background:rgba(255,255,255,0.1);border-radius:6px;padding:10px;text-align:center;">'
+       + '<div style="font-size:10px;color:#aac;margin-bottom:4px;">購入金額</div>'
+       + '<div id="custom-total" style="font-size:24px;font-weight:bold;color:#ffd700;">0円</div>'
+       + '</div>'
+       + '</div>';
+  html += '<div style="margin-top:12px;"><div style="font-size:11px;color:#aac;margin-bottom:6px;">1点あたり単価：</div>'
+       + '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
+  [100, 200, 300, 500, 1000].forEach(function(price){
+    var isDefault = (price === 100);
+    var activeCls = isDefault ? ' active-price' : '';
+    var bgCol = isDefault ? '#ffd700' : 'rgba(255,255,255,0.1)';
+    var txtCol = isDefault ? '#1a2744' : '#fff';
+    html += '<button class="price-btn' + activeCls + '" data-price="' + price + '" onclick="setPrice(' + price + ')" style="background:' + bgCol + ';border:1.5px solid #ffd700;border-radius:6px;padding:6px 12px;font-size:11px;font-weight:bold;color:' + txtCol + ';cursor:pointer;">'
+         + price.toLocaleString() + '円</button>';
+  });
+  html += '</div></div>';
+  html += '</div>';
   html += '</div>';
   return html;
 }
@@ -18222,6 +18335,101 @@ function updateHeaderStats() {
 }
 
 document.addEventListener('DOMContentLoaded', updateHeaderStats);
+
+// ===== カスタムフォーメーション グローバルハンドラ =====
+window.updateCustomFormation = function() {
+  var col1 = Array.prototype.slice.call(document.querySelectorAll('.custom-cb[data-column="col1"]:checked')).map(function(cb){ return cb.dataset.name; });
+  var col2 = Array.prototype.slice.call(document.querySelectorAll('.custom-cb[data-column="col2"]:checked')).map(function(cb){ return cb.dataset.name; });
+  var col3 = Array.prototype.slice.call(document.querySelectorAll('.custom-cb[data-column="col3"]:checked')).map(function(cb){ return cb.dataset.name; });
+  var c1El = document.getElementById('col1-count');
+  var c2El = document.getElementById('col2-count');
+  var c3El = document.getElementById('col3-count');
+  if (c1El) c1El.textContent = col1.length;
+  if (c2El) c2El.textContent = col2.length;
+  if (c3El) c3El.textContent = col3.length;
+  var points = 0;
+  col1.forEach(function(a){
+    col2.forEach(function(b){
+      col3.forEach(function(c){
+        if (a !== b && a !== c && b !== c) points++;
+      });
+    });
+  });
+  var ptEl = document.getElementById('custom-points');
+  var totEl = document.getElementById('custom-total');
+  if (ptEl) ptEl.textContent = points + '点';
+  var activeBtn = document.querySelector('.price-btn.active-price');
+  var price = activeBtn ? parseInt(activeBtn.dataset.price, 10) : 100;
+  if (totEl) totEl.textContent = (points * price).toLocaleString() + '円';
+};
+
+window.setPrice = function(price) {
+  document.querySelectorAll('.price-btn').forEach(function(btn){
+    btn.classList.remove('active-price');
+    btn.style.background = 'rgba(255,255,255,0.1)';
+    btn.style.color = '#fff';
+  });
+  var btn = document.querySelector('.price-btn[data-price="' + price + '"]');
+  if (btn) {
+    btn.classList.add('active-price');
+    btn.style.background = '#ffd700';
+    btn.style.color = '#1a2744';
+  }
+  window.updateCustomFormation();
+};
+
+window.clearCustomFormation = function() {
+  document.querySelectorAll('.custom-cb').forEach(function(cb){ cb.checked = false; });
+  window.updateCustomFormation();
+};
+
+window.applyPattern = function(patternName) {
+  window.clearCustomFormation();
+  var raceName = (typeof window !== 'undefined' && (window.currentRaceName || window.currentRace))
+                 || (typeof currentRace !== 'undefined' ? currentRace : '');
+  if (!raceName || typeof HORSES_BY_RACE === 'undefined') return;
+  var horses = HORSES_BY_RACE[raceName];
+  if (!horses) return;
+  var ranked = horses.map(function(h){
+    var bd = computeScoreBreakdown(h, raceName);
+    var rank;
+    if (bd.pct >= 60) rank = 'S';
+    else if (bd.pct >= 55) rank = 'A';
+    else if (bd.pct >= 48) rank = 'B';
+    else if (bd.pct >= 35) rank = 'C';
+    else rank = 'D';
+    return { name:h.name, rank:rank, pct:bd.pct };
+  }).sort(function(a,b){ return b.pct - a.pct; });
+  var byRank = { S:[], A:[], B:[], C:[], D:[] };
+  ranked.forEach(function(x){ byRank[x.rank].push(x.name); });
+
+  var col1Names = [], col2Names = [], col3Names = [];
+  if (patternName === 'A') {
+    col1Names = byRank.S;
+    col2Names = byRank.S.concat(byRank.A);
+    col3Names = byRank.S.concat(byRank.A).concat(byRank.B);
+    window.setPrice(200);
+  } else if (patternName === 'B') {
+    col1Names = byRank.S.slice(0, 1);
+    col2Names = byRank.S.concat(byRank.A);
+    col3Names = byRank.S.concat(byRank.A).concat(byRank.B).concat(byRank.C.slice(0, 2));
+    window.setPrice(300);
+  } else if (patternName === 'C') {
+    col1Names = byRank.S.slice(0, 1);
+    col2Names = byRank.S.concat(byRank.A).concat(byRank.B.slice(0, 1));
+    col3Names = byRank.S.concat(byRank.A).concat(byRank.B).concat(byRank.C.slice(0, 2)).concat(byRank.D.slice(0, 1));
+    window.setPrice(200);
+  }
+  function checkBox(col, name){
+    var sel = '.custom-cb[data-column="' + col + '"][data-name="' + name.replace(/"/g,'&quot;') + '"]';
+    var cb = document.querySelector(sel);
+    if (cb) cb.checked = true;
+  }
+  col1Names.forEach(function(n){ checkBox('col1', n); });
+  col2Names.forEach(function(n){ checkBox('col2', n); });
+  col3Names.forEach(function(n){ checkBox('col3', n); });
+  window.updateCustomFormation();
+};
 
 // スマホ・PC両対応：ページ読み込み完了後に出馬表データ + ヘッダー馬場ボタン + 終了バナーを確実に初期化
 window.addEventListener('load', function() {
