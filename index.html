@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-0900';
+  var CURRENT_VERSION = '20260602-1000';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1461,6 +1461,14 @@
   .mini-badge-warn { background:#ff9933; color:#fff; border:1px solid #cc6600; }
   .mini-badge-kill { background:#ff6666; color:#fff; border:1px solid #cc3333; text-decoration:line-through; }
   .empty-mark { font-size:10px; color:#6a7090; font-style:italic; }
+  /* ===== スコア両表示（能力スコア + 3着内予想） ===== */
+  .score-display { background:rgba(0,0,0,0.05); border-radius:8px; padding:10px 12px; margin:6px 0 10px; }
+  .score-display .score-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; }
+  .score-display .score-row + .score-row { border-top:1px solid rgba(0,0,0,0.06); }
+  .score-display .score-label { font-size:12px; color:#666; font-weight:600; }
+  .score-display .score-value { font-size:16px; font-weight:bold; color:#1a2744; }
+  .score-display .score-value .pct { font-size:12px; opacity:0.7; }
+  .score-display .score-value.score-fukusho { color:#0F6E56; font-size:18px; }
   /* ===== ミニカード式（種牡馬/前走人気/上がり3F/性別所属） ===== */
   .sire-card-list, .data-card-list { display:flex; flex-direction:column; gap:10px; margin:16px 0; }
   .sire-card, .data-card { background:rgba(255,255,255,0.04); border-radius:8px; padding:12px; border-left:3px solid #4a9eff; }
@@ -11705,6 +11713,9 @@ function renderHorses() {
     const total = breakdown.total;
     const maxS = breakdown.max;
     const pct = _pct;
+    // 🎯 3着内予想（calcFukusho ベース・最大95%にクランプ）
+    var _fukR = (typeof calcFukusho === 'function') ? calcFukusho(h) : { score: 0 };
+    const fukushoProb = Math.min(95, Math.round((_fukR.score || 0) * 0.85));
     // 順位ベースで印を割り当て（1:◎ / 2:○ / 3:▲ / 4-5:△ / 6:× / 7以下:無印）
     let rank = getMarkByRank(idx + 1);
     const wakuClass = h.waku ? `waku-${h.waku}` : 'waku-tbd';
@@ -11793,9 +11804,15 @@ function renderHorses() {
       ${getHorseDataBadges(h, currentRace)}
 
       <div class="score-block">
-        <div class="score-top">
-          <span class="score-label">総合信頼度</span>
-          <span class="score-value">${pct}<span class="pct">%</span></span>
+        <div class="score-display">
+          <div class="score-row">
+            <span class="score-label">📊 能力スコア</span>
+            <span class="score-value">${total}/${maxS} (${pct}<span class="pct">%</span>)</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">🎯 3着内予想</span>
+            <span class="score-value score-fukusho">${fukushoProb}<span class="pct">%</span></span>
+          </div>
         </div>
         <div class="score-bar">
           <div class="score-bar-fill ${rank.key}" style="width:${pct}%"></div>
