@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-2100';
+  var CURRENT_VERSION = '20260602-2200';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1668,6 +1668,7 @@
       <button class="tab"        data-target="tab-data">過去10年</button>
       <button class="tab"        data-target="tab-horses">登録馬・信頼度</button>
       <button class="tab"        data-target="tab-kaime">買い目</button>
+      <button class="tab"        data-target="tab-maigo">🐎 迷走馬診断</button>
       <button class="tab"        data-target="tab-report">収支レポート</button>
     </nav>
 
@@ -2516,6 +2517,25 @@
 
       </div>
     </div>
+
+    <!-- ⑥ TAB: 迷走馬診断 -->
+    <div class="panel" id="tab-maigo">
+      <div class="container" style="padding:16px;">
+        <h2 style="font-size:20px;font-weight:bold;color:#1a2744;margin:0 0 8px;">🐎 迷走馬診断 🐎</h2>
+        <div style="font-size:12px;color:#666;margin-bottom:16px;">「来るか来ないか判断できない馬」をAIが診断します</div>
+
+        <div style="margin-bottom:16px;">
+          <div style="font-size:12px;color:#666;margin-bottom:8px;">診断したい馬を選択：</div>
+          <div id="maigo-horse-buttons" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+        </div>
+
+        <div id="maigo-diagnosis">
+          <div style="padding:30px;text-align:center;color:#999;font-style:italic;background:#f5f5f5;border-radius:8px;">
+            ↑ 上から馬を1頭選択してください
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <footer class="footer">
@@ -2833,6 +2853,10 @@ document.querySelectorAll('#contentTabs .tab').forEach(t => {
     }
     if (t.dataset.target === 'tab-data' && typeof renderPastData === 'function') {
       renderPastData();
+    }
+    if (t.dataset.target === 'tab-maigo' && typeof window.renderMaigoTab === 'function') {
+      var _rn = (window.currentRaceName || (typeof currentRace !== 'undefined' ? currentRace : ''));
+      window.renderMaigoTab(_rn);
     }
     if (t.dataset.target === 'tab-report') setTimeout(function(){ renderSeisekiGraph(); if (typeof renderJikuTracking === 'function') renderJikuTracking(); }, 50);
   });
@@ -18533,6 +18557,202 @@ window.setPrice = function(price) {
 window.clearCustomFormation = function() {
   document.querySelectorAll('.custom-cb').forEach(function(cb){ cb.checked = false; });
   window.updateCustomFormation();
+};
+
+window.renderMaigoTab = function(raceName) {
+  if (typeof HORSES_BY_RACE === 'undefined') return;
+  var horses = HORSES_BY_RACE[raceName];
+  if (!horses || !horses.length) return;
+  var buttonsEl = document.getElementById('maigo-horse-buttons');
+  if (!buttonsEl) return;
+  var sorted = horses.map(function(h){
+    var bd = computeScoreBreakdown(h, raceName);
+    return { horse:h, pct:bd.pct };
+  }).sort(function(a,b){ return b.pct - a.pct; });
+  var btnHtml = '';
+  sorted.forEach(function(x){
+    var h = x.horse;
+    var safeName = h.name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    var umaban = h.umaban ? h.umaban + '. ' : '';
+    btnHtml += '<button onclick="diagnoseMaigo(\'' + safeName + '\')" style="background:#fff;border:1.5px solid #ddd;border-radius:8px;padding:8px 12px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;">'
+            + '<span style="font-weight:bold;color:#1a2744;">' + umaban + h.name + '</span>'
+            + '<span style="font-size:10px;color:#666;">(' + x.pct + '%)</span>'
+            + '</button>';
+  });
+  buttonsEl.innerHTML = btnHtml;
+};
+
+window.diagnoseMaigo = function(horseName) {
+  var raceName = (typeof window !== 'undefined' && (window.currentRaceName || window.currentRace))
+                 || (typeof currentRace !== 'undefined' ? currentRace : '安田記念');
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? HORSES_BY_RACE[raceName] : [];
+  var h = horses && horses.find ? horses.find(function(x){ return x.name === horseName; }) : null;
+  if (!h) return;
+  var bd = computeScoreBreakdown(h, raceName);
+  var pct = bd.pct;
+  var rank;
+  if (pct >= 60) rank = 'S';
+  else if (pct >= 55) rank = 'A';
+  else if (pct >= 48) rank = 'B';
+  else if (pct >= 35) rank = 'C';
+  else rank = 'D';
+
+  var clearHorses = ['アスクイキゴミ','アドマイヤズーム','ガイアフォース','パンジャタワー','ワールズエンド'];
+  var isClear = clearHorses.indexOf(horseName) >= 0;
+
+  var killReasons = {
+    'ステレンボッシュ':'前走G3で消去対象（1-0-0-14）','トロヴァトーレ':'前走G3で消去対象（1-0-0-14）',
+    'レーベンスティール':'前走阪神競馬（0-0-1-25）',
+    'サクラトゥジュール':'前走6人気以下（0-1-0-47）','シャンパンカラー':'前走6人気以下（0-1-0-47）',
+    'シリウスコルト':'前走6人気以下（0-1-0-47）','スズハローム':'前走6人気以下（0-1-0-47）',
+    'セイウンハーデス':'前走6人気以下（0-1-0-47）','セフィロ':'前走6人気以下（0-1-0-47・14人気）',
+    'ドラゴンブースト':'前走6人気以下（0-1-0-47）','ロングラン':'前走6人気以下（0-1-0-47）',
+    'ルクソールカフェ':'前走ダート（芝1600m未経験）',
+    'ウォーターリヒト':'マイラーズC 5着以下（0-0-0-13）','オフトレイル':'マイラーズC 5着以下（0-0-0-13）',
+    'シックスペンス':'マイラーズC 5着以下（0-0-0-13）'
+  };
+
+  var positives = [];
+  if (h.prevIsOverseas) positives.push({ icon:'🌍', text:'前走海外組（別枠評価）' });
+  else if (h.prevPop === 1) positives.push({ icon:'✅', text:'前走1人気（複勝率36%）' });
+  else if (h.prevPop === 2) positives.push({ icon:'⭐', text:'前走2人気（最多3勝・複勝率30.4%）' });
+  else if (h.prevPop === 3) positives.push({ icon:'✅', text:'前走3人気（複勝率16.7%）' });
+  else if (h.prevPop === 4) positives.push({ icon:'✅', text:'前走4人気（複勝率17.6%・鉄板帯）' });
+
+  var lf = h.prevLast3f;
+  if (lf && lf < 99) {
+    if (lf <= 32.9) positives.push({ icon:'⚡', text:'前走上がり' + lf + '（最速帯・異次元末脚）' });
+    else if (lf <= 33.0) positives.push({ icon:'⚡', text:'前走上がり' + lf + '（鉄板ボーダー）' });
+    else if (lf <= 33.3) positives.push({ icon:'⚡', text:'前走上がり' + lf + '（重賞上位）' });
+    else if (lf <= 33.5) positives.push({ icon:'⚡', text:'前走上がり' + lf + '（重賞中位）' });
+  }
+
+  var sire = h.sire || '';
+  var sireDescMap = {
+    'リアルスティール':'父リアルスティール（複勝率43.3%★最強）',
+    'エピファネイア':'父エピファネイア（単勝回収188%）',
+    'モーリス':'父モーリス（複勝回収107%）',
+    'ロードカナロア':'父ロードカナロア（1位サンプル最多）',
+    'キタサンブラック':'父キタサンブラック（勝率15.7%最高）',
+    'キズナ':'父キズナ（複勝率31.3%）',
+    'ドゥラメンテ':'父ドゥラメンテ（安定）'
+  };
+  if (sireDescMap[sire]) positives.push({ icon:'🩸', text:sireDescMap[sire] });
+  else if (sire === 'イスラボニータ') positives.push({ icon:'💎', text:'父イスラボニータ（単勝249%★穴妙味）' });
+
+  var isMiuho = h.stable && h.stable.indexOf('美浦') >= 0;
+  var isMare = h.sex === '牝';
+  if (isMiuho && isMare) positives.push({ icon:'🌸', text:'美浦×牝馬（複勝率66.7%★★★最強）' });
+  else if (isMiuho) positives.push({ icon:'🏠', text:'美浦所属（関東馬・地の利）' });
+
+  if (h.carriedWeight && h.carriedWeight <= 54) positives.push({ icon:'🎚️', text: h.carriedWeight + 'kg（★3歳異次元アドバンテージ）' });
+  else if (h.carriedWeight && h.carriedWeight <= 56 && isMare) positives.push({ icon:'🎚️', text: h.carriedWeight + 'kg（牝馬軽斤量）' });
+
+  var nfHorses = ['シックスペンス','ステレンボッシュ','トロヴァトーレ','レーベンスティール','ワールズエンド'];
+  if (nfHorses.indexOf(horseName) >= 0) positives.push({ icon:'🏭', text:'ノーザンファーム生産（複勝率34.2%）' });
+
+  if (isClear) positives.unshift({ icon:'🏆', text:'データクリア5頭の1頭（全消去条件回避）' });
+
+  var jockey = h.jockey || '';
+  if (jockey === 'C.ルメール' || jockey === 'ルメール') positives.push({ icon:'🏇', text:'C.ルメール騎乗（東京1600m複勝率63.2%★）' });
+  else if (jockey === '武豊') positives.push({ icon:'🏇', text:'武豊騎乗（実績豊富）' });
+  else if (jockey.indexOf('戸崎') >= 0) positives.push({ icon:'🏇', text:'戸崎圭太騎乗（東京1600m45%）' });
+  else if (jockey.indexOf('川田') >= 0) positives.push({ icon:'🏇', text:'川田将雅騎乗（東京1600m45%）' });
+
+  var negatives = [];
+  if (killReasons[horseName]) negatives.push({ icon:'⚠️', text:killReasons[horseName] });
+  if (h.prevPop && h.prevPop >= 5 && !h.prevIsOverseas) negatives.push({ icon:'❌', text:'前走' + h.prevPop + '人気（5人気以下：3着内率1.6%）' });
+  if (lf && lf >= 34.0) negatives.push({ icon:'⚠️', text:'前走上がり' + lf + '（末脚不足・消し対象）' });
+  if (h.age >= 7) negatives.push({ icon:'⚠️', text: h.age + '歳（7歳以上：3着内率10.3%・苦戦）' });
+
+  var verdict, verdictColor, verdictBg, verdictIcon;
+  if (isClear && pct >= 55) {
+    verdict = '軸として強推奨'; verdictColor = '#2e7d32'; verdictBg = '#e8f5e9'; verdictIcon = '🟢';
+  } else if (pct >= 55) {
+    verdict = '押さえまで強く推奨'; verdictColor = '#1565c0'; verdictBg = '#e3f2fd'; verdictIcon = '🔵';
+  } else if (pct >= 48 && positives.length >= 3) {
+    verdict = '押さえまでは買い'; verdictColor = '#f57c00'; verdictBg = '#fff3e0'; verdictIcon = '🟡';
+  } else if (pct >= 35 && positives.length >= 2) {
+    verdict = 'データ悪いが妙味あり'; verdictColor = '#e65100'; verdictBg = '#ffe0b2'; verdictIcon = '🟠';
+  } else {
+    verdict = '完全消し推奨'; verdictColor = '#c62828'; verdictBg = '#ffebee'; verdictIcon = '🔴';
+  }
+
+  var diagnosis = '';
+  if (isClear && pct >= 60) {
+    diagnosis = '<strong>' + horseName + '</strong>はデータクリア5頭の中でも上位のスコア。全ての消去条件を回避し、AIスコア' + pct + '%は3着内予想として最有力。軸として固定する候補です。';
+  } else if (isClear) {
+    diagnosis = '<strong>' + horseName + '</strong>は全ての消去条件を回避したデータクリア5頭の1頭。AIスコア' + pct + '%は中堅だが、消去対象に該当しない点が強みです。推奨フォーメーションには確実に組み込みたい馬。';
+  } else if (pct >= 55 && negatives.length === 0) {
+    diagnosis = '<strong>' + horseName + '</strong>はAIスコア' + pct + '%で上位ランク。消去対象にも該当せず、データ的に堅実な選択。相手として強く推奨できる馬です。';
+  } else if (pct >= 48 && positives.length >= 3) {
+    diagnosis = '<strong>' + horseName + '</strong>は好走条件が多数あり妙味は強いが、消去対象にも該当する「データ矛盾型」。葵Sのデアヴェローチェ（6人気軸的中）、ダービーのバステール（11人気3着）のような中穴爆発を狙うなら3列目押さえに。';
+  } else if (positives.length >= 2 && negatives.length >= 1) {
+    diagnosis = '<strong>' + horseName + '</strong>はデータ的に消去対象だが、個別の好材料（' + positives.length + '個）も存在。ハイリスク・ハイリターン型で、配当妙味を取るか完全消しか判断が分かれる馬。不安なら押さえ程度に。';
+  } else if (positives.length === 0 || pct < 35) {
+    diagnosis = '<strong>' + horseName + '</strong>はAIスコア' + pct + '%と低調で、評価できる好材料も限定的。消去対象にも該当しており、データ的には完全消しが冷静な判断。夢を買うなら別馬を検討した方が効率的です。';
+  } else {
+    diagnosis = '<strong>' + horseName + '</strong>のAIスコアは' + pct + '%（' + bd.total + '/194点）。データ的には押さえまで。配当妙味次第で3列目に組み込むか検討。';
+  }
+
+  var buyAdvice;
+  if (verdict === '軸として強推奨' || verdict === '押さえまで強く推奨') {
+    buyAdvice = ['☑️ 軸として固定','☑️ 2列目・3列目に組み込む','☐ 完全消し'];
+  } else if (verdict === '押さえまでは買い' || verdict === 'データ悪いが妙味あり') {
+    buyAdvice = ['☐ 軸として固定','☑️ 3列目に組み込む','☐ 完全消し'];
+  } else {
+    buyAdvice = ['☐ 軸として固定','☐ 3列目に組み込む','☑️ 完全消し'];
+  }
+
+  var resultEl = document.getElementById('maigo-diagnosis');
+  if (!resultEl) return;
+  var umaban = h.umaban ? h.umaban + '. ' : '';
+
+  var html = '';
+  html += '<div style="margin-bottom:12px;padding:14px;background:#1a2744;color:#fff;border-radius:8px;">'
+       + '<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;">'
+       + '<div>'
+       + '<div style="font-size:20px;font-weight:bold;">' + umaban + horseName + '</div>'
+       + '<div style="font-size:12px;color:#aac;margin-top:2px;">' + (h.popEstimate||'?') + '人気・' + (h.odds!=null?h.odds:'?') + '倍 / ' + (h.age||'?') + '歳' + (h.sex||'') + ' / ' + (h.stable||'') + '</div>'
+       + '</div>'
+       + '<div style="text-align:right;">'
+       + '<div style="font-size:24px;font-weight:bold;color:#7AE6B5;">' + pct + '%</div>'
+       + '<div style="font-size:10px;color:#aac;">AIスコア ' + bd.total + '/' + bd.max + ' (' + rank + ')</div>'
+       + '</div>'
+       + '</div></div>';
+  html += '<div style="margin-bottom:16px;padding:16px;background:' + verdictBg + ';border:2px solid ' + verdictColor + ';border-radius:10px;text-align:center;">'
+       + '<div style="font-size:11px;color:#666;margin-bottom:4px;">【総合判定】</div>'
+       + '<div style="font-size:20px;font-weight:bold;color:' + verdictColor + ';">' + verdictIcon + ' ' + verdict + '</div>'
+       + '</div>';
+  html += '<div style="margin-bottom:12px;padding:14px;background:#e8f5e9;border-left:4px solid #2e7d32;border-radius:8px;">'
+       + '<div style="font-size:14px;font-weight:bold;color:#2e7d32;margin-bottom:8px;">✅ 評価できる点</div>';
+  if (positives.length === 0) html += '<div style="font-size:12px;color:#666;font-style:italic;">該当データなし</div>';
+  else {
+    html += '<ul style="margin:0;padding-left:8px;list-style:none;">';
+    positives.forEach(function(p){ html += '<li style="font-size:13px;color:#1a2744;line-height:1.8;font-weight:500;">' + p.icon + ' ' + p.text + '</li>'; });
+    html += '</ul>';
+  }
+  html += '</div>';
+  html += '<div style="margin-bottom:12px;padding:14px;background:#ffebee;border-left:4px solid #c62828;border-radius:8px;">'
+       + '<div style="font-size:14px;font-weight:bold;color:#c62828;margin-bottom:8px;">❌ 評価できない点（消去対象）</div>';
+  if (negatives.length === 0) html += '<div style="font-size:12px;color:#666;font-style:italic;">該当なし（クリア組）</div>';
+  else {
+    html += '<ul style="margin:0;padding-left:8px;list-style:none;">';
+    negatives.forEach(function(n){ html += '<li style="font-size:13px;color:#c62828;line-height:1.8;text-decoration:line-through;font-weight:500;">' + n.icon + ' ' + n.text + '</li>'; });
+    html += '</ul>';
+  }
+  html += '</div>';
+  html += '<div style="margin-bottom:12px;padding:14px;background:#fff8e1;border-left:4px solid #ffd700;border-radius:8px;">'
+       + '<div style="font-size:14px;font-weight:bold;color:#b8860b;margin-bottom:8px;">💬 総合診断</div>'
+       + '<div style="font-size:13px;color:#1a2744;line-height:1.8;">' + diagnosis + '</div>'
+       + '</div>';
+  html += '<div style="padding:14px;background:#e3f2fd;border-left:4px solid #1565c0;border-radius:8px;">'
+       + '<div style="font-size:14px;font-weight:bold;color:#1565c0;margin-bottom:8px;">🎫 おすすめ買い方</div>';
+  buyAdvice.forEach(function(b){ html += '<div style="font-size:13px;color:#1a2744;line-height:1.8;">' + b + '</div>'; });
+  html += '</div>';
+
+  resultEl.innerHTML = html;
+  resultEl.scrollIntoView({ behavior:'smooth', block:'start' });
 };
 
 window.applyPattern = function(patternName) {
