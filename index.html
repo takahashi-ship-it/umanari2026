@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-0200';
+  var CURRENT_VERSION = '20260602-0300';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -8545,6 +8545,46 @@ const RACE_PAST_DATA = {
         summary: '個別データでは「年齢4歳」「差し脚質」「馬体重500-519kg」「5・7枠」が鉄板帯。逆に「7歳以上」「逃げ脚質」「460kg未満」「6枠」は割引対象。前走別ではヴィクトリアM・ドバイターフ・NHKマイル組が圧倒的に強い。これらを総合して評価すれば、ピークの組み合わせを持つ馬が浮上する。'
       }
     },
+    clearAnalysis: {
+      title: '安田記念 消去データクリア分析',
+      subtitle: '全消去条件をクリアした「データ的最上位5頭」',
+      headerCards: [
+        { type:'ace',   label:'データクリア馬',         mainValue:'5頭',      subValue:'全消去条件回避' },
+        { type:'iron',  label:'前走G3組',                mainValue:'1-0-0-14', subValue:'勝率6.7%・低調' },
+        { type:'kill',  label:'前走6人気以下',          mainValue:'0-1-0-47', subValue:'消し対象' },
+        { type:'block', label:'前走マイラーズC5着以下', mainValue:'0-0-0-13', subValue:'全消し' }
+      ],
+      filterSummary: {
+        title: '「全消去条件クリア」5頭がデータ的最上位',
+        iron: { label:'✅ データクリア5頭が勝負馬', desc:'アスクイキゴミ・アドマイヤズーム・ガイアフォース・パンジャタワー・ワールズエンドの5頭が全ての消去条件を回避。データ的に最上位グループ。' },
+        kill: { label:'❌ 消去対象15頭は割引', desc:'残る15頭は何らかの消去条件に該当。特にステレンボッシュ・トロヴァトーレは前走G3 (1-0-0-14)で勝負にならないデータ。' }
+      },
+      killConditionsList: [
+        { label:'前走G3 (1-0-0-14)', desc:'勝率6.7%・3着内率6.7%の低調', horses:['ステレンボッシュ','トロヴァトーレ'], icon:'⚠️', color:'red' },
+        { label:'前走阪神競馬 (0-0-1-25)', desc:'関西開催からの参戦は苦戦', horses:['レーベンスティール'], icon:'⚠️', color:'red' },
+        { label:'前走6番人気以下 (0-1-0-47)', desc:'前走で人気落ちは復活困難', horses:['サクラトゥジュール','シャンパンカラー','シリウスコルト','スズハローム','セイウンハーデス','セフィロ','ドラゴンブースト','ロングラン'], icon:'❌', color:'red' },
+        { label:'前走ダート (0-0-0-0)', desc:'前走ダート組は論外', horses:['ルクソールカフェ'], icon:'🚫', color:'red' },
+        { label:'前走マイラーズC5着以下 (0-0-0-13)', desc:'マイル前哨戦で大敗組は復活なし', horses:['ウォーターリヒト','オフトレイル','シックスペンス'], icon:'❌', color:'red' }
+      ],
+      clearHorses: [
+        { name:'アスクイキゴミ',     reason:'NHKマイル2着・3歳54kg・全戦1600m',                strength:'AI 1位・121点' },
+        { name:'アドマイヤズーム',   reason:'前走マイラーズC1着・モーリス産駒',                strength:'4歳1人気' },
+        { name:'ガイアフォース',     reason:'海外組・安田リピーター・Rt115',                  strength:'リピーター8/8' },
+        { name:'パンジャタワー',     reason:'NHKマイル覇者・前走G1・東京1600mG1勝利',         strength:'G1経験10/10' },
+        { name:'ワールズエンド',     reason:'前走京王杯SC1着・上がり鉄板',                    strength:'前走3人気' }
+      ],
+      finalStrategy: {
+        title: '🎯 データクリア5頭からの絞り込み戦略',
+        items: [
+          '①データクリア5頭から軸を選定',
+          '②AI 1位アスクイキゴミ＋クリア4頭でフォーメーション',
+          '③ステレン・トロヴァは「前走G3」で軸不適',
+          '④10頭の消去対象は完全消し or 押さえまで',
+          '⑤クリア5頭以外の上位人気は「データの罠」'
+        ],
+        summary: '安田記念2026は「データクリア5頭」と「消去対象15頭」に明確に二分される。データクリア5頭（アスク・アドマ・ガイア・パンジャ・ワールズ）が勝負馬の候補。特にAIスコア上位3頭（アスク・ガイア・パンジャ）はクリア組かつスコア最上位で「データ的に最強の組み合わせ」。前走G3組のステレンボッシュ・トロヴァトーレは「美浦×牝馬」「東京1600m最強実績」などの好材料があってもデータ的には軸不適。逆に「データクリア」の事実が、なぜアスクイキゴミがAIスコア1位なのかを補強する。'
+      }
+    },
     anaPoints: [
       '🏟️【コース特徴】東京芝1600m・G1・3歳上・直線525mのスピード持続戦',
       '🥇 馬体重 480kg未満は危険（勝ち馬は全頭480kg以上）',
@@ -9209,6 +9249,71 @@ function renderOtherDataAnalysis(d) {
   return html;
 }
 
+function renderClearAnalysis(d) {
+  if (!d) return '';
+  var html = '<div class="analysis-card">';
+  html += '<h3>📋 ' + d.title + '</h3>';
+  html += '<div class="subtitle">' + d.subtitle + '</div>';
+
+  html += '<div class="header-cards">';
+  (d.headerCards || []).forEach(function(c){
+    html += '<div class="header-card header-card-' + c.type + '">'
+         + '<div class="header-card-label">' + c.label + '</div>'
+         + '<div class="header-card-main">' + c.mainValue + '</div>'
+         + '<div class="header-card-sub">' + c.subValue + '</div></div>';
+  });
+  html += '</div>';
+
+  if (d.filterSummary) {
+    html += '<div class="filter-summary">'
+         + '<div class="filter-summary-title">📌 ' + d.filterSummary.title + '</div>'
+         + '<div class="filter-2col">'
+         + '<div class="filter-block filter-block-iron"><div class="filter-block-label">' + d.filterSummary.iron.label + '</div><div class="filter-block-desc">' + d.filterSummary.iron.desc + '</div></div>'
+         + '<div class="filter-block filter-block-kill"><div class="filter-block-label">' + d.filterSummary.kill.label + '</div><div class="filter-block-desc">' + d.filterSummary.kill.desc + '</div></div>'
+         + '</div></div>';
+  }
+
+  // クリア5頭セクション
+  if (d.clearHorses && d.clearHorses.length) {
+    html += '<div style="background:rgba(255,215,0,0.1);border-radius:8px;padding:16px;margin:16px 0;">';
+    html += '<div style="font-size:14px;font-weight:bold;color:#ffd700;margin-bottom:12px;">🏆 全消去条件クリア！データ的最上位' + d.clearHorses.length + '頭</div>';
+    d.clearHorses.forEach(function(h, idx){
+      html += '<div style="background:rgba(255,255,255,0.05);border-left:3px solid #ffd700;border-radius:4px;padding:10px 12px;margin-bottom:8px;">'
+           + '<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;">'
+           + '<span style="font-size:14px;font-weight:bold;color:#fff;">' + (idx+1) + '. ' + h.name + '</span>'
+           + '<span class="mini-badge mini-badge-best">' + h.strength + '</span></div>'
+           + '<div style="font-size:11px;color:#ccd0e0;margin-top:4px;">' + h.reason + '</div></div>';
+    });
+    html += '</div>';
+  }
+
+  // 消去条件リスト
+  if (d.killConditionsList && d.killConditionsList.length) {
+    html += '<div style="margin:16px 0;">';
+    html += '<div style="font-size:14px;font-weight:bold;color:#ff8080;margin-bottom:12px;">❌ 消去条件＋該当馬一覧</div>';
+    d.killConditionsList.forEach(function(c){
+      html += '<div style="background:rgba(255,74,74,0.08);border-left:3px solid #ff4a4a;border-radius:4px;padding:10px 12px;margin-bottom:8px;">'
+           + '<div style="font-size:12px;font-weight:bold;color:#ff8080;margin-bottom:4px;">' + c.icon + ' ' + c.label + '</div>'
+           + '<div style="font-size:11px;color:#ccd0e0;margin-bottom:6px;">' + c.desc + '</div>'
+           + '<div class="badge-container">'
+           + '<span class="badge-label">該当' + c.horses.length + '頭：</span>';
+      c.horses.forEach(function(n){ html += '<span class="horse-badge horse-badge-kill">' + n + '</span>'; });
+      html += '</div></div>';
+    });
+    html += '</div>';
+  }
+
+  if (d.finalStrategy) {
+    var fs = d.finalStrategy;
+    html += '<div class="final-strategy"><div class="final-strategy-title">' + fs.title + '</div><ol>';
+    fs.items.forEach(function(s){ html += '<li>' + s + '</li>'; });
+    html += '</ol></div>';
+    html += '<div class="summary-text"><strong>総括</strong>：' + fs.summary + '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
 function renderPastData() {
   var root = document.getElementById('pastDataRoot');
   if (!root) return;
@@ -9312,6 +9417,9 @@ function renderPastData() {
   }
   if (data.otherDataAnalysis) {
     html += renderOtherDataAnalysis(data.otherDataAnalysis);
+  }
+  if (data.clearAnalysis) {
+    html += renderClearAnalysis(data.clearAnalysis);
   }
   data.sections.forEach(function(sec) {
     html += '<div class="section">';
