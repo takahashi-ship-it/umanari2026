@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260601-1500';
+  var CURRENT_VERSION = '20260601-1600';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1405,6 +1405,19 @@
   .final-strategy ol { margin: 0; padding-left: 20px; font-size: 11px; color: #ccd0e0; }
   .final-strategy li { margin-bottom: 4px; line-height: 1.5; }
   .summary-text { background: rgba(255,215,0,0.05); border-top: 2px solid #ffd700; padding: 12px; font-size: 11px; line-height: 1.6; color: #ccd0e0; }
+  /* ===== 該当馬バッジ ===== */
+  .analysis-table .badge-row td {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 6px 14px;
+    background: rgba(255,255,255,0.02);
+  }
+  .badge-container { display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+  .badge-label { font-size:11px; color:#a0a8c8; margin-right:4px; }
+  .horse-badge { display:inline-block; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:bold; white-space:nowrap; }
+  .horse-badge-iron     { background:rgba(74,158,255,0.2); border:1px solid #4a9eff; color:#6fb3d9; }
+  .horse-badge-kill     { background:rgba(255,74,74,0.15); border:1px solid #ff4a4a; color:#ff8080; opacity:0.7; text-decoration:line-through; text-decoration-color:rgba(255,128,128,0.5); }
+  .horse-badge-overseas { background:rgba(192,143,255,0.2); border:1px solid #c08fff; color:#c08fff; }
+  .badge-empty { font-size:11px; color:#6a7090; font-style:italic; }
 </style>
 </head>
 <body>
@@ -8594,6 +8607,39 @@ function renderPastSection(title, icon, items, horses) {
 
 function renderPrevPopAnalysis(d) {
   if (!d) return '';
+  // 今年の出走馬を前走人気別に振り分け
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['安田記念'] || []) : [];
+  var hbc = { pop1:[], pop2:[], pop3:[], pop4:[], pop5plus:[], overseas:[] };
+  horses.forEach(function(h){
+    if (h.prevIsOverseas) hbc.overseas.push(h.name);
+    else if (h.prevPop === 1) hbc.pop1.push(h.name);
+    else if (h.prevPop === 2) hbc.pop2.push(h.name);
+    else if (h.prevPop === 3) hbc.pop3.push(h.name);
+    else if (h.prevPop === 4) hbc.pop4.push(h.name);
+    else if (typeof h.prevPop === 'number' && h.prevPop >= 5) hbc.pop5plus.push(h.name);
+  });
+  function getCategoryKey(popLabel){
+    if (popLabel.indexOf('1番人気') >= 0) return 'pop1';
+    if (popLabel.indexOf('2番人気') >= 0) return 'pop2';
+    if (popLabel.indexOf('3番人気') >= 0) return 'pop3';
+    if (popLabel.indexOf('4番人気') >= 0) return 'pop4';
+    if (popLabel.indexOf('5番人気以下') >= 0) return 'pop5plus';
+    if (popLabel.indexOf('海外') >= 0) return 'overseas';
+    return null;
+  }
+  function renderBadges(names, type){
+    if (!names || names.length === 0) return '<div class="badge-empty">該当なし</div>';
+    var cls = 'horse-badge';
+    if (type === 'iron') cls += ' horse-badge-iron';
+    else if (type === 'kill') cls += ' horse-badge-kill';
+    else if (type === 'overseas') cls += ' horse-badge-overseas';
+    var h = '<div class="badge-container">';
+    h += '<span class="badge-label">該当' + names.length + '頭：</span>';
+    names.forEach(function(n){ h += '<span class="' + cls + '">' + n + '</span>'; });
+    h += '</div>';
+    return h;
+  }
+
   var html = '<div class="analysis-card">';
   html += '<h3>🎯 ' + d.title + '</h3>';
   html += '<div class="subtitle">' + d.subtitle + '</div>';
@@ -8624,8 +8670,14 @@ function renderPrevPopAnalysis(d) {
   if (d.detailTable) {
     html += '<table class="analysis-table"><thead><tr><th>前走人気</th><th>成績</th><th>勝率</th><th>連対率</th><th>3着内率</th><th>評価</th></tr></thead><tbody>';
     d.detailTable.forEach(function(r){
+      var catKey = getCategoryKey(r.pop);
+      var names = catKey ? hbc[catKey] : [];
+      var badgeType = 'iron';
+      if (catKey === 'pop5plus') badgeType = 'kill';
+      else if (catKey === 'overseas') badgeType = 'overseas';
       html += '<tr><td>' + r.pop + '</td><td>' + r.record + '</td><td>' + r.win + '</td><td>' + r.rentai + '</td><td>' + r.fukusho + '</td>'
            + '<td><span class="label-pill label-pill-' + r.color + '">' + r.label + '</span></td></tr>';
+      html += '<tr class="badge-row"><td colspan="6">' + renderBadges(names, badgeType) + '</td></tr>';
     });
     html += '</tbody></table>';
   }
