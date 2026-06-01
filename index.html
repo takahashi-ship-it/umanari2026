@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-0400';
+  var CURRENT_VERSION = '20260602-0500';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -8439,10 +8439,10 @@ const RACE_PAST_DATA = {
       title: '安田記念 性別×所属別 分析カード',
       subtitle: '過去10年データ／斤量・地の利・繊細さの三位一体',
       headerCards: [
-        { type:'ace',   label:'美浦×牝馬',       mainValue:'66.7%',  subValue:'★★★最強条件' },
-        { type:'iron',  label:'美浦全体',         mainValue:'27.0%',  subValue:'関東馬が好調' },
-        { type:'block', label:'ヴィクトリアM組', mainValue:'7年連続', subValue:'連対の鉄板ルート' },
-        { type:'kill',  label:'栗東全体',         mainValue:'12.9%',  subValue:'輸送ストレス影響' }
+        { type:'ace',   label:'美浦×牝馬', mainValue:'66.7%', subValue:'★★★最強条件' },
+        { type:'ace',   label:'牝馬全体',   mainValue:'42.9%', subValue:'★単勝回収134%' },
+        { type:'iron',  label:'美浦全体',   mainValue:'27.0%', subValue:'関東馬' },
+        { type:'kill',  label:'栗東全体',   mainValue:'12.9%', subValue:'輸送ストレス' }
       ],
       filterSummary: {
         title: '「美浦×牝馬」は4つの必然が重なる',
@@ -8450,6 +8450,7 @@ const RACE_PAST_DATA = {
         kill: { label:'ヴィクトリアM組牝馬 → 7年連続連対', desc:'2018-2024年で7年連続連対を記録。グランアレグリア・ソングライン・ナミュール等のG1級牝馬が安田記念で輝く必然のローテ。' }
       },
       detailTable: [
+        { type:'🌸 牝馬全体（参考）', record:'出走数少', win:'-', rentai:'-', fukusho:'42.9%', label:'★圧倒的安定感（単134%）', color:'green' },
         { type:'美浦×牝馬', record:'3-4-1-4',  win:'37.5%', rentai:'87.5%', fukusho:'66.7%', label:'★★★最強条件', color:'green' },
         { type:'美浦×牡馬', record:'2-3-4-42', win:'3.9%',  rentai:'9.8%',  fukusho:'17.6%', label:'安定',           color:'blue'  },
         { type:'栗東×牝馬', record:'0-0-1-3',  win:'0%',    rentai:'0%',    fukusho:'25.0%', label:'サンプル少',     color:'blue'  },
@@ -8464,11 +8465,11 @@ const RACE_PAST_DATA = {
       filterStrategy: {
         title: '牝馬が強い4つの理由 + 2026年絞り込み',
         tags: ['美浦×牝馬は最強条件','ヴィクトリアM組7年連続連対','関東馬は地の利あり','栗東牡馬は割引対象'],
-        buyRules: ['① 斤量2kg減（牡58kg/牝56kg/3歳54kg）','② マイル戦は牝馬の瞬発力が活きる','③ 6月の高速馬場で軽い斤量がさらに有利','④ 美浦は東京近郊で輸送ストレス少'],
+        buyRules: ['★ 牝馬全体：複勝率42.9%・単勝回収134%','① 斤量2kg減（牡58kg/牝56kg/3歳54kg）','② マイル戦は牝馬の瞬発力が活きる','③ 6月の高速馬場で軽い斤量がさらに有利','④ 美浦は東京近郊で輸送ストレス少'],
         killRules: ['栗東牡馬の複勝率14.3%は割引','長距離輸送が牝馬に不利','7歳以上の古馬は苦戦傾向','パワー型短距離血統は不向き'],
         overseasRules: ['海外組は別枠評価（複勝率33.3%）','本番人気3番以内が目安','海外G1勝ち馬は警戒','ロマンチックウォリアー型の例あり'],
         finalStrategy: ['①美浦×牝馬を最優先評価（複勝率66.7%）','②ヴィクトリアマイル経由馬を加点','③同じ斤量条件なら3歳牡馬（54kg）も妙味','④栗東牡馬は実績で判断'],
-        summary: '安田記念で「美浦×牝馬」が複勝率66.7%★★★を記録する異常な強さの裏には、4つの構造的必然がある。①制度的に牝馬は斤量56kgで牡馬より2kg軽い、②マイル戦は牝馬の瞬発力が最も活きる距離、③6月の高速馬場で軽い斤量がさらに加速、④美浦は東京近郊で輸送ストレスが少なく、調教コースも東京と類似。これらの要因が重なって、ヴィクトリアマイル経由馬は7年連続連対を達成している。今年の出走馬では牝馬2頭（ステレンボッシュ・セフィロ）が該当する。同じ斤量論理で3歳牡馬54kgのアスクイキゴミも制度的アドバンテージを持ち、軽斤量で考えるとさらに有利な立場にいる。'
+        summary: '安田記念で「美浦×牝馬」が複勝率66.7%★★★を記録する異常な強さの裏には、4つの構造的必然がある。さらに「牝馬全体」も複勝率42.9%・単勝回収率134.3%と数値で圧倒している。これは①制度的に牝馬は斤量56kgで牡馬より2kg軽い、②マイル戦は牝馬の瞬発力が最も活きる距離、③6月の高速馬場で軽い斤量がさらに加速、④美浦は東京近郊で輸送ストレスが少なく、調教コースも東京と類似、という要因が重なる結果。ヴィクトリアマイル経由馬は7年連続連対を達成している。今年の出走馬では牝馬2頭（ステレンボッシュ・セフィロ）が該当する。同じ斤量論理で3歳牡馬54kgのアスクイキゴミも制度的アドバンテージを持ち、軽斤量で考えるとさらに有利な立場にいる。'
       }
     },
     otherDataAnalysis: {
@@ -8530,6 +8531,14 @@ const RACE_PAST_DATA = {
             { label:'1枠', record:'1-3-2-31', rate:16.2, tag:'warn', desc:'内詰まり' },
             { label:'4枠', record:'1-3-2-33', rate:15.4, tag:'warn', desc:'回収率低' },
             { label:'6枠', record:'0-2-2-36', rate:10.0, tag:'kill', desc:'★複勝率最低' }
+          ]
+        },
+        {
+          title: '📏 前走距離変更', subtitle: '過去10年データ', matchKey:'prevDistance',
+          rows: [
+            { label:'前走1800m以上→マイル', record:'★単勝回収率207.4%', rate:null, tag:'best', desc:'★距離短縮の妙味' },
+            { label:'前走マイル戦',          record:'同距離は標準',       rate:null, tag:'iron', desc:'安定' },
+            { label:'前走1200-1400m',        record:'距離延長は割引',     rate:null, tag:'warn', desc:'高松宮組は警戒' }
           ]
         }
       ],
@@ -9232,6 +9241,13 @@ function renderOtherDataAnalysis(d) {
         for (var i = 1; i <= 8; i++) {
           if (row.label === (i + '枠') && wk === i) { ok = true; break; }
         }
+      } else if (sec.matchKey === 'prevDistance') {
+        if (!h.raceHistory || h.raceHistory.length === 0) return;
+        var pr = h.raceHistory[0];
+        var pd = pr.distance || 0;
+        if (row.label.indexOf('1800m以上→マイル') >= 0 && pd >= 1800 && pr.surface === '芝') ok = true;
+        else if (row.label.indexOf('前走マイル戦') >= 0 && pd === 1600 && pr.surface === '芝') ok = true;
+        else if (row.label.indexOf('1200-1400m') >= 0 && pd >= 1200 && pd <= 1400 && pr.surface === '芝') ok = true;
       }
       if (ok) matched.push(h.name);
     });
