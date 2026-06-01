@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-2000';
+  var CURRENT_VERSION = '20260602-2100';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13964,6 +13964,14 @@ function renderCustomFormation(raceName) {
          + price.toLocaleString() + '円</button>';
   });
   html += '</div></div>';
+
+  // 🤖 AI評価エリア
+  html += '<div id="ai-evaluation" style="margin-top:16px;padding:14px;background:rgba(255,255,255,0.08);border-radius:8px;border-left:3px solid #7AE6B5;">'
+       + '<div style="font-size:13px;font-weight:bold;color:#7AE6B5;margin-bottom:10px;">🤖 AI評価</div>'
+       + '<div id="ai-eval-content" style="color:#fff;font-size:12px;line-height:1.7;">'
+       + '<div style="color:#aac;font-style:italic;">馬を選択するとAI評価が表示されます</div>'
+       + '</div></div>';
+
   html += '</div>';
   html += '</div>';
   return html;
@@ -18361,6 +18369,150 @@ window.updateCustomFormation = function() {
   var activeBtn = document.querySelector('.price-btn.active-price');
   var price = activeBtn ? parseInt(activeBtn.dataset.price, 10) : 100;
   if (totEl) totEl.textContent = (points * price).toLocaleString() + '円';
+  // 🤖 AI評価生成
+  if (typeof window.updateAIEvaluation === 'function') {
+    window.updateAIEvaluation(col1, col2, col3, points);
+  }
+};
+
+window.updateAIEvaluation = function(col1, col2, col3, points) {
+  var contentEl = document.getElementById('ai-eval-content');
+  if (!contentEl) return;
+  if (col1.length === 0 && col2.length === 0 && col3.length === 0) {
+    contentEl.innerHTML = '<div style="color:#aac;font-style:italic;">馬を選択するとAI評価が表示されます</div>';
+    return;
+  }
+  if (col1.length === 0 || col2.length === 0 || col3.length === 0) {
+    contentEl.innerHTML = '<div style="color:#ff9800;">⚠️ 3連単フォーメーションには1列目・2列目・3列目すべてに馬を選択する必要があります</div>';
+    return;
+  }
+  var raceName = (typeof window !== 'undefined' && (window.currentRaceName || window.currentRace))
+                 || (typeof currentRace !== 'undefined' ? currentRace : '安田記念');
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? HORSES_BY_RACE[raceName] : [];
+  if (!horses || !horses.length) {
+    contentEl.innerHTML = '<div style="color:#ff9800;">⚠️ レースデータが取得できません</div>';
+    return;
+  }
+  var rankMap = {}, pctMap = {};
+  horses.forEach(function(h){
+    var bd = computeScoreBreakdown(h, raceName);
+    var rank;
+    if (bd.pct >= 60) rank = 'S';
+    else if (bd.pct >= 55) rank = 'A';
+    else if (bd.pct >= 48) rank = 'B';
+    else if (bd.pct >= 35) rank = 'C';
+    else rank = 'D';
+    rankMap[h.name] = rank;
+    pctMap[h.name] = bd.pct;
+  });
+  function countRanks(names){
+    var c = { S:0, A:0, B:0, C:0, D:0 };
+    names.forEach(function(n){ if (rankMap[n]) c[rankMap[n]]++; });
+    return c;
+  }
+  var c1 = countRanks(col1), c2 = countRanks(col2), c3 = countRanks(col3);
+
+  var clearHorses = ['アスクイキゴミ','アドマイヤズーム','ガイアフォース','パンジャタワー','ワールズエンド'];
+  var clearInCol1 = col1.filter(function(n){ return clearHorses.indexOf(n) >= 0; }).length;
+  var allSelected = {};
+  col1.concat(col2).concat(col3).forEach(function(n){ allSelected[n] = true; });
+  var clearInAll = Object.keys(allSelected).filter(function(n){ return clearHorses.indexOf(n) >= 0; }).length;
+
+  var killReasons = {
+    'ステレンボッシュ':'前走G3','トロヴァトーレ':'前走G3',
+    'レーベンスティール':'前走阪神','サクラトゥジュール':'前走6人気↓',
+    'シャンパンカラー':'前走6人気↓','シリウスコルト':'前走6人気↓',
+    'スズハローム':'前走6人気↓','セイウンハーデス':'前走6人気↓',
+    'セフィロ':'前走6人気↓','ドラゴンブースト':'前走6人気↓',
+    'ロングラン':'前走6人気↓','ルクソールカフェ':'前走ダート',
+    'ウォーターリヒト':'マイラC5着↓','オフトレイル':'マイラC5着↓',
+    'シックスペンス':'マイラC5着↓'
+  };
+  var killInCol1 = col1.filter(function(n){ return killReasons[n]; });
+  var killInCol2 = col2.filter(function(n){ return killReasons[n]; });
+
+  var type, typeIcon, typeColor;
+  if (c1.S >= 2 && c1.C === 0 && c1.D === 0) {
+    type = '堅実重視型'; typeIcon = '🛡'; typeColor = '#7AE6B5';
+  } else if (c1.D > 0 || c1.C > 0) {
+    type = 'ギャンブル型（高リスク高リターン）'; typeIcon = '🎰'; typeColor = '#ff9800';
+  } else if (c1.S === 1 && c3.D > 0) {
+    type = '妙味追求型'; typeIcon = '💎'; typeColor = '#ffd700';
+  } else if (c1.S === 1 && c3.D === 0) {
+    type = '標準バランス型'; typeIcon = '⚖️'; typeColor = '#4a9eff';
+  } else if (c1.A > 0 && c1.S === 0) {
+    type = 'A軸攻略型'; typeIcon = '🎯'; typeColor = '#ff9800';
+  } else {
+    type = '個性派構成'; typeIcon = '🌟'; typeColor = '#9c27b0';
+  }
+
+  var positives = [];
+  if (c1.S >= 2) positives.push('1列目にSランク' + c1.S + '頭で軸が堅実');
+  if (clearInCol1 >= 1) positives.push('1列目にデータクリア馬を' + clearInCol1 + '頭含む');
+  if (clearInAll >= 4) positives.push('データクリア5頭中' + clearInAll + '頭を押さえている');
+  if (c3.B > 0 || c3.C > 0) positives.push('3列目に中穴（B/Cランク）含み配当狙い');
+  if (c3.D > 0) positives.push('3列目に夢馬券（Dランク）含み配当跳ね期待');
+  if (points >= 15 && points <= 40) positives.push('点数' + points + '点はバランス良好');
+  if (col1.length === 1 && rankMap[col1[0]] === 'S') {
+    positives.push('1列目1頭固定（' + col1[0] + '）で軸が明確');
+  }
+
+  var warnings = [];
+  if (c1.D > 0) warnings.push('1列目にDランク（夢馬券）含む→1着リスク高');
+  if (c1.C > 0) warnings.push('1列目にCランク含む→軸馬としては不安');
+  if (killInCol1.length > 0) {
+    warnings.push('1列目に消去対象馬（' + killInCol1.join('・') + '）含む');
+  }
+  if (killInCol2.length >= 2) {
+    warnings.push('2列目に消去対象馬が' + killInCol2.length + '頭');
+  }
+  if (points >= 50) warnings.push('点数' + points + '点と多め→投資効率DOWN');
+  if (points <= 5) warnings.push('点数' + points + '点と少なめ→ハズレリスク高');
+  if (c3.S + c3.A + c3.B + c3.C + c3.D === 0) warnings.push('3列目が空');
+
+  var summary;
+  if (type === '堅実重視型') summary = '上位人気馬中心の的中率重視構成。配当はやや控えめですが、3着内予想60%以上の馬を網羅していて、データ的に手堅い選択です。';
+  else if (type === '妙味追求型') summary = 'S軸固定で配当跳ねを狙う構成。1着候補が明確なので、それさえ来れば中穴・大穴の3着内で配当が期待できます。';
+  else if (type === 'ギャンブル型（高リスク高リターン）') summary = '1列目に夢馬券を含む大胆な構成。当たれば大配当ですが、データ的にはリスク高。投資額は控えめに、夢を買う気持ちで臨むのが吉。';
+  else if (type === '標準バランス型') summary = 'S軸1頭固定の王道構成。的中率と配当のバランスが良く、安田記念のような接戦レースには合理的な選択。';
+  else if (type === 'A軸攻略型') summary = 'Sランクではなく敢えてAランク馬を軸に据えた構成。S馬を「来ない」と読んでいる強気の予想。配当妙味は高いです。';
+  else summary = '個性的な構成。ランク分けに捉われない独自の視点が光ります。投資額と相談しながら最終確認してみてください。';
+
+  var html = '';
+  html += '<div style="margin-bottom:10px;padding:8px 12px;background:rgba(0,0,0,0.2);border-radius:6px;border-left:3px solid ' + typeColor + ';">'
+       + '<div style="font-size:11px;color:#aac;margin-bottom:2px;">🎯 戦略タイプ</div>'
+       + '<div style="font-size:14px;font-weight:bold;color:' + typeColor + ';">' + typeIcon + ' ' + type + '</div>'
+       + '</div>';
+  if (positives.length > 0) {
+    html += '<div style="margin-bottom:8px;">'
+         + '<div style="font-size:12px;font-weight:bold;color:#7AE6B5;margin-bottom:4px;">✅ 良いポイント</div>'
+         + '<ul style="margin:0;padding-left:18px;">';
+    positives.forEach(function(p){ html += '<li style="font-size:11px;color:#ccd0e0;line-height:1.6;">' + p + '</li>'; });
+    html += '</ul></div>';
+  }
+  if (warnings.length > 0) {
+    html += '<div style="margin-bottom:8px;">'
+         + '<div style="font-size:12px;font-weight:bold;color:#ff9800;margin-bottom:4px;">⚠️ 注意点</div>'
+         + '<ul style="margin:0;padding-left:18px;">';
+    warnings.forEach(function(w){ html += '<li style="font-size:11px;color:#ffaa55;line-height:1.6;">' + w + '</li>'; });
+    html += '</ul></div>';
+  }
+  html += '<div style="margin-top:10px;padding:8px 12px;background:rgba(122,230,181,0.1);border-radius:6px;">'
+       + '<div style="font-size:12px;font-weight:bold;color:#7AE6B5;margin-bottom:4px;">💬 総評</div>'
+       + '<div style="font-size:11px;color:#ccd0e0;line-height:1.7;">' + summary + '</div>'
+       + '</div>';
+
+  var recommendedPrice = 100;
+  if (type === 'ギャンブル型（高リスク高リターン）') recommendedPrice = 100;
+  else if (type === '妙味追求型') recommendedPrice = 200;
+  else if (type === '堅実重視型' && points <= 30) recommendedPrice = 300;
+  else if (type === '標準バランス型') recommendedPrice = 200;
+  if (points > 0) {
+    html += '<div style="margin-top:8px;padding:6px 10px;background:rgba(255,215,0,0.1);border-left:2px solid #ffd700;border-radius:4px;font-size:11px;color:#ffd700;">'
+         + '💡 推奨単価：<strong>' + recommendedPrice + '円</strong>（合計：' + (points * recommendedPrice).toLocaleString() + '円）'
+         + '</div>';
+  }
+  contentEl.innerHTML = html;
 };
 
 window.setPrice = function(price) {
