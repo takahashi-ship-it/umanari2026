@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-1100';
+  var CURRENT_VERSION = '20260602-1200';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13209,31 +13209,7 @@ function setBaba(baba) {
 window.selectedJiku = null;
 window.excludedHimo = [];
 
-/* 既存の computeScore/sumScore/maxScoreFor/rankFromTotal をラップして
- * 仕様書の calcFukusho(h) インターフェースに合わせる。
- *   .score : 0〜100 の正規化%
- *   .rank  : 'A'/'B'/'C'/'D'/'E' （E = 消し）
- *   .ok    : 該当した来やすい条件のラベル配列
- */
-function calcFukusho(h) {
-  // 完全統一: V系統スコア（computeScoreBreakdown）の pct をそのまま 3着内予想として使用
-  // V1=194/V2=167/V4=175/V3=130/default=115 などレース別の満点に応じた pct を返す
-  var raceName = (typeof window !== 'undefined' && (window.currentRaceName || window.currentRace))
-                 || (typeof currentRace !== 'undefined' ? currentRace : '');
-  var bd = (typeof computeScoreBreakdown === 'function')
-           ? computeScoreBreakdown(h, raceName)
-           : { pct: 0, total: 0, max: 100, items: {} };
-  var pct = Math.max(0, Math.min(99, bd.pct || 0));
-  var rankLetter = pct >= 60 ? 'A'
-                 : pct >= 50 ? 'B'
-                 : pct >= 40 ? 'C'
-                 : pct >= 30 ? 'D'
-                 : 'E';
-  var ok = (typeof getActiveConditions === 'function')
-           ? getActiveConditions().good.filter(function(c){return c.match(h);}).map(function(c){return c.label;})
-           : [];
-  return { score: pct, rank: rankLetter, ok: ok, breakdown: bd.items, raw: bd.total, max: bd.max };
-}
+/* 旧スコア関数は撤廃。すべての呼び出し元は computeScoreBreakdown を直接使用。 */
 
 /**
  * 軸向きスコア計算（複勝率・安定性重視・100点満点）
@@ -13394,9 +13370,10 @@ function selectJiku(horses, raceName) {
     var preset = horses.find(function(h){return h.name === KAIMOKU_DATA[raceName].jiku;});
     if (preset) return preset;
   }
-  // 4. 最後の保険として旧スコアのフォールバック
+  // 4. 最後の保険として V系統スコアでソート
   var scored = horses.map(function(h) {
-    var sc = calcFukusho(h).score;
+    var _bd = computeScoreBreakdown(h, raceName);
+    var sc = (_bd && _bd.pct) || 0;
     var isPopular = (h.popEstimate || 99) <= 3;
     if ((h.waku === 8 || h.waku === 1) && isPopular) sc += 5;
     return { h: h, score: sc };
@@ -13405,16 +13382,20 @@ function selectJiku(horses, raceName) {
 }
 
 function selectHimo(horses, jiku) {
-  // 軸馬以外の全頭をスコア順に返す（呼び出し側でslice(0, N)・上限撤廃）
+  // 軸馬以外の全頭を V系統スコア順に返す
+  var _rn = (typeof window !== 'undefined' && (window.currentRaceName || window.currentRace))
+            || (typeof currentRace !== 'undefined' ? currentRace : '');
   return horses
     .filter(function(h){return h.name !== jiku.name;})
     .map(function(h) {
-      var r = calcFukusho(h);
-      var sc = r.score;
+      var _bd = computeScoreBreakdown(h, _rn);
+      var pct = (_bd && _bd.pct) || 0;
+      var rankLetter = pct >= 60 ? 'A' : pct >= 50 ? 'B' : pct >= 40 ? 'C' : pct >= 30 ? 'D' : 'E';
+      var sc = pct;
       var isPopular = (h.popEstimate || 99) <= 3;
-      if (r.rank === 'E') sc = 0;
+      if (rankLetter === 'E') sc = 0;
       if (!isPopular && (h.waku === 8 || h.waku === 1)) sc -= 5;
-      return { h: h, score: sc, rank: r.rank, isPopular: isPopular };
+      return { h: h, score: sc, rank: rankLetter, isPopular: isPopular };
     })
     .sort(function(a,b){return b.score - a.score;});
 }
@@ -13440,7 +13421,7 @@ function renderKaime() {
 
   var raceName = window.currentRaceName || currentRace;
   var jiku = selectJiku(horses, raceName);
-  // 相手リストは V2/V3/V4 スコア順（getAiteRanked）を優先。フォールバックで selectHimo（旧 calcFukusho）
+  // 相手リストは V2/V3/V4 スコア順（getAiteRanked）を優先。フォールバックで selectHimo（V系統スコア）
   var himoAll;
   if (typeof getAiteRanked === 'function') {
     var rankedAite = getAiteRanked(raceName);
@@ -13461,10 +13442,9 @@ function renderKaime() {
   if (!himoAll || !himoAll.length) {
     himoAll = selectHimo(horses, jiku);  // フォールバック（旧ロジック）
   }
-  var jikuR = calcFukusho(jiku);
-  // 3着内予想は V系統 breakdown.pct を直接使用（馬カードと完全一致）
-  var fukushoProb = jikuR.score;
-  var jikuBd = (typeof computeScoreBreakdown === 'function') ? computeScoreBreakdown(jiku, raceName) : { total: 0, max: 100 };
+  // 3着内予想 = V系統 breakdown.pct を直接使用（馬カードと完全一致）
+  var jikuBd = (typeof computeScoreBreakdown === 'function') ? computeScoreBreakdown(jiku, raceName) : { total: 0, max: 100, pct: 0 };
+  var fukushoProb = jikuBd.pct || 0;
   var jikuUmaban = jiku.umaban != null ? jiku.umaban + '番 ' : '';
   var jikuUmaDisplay = (jiku.umaban != null) ? (jiku.umaban + '番') : '';
 
@@ -13528,14 +13508,6 @@ function renderKaime() {
   jikuHtml += '<div style="font-size:10px;color:#AAC;margin-top:2px">AIスコア ' + jikuBd.total + '/' + jikuBd.max + '</div>';
   jikuHtml += '</div>';
   jikuHtml += '</div>';
-  // 軸向きスコア（複勝率・安定性）表示
-  var _jikuStability = (typeof computeJikuScore === 'function') ? computeJikuScore(jiku, raceName) : null;
-  if (_jikuStability != null) {
-    jikuHtml += '<div style="margin-top:8px;padding:6px 10px;background:rgba(122,230,181,0.08);border-left:3px solid #7AE6B5;border-radius:6px;font-size:11px;color:#C0D0E8">'
-              + '🎯 <strong style="color:#7AE6B5">軸向きスコア</strong>（複勝率・安定性）: <strong>' + _jikuStability + '/100</strong>'
-              + '<br><span style="font-size:10px;color:#888">※予想タブの能力スコア（強さ）とは別軸で、3着以内の堅実性を評価</span>'
-              + '</div>';
-  }
 
   // 選定理由
   jikuHtml += memoHtml;
@@ -13628,7 +13600,10 @@ function renderKaime() {
   var himoHtml = '';
   himoVisible.forEach(function(x, hi) {
     var h = x.h;
-    var r = calcFukusho(h);
+    var _hBd = computeScoreBreakdown(h, raceName);
+    var _hPct = (_hBd && _hBd.pct) || 0;
+    var _hRank = _hPct >= 60 ? 'A' : _hPct >= 50 ? 'B' : _hPct >= 40 ? 'C' : _hPct >= 30 ? 'D' : 'E';
+    var r = { score: _hPct, rank: _hRank };
     var isPopular = (h.popEstimate || 99) <= 3;
     var hasWakuPenalty = (h.waku === 8 || h.waku === 1);
     var isSelected = window.excludedHimo.indexOf(h.name) === -1;
