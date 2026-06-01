@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260601-2100';
+  var CURRENT_VERSION = '20260601-2200';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1418,35 +1418,30 @@
   .horse-badge-kill     { background:rgba(255,74,74,0.15); border:1px solid #ff4a4a; color:#ff8080; opacity:0.7; text-decoration:line-through; text-decoration-color:rgba(255,128,128,0.5); }
   .horse-badge-overseas { background:rgba(192,143,255,0.2); border:1px solid #c08fff; color:#c08fff; }
   .horse-badge-best     { background:linear-gradient(135deg, rgba(192,143,255,0.3), rgba(255,215,0,0.2)); border:1px solid #ffd700; color:#ffd700; font-weight:bold; }
-  /* ===== 馬カード用データバッジ ===== */
+  /* ===== 馬カード用データバッジ（コンパクト版） ===== */
   .horse-data-badges {
-    display:flex; flex-wrap:wrap; gap:6px;
-    margin:10px 0; padding:10px;
-    background:rgba(0,0,0,0.2); border-radius:8px;
-    border-left:3px solid #ffd700;
+    display:flex; flex-wrap:wrap; gap:4px;
+    margin:8px 0; padding:8px;
+    background:rgba(0,0,0,0.15); border-radius:6px;
+    border-left:2px solid #ffd700;
   }
   .data-badge {
-    display:inline-flex; align-items:center; gap:4px;
-    padding:4px 10px; border-radius:12px;
-    font-size:11px; font-weight:bold; white-space:nowrap;
-    position:relative;
+    display:inline-block;
+    padding:3px 8px; border-radius:4px;
+    font-size:11px; font-weight:600; white-space:nowrap;
+    line-height:1.4; cursor:help;
   }
-  .data-badge .badge-detail {
-    display:inline-block; margin-left:6px; padding-left:6px;
-    border-left:1px solid rgba(255,255,255,0.2);
-    font-weight:normal; font-size:10px; opacity:0.85;
-  }
-  .data-badge.badge-best     { background:linear-gradient(135deg, rgba(255,215,0,0.25), rgba(192,143,255,0.2)); border:1px solid #ffd700; color:#ffd700; }
-  .data-badge.badge-iron     { background:rgba(74,158,255,0.2); border:1px solid #4a9eff; color:#6fb3d9; }
-  .data-badge.badge-value    { background:rgba(192,143,255,0.2); border:1px solid #c08fff; color:#c08fff; }
-  .data-badge.badge-overseas { background:rgba(192,143,255,0.2); border:1px solid #c08fff; color:#c08fff; }
-  .data-badge.badge-warn     { background:rgba(255,165,0,0.15); border:1px solid #ff9933; color:#ffaa55; }
-  .data-badge.badge-kill     { background:rgba(255,74,74,0.15); border:1px solid #ff4a4a; color:#ff8080; opacity:0.7; }
+  .data-badge.badge-best     { background:#ffd700; border:1px solid #ffb300; color:#5a4500; }
+  .data-badge.badge-iron     { background:#4a9eff; border:1px solid #2a7edd; color:#fff; }
+  .data-badge.badge-value    { background:#c08fff; border:1px solid #9b6fdb; color:#fff; }
+  .data-badge.badge-overseas { background:#c08fff; border:1px solid #9b6fdb; color:#fff; }
+  .data-badge.badge-warn     { background:#ff9933; border:1px solid #cc6600; color:#fff; }
+  .data-badge.badge-kill     { background:#ff6666; border:1px solid #cc3333; color:#fff; text-decoration:line-through; text-decoration-thickness:1.5px; opacity:0.85; }
   @media (max-width: 600px) {
-    .horse-data-badges { padding:8px; gap:4px; }
-    .data-badge { font-size:10px; padding:3px 8px; }
-    .data-badge .badge-detail { font-size:9px; }
+    .horse-data-badges { padding:6px; gap:3px; margin:6px 0; }
+    .data-badge { font-size:10px; padding:2px 6px; }
   }
+  .horse-card .horse-data-badges { background:rgba(0,0,0,0.05); border-left-color:#ffb300; }
   .badge-empty { font-size:11px; color:#6a7090; font-style:italic; }
 </style>
 </head>
@@ -11114,7 +11109,6 @@ function getHorseDataBadges(horse, raceName) {
   badges.forEach(function(b){
     html += '<span class="data-badge ' + b.cls + '" title="' + b.detail + '">'
          + b.icon + ' ' + b.label
-         + '<span class="badge-detail">' + b.detail + '</span>'
          + '</span>';
   });
   html += '</div>';
