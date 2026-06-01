@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260601-1600';
+  var CURRENT_VERSION = '20260601-1700';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1417,6 +1417,7 @@
   .horse-badge-iron     { background:rgba(74,158,255,0.2); border:1px solid #4a9eff; color:#6fb3d9; }
   .horse-badge-kill     { background:rgba(255,74,74,0.15); border:1px solid #ff4a4a; color:#ff8080; opacity:0.7; text-decoration:line-through; text-decoration-color:rgba(255,128,128,0.5); }
   .horse-badge-overseas { background:rgba(192,143,255,0.2); border:1px solid #c08fff; color:#c08fff; }
+  .horse-badge-best     { background:linear-gradient(135deg, rgba(192,143,255,0.3), rgba(255,215,0,0.2)); border:1px solid #ffd700; color:#ffd700; font-weight:bold; }
   .badge-empty { font-size:11px; color:#6a7090; font-style:italic; }
 </style>
 </head>
@@ -8305,6 +8306,42 @@ const RACE_PAST_DATA = {
         summary: '前走5番人気以下(国内)は即消し・最強の絞り込み基準。前走国内のレースで人気下位だった馬は、出走して3着以内に来た例は10年でわずか1頭。これは安田記念で最も信頼できる「切り捨て基準」。前走4番人気以内の国内組に絞ることで、候補馬を厳選できる。前走海外組には別ルールを適用し、「本番での人気3番以内」を目安に評価する。この2段階フィルターを徹底することが2026年安田記念の回収率向上に直結する最強の武器。'
       }
     },
+    last3fAnalysis: {
+      title: '安田記念 上がり3F別成績 分析カード',
+      subtitle: '過去10年データ分析／キレ味勝負の正体',
+      headerCards: [
+        { type:'ace',   label:'上がり3F 1位馬',   mainValue:'75%',   subValue:'複勝率★最強' },
+        { type:'iron',  label:'33.0以下経験馬',   mainValue:'8/12',  subValue:'勝ち馬の67%該当' },
+        { type:'kill',  label:'上がり34.0以上',   mainValue:'消し',   subValue:'末脚不足は致命的' },
+        { type:'block', label:'キレ味勝負',       mainValue:'★必須', subValue:'東京マイル最強要素' }
+      ],
+      filterSummary: {
+        title: '安田記念は「上がり3F」が勝負を決める',
+        iron: { label:'上がり3F 1位 → 複勝率75%', desc:'過去10年で上がり1位を出した馬は12頭中9頭が3着内。1位の末脚を出せる馬を狙うのが鉄板。' },
+        kill: { label:'上がり34.0以上 → 消し対象', desc:'末脚が出ない馬は東京1600mで決め手不足。レーベン・セイウンなど直近で34秒以上の馬は割引。' }
+      },
+      detailTable: [
+        { range:'32.9秒以下',   record:'最速帯',     win:'★',  rentai:'★',  fukusho:'★',  label:'異次元末脚',     color:'purple' },
+        { range:'33.0秒（鉄板）', record:'勝ち馬基準', win:'高',  rentai:'高',  fukusho:'高',  label:'鉄板ボーダー',   color:'green'  },
+        { range:'33.1-33.3秒',  record:'重賞上位',   win:'中',  rentai:'高',  fukusho:'高',  label:'重賞上位',       color:'blue'   },
+        { range:'33.4-33.5秒',  record:'中位',       win:'中',  rentai:'中',  fukusho:'中',  label:'重賞中位',       color:'blue'   },
+        { range:'33.6-33.9秒',  record:'やや遅',     win:'低',  rentai:'中',  fukusho:'中',  label:'苦戦寄り',       color:'red'    },
+        { range:'34.0秒以上',   record:'末脚不足',   win:'0%',  rentai:'低',  fukusho:'低',  label:'消し対象',       color:'red'    }
+      ],
+      comparisonBars: [
+        { label:'上がり3F 1位の複勝率', value:75, color:'blue' },
+        { label:'上がり3F 2位の複勝率', value:25, color:'red'  }
+      ],
+      filterStrategy: {
+        title: '2026年安田記念 絞り込みフィルター（上がり3F）',
+        tags: ['上がり1位の馬を最優先','33.0秒以下経験馬を中心に','34.0秒以上は割引','直近の上がりタイムをチェック'],
+        buyRules: ['上がり1位経験：複勝率75%★最強','33.0秒以下経験：勝ち馬12中8頭該当','東京マイルは末脚勝負','キレ味が決め手の正体'],
+        killRules: ['34.0秒以上の馬は3着内率激減','末脚不足は東京1600mで致命的','パワー型より瞬発力型','高速馬場で更にキレ味重要'],
+        overseasRules: ['海外組の上がりは参考程度','コース・馬場が異なるため別評価','本番のキレ味を重視','直近の好走時の上がりを確認'],
+        finalStrategy: ['①前走上がり33.5秒以下を中心に','②33.0秒以下経験馬を加点','③34.0秒以上は完全消し検討','④海外組は別評価で本番のキレ味重視'],
+        summary: '安田記念は「上がり3F」が勝敗を分ける最重要要素。過去10年で上がり1位馬の複勝率75%、33.0秒以下経験馬は勝ち馬12頭中8頭が該当する圧倒的データ。東京1600mの長い直線で「キレ味」が最強の決め手になる。逆に34.0秒以上しか出せない馬は決め手不足で苦戦傾向。直近の上がり3Fタイムを必ずチェックし、33.5秒以下の馬を中心に狙うのが2026年の絞り込み戦略。'
+      }
+    },
     anaPoints: [
       '🏟️【コース特徴】東京芝1600m・G1・3歳上・直線525mのスピード持続戦',
       '🥇 馬体重 480kg未満は危険（勝ち馬は全頭480kg以上）',
@@ -8697,6 +8734,100 @@ function renderPrevPopAnalysis(d) {
   return html;
 }
 
+function renderLast3fAnalysis(d) {
+  if (!d) return '';
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['安田記念'] || []) : [];
+  var hbr = { sub329:[], at330:[], at331_333:[], at334_335:[], at336_339:[], over340:[] };
+  horses.forEach(function(h){
+    var lf = h.prevLast3f;
+    if (!lf || lf >= 99) return;
+    var label = h.name + '(' + lf + ')';
+    if (lf <= 32.9) hbr.sub329.push(label);
+    else if (lf <= 33.0) hbr.at330.push(label);
+    else if (lf <= 33.3) hbr.at331_333.push(label);
+    else if (lf <= 33.5) hbr.at334_335.push(label);
+    else if (lf <= 33.9) hbr.at336_339.push(label);
+    else hbr.over340.push(label);
+  });
+  function getRangeKey(r){
+    if (r.indexOf('32.9') >= 0) return 'sub329';
+    if (r.indexOf('33.0') >= 0) return 'at330';
+    if (r.indexOf('33.1-33.3') >= 0) return 'at331_333';
+    if (r.indexOf('33.4-33.5') >= 0) return 'at334_335';
+    if (r.indexOf('33.6-33.9') >= 0) return 'at336_339';
+    if (r.indexOf('34.0') >= 0) return 'over340';
+    return null;
+  }
+  function renderBadges(names, type){
+    if (!names || names.length === 0) return '<div class="badge-empty">該当なし</div>';
+    var cls = 'horse-badge';
+    if (type === 'best') cls += ' horse-badge-best';
+    else if (type === 'iron') cls += ' horse-badge-iron';
+    else if (type === 'kill') cls += ' horse-badge-kill';
+    var h = '<div class="badge-container">';
+    h += '<span class="badge-label">該当' + names.length + '頭：</span>';
+    names.forEach(function(n){ h += '<span class="' + cls + '">' + n + '</span>'; });
+    h += '</div>';
+    return h;
+  }
+
+  var html = '<div class="analysis-card">';
+  html += '<h3>⚡ ' + d.title + '</h3>';
+  html += '<div class="subtitle">' + d.subtitle + '</div>';
+  html += '<div class="header-cards">';
+  (d.headerCards || []).forEach(function(c){
+    html += '<div class="header-card header-card-' + c.type + '">'
+         + '<div class="header-card-label">' + c.label + '</div>'
+         + '<div class="header-card-main">' + c.mainValue + '</div>'
+         + '<div class="header-card-sub">' + c.subValue + '</div></div>';
+  });
+  html += '</div>';
+  if (d.filterSummary) {
+    html += '<div class="filter-summary">'
+         + '<div class="filter-summary-title">📌 ' + d.filterSummary.title + '</div>'
+         + '<div class="filter-2col">'
+         + '<div class="filter-block filter-block-iron"><div class="filter-block-label">✅ ' + d.filterSummary.iron.label + '</div><div class="filter-block-desc">' + d.filterSummary.iron.desc + '</div></div>'
+         + '<div class="filter-block filter-block-kill"><div class="filter-block-label">❌ ' + d.filterSummary.kill.label + '</div><div class="filter-block-desc">' + d.filterSummary.kill.desc + '</div></div>'
+         + '</div></div>';
+  }
+  if (d.comparisonBars) {
+    html += '<div class="comparison-bars"><div class="comparison-bars-title">📊 上がり1位 vs 2位 — 75%対25%の絶対差</div>';
+    d.comparisonBars.forEach(function(b){
+      html += '<div class="comp-bar-row"><div class="comp-bar-label">' + b.label + '</div>'
+           + '<div class="comp-bar-bg"><div class="comp-bar-fill ' + b.color + '" style="width:' + Math.min(100, b.value) + '%">' + b.value + '%</div></div></div>';
+    });
+    html += '</div>';
+  }
+  if (d.detailTable) {
+    html += '<table class="analysis-table"><thead><tr><th>上がり3F</th><th>分類</th><th>勝率</th><th>連対率</th><th>3着内率</th><th>評価</th></tr></thead><tbody>';
+    d.detailTable.forEach(function(r){
+      var key = getRangeKey(r.range);
+      var names = key ? hbr[key] : [];
+      var bType = 'iron';
+      if (key === 'sub329' || key === 'at330') bType = 'best';
+      else if (key === 'over340' || key === 'at336_339') bType = 'kill';
+      html += '<tr><td>' + r.range + '</td><td>' + r.record + '</td><td>' + r.win + '</td><td>' + r.rentai + '</td><td>' + r.fukusho + '</td>'
+           + '<td><span class="label-pill label-pill-' + r.color + '">' + r.label + '</span></td></tr>';
+      html += '<tr class="badge-row"><td colspan="6">' + renderBadges(names, bType) + '</td></tr>';
+    });
+    html += '</tbody></table>';
+  }
+  if (d.filterStrategy) {
+    var fs = d.filterStrategy;
+    html += '<div class="filter-strategy"><div class="filter-strategy-title">⭐ ' + fs.title + '</div>';
+    html += '<div class="filter-tags">' + fs.tags.map(function(t){ return '<div class="filter-tag">' + t + '</div>'; }).join('') + '</div>';
+    html += '<div class="rules-3col">'
+         + '<div class="rules-block rules-block-buy"><div class="rules-block-title">🟢 買い：33.5秒以下</div><ul>' + fs.buyRules.map(function(r){ return '<li>' + r + '</li>'; }).join('') + '</ul></div>'
+         + '<div class="rules-block rules-block-kill"><div class="rules-block-title">❌ 消し：34.0秒以上</div><ul>' + fs.killRules.map(function(r){ return '<li>' + r + '</li>'; }).join('') + '</ul></div>'
+         + '<div class="rules-block rules-block-overseas"><div class="rules-block-title">🌍 別枠：海外組</div><ul>' + fs.overseasRules.map(function(r){ return '<li>' + r + '</li>'; }).join('') + '</ul></div>'
+         + '</div>';
+    html += '<div class="final-strategy"><div class="final-strategy-title">🎯 2026年の絞り込み戦略（上がり3F）</div><ol>' + fs.finalStrategy.map(function(s){ return '<li>' + s + '</li>'; }).join('') + '</ol></div>';
+    html += '<div class="summary-text"><strong>総括</strong>：' + fs.summary + '</div></div>';
+  }
+  html += '</div>';
+  return html;
+}
+
 function renderPastData() {
   var root = document.getElementById('pastDataRoot');
   if (!root) return;
@@ -8788,6 +8919,9 @@ function renderPastData() {
   var html = '';
   if (data.prevPopAnalysis) {
     html += renderPrevPopAnalysis(data.prevPopAnalysis);
+  }
+  if (data.last3fAnalysis) {
+    html += renderLast3fAnalysis(data.last3fAnalysis);
   }
   data.sections.forEach(function(sec) {
     html += '<div class="section">';
