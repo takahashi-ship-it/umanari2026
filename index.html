@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-0600';
+  var CURRENT_VERSION = '20260602-0700';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -11573,6 +11573,26 @@ function getHorseDataBadges(horse, raceName) {
   if (raceName !== '安田記念' || !horse) return '';
   var badges = [];
 
+  // ⭐ データクリアバッジ（最優先表示）
+  var clearHorses = ['アスクイキゴミ','アドマイヤズーム','ガイアフォース','パンジャタワー','ワールズエンド'];
+  if (clearHorses.indexOf(horse.name) >= 0) {
+    badges.push({ icon:'🏆', label:'データクリア', cls:'badge-best', detail:'全消去条件回避' });
+  }
+
+  // ⚠️ 消去条件該当バッジ
+  var killReasons = {
+    'ステレンボッシュ':'前走G3','トロヴァトーレ':'前走G3',
+    'レーベンスティール':'前走阪神',
+    'サクラトゥジュール':'前走6人気↓','シャンパンカラー':'前走6人気↓','シリウスコルト':'前走6人気↓',
+    'スズハローム':'前走6人気↓','セイウンハーデス':'前走6人気↓','セフィロ':'前走6人気↓',
+    'ドラゴンブースト':'前走6人気↓','ロングラン':'前走6人気↓',
+    'ルクソールカフェ':'前走ダート',
+    'ウォーターリヒト':'マイラC5着↓','オフトレイル':'マイラC5着↓','シックスペンス':'マイラC5着↓'
+  };
+  if (killReasons[horse.name]) {
+    badges.push({ icon:'⚠️', label:killReasons[horse.name], cls:'badge-kill', detail:'消去対象' });
+  }
+
   // ① 前走人気
   if (horse.prevIsOverseas) {
     badges.push({ icon:'🌍', label:'前走海外組',     cls:'badge-overseas', detail:'別枠評価' });
@@ -11614,6 +11634,24 @@ function getHorseDataBadges(horse, raceName) {
   };
   if (horse.sire && sireMap[horse.sire]) {
     badges.push({ icon: sireMap[horse.sire].cls === 'badge-value' ? '💎' : '🩸', label: horse.sire, cls: sireMap[horse.sire].cls, detail: sireMap[horse.sire].detail });
+  }
+
+  // 🏇 騎手バッジ（東京1600m強い騎手のみ）
+  var _jk = horse.jockey || '';
+  if (_jk === 'C.ルメール' || _jk === 'ルメール') {
+    badges.push({ icon:'🏇', label:'ルメール', cls:'badge-best', detail:'東京1600m複勝率63.2%' });
+  } else if (_jk.indexOf('戸崎') >= 0) {
+    badges.push({ icon:'🏇', label:'戸崎', cls:'badge-iron', detail:'東京1600m45%' });
+  } else if (_jk.indexOf('川田') >= 0) {
+    badges.push({ icon:'🏇', label:'川田', cls:'badge-iron', detail:'東京1600m45%' });
+  } else if (_jk === '武豊') {
+    badges.push({ icon:'🏇', label:'武豊', cls:'badge-iron', detail:'実績豊富' });
+  }
+
+  // 🏭 生産者バッジ（ノーザンファームのみ）
+  var nfHorses = ['シックスペンス','ステレンボッシュ','トロヴァトーレ','レーベンスティール','ワールズエンド'];
+  if (nfHorses.indexOf(horse.name) >= 0) {
+    badges.push({ icon:'🏭', label:'ノーザンF', cls:'badge-iron', detail:'複勝率34.2%' });
   }
 
   // ④ 性別×所属
