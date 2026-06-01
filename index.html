@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-1000';
+  var CURRENT_VERSION = '20260602-1100';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -11713,9 +11713,8 @@ function renderHorses() {
     const total = breakdown.total;
     const maxS = breakdown.max;
     const pct = _pct;
-    // 🎯 3着内予想（calcFukusho ベース・最大95%にクランプ）
-    var _fukR = (typeof calcFukusho === 'function') ? calcFukusho(h) : { score: 0 };
-    const fukushoProb = Math.min(95, Math.round((_fukR.score || 0) * 0.85));
+    // 🎯 3着内予想（V系統 breakdown.pct を直接使用・能力スコアと完全一致）
+    const fukushoProb = pct;
     // 順位ベースで印を割り当て（1:◎ / 2:○ / 3:▲ / 4-5:△ / 6:× / 7以下:無印）
     let rank = getMarkByRank(idx + 1);
     const wakuClass = h.waku ? `waku-${h.waku}` : 'waku-tbd';
@@ -13217,18 +13216,23 @@ window.excludedHimo = [];
  *   .ok    : 該当した来やすい条件のラベル配列
  */
 function calcFukusho(h) {
-  var s = computeScore(h);
-  var total = sumScore(s);
-  var maxS = maxScoreFor(s);
-  var score = Math.min(100, Math.round(total * 100 / maxS));
-  var rk = rankFromTotal(score);
-  var rankLetter = 'E';
-  if (rk.key === 'rank-honmei')      rankLetter = 'A';
-  else if (rk.key === 'rank-taikou') rankLetter = 'B';
-  else if (rk.key === 'rank-tanana') rankLetter = 'C';
-  else if (rk.key === 'rank-renka')  rankLetter = 'D';
-  var ok = getActiveConditions().good.filter(function(c){return c.match(h);}).map(function(c){return c.label;});
-  return { score: score, rank: rankLetter, ok: ok, breakdown: s, raw: total, max: maxS };
+  // 完全統一: V系統スコア（computeScoreBreakdown）の pct をそのまま 3着内予想として使用
+  // V1=194/V2=167/V4=175/V3=130/default=115 などレース別の満点に応じた pct を返す
+  var raceName = (typeof window !== 'undefined' && (window.currentRaceName || window.currentRace))
+                 || (typeof currentRace !== 'undefined' ? currentRace : '');
+  var bd = (typeof computeScoreBreakdown === 'function')
+           ? computeScoreBreakdown(h, raceName)
+           : { pct: 0, total: 0, max: 100, items: {} };
+  var pct = Math.max(0, Math.min(99, bd.pct || 0));
+  var rankLetter = pct >= 60 ? 'A'
+                 : pct >= 50 ? 'B'
+                 : pct >= 40 ? 'C'
+                 : pct >= 30 ? 'D'
+                 : 'E';
+  var ok = (typeof getActiveConditions === 'function')
+           ? getActiveConditions().good.filter(function(c){return c.match(h);}).map(function(c){return c.label;})
+           : [];
+  return { score: pct, rank: rankLetter, ok: ok, breakdown: bd.items, raw: bd.total, max: bd.max };
 }
 
 /**
@@ -13458,7 +13462,9 @@ function renderKaime() {
     himoAll = selectHimo(horses, jiku);  // フォールバック（旧ロジック）
   }
   var jikuR = calcFukusho(jiku);
-  var fukushoProb = Math.min(95, Math.round(jikuR.score * 0.85));
+  // 3着内予想は V系統 breakdown.pct を直接使用（馬カードと完全一致）
+  var fukushoProb = jikuR.score;
+  var jikuBd = (typeof computeScoreBreakdown === 'function') ? computeScoreBreakdown(jiku, raceName) : { total: 0, max: 100 };
   var jikuUmaban = jiku.umaban != null ? jiku.umaban + '番 ' : '';
   var jikuUmaDisplay = (jiku.umaban != null) ? (jiku.umaban + '番') : '';
 
@@ -13517,9 +13523,9 @@ function renderKaime() {
   jikuHtml += '<div style="font-size:10px;color:#AAC;margin-top:6px">調教 ' + (jiku.training || '—') + (jiku.popEstimate ? ' / ' + jiku.popEstimate + '番人気' : '') + '</div>';
   jikuHtml += '</div>';
   jikuHtml += '<div style="text-align:right;flex-shrink:0">';
-  jikuHtml += '<div style="font-size:10px;color:#AAC">3着内推定</div>';
+  jikuHtml += '<div style="font-size:10px;color:#AAC">🎯 3着内予想</div>';
   jikuHtml += '<div style="font-size:22px;font-weight:800;color:#7AE6B5">' + fukushoProb + '%</div>';
-  jikuHtml += '<div style="font-size:10px;color:#AAC;margin-top:2px">信頼度 ' + jikuR.score + '%</div>';
+  jikuHtml += '<div style="font-size:10px;color:#AAC;margin-top:2px">AIスコア ' + jikuBd.total + '/' + jikuBd.max + '</div>';
   jikuHtml += '</div>';
   jikuHtml += '</div>';
   // 軸向きスコア（複勝率・安定性）表示
