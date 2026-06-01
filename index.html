@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-0000';
+  var CURRENT_VERSION = '20260602-0100';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1461,6 +1461,23 @@
   .mini-badge-warn { background:#ff9933; color:#fff; border:1px solid #cc6600; }
   .mini-badge-kill { background:#ff6666; color:#fff; border:1px solid #cc3333; text-decoration:line-through; }
   .empty-mark { font-size:10px; color:#6a7090; font-style:italic; }
+  /* ===== ミニカード式（種牡馬/前走人気/上がり3F/性別所属） ===== */
+  .sire-card-list, .data-card-list { display:flex; flex-direction:column; gap:10px; margin:16px 0; }
+  .sire-card, .data-card { background:rgba(255,255,255,0.04); border-radius:8px; padding:12px; border-left:3px solid #4a9eff; }
+  .sire-card-header, .data-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px; }
+  .sire-name, .data-name { font-size:14px; font-weight:bold; color:#fff; }
+  .sire-card-stats, .data-card-stats { display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-bottom:8px; }
+  .stat-item { background:rgba(0,0,0,0.2); border-radius:4px; padding:6px 8px; text-align:center; }
+  .stat-label { display:block; font-size:9px; color:#a0a8c8; margin-bottom:2px; }
+  .stat-value { display:block; font-size:13px; font-weight:bold; color:#fff; }
+  .stat-highlight { color:#ffd700; font-size:14px; }
+  .sire-card-badges, .data-card-badges { display:flex; flex-wrap:wrap; gap:4px; align-items:center; padding-top:6px; border-top:1px solid rgba(255,255,255,0.05); }
+  @media (max-width: 600px) {
+    .sire-card-stats, .data-card-stats { grid-template-columns:repeat(2, 1fr); }
+    .stat-label { font-size:10px; }
+    .stat-value { font-size:12px; }
+    .sire-name, .data-name { font-size:13px; }
+  }
   .badge-empty { font-size:11px; color:#6a7090; font-style:italic; }
 </style>
 </head>
@@ -8715,18 +8732,34 @@ function renderPrevPopAnalysis(d) {
     html += '</div>';
   }
   if (d.detailTable) {
-    html += '<table class="analysis-table"><thead><tr><th>前走人気</th><th>成績</th><th>勝率</th><th>連対率</th><th>3着内率</th><th>評価</th></tr></thead><tbody>';
+    html += '<div class="data-card-list">';
     d.detailTable.forEach(function(r){
       var catKey = getCategoryKey(r.pop);
       var names = catKey ? hbc[catKey] : [];
       var badgeType = 'iron';
       if (catKey === 'pop5plus') badgeType = 'kill';
       else if (catKey === 'overseas') badgeType = 'overseas';
-      html += '<tr><td>' + r.pop + '</td><td>' + r.record + '</td><td>' + r.win + '</td><td>' + r.rentai + '</td><td>' + r.fukusho + '</td>'
-           + '<td><span class="label-pill label-pill-' + r.color + '">' + r.label + '</span></td></tr>';
-      html += '<tr class="badge-row"><td colspan="6">' + renderBadges(names, badgeType) + '</td></tr>';
+      html += '<div class="data-card">'
+           + '<div class="data-card-header"><span class="data-name">' + r.pop + '</span>'
+           + '<span class="label-pill label-pill-' + r.color + '">' + r.label + '</span></div>'
+           + '<div class="data-card-stats">'
+           + '<div class="stat-item"><span class="stat-label">成績</span><span class="stat-value">' + r.record + '</span></div>'
+           + '<div class="stat-item"><span class="stat-label">勝率</span><span class="stat-value">' + r.win + '</span></div>'
+           + '<div class="stat-item"><span class="stat-label">連対率</span><span class="stat-value">' + r.rentai + '</span></div>'
+           + '<div class="stat-item"><span class="stat-label">3着内率</span><span class="stat-value stat-highlight">' + r.fukusho + '</span></div>'
+           + '</div>';
+      if (names.length > 0) {
+        var bcls = 'horse-badge';
+        if (badgeType === 'iron') bcls += ' horse-badge-iron';
+        else if (badgeType === 'kill') bcls += ' horse-badge-kill';
+        else if (badgeType === 'overseas') bcls += ' horse-badge-overseas';
+        html += '<div class="data-card-badges"><span class="badge-label">該当' + names.length + '頭：</span>';
+        names.forEach(function(n){ html += '<span class="' + bcls + '">' + n + '</span>'; });
+        html += '</div>';
+      }
+      html += '</div>';
     });
-    html += '</tbody></table>';
+    html += '</div>';
   }
   if (d.filterStrategy) {
     var fs = d.filterStrategy;
@@ -8809,18 +8842,34 @@ function renderLast3fAnalysis(d) {
     html += '</div>';
   }
   if (d.detailTable) {
-    html += '<table class="analysis-table"><thead><tr><th>上がり3F</th><th>分類</th><th>勝率</th><th>連対率</th><th>3着内率</th><th>評価</th></tr></thead><tbody>';
+    html += '<div class="data-card-list">';
     d.detailTable.forEach(function(r){
       var key = getRangeKey(r.range);
       var names = key ? hbr[key] : [];
       var bType = 'iron';
       if (key === 'sub329' || key === 'at330') bType = 'best';
       else if (key === 'over340' || key === 'at336_339') bType = 'kill';
-      html += '<tr><td>' + r.range + '</td><td>' + r.record + '</td><td>' + r.win + '</td><td>' + r.rentai + '</td><td>' + r.fukusho + '</td>'
-           + '<td><span class="label-pill label-pill-' + r.color + '">' + r.label + '</span></td></tr>';
-      html += '<tr class="badge-row"><td colspan="6">' + renderBadges(names, bType) + '</td></tr>';
+      html += '<div class="data-card">'
+           + '<div class="data-card-header"><span class="data-name">⚡ ' + r.range + '</span>'
+           + '<span class="label-pill label-pill-' + r.color + '">' + r.label + '</span></div>'
+           + '<div class="data-card-stats">'
+           + '<div class="stat-item"><span class="stat-label">分類</span><span class="stat-value">' + r.record + '</span></div>'
+           + '<div class="stat-item"><span class="stat-label">勝率</span><span class="stat-value">' + r.win + '</span></div>'
+           + '<div class="stat-item"><span class="stat-label">連対率</span><span class="stat-value">' + r.rentai + '</span></div>'
+           + '<div class="stat-item"><span class="stat-label">3着内率</span><span class="stat-value stat-highlight">' + r.fukusho + '</span></div>'
+           + '</div>';
+      if (names.length > 0) {
+        var bcls = 'horse-badge';
+        if (bType === 'best') bcls += ' horse-badge-best';
+        else if (bType === 'iron') bcls += ' horse-badge-iron';
+        else if (bType === 'kill') bcls += ' horse-badge-kill';
+        html += '<div class="data-card-badges"><span class="badge-label">該当' + names.length + '頭：</span>';
+        names.forEach(function(n){ html += '<span class="' + bcls + '">' + n + '</span>'; });
+        html += '</div>';
+      }
+      html += '</div>';
     });
-    html += '</tbody></table>';
+    html += '</div>';
   }
   if (d.filterStrategy) {
     var fs = d.filterStrategy;
@@ -8888,17 +8937,33 @@ function renderBloodAnalysis(d) {
     html += '</div>';
   }
   if (d.detailTable) {
-    html += '<table class="analysis-table"><thead><tr><th>種牡馬</th><th>成績</th><th>勝率</th><th>連対率</th><th>複勝率</th><th>単回収</th><th>複回収</th><th>評価</th></tr></thead><tbody>';
+    html += '<div class="sire-card-list">';
     d.detailTable.forEach(function(r){
       var names = hbs[r.sire] || [];
       var bType = 'iron';
       if (r.label.indexOf('★') >= 0) bType = 'best';
       else if (r.label.indexOf('💎') >= 0) bType = 'value';
-      html += '<tr><td>' + r.sire + '</td><td>' + r.record + '</td><td>' + r.win + '</td><td>' + r.rentai + '</td><td>' + r.fukusho + '</td><td>' + r.tan + '</td><td>' + r.fuku + '</td>'
-           + '<td><span class="label-pill label-pill-' + r.color + '">' + r.label + '</span></td></tr>';
-      html += '<tr class="badge-row"><td colspan="8">' + renderBadges(names, bType) + '</td></tr>';
+      html += '<div class="sire-card">'
+           + '<div class="sire-card-header"><span class="sire-name">🩸 ' + r.sire + '</span>'
+           + '<span class="label-pill label-pill-' + r.color + '">' + r.label + '</span></div>'
+           + '<div class="sire-card-stats">'
+           + '<div class="stat-item"><span class="stat-label">成績</span><span class="stat-value">' + r.record + '</span></div>'
+           + '<div class="stat-item"><span class="stat-label">複勝率</span><span class="stat-value stat-highlight">' + r.fukusho + '</span></div>'
+           + '<div class="stat-item"><span class="stat-label">単回収</span><span class="stat-value">' + r.tan + '</span></div>'
+           + '<div class="stat-item"><span class="stat-label">複回収</span><span class="stat-value">' + r.fuku + '</span></div>'
+           + '</div>';
+      if (names.length > 0) {
+        var bcls = 'horse-badge';
+        if (bType === 'best') bcls += ' horse-badge-best';
+        else if (bType === 'iron') bcls += ' horse-badge-iron';
+        else if (bType === 'value') bcls += ' horse-badge-overseas';
+        html += '<div class="sire-card-badges"><span class="badge-label">該当' + names.length + '頭：</span>';
+        names.forEach(function(n){ html += '<span class="' + bcls + '">' + n + '</span>'; });
+        html += '</div>';
+      }
+      html += '</div>';
     });
-    html += '</tbody></table>';
+    html += '</div>';
   }
   // その他の出走馬血統一覧
   var listed = d.detailTable.map(function(r){ return r.sire; });
@@ -8995,7 +9060,7 @@ function renderSexStableAnalysis(d) {
     html += '</div>';
   }
   if (d.detailTable) {
-    html += '<table class="analysis-table"><thead><tr><th>性別×所属</th><th>成績</th><th>勝率</th><th>連対率</th><th>3着内率</th><th>評価</th></tr></thead><tbody>';
+    html += '<div class="data-card-list">';
     d.detailTable.forEach(function(r){
       var key = getCategoryKey(r.type);
       var names = key ? hbc[key] : [];
@@ -9003,11 +9068,28 @@ function renderSexStableAnalysis(d) {
       if (r.label.indexOf('★★★') >= 0) bType = 'best';
       else if (r.label.indexOf('別枠') >= 0) bType = 'value';
       else if (r.label.indexOf('苦戦') >= 0) bType = 'kill';
-      html += '<tr><td>' + r.type + '</td><td>' + r.record + '</td><td>' + r.win + '</td><td>' + r.rentai + '</td><td>' + r.fukusho + '</td>'
-           + '<td><span class="label-pill label-pill-' + r.color + '">' + r.label + '</span></td></tr>';
-      html += '<tr class="badge-row"><td colspan="6">' + renderBadges(names, bType) + '</td></tr>';
+      html += '<div class="data-card">'
+           + '<div class="data-card-header"><span class="data-name">🌸 ' + r.type + '</span>'
+           + '<span class="label-pill label-pill-' + r.color + '">' + r.label + '</span></div>'
+           + '<div class="data-card-stats">'
+           + '<div class="stat-item"><span class="stat-label">成績</span><span class="stat-value">' + r.record + '</span></div>'
+           + '<div class="stat-item"><span class="stat-label">勝率</span><span class="stat-value">' + r.win + '</span></div>'
+           + '<div class="stat-item"><span class="stat-label">連対率</span><span class="stat-value">' + r.rentai + '</span></div>'
+           + '<div class="stat-item"><span class="stat-label">3着内率</span><span class="stat-value stat-highlight">' + r.fukusho + '</span></div>'
+           + '</div>';
+      if (names.length > 0) {
+        var bcls = 'horse-badge';
+        if (bType === 'best') bcls += ' horse-badge-best';
+        else if (bType === 'iron') bcls += ' horse-badge-iron';
+        else if (bType === 'kill') bcls += ' horse-badge-kill';
+        else if (bType === 'value') bcls += ' horse-badge-overseas';
+        html += '<div class="data-card-badges"><span class="badge-label">該当' + names.length + '頭：</span>';
+        names.forEach(function(n){ html += '<span class="' + bcls + '">' + n + '</span>'; });
+        html += '</div>';
+      }
+      html += '</div>';
     });
-    html += '</tbody></table>';
+    html += '</div>';
   }
   if (d.filterStrategy) {
     var fs = d.filterStrategy;
