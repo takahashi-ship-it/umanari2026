@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-0700';
+  var CURRENT_VERSION = '20260602-0900';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -11786,7 +11786,7 @@ function renderHorses() {
         <span class="badge-speed${siAvailable ? '' : ' tbd'}" title="${siBadgeTitle}">${siLabelText}</span>
         <span class="badge">${h.age}歳${h.sex}</span>
         <span class="badge">${h.stable || h.shozo || '不明'}</span>
-        <span class="badge">父: ${h.father || '不明'}</span>
+        <span class="badge">父: ${h.father || h.sire || '不明'}</span>
         <span class="badge">前走: ${prevRaceText} ${prevRankText}</span>
       </div>
 
