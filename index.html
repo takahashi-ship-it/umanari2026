@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-0300';
+  var CURRENT_VERSION = '20260602-0400';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -8585,6 +8585,53 @@ const RACE_PAST_DATA = {
         summary: '安田記念2026は「データクリア5頭」と「消去対象15頭」に明確に二分される。データクリア5頭（アスク・アドマ・ガイア・パンジャ・ワールズ）が勝負馬の候補。特にAIスコア上位3頭（アスク・ガイア・パンジャ）はクリア組かつスコア最上位で「データ的に最強の組み合わせ」。前走G3組のステレンボッシュ・トロヴァトーレは「美浦×牝馬」「東京1600m最強実績」などの好材料があってもデータ的には軸不適。逆に「データクリア」の事実が、なぜアスクイキゴミがAIスコア1位なのかを補強する。'
       }
     },
+    jockeyAnalysis: {
+      title: '安田記念 騎手別 分析カード',
+      subtitle: '東京芝1600mトップランカー（過去5年データ）',
+      headerCards: [
+        { type:'ace',   label:'C.ルメール',  mainValue:'63.2%', subValue:'★複勝率最強' },
+        { type:'iron',  label:'戸崎圭太',     mainValue:'45%',   subValue:'東京1600m巧者' },
+        { type:'iron',  label:'川田将雅',     mainValue:'45%',   subValue:'東京1600m巧者' },
+        { type:'block', label:'トップ3騎手', mainValue:'★必須', subValue:'東京マイル支配率' }
+      ],
+      filterSummary: {
+        title: '東京芝1600mは「騎手の差」が顕著',
+        iron: { label:'✅ C.ルメール 複勝率63.2%★最強', desc:'東京1600mトップランカー1位。複勝率63%は他の主力騎手を大きく引き離す。今年は◎トロヴァトーレに騎乗。' },
+        kill: { label:'⚠️ トップ騎手以外は割引', desc:'東京1600mで実績を残しているのは限られた騎手のみ。経験浅い騎手・地方騎手は割引対象。' }
+      },
+      detailTable: [
+        { jockey:'C.ルメール', rate:63.2, label:'★★★最強',     color:'green' },
+        { jockey:'戸崎圭太',    rate:45.0, label:'東京1600m巧者', color:'blue' },
+        { jockey:'川田将雅',    rate:45.0, label:'東京1600m巧者', color:'blue' },
+        { jockey:'武豊',        rate:35.0, label:'実績豊富',       color:'blue' },
+        { jockey:'横山武史',    rate:32.0, label:'マイル得意',     color:'blue' },
+        { jockey:'D.レーン',    rate:30.0, label:'外国人騎手',     color:'blue' },
+        { jockey:'松山弘平',    rate:28.0, label:'パンジャ騎乗',   color:'blue' }
+      ],
+      comparisonBars: [
+        { label:'C.ルメール 複勝率', value:63.2, color:'blue' },
+        { label:'戸崎圭太 複勝率',    value:45.0, color:'blue' },
+        { label:'川田将雅 複勝率',    value:45.0, color:'blue' },
+        { label:'武豊 複勝率',        value:35.0, color:'blue' }
+      ],
+      topRankerInfo: {
+        title: '🏆 直近1年・東京芝1600mトップランカー（複勝数順）',
+        rows: [
+          { category:'騎手',   '1':'C.ルメール',     '2':'戸崎圭太',   '3':'川田将雅' },
+          { category:'種牡馬', '1':'ロードカナロア', '2':'キズナ',     '3':'エピファネイア' },
+          { category:'調教師', '1':'国枝栄',         '2':'木村哲也',   '3':'塚貴久' }
+        ]
+      },
+      filterStrategy: {
+        title: '2026年安田記念 騎手別戦略',
+        tags: ['C.ルメール最優先','戸崎・川田は加点','武豊・横山武も評価','実績の薄い騎手は割引'],
+        buyRules: ['C.ルメール：複勝率63.2%★最強','戸崎圭太・川田将雅：複勝率45%','武豊：実績豊富で安定','横山武史：マイル戦得意'],
+        killRules: ['トップランカー以外は割引','東京1600m未経験騎手は警戒','地方騎手・若手は実績で判断','騎手未定馬は確定後に再評価'],
+        overseasRules: ['外国人騎手は東京経験を確認','モレイラ・マーカンドも実績あり','デムーロは東京1600m不得手','D.レーン・C.デムーロは個別評価'],
+        finalStrategy: ['①ルメール騎乗馬を最優先評価','②戸崎・川田・武豊騎乗馬を加点','③騎手未定馬は確定まで保留','④経験浅い騎手は割引'],
+        summary: '東京芝1600mは騎手の力量が直結するコース。C.ルメールは複勝率63.2%と他を圧倒、戸崎圭太・川田将雅も45%と高水準。武豊・横山武史も30%超で安定している。今年の出走馬では◎トロヴァトーレにC.ルメール、アスクイキゴミの騎手未定が最重要ポイント。戸崎or川田orルメール継続なら大幅評価UP、それ以外なら大きく評価を下げる必要がある。'
+      }
+    },
     anaPoints: [
       '🏟️【コース特徴】東京芝1600m・G1・3歳上・直線525mのスピード持続戦',
       '🥇 馬体重 480kg未満は危険（勝ち馬は全頭480kg以上）',
@@ -9314,6 +9361,116 @@ function renderClearAnalysis(d) {
   return html;
 }
 
+function renderJockeyAnalysis(d) {
+  if (!d) return '';
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['安田記念'] || []) : [];
+  var hbj = {};
+  horses.forEach(function(h){
+    var j = h.jockey || '未定';
+    if (!hbj[j]) hbj[j] = [];
+    hbj[j].push(h.name);
+  });
+  function findHorses(name){
+    var key = name;
+    if (name === 'C.ルメール') key = 'ルメール';
+    else if (name === '戸崎圭太') key = '戸崎圭';
+    else if (name === '横山武史') key = '横山武';
+    else if (name === '岩田望来') key = '岩田望';
+    var matched = [];
+    Object.keys(hbj).forEach(function(j){
+      if (j === name || j === key || j.indexOf(key) >= 0) {
+        hbj[j].forEach(function(n){ matched.push(n); });
+      }
+    });
+    return matched;
+  }
+
+  var html = '<div class="analysis-card">';
+  html += '<h3>🏇 ' + d.title + '</h3>';
+  html += '<div class="subtitle">' + d.subtitle + '</div>';
+
+  html += '<div class="header-cards">';
+  (d.headerCards || []).forEach(function(c){
+    html += '<div class="header-card header-card-' + c.type + '">'
+         + '<div class="header-card-label">' + c.label + '</div>'
+         + '<div class="header-card-main">' + c.mainValue + '</div>'
+         + '<div class="header-card-sub">' + c.subValue + '</div></div>';
+  });
+  html += '</div>';
+
+  if (d.filterSummary) {
+    html += '<div class="filter-summary">'
+         + '<div class="filter-summary-title">📌 ' + d.filterSummary.title + '</div>'
+         + '<div class="filter-2col">'
+         + '<div class="filter-block filter-block-iron"><div class="filter-block-label">' + d.filterSummary.iron.label + '</div><div class="filter-block-desc">' + d.filterSummary.iron.desc + '</div></div>'
+         + '<div class="filter-block filter-block-kill"><div class="filter-block-label">' + d.filterSummary.kill.label + '</div><div class="filter-block-desc">' + d.filterSummary.kill.desc + '</div></div>'
+         + '</div></div>';
+  }
+
+  if (d.comparisonBars) {
+    html += '<div class="comparison-bars"><div class="comparison-bars-title">📊 主要騎手の東京1600m複勝率比較</div>';
+    d.comparisonBars.forEach(function(b){
+      html += '<div class="comp-bar-row"><div class="comp-bar-label">' + b.label + '</div>'
+           + '<div class="comp-bar-bg"><div class="comp-bar-fill ' + b.color + '" style="width:' + Math.min(100, b.value) + '%">' + b.value + '%</div></div></div>';
+    });
+    html += '</div>';
+  }
+
+  if (d.detailTable) {
+    html += '<div class="data-card-list">';
+    d.detailTable.forEach(function(r){
+      var names = findHorses(r.jockey);
+      var bType = r.label.indexOf('★★★') >= 0 ? 'best' : 'iron';
+      html += '<div class="data-card">'
+           + '<div class="data-card-header"><span class="data-name">🏇 ' + r.jockey + '</span>'
+           + '<span class="label-pill label-pill-' + r.color + '">' + r.label + '</span></div>'
+           + '<div class="data-card-stats">'
+           + '<div class="stat-item"><span class="stat-label">複勝率</span><span class="stat-value stat-highlight">' + r.rate + '%</span></div>'
+           + '</div>';
+      if (names.length > 0) {
+        var bcls = 'horse-badge';
+        bcls += bType === 'best' ? ' horse-badge-best' : ' horse-badge-iron';
+        html += '<div class="data-card-badges"><span class="badge-label">該当' + names.length + '頭：</span>';
+        names.forEach(function(n){ html += '<span class="' + bcls + '">' + n + '</span>'; });
+        html += '</div>';
+      }
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  if (d.topRankerInfo) {
+    html += '<div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:14px;margin:16px 0;">';
+    html += '<div style="font-size:13px;font-weight:bold;color:#ffd700;margin-bottom:10px;">' + d.topRankerInfo.title + '</div>';
+    html += '<table style="width:100%;border-collapse:collapse;font-size:11px;">';
+    html += '<thead><tr style="background:rgba(255,255,255,0.05);"><th style="padding:6px;text-align:left;color:#a0a8c8;">カテゴリ</th><th style="padding:6px;color:#ffd700;">1位</th><th style="padding:6px;color:#a0a8c8;">2位</th><th style="padding:6px;color:#a0a8c8;">3位</th></tr></thead><tbody>';
+    d.topRankerInfo.rows.forEach(function(r){
+      html += '<tr>'
+           + '<td style="padding:6px;color:#ccd0e0;">' + r.category + '</td>'
+           + '<td style="padding:6px;color:#fff;font-weight:bold;">' + r['1'] + '</td>'
+           + '<td style="padding:6px;color:#ccd0e0;">' + r['2'] + '</td>'
+           + '<td style="padding:6px;color:#ccd0e0;">' + r['3'] + '</td>'
+           + '</tr>';
+    });
+    html += '</tbody></table></div>';
+  }
+
+  if (d.filterStrategy) {
+    var fs = d.filterStrategy;
+    html += '<div class="filter-strategy"><div class="filter-strategy-title">⭐ ' + fs.title + '</div>';
+    html += '<div class="filter-tags">' + fs.tags.map(function(t){ return '<div class="filter-tag">' + t + '</div>'; }).join('') + '</div>';
+    html += '<div class="rules-3col">'
+         + '<div class="rules-block rules-block-buy"><div class="rules-block-title">🟢 買い：トップ騎手</div><ul>' + fs.buyRules.map(function(r){ return '<li>' + r + '</li>'; }).join('') + '</ul></div>'
+         + '<div class="rules-block rules-block-kill"><div class="rules-block-title">❌ 割引：実績薄い騎手</div><ul>' + fs.killRules.map(function(r){ return '<li>' + r + '</li>'; }).join('') + '</ul></div>'
+         + '<div class="rules-block rules-block-overseas"><div class="rules-block-title">🌍 別枠：外国人騎手</div><ul>' + fs.overseasRules.map(function(r){ return '<li>' + r + '</li>'; }).join('') + '</ul></div>'
+         + '</div>';
+    html += '<div class="final-strategy"><div class="final-strategy-title">🎯 2026年の絞り込み戦略（騎手）</div><ol>' + fs.finalStrategy.map(function(s){ return '<li>' + s + '</li>'; }).join('') + '</ol></div>';
+    html += '<div class="summary-text"><strong>総括</strong>：' + fs.summary + '</div></div>';
+  }
+  html += '</div>';
+  return html;
+}
+
 function renderPastData() {
   var root = document.getElementById('pastDataRoot');
   if (!root) return;
@@ -9420,6 +9577,9 @@ function renderPastData() {
   }
   if (data.clearAnalysis) {
     html += renderClearAnalysis(data.clearAnalysis);
+  }
+  if (data.jockeyAnalysis) {
+    html += renderJockeyAnalysis(data.jockeyAnalysis);
   }
   data.sections.forEach(function(sec) {
     html += '<div class="section">';
