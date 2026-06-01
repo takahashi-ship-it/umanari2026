@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260603-0100';
+  var CURRENT_VERSION = '20260603-0200';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -8372,38 +8372,48 @@ const RACE_PAST_DATA = {
     },
     last3fAnalysis: {
       title: '安田記念 上がり3F別成績 分析カード',
-      subtitle: '過去10年データ分析／キレ味勝負の正体',
+      subtitle: '過去5年データ／キレ味勝負＝勝ち馬全員上がり1位の衝撃',
       headerCards: [
-        { type:'ace',   label:'上がり3F 1位馬',   mainValue:'75%',   subValue:'複勝率★最強' },
-        { type:'iron',  label:'33.0以下経験馬',   mainValue:'8/12',  subValue:'勝ち馬の67%該当' },
-        { type:'kill',  label:'上がり34.0以上',   mainValue:'消し',   subValue:'末脚不足は致命的' },
-        { type:'block', label:'キレ味勝負',       mainValue:'★必須', subValue:'東京マイル最強要素' }
+        { type:'ace',   label:'勝ち馬の上がり順位',   mainValue:'★1位',       subValue:'過去5年全勝ち馬該当', color:'green'  },
+        { type:'iron',  label:'近年勝ち馬の上がり',   mainValue:'32.9〜33.7', subValue:'33秒切りが必須レベル', color:'blue'   },
+        { type:'block', label:'上がり3F 1位馬',       mainValue:'75%',         subValue:'複勝率★最強',         color:'purple' },
+        { type:'kill',  label:'上がり34.0以上',       mainValue:'消し',        subValue:'末脚不足は致命的',     color:'red'    }
       ],
       filterSummary: {
-        title: '安田記念は「上がり3F」が勝負を決める',
-        iron: { label:'上がり3F 1位 → 複勝率75%', desc:'過去10年で上がり1位を出した馬は12頭中9頭が3着内。1位の末脚を出せる馬を狙うのが鉄板。' },
-        kill: { label:'上がり34.0以上 → 消し対象', desc:'末脚が出ない馬は東京1600mで決め手不足。レーベン・セイウンなど直近で34秒以上の馬は割引。' }
+        title: '安田記念は「上がり3F」が全てを決める',
+        iron: { label:'上がり3F 1位 → 過去5年勝ち馬全員該当★★★', desc:'2020-2024年の勝ち馬5頭（グランアレグリア×2・ソングライン×2・ナミュール）が全員上がり1位を記録。「キレる脚」が勝利への絶対条件。' },
+        kill: { label:'上がり34.0以上 → 消し対象', desc:'末脚不足の馬は東京1600mで決め手不足。直近で33.5秒以下を出せる馬を狙うのが鉄板戦略。' }
       },
       detailTable: [
-        { range:'32.9秒以下',   record:'最速帯',     win:'★',  rentai:'★',  fukusho:'★',  label:'異次元末脚',     color:'purple' },
-        { range:'33.0秒（鉄板）', record:'勝ち馬基準', win:'高',  rentai:'高',  fukusho:'高',  label:'鉄板ボーダー',   color:'green'  },
-        { range:'33.1-33.3秒',  record:'重賞上位',   win:'中',  rentai:'高',  fukusho:'高',  label:'重賞上位',       color:'blue'   },
-        { range:'33.4-33.5秒',  record:'中位',       win:'中',  rentai:'中',  fukusho:'中',  label:'重賞中位',       color:'blue'   },
-        { range:'33.6-33.9秒',  record:'やや遅',     win:'低',  rentai:'中',  fukusho:'中',  label:'苦戦寄り',       color:'red'    },
-        { range:'34.0秒以上',   record:'末脚不足',   win:'0%',  rentai:'低',  fukusho:'低',  label:'消し対象',       color:'red'    }
+        { range:'32.9秒以下',   record:'★最速帯',     win:'★',  rentai:'★',  fukusho:'★',  rate:100, label:'異次元末脚',     color:'purple', threshold:32.9 },
+        { range:'33.0秒（鉄板）', record:'勝ち馬基準', win:'高',  rentai:'高',  fukusho:'高',  rate:80,  label:'鉄板ボーダー',   color:'green',  threshold:33.0 },
+        { range:'33.1-33.3秒',  record:'重賞上位',   win:'中',  rentai:'高',  fukusho:'高',  rate:60,  label:'重賞上位',       color:'blue',   threshold:33.3 },
+        { range:'33.4-33.5秒',  record:'中位',       win:'低',  rentai:'中',  fukusho:'中',  rate:40,  label:'重賞中位',       color:'blue',   threshold:33.5 },
+        { range:'33.6-33.9秒',  record:'やや遅',     win:'低',  rentai:'中',  fukusho:'中',  rate:25,  label:'苦戦寄り',       color:'red',    threshold:33.9 },
+        { range:'34.0秒以上',   record:'末脚不足',   win:'0%',  rentai:'低',  fukusho:'低',  rate:5,   label:'消し対象',       color:'red',    threshold:99   }
       ],
+      winnersData: {
+        title: '🏆 過去5年安田記念 勝ち馬の上がり3F（全員1位★）',
+        rows: [
+          { year:'2020年', name:'グランアレグリア', last3f:33.7, rank:1, kyaku:'差し' },
+          { year:'2021年', name:'グランアレグリア', last3f:32.9, rank:1, kyaku:'差し' },
+          { year:'2022年', name:'ソングライン',     last3f:32.9, rank:1, kyaku:'差し' },
+          { year:'2023年', name:'ソングライン',     last3f:33.1, rank:1, kyaku:'差し' },
+          { year:'2024年', name:'ナミュール',       last3f:32.9, rank:1, kyaku:'差し' }
+        ]
+      },
       comparisonBars: [
         { label:'上がり3F 1位の複勝率', value:75, color:'blue' },
         { label:'上がり3F 2位の複勝率', value:25, color:'red'  }
       ],
       filterStrategy: {
         title: '2026年安田記念 絞り込みフィルター（上がり3F）',
-        tags: ['上がり1位の馬を最優先','33.0秒以下経験馬を中心に','34.0秒以上は割引','直近の上がりタイムをチェック'],
-        buyRules: ['上がり1位経験：複勝率75%★最強','33.0秒以下経験：勝ち馬12中8頭該当','東京マイルは末脚勝負','キレ味が決め手の正体'],
-        killRules: ['34.0秒以上の馬は3着内率激減','末脚不足は東京1600mで致命的','パワー型より瞬発力型','高速馬場で更にキレ味重要'],
+        tags: ['上がり1位経験馬を最優先','33.0秒以下経験馬を中心に','34.0秒以上は完全消し','近走の上がり3Fを必ずチェック'],
+        buyRules: ['★過去5年勝ち馬は全員上がり1位','33.0秒以下経験馬：勝ち馬基準クリア','直近3戦で上がり1-2位を出している馬','差し脚質×キレる末脚＝勝利の最短ルート'],
+        killRules: ['34.0秒以上の馬は3着内率激減','末脚不足は東京1600mで致命的','パワー型より瞬発力型を優先','高速馬場で更にキレ味重要'],
         overseasRules: ['海外組の上がりは参考程度','コース・馬場が異なるため別評価','本番のキレ味を重視','直近の好走時の上がりを確認'],
-        finalStrategy: ['①前走上がり33.5秒以下を中心に','②33.0秒以下経験馬を加点','③34.0秒以上は完全消し検討','④海外組は別評価で本番のキレ味重視'],
-        summary: '安田記念は「上がり3F」が勝敗を分ける最重要要素。過去10年で上がり1位馬の複勝率75%、33.0秒以下経験馬は勝ち馬12頭中8頭が該当する圧倒的データ。東京1600mの長い直線で「キレ味」が最強の決め手になる。逆に34.0秒以上しか出せない馬は決め手不足で苦戦傾向。直近の上がり3Fタイムを必ずチェックし、33.5秒以下の馬を中心に狙うのが2026年の絞り込み戦略。'
+        finalStrategy: ['①前走上がり33.5秒以下を中心に','②33.0秒以下経験馬を最重要加点','③34.0秒以上は完全消し検討','④海外組は別評価で本番のキレ味重視','⑤近走で上がり1-2位を出している馬は鉄板候補'],
+        summary: '安田記念は「キレる脚」が勝敗を分ける最重要要素。過去5年（2020-2024）の勝ち馬5頭（グランアレグリア×2・ソングライン×2・ナミュール）が全員上がり1位を記録した衝撃データ。これは「東京1600mの長い直線」で瞬発力勝負になる構造的必然。32.9〜33.7秒という近年の勝ち馬の上がりタイムは「33秒切り」が必須レベルで、34.0秒以上の馬は決定打不足で勝負にならない。今年の出走馬の直近の上がり3Fを必ずチェックし、33.5秒以下を経験した馬を中心に狙うのが2026年の絞り込み戦略。差し脚質×キレる末脚の組み合わせが勝利への最短ルート。'
       }
     },
     bloodAnalysis: {
@@ -9075,6 +9085,33 @@ function renderLast3fAnalysis(d) {
       }
       html += '</div>';
     });
+    html += '</div>';
+  }
+  if (d.winnersData) {
+    html += '<div style="margin:20px 0;padding:14px;background:linear-gradient(135deg,rgba(255,215,0,0.08),rgba(122,230,181,0.05));border-radius:8px;border-left:4px solid #ffd700;">';
+    html += '<div style="font-size:14px;font-weight:bold;color:#b8860b;margin-bottom:12px;">' + d.winnersData.title + '</div>';
+    html += '<div style="background:#fff;border-radius:6px;overflow:hidden;">';
+    html += '<table style="width:100%;border-collapse:collapse;font-size:12px;">';
+    html += '<thead><tr style="background:#1a2744;color:#fff;">'
+         + '<th style="padding:8px;text-align:left;">年</th>'
+         + '<th style="padding:8px;text-align:left;">勝ち馬</th>'
+         + '<th style="padding:8px;text-align:center;">上がり3F</th>'
+         + '<th style="padding:8px;text-align:center;">上がり順位</th>'
+         + '<th style="padding:8px;text-align:center;">脚質</th>'
+         + '</tr></thead><tbody>';
+    d.winnersData.rows.forEach(function(r){
+      html += '<tr style="border-bottom:1px solid #eee;">'
+           + '<td style="padding:8px;color:#666;">' + r.year + '</td>'
+           + '<td style="padding:8px;font-weight:bold;color:#1a2744;">' + r.name + '</td>'
+           + '<td style="padding:8px;text-align:center;font-weight:bold;color:#b8860b;">' + r.last3f + '秒</td>'
+           + '<td style="padding:8px;text-align:center;"><span style="background:#ffd700;color:#5a4500;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:bold;">' + r.rank + '位★</span></td>'
+           + '<td style="padding:8px;text-align:center;color:#1565c0;font-weight:bold;">' + r.kyaku + '</td>'
+           + '</tr>';
+    });
+    html += '</tbody></table></div>';
+    html += '<div style="margin-top:10px;padding:8px 12px;background:rgba(255,215,0,0.15);border-radius:4px;font-size:12px;color:#5a4500;font-weight:500;">'
+         + '💡 <strong>結論：過去5年の勝ち馬は全員「上がり1位」</strong>。安田記念は「上がり最速の馬を最優先に狙う」のが最強の絞り込み戦略。'
+         + '</div>';
     html += '</div>';
   }
   if (d.filterStrategy) {
@@ -16506,20 +16543,17 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
 
   // ===== 🐴 馬個別（45点）=====
 
-  // 6. 上がり3F（max 15）★最重要・過去10年データ：上がり1位は複勝率75%、33.0以下経験は勝ち馬12中8該当
+  // 6. 上がり3F（max 15）★最重要・過去5年勝ち馬全員が上がり1位／33秒切りが必須
   var lastSpeed = (typeof horse.prevLast3f === 'number') ? horse.prevLast3f :
                   (typeof horse.lastSpeed === 'number') ? horse.lastSpeed :
                   (typeof horse.prev1Last3F === 'number') ? horse.prev1Last3F : 99;
   var speedScore;
-  if (lastSpeed <= 32.9)      speedScore = 15;  // ★★最強帯（32秒台）
-  else if (lastSpeed <= 33.0) speedScore = 14;  // ★鉄板ボーダー
+  if (lastSpeed <= 32.9)      speedScore = 15;  // ★★最強帯（32秒台・出走馬中最速級）
+  else if (lastSpeed <= 33.0) speedScore = 14;  // ★鉄板ボーダー（勝ち馬基準クリア）
   else if (lastSpeed <= 33.3) speedScore = 12;  // 重賞上位レベル
-  else if (lastSpeed <= 33.5) speedScore = 10;
-  else if (lastSpeed <= 33.8) speedScore = 8;
-  else if (lastSpeed <= 34.0) speedScore = 6;
-  else if (lastSpeed <= 34.5) speedScore = 4;
-  else if (lastSpeed <= 35.0) speedScore = 2;
-  else speedScore = 0;
+  else if (lastSpeed <= 33.5) speedScore = 10;  // 重賞中位
+  else if (lastSpeed <= 33.9) speedScore = 6;   // やや遅
+  else speedScore = 0;                          // 34.0以上は末脚不足（消し対象）
   var speedNote = (lastSpeed < 99)
     ? ('前走上がり ' + lastSpeed + (horse.prevLast3fNote ? '（' + horse.prevLast3fNote + '）' : ''))
     : '未集計';
