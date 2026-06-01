@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-2200';
+  var CURRENT_VERSION = '20260602-2300';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -11777,7 +11777,7 @@ function renderHorses() {
     const hasLastF = (h.prev1Last3F != null || h.prev1Last3FRank != null);
     const lastFText = hasLastF
       ? '⚡ 上がり: ' + (h.prev1Last3F != null ? h.prev1Last3F.toFixed(1) + '秒' : '―') + (h.prev1Last3FRank ? '/' + h.prev1Last3FRank + '位' : '')
-      : (siAvailable ? `⚡ SI: ${siVal}` : `⚡ 上がり: 未集計`);
+      : (siAvailable ? `⚡ SI: ${siVal}` : '');
     const siLabelText = lastFText;
     const siBadgeTitle = hasLastF
       ? `前走上がり3F（${h.prev1Last3F != null ? h.prev1Last3F + '秒' : '?'}・${h.prev1Last3FRank || '?'}位）`
@@ -11806,7 +11806,7 @@ function renderHorses() {
             const tier = siVal >= 95 ? 'S' : siVal >= 88 ? 'A' : siVal >= 82 ? 'B' : siVal >= 75 ? 'C' : 'D';
             return `<span style="background:${c};color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap;flex-shrink:0" title="スピード指数 ${siVal}（${tier}級）">⚡SI:${siVal}</span>`;
           })()
-        : `<span style="background:#ccc;color:#555;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap;flex-shrink:0">⚡未集計</span>`;
+        : '';
     const umaText = (h.umaban != null) ? `<span class="uma-num">${h.umaban}番</span>` : '';
 
     // 手動印 (機能4) — 設定されていれば自動印を上書き
@@ -11844,7 +11844,7 @@ function renderHorses() {
         <span class="badge ${h.umaban ? '' : 'tbd'}" data-field="umaban">馬番: ${h.umaban ?? '未定'}</span>
         <span class="badge" data-field="jockey">騎手: ${h.jockey}</span>${jockeyChangeBadge}
         <span class="badge ${h.odds ? '' : 'tbd'}" data-field="odds">オッズ: ${h.odds ?? '--'}</span>
-        <span class="badge-speed${siAvailable ? '' : ' tbd'}" title="${siBadgeTitle}">${siLabelText}</span>
+        ${(hasLastF || siAvailable) ? `<span class="badge-speed${siAvailable ? '' : ' tbd'}" title="${siBadgeTitle}">${siLabelText}</span>` : ''}
         <span class="badge">${h.age}歳${h.sex}</span>
         <span class="badge">${h.stable || h.shozo || '不明'}</span>
         <span class="badge">父: ${h.father || h.sire || '不明'}</span>
