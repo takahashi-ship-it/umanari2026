@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-1900';
+  var CURRENT_VERSION = '20260602-2000';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13683,16 +13683,16 @@ function renderKaime() {
   var rankEl = document.getElementById('rank-strategy-container');
   if (rankEl) {
     var html = renderRankStrategy(raceName);
+    // 🌠 穴馬・伏兵・夢馬券 妙味候補（注目馬の解説を先に提示）
+    var anaData = (typeof RACE_PAST_DATA !== 'undefined' && RACE_PAST_DATA[raceName])
+                  ? RACE_PAST_DATA[raceName].anaUmaAnalysis : null;
+    if (anaData) html += renderAnaUmaSection(anaData);
     // 🏆 AIランク分け（全頭のV1スコア%でS/A/B/C/D自動分類）
     html += renderRankClassification(raceName);
     // 🎯 推奨フォーメーション 3パターン
     html += renderRecommendedFormations(raceName);
     // 🛠 カスタムフォーメーション（チェックボックスで自由選択）
     html += renderCustomFormation(raceName);
-    // 穴馬・伏兵・夢馬券セクションを ランク戦略の下に挿入
-    var anaData = (typeof RACE_PAST_DATA !== 'undefined' && RACE_PAST_DATA[raceName])
-                  ? RACE_PAST_DATA[raceName].anaUmaAnalysis : null;
-    if (anaData) html += renderAnaUmaSection(anaData);
     rankEl.innerHTML = html;
   }
 }
