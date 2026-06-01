@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-1700';
+  var CURRENT_VERSION = '20260602-1800';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13685,6 +13685,8 @@ function renderKaime() {
     var html = renderRankStrategy(raceName);
     // 🏆 AIランク分け（全頭のV1スコア%でS/A/B/C/D自動分類）
     html += renderRankClassification(raceName);
+    // 🎯 推奨フォーメーション 3パターン
+    html += renderRecommendedFormations(raceName);
     // 穴馬・伏兵・夢馬券セクションを ランク戦略の下に挿入
     var anaData = (typeof RACE_PAST_DATA !== 'undefined' && RACE_PAST_DATA[raceName])
                   ? RACE_PAST_DATA[raceName].anaUmaAnalysis : null;
@@ -13738,8 +13740,12 @@ function renderRankClassification(raceName) {
     html += '<div style="display:flex;flex-direction:column;gap:6px;padding:10px 12px;">';
     hs.forEach(function(x){
       var h = x.horse;
+      var umabanHtml = h.umaban
+        ? '<span style="display:inline-flex;justify-content:center;align-items:center;width:24px;height:24px;background:#1a2744;color:#fff;border-radius:50%;font-size:11px;font-weight:bold;flex-shrink:0;">' + h.umaban + '</span>'
+        : '';
       html += '<div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border-radius:6px;padding:8px 12px;border-left:3px solid ' + info.accentColor + ';box-shadow:0 1px 3px rgba(0,0,0,0.05);">'
            + '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">'
+           + umabanHtml
            + '<span style="font-weight:bold;color:#1a2744;font-size:14px;">' + h.name + '</span>'
            + '<span style="font-size:11px;color:#888;">' + (h.popEstimate || '?') + '人気・' + (h.odds != null ? h.odds + '倍' : '?倍') + '</span>'
            + '</div>'
@@ -13751,6 +13757,101 @@ function renderRankClassification(raceName) {
     });
     html += '</div></div>';
   });
+  html += '</div>';
+  return html;
+}
+
+function renderRecommendedFormations(raceName) {
+  if (typeof HORSES_BY_RACE === 'undefined') return '';
+  var horses = HORSES_BY_RACE[raceName];
+  if (!horses || !horses.length) return '';
+
+  var ranked = horses.map(function(h){
+    var bd = computeScoreBreakdown(h, raceName);
+    var rank;
+    if (bd.pct >= 60) rank = 'S';
+    else if (bd.pct >= 55) rank = 'A';
+    else if (bd.pct >= 48) rank = 'B';
+    else if (bd.pct >= 35) rank = 'C';
+    else rank = 'D';
+    return { horse:h, bd:bd, rank:rank, pct:bd.pct };
+  }).sort(function(a,b){ return b.pct - a.pct; });
+
+  var byRank = { S:[], A:[], B:[], C:[], D:[] };
+  ranked.forEach(function(x){ byRank[x.rank].push(x); });
+
+  function horseBadge(x, color){
+    var u = x.horse.umaban
+      ? '<span style="display:inline-flex;justify-content:center;align-items:center;width:18px;height:18px;background:' + color + ';color:#fff;border-radius:50%;font-size:10px;font-weight:bold;margin-right:4px;">' + x.horse.umaban + '</span>'
+      : '';
+    return '<span style="display:inline-flex;align-items:center;background:#fff;border:1.5px solid ' + color + ';border-radius:14px;padding:3px 10px 3px 4px;font-size:11px;font-weight:bold;color:#1a2744;margin:2px;">' + u + x.horse.name + '</span>';
+  }
+
+  var sList = byRank.S, aList = byRank.A, bList = byRank.B, cList = byRank.C, dList = byRank.D;
+
+  var patternA = {
+    name:'🛡 堅実重視', desc:'S+A中心。配当は控えめだが的中率重視。',
+    color:'#2e7d32', bgColor:'#e8f5e9',
+    col1: sList,
+    col2: sList.concat(aList),
+    col3: sList.concat(aList).concat(bList),
+    suggestPrice: 200
+  };
+  var patternB = {
+    name:'⚖️ 標準バランス', desc:'S軸1頭固定。バランス型で配当と的中率を両立。',
+    color:'#1565c0', bgColor:'#e3f2fd',
+    col1: sList.slice(0, 1),
+    col2: sList.concat(aList),
+    col3: sList.concat(aList).concat(bList).concat(cList.slice(0, 2)),
+    suggestPrice: 300
+  };
+  var patternC = {
+    name:'💎 妙味追求', desc:'S軸1頭固定。中穴・大穴も視野に入れた攻めの構成。',
+    color:'#b8860b', bgColor:'#fff8e1',
+    col1: sList.slice(0, 1),
+    col2: sList.concat(aList).concat(bList.slice(0, 1)),
+    col3: sList.concat(aList).concat(bList).concat(cList.slice(0, 2)).concat(dList.slice(0, 1)),
+    suggestPrice: 200
+  };
+
+  function countPoints(c1, c2, c3){
+    var pts = 0;
+    c1.forEach(function(a){ c2.forEach(function(b){ c3.forEach(function(c){
+      if (a.horse.name !== b.horse.name &&
+          a.horse.name !== c.horse.name &&
+          b.horse.name !== c.horse.name) pts++;
+    }); }); });
+    return pts;
+  }
+
+  var html = '<div class="recommended-formations" style="margin:24px 0;">';
+  html += '<h3 style="font-size:16px;font-weight:bold;color:#1a2744;margin:0 0 8px;">🎯 推奨フォーメーション（3パターン）</h3>';
+  html += '<div style="font-size:11px;color:#666;margin-bottom:16px;">ランク分けに基づく3連単フォーメーション。スタイルに合わせて選択</div>';
+
+  [patternA, patternB, patternC].forEach(function(p){
+    var points = countPoints(p.col1, p.col2, p.col3);
+    var totalAmount = points * p.suggestPrice;
+    html += '<div style="background:' + p.bgColor + ';border:2px solid ' + p.color + ';border-radius:10px;padding:14px;margin-bottom:12px;">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;margin-bottom:6px;">'
+         + '<div style="font-size:15px;font-weight:bold;color:' + p.color + ';">' + p.name + '</div>'
+         + '<div style="font-size:12px;color:' + p.color + ';font-weight:bold;">' + points + '点 × ' + p.suggestPrice + '円 = ' + totalAmount.toLocaleString() + '円</div>'
+         + '</div>';
+    html += '<div style="font-size:11px;color:#555;margin-bottom:10px;">' + p.desc + '</div>';
+    ['col1','col2','col3'].forEach(function(key, idx){
+      var label = (idx + 1) + '列目';
+      var list = p[key];
+      html += '<div style="background:#fff;border-radius:6px;padding:8px 10px;margin-bottom:6px;border-left:3px solid ' + p.color + ';">'
+           + '<div style="font-size:11px;color:#888;margin-bottom:4px;font-weight:bold;">' + label + '（' + list.length + '頭）</div>'
+           + '<div style="display:flex;flex-wrap:wrap;">';
+      list.forEach(function(x){ html += horseBadge(x, p.color); });
+      html += '</div></div>';
+    });
+    html += '</div>';
+  });
+
+  html += '<div style="margin-top:12px;padding:10px;background:#fff3cd;border-left:3px solid #ffc107;border-radius:4px;font-size:11px;color:#856404;line-height:1.6;">'
+       + '💡 <strong>3連単フォーメーションの利点</strong>：1着・2着・3着を別々に予想することで、不要な組み合わせを排除。マルチより少ない点数で効率的に的中を狙えます。同馬の重複は自動除外されます。'
+       + '</div>';
   html += '</div>';
   return html;
 }
