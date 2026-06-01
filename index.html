@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-0500';
+  var CURRENT_VERSION = '20260602-0600';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -8641,6 +8641,63 @@ const RACE_PAST_DATA = {
         summary: '東京芝1600mは騎手の力量が直結するコース。C.ルメールは複勝率63.2%と他を圧倒、戸崎圭太・川田将雅も45%と高水準。武豊・横山武史も30%超で安定している。今年の出走馬では◎トロヴァトーレにC.ルメール、アスクイキゴミの騎手未定が最重要ポイント。戸崎or川田orルメール継続なら大幅評価UP、それ以外なら大きく評価を下げる必要がある。'
       }
     },
+    producerAnalysis: {
+      title: '安田記念 生産者・調整別 分析カード',
+      subtitle: '人と組織の支配率／ノーザンファーム勢の威力',
+      headerCards: [
+        { type:'ace',   label:'ノーザンファーム生産', mainValue:'34.2%',  subValue:'★複勝率1位' },
+        { type:'iron',  label:'外厩調整馬',           mainValue:'121.2%', subValue:'中4-9週外厩なら強い' },
+        { type:'block', label:'直近1年トップ',        mainValue:'★必須', subValue:'人と組織の支配率' },
+        { type:'kill',  label:'社台外組',             mainValue:'割引',   subValue:'生産者で評価変動' }
+      ],
+      filterSummary: {
+        title: '安田記念は「生産者・調整」で勝負が分かれる',
+        iron: { label:'✅ ノーザンファーム生産馬：複勝率34.2%', desc:'社台グループの中心ノーザンファーム生産馬が圧倒的。さらに中4-9週で外厩調整に出した馬は複勝率121.2%に上昇する隠れた鉄板。' },
+        kill: { label:'⚠️ 社台外組は実績で判断', desc:'生産牧場が社台グループ外の馬は割引対象。ただし個別実績があれば例外あり。' }
+      },
+      detailTable: [
+        { producer:'ノーザンファーム', rate:34.2,  recordType:'生産', label:'★複勝率1位', color:'green' },
+        { producer:'外厩調整馬',       rate:121.2, recordType:'調整', label:'★隠れた鉄板', color:'green' },
+        { producer:'社台ファーム',     rate:25.0,  recordType:'生産', label:'安定',         color:'blue' },
+        { producer:'社台外組',         rate:15.0,  recordType:'生産', label:'実績で判断',   color:'red' }
+      ],
+      comparisonBars: [
+        { label:'ノーザンF生産馬 複勝率',          value:34.2,  color:'blue' },
+        { label:'外厩調整馬 複勝率（中4-9週）',     value:121.2, color:'blue' },
+        { label:'社台外組 複勝率',                 value:15.0,  color:'red'  }
+      ],
+      horseProducerMap: [
+        { name:'アスクイキゴミ',     producer:'?',                note:'廣崎利洋HD所有・要確認' },
+        { name:'アドマイヤズーム',   producer:'?',                note:'近藤旬子所有・要確認' },
+        { name:'ウォーターリヒト',   producer:'?',                note:'山岡正人所有・要確認' },
+        { name:'オフトレイル',       producer:'ゴドルフィン',     note:'ゴドルフィン直営' },
+        { name:'ガイアフォース',     producer:'?',                note:'KRジャパン所有' },
+        { name:'サクラトゥジュール', producer:'さくらコマース',   note:'さくら系列' },
+        { name:'シックスペンス',     producer:'ノーザンファーム', note:'★キャロットファーム' },
+        { name:'シャンパンカラー',   producer:'?',                note:'青山洋一所有' },
+        { name:'シリウスコルト',     producer:'?',                note:'飯田正剛所有' },
+        { name:'スズハローム',       producer:'?',                note:'森達郎所有' },
+        { name:'ステレンボッシュ',   producer:'ノーザンファーム', note:'★吉田勝己所有' },
+        { name:'セイウンハーデス',   producer:'?',                note:'西山茂行所有' },
+        { name:'セフィロ',           producer:'?',                note:'村野康司所有' },
+        { name:'ドラゴンブースト',   producer:'?',                note:'水谷美穂所有' },
+        { name:'トロヴァトーレ',     producer:'ノーザンファーム', note:'★サンデーレーシング' },
+        { name:'パンジャタワー',     producer:'?',                note:'Deep Creek所有' },
+        { name:'ルクソールカフェ',   producer:'?',                note:'西川光一所有' },
+        { name:'レーベンスティール', producer:'ノーザンファーム', note:'★キャロットファーム' },
+        { name:'ロングラン',         producer:'?',                note:'梅澤明所有' },
+        { name:'ワールズエンド',     producer:'ノーザンファーム', note:'★キャロットファーム' }
+      ],
+      filterStrategy: {
+        title: '2026年安田記念 生産者・調整別戦略',
+        tags: ['ノーザンF生産馬は最優先','外厩調整馬は加点','社台系は安定評価','社台外は実績で判断'],
+        buyRules: ['ノーザンファーム生産：複勝率34.2%','外厩調整馬（中4-9週）：複勝率121.2%★','キャロットF・サンデーレーシングは社台系','ゴドルフィン直営も世界レベル'],
+        killRules: ['社台外組は個別実績で判断','生産者不明は中立評価','小規模牧場生産は割引','地方生産馬は警戒'],
+        overseasRules: ['ゴドルフィン直営は世界レベル','海外生産馬は別評価','日本適性を個別チェック','輸送ストレスへの強さも要素'],
+        finalStrategy: ['①ノーザンF生産馬を最優先評価','②外厩調整明けは加点','③社台系のキャロットF・サンデーR馬は信頼','④社台外組は個別実績で判断'],
+        summary: '安田記念は生産者の支配率が顕著に出るレース。ノーザンファーム生産馬は複勝率34.2%で他を圧倒。さらに「中4-9週の外厩調整馬」は複勝率121.2%という隠れた鉄板データを記録している。今年の出走馬では、ノーザンファーム生産馬5頭（シックスペンス・ステレンボッシュ・トロヴァトーレ・レーベンスティール・ワールズエンド）が該当する。ただし他のデータ（前走人気・前走G3等）との組み合わせで最終判断する必要がある。ステレン・トロヴァ・レーベンはノーザンFだが前走G3 or 前走阪神で消去対象。シックスペンスも前走マイラーズC5着以下で消去対象。クリア組のワールズエンドのみがノーザンF×データクリアの組み合わせ。'
+      }
+    },
     anaPoints: [
       '🏟️【コース特徴】東京芝1600m・G1・3歳上・直線525mのスピード持続戦',
       '🥇 馬体重 480kg未満は危険（勝ち馬は全頭480kg以上）',
@@ -9487,6 +9544,92 @@ function renderJockeyAnalysis(d) {
   return html;
 }
 
+function renderProducerAnalysis(d) {
+  if (!d) return '';
+  var hbp = {};
+  (d.horseProducerMap || []).forEach(function(h){
+    var p = h.producer;
+    if (!hbp[p]) hbp[p] = [];
+    hbp[p].push(h.name);
+  });
+
+  var html = '<div class="analysis-card">';
+  html += '<h3>🏭 ' + d.title + '</h3>';
+  html += '<div class="subtitle">' + d.subtitle + '</div>';
+
+  html += '<div class="header-cards">';
+  (d.headerCards || []).forEach(function(c){
+    html += '<div class="header-card header-card-' + c.type + '">'
+         + '<div class="header-card-label">' + c.label + '</div>'
+         + '<div class="header-card-main">' + c.mainValue + '</div>'
+         + '<div class="header-card-sub">' + c.subValue + '</div></div>';
+  });
+  html += '</div>';
+
+  if (d.filterSummary) {
+    html += '<div class="filter-summary">'
+         + '<div class="filter-summary-title">📌 ' + d.filterSummary.title + '</div>'
+         + '<div class="filter-2col">'
+         + '<div class="filter-block filter-block-iron"><div class="filter-block-label">' + d.filterSummary.iron.label + '</div><div class="filter-block-desc">' + d.filterSummary.iron.desc + '</div></div>'
+         + '<div class="filter-block filter-block-kill"><div class="filter-block-label">' + d.filterSummary.kill.label + '</div><div class="filter-block-desc">' + d.filterSummary.kill.desc + '</div></div>'
+         + '</div></div>';
+  }
+
+  if (d.comparisonBars) {
+    html += '<div class="comparison-bars"><div class="comparison-bars-title">📊 生産者・調整別の複勝率比較</div>';
+    d.comparisonBars.forEach(function(b){
+      var w = Math.min(b.value, 100);
+      html += '<div class="comp-bar-row"><div class="comp-bar-label">' + b.label + '</div>'
+           + '<div class="comp-bar-bg"><div class="comp-bar-fill ' + b.color + '" style="width:' + w + '%">' + b.value + '%</div></div></div>';
+    });
+    html += '</div>';
+  }
+
+  // ノーザンファーム該当馬リスト
+  var nfHorses = hbp['ノーザンファーム'] || [];
+  if (nfHorses.length > 0) {
+    html += '<div style="background:rgba(255,215,0,0.1);border-radius:8px;padding:16px;margin:16px 0;border-left:3px solid #ffd700;">';
+    html += '<div style="font-size:14px;font-weight:bold;color:#ffd700;margin-bottom:10px;">🏆 ノーザンファーム生産馬（複勝率34.2%）</div>';
+    html += '<div class="badge-container">';
+    nfHorses.forEach(function(n){ html += '<span class="horse-badge horse-badge-best">' + n + '</span>'; });
+    html += '</div>';
+    html += '<div style="font-size:11px;color:#a0a8c8;margin-top:8px;">★ただし他データとの組み合わせで判定</div>';
+    html += '</div>';
+  }
+
+  // 全馬の生産者マッピング
+  if (d.horseProducerMap && d.horseProducerMap.length) {
+    html += '<div style="margin:16px 0;">';
+    html += '<div style="font-size:13px;font-weight:bold;color:#ccd0e0;margin-bottom:10px;">📋 全出走馬の生産者・所有情報</div>';
+    html += '<div style="display:grid;grid-template-columns:1fr;gap:6px;">';
+    d.horseProducerMap.forEach(function(h){
+      var isNF = h.producer === 'ノーザンファーム';
+      var bg = isNF ? 'rgba(255,215,0,0.08)' : 'rgba(255,255,255,0.03)';
+      var border = isNF ? '#ffd700' : '#4a9eff';
+      html += '<div style="background:' + bg + ';border-left:2px solid ' + border + ';border-radius:4px;padding:6px 10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;">'
+           + '<span style="font-size:12px;font-weight:bold;color:#fff;">' + h.name + '</span>'
+           + '<span style="font-size:11px;color:' + (isNF ? '#ffd700' : '#a0a8c8') + ';">' + h.note + '</span>'
+           + '</div>';
+    });
+    html += '</div></div>';
+  }
+
+  if (d.filterStrategy) {
+    var fs = d.filterStrategy;
+    html += '<div class="filter-strategy"><div class="filter-strategy-title">⭐ ' + fs.title + '</div>';
+    html += '<div class="filter-tags">' + fs.tags.map(function(t){ return '<div class="filter-tag">' + t + '</div>'; }).join('') + '</div>';
+    html += '<div class="rules-3col">'
+         + '<div class="rules-block rules-block-buy"><div class="rules-block-title">🟢 買い：ノーザンF・社台系</div><ul>' + fs.buyRules.map(function(r){ return '<li>' + r + '</li>'; }).join('') + '</ul></div>'
+         + '<div class="rules-block rules-block-kill"><div class="rules-block-title">❌ 割引：社台外組</div><ul>' + fs.killRules.map(function(r){ return '<li>' + r + '</li>'; }).join('') + '</ul></div>'
+         + '<div class="rules-block rules-block-overseas"><div class="rules-block-title">🌍 別枠：海外系</div><ul>' + fs.overseasRules.map(function(r){ return '<li>' + r + '</li>'; }).join('') + '</ul></div>'
+         + '</div>';
+    html += '<div class="final-strategy"><div class="final-strategy-title">🎯 2026年の絞り込み戦略（生産・調整）</div><ol>' + fs.finalStrategy.map(function(s){ return '<li>' + s + '</li>'; }).join('') + '</ol></div>';
+    html += '<div class="summary-text"><strong>総括</strong>：' + fs.summary + '</div></div>';
+  }
+  html += '</div>';
+  return html;
+}
+
 function renderPastData() {
   var root = document.getElementById('pastDataRoot');
   if (!root) return;
@@ -9596,6 +9739,9 @@ function renderPastData() {
   }
   if (data.jockeyAnalysis) {
     html += renderJockeyAnalysis(data.jockeyAnalysis);
+  }
+  if (data.producerAnalysis) {
+    html += renderProducerAnalysis(data.producerAnalysis);
   }
   data.sections.forEach(function(sec) {
     html += '<div class="section">';
