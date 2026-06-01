@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-1400';
+  var CURRENT_VERSION = '20260602-1500';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2513,28 +2513,6 @@
 
         <!-- ランク戦略買い目（S軸+A/B/C群） -->
         <div id="rank-strategy-container"></div>
-
-        <!-- 投資額の目安 -->
-        <div class="card">
-          <div class="ct">投資額の目安</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-            <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px;text-align:center">
-              <div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px">ミニマム</div>
-              <div style="font-size:16px;font-weight:700;color:var(--color-text-primary)" id="invest-min">—</div>
-              <div style="font-size:10px;color:var(--color-text-tertiary)">各50円</div>
-            </div>
-            <div style="background:#EFF6FF;border-radius:var(--border-radius-md);padding:10px;text-align:center;border:1px solid #2563EB">
-              <div style="font-size:10px;color:#1d4ed8;margin-bottom:4px">標準</div>
-              <div style="font-size:16px;font-weight:700;color:#1d4ed8" id="invest-std">—</div>
-              <div style="font-size:10px;color:#1d4ed8">各100円</div>
-            </div>
-            <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px;text-align:center">
-              <div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px">強気</div>
-              <div style="font-size:16px;font-weight:700;color:var(--color-text-primary)" id="invest-big">—</div>
-              <div style="font-size:10px;color:var(--color-text-tertiary)">各200円</div>
-            </div>
-          </div>
-        </div>
 
       </div>
     </div>
@@ -12818,8 +12796,7 @@ function renderSimulator() {
   var div = document.getElementById('simulator');
   if (!div) return;
 
-  var stdEl = document.getElementById('invest-std');
-  var pts = stdEl ? (parseInt(stdEl.textContent.replace(/[^0-9]/g,''), 10) / 100 || 30) : 30;
+  var pts = 30;  // 旧 invest-std 連動を撤廃しデフォルト30点固定
 
   var html = '<div style="font-size:12px;color:var(--text-sub);margin-bottom:10px">' +
              '各 100 円で買った場合の想定払戻シミュレーション（軸からヒモへ ' + pts + ' 点想定）：</div>';
@@ -13701,14 +13678,6 @@ function renderKaime() {
     + '<span style="color:#2563EB;font-weight:700">点数：' + pts + '点</span>'
     + '</div>';
   document.getElementById('kaime-summary').innerHTML = summaryHtml;
-
-  var fmt = function(n){ return n.toLocaleString() + '円'; };
-  var minEl = document.getElementById('invest-min');
-  var stdEl = document.getElementById('invest-std');
-  var bigEl = document.getElementById('invest-big');
-  if (minEl) minEl.textContent = pts ? fmt(pts * 50) : '—';
-  if (stdEl) stdEl.textContent = pts ? fmt(pts * 100) : '—';
-  if (bigEl) bigEl.textContent = pts ? fmt(pts * 200) : '—';
 
   // ランク戦略買い目（S軸+A/B/C群の3連単マルチ）
   var rankEl = document.getElementById('rank-strategy-container');
