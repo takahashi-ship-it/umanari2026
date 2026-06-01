@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260601-2000';
+  var CURRENT_VERSION = '20260601-2100';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1418,6 +1418,35 @@
   .horse-badge-kill     { background:rgba(255,74,74,0.15); border:1px solid #ff4a4a; color:#ff8080; opacity:0.7; text-decoration:line-through; text-decoration-color:rgba(255,128,128,0.5); }
   .horse-badge-overseas { background:rgba(192,143,255,0.2); border:1px solid #c08fff; color:#c08fff; }
   .horse-badge-best     { background:linear-gradient(135deg, rgba(192,143,255,0.3), rgba(255,215,0,0.2)); border:1px solid #ffd700; color:#ffd700; font-weight:bold; }
+  /* ===== 馬カード用データバッジ ===== */
+  .horse-data-badges {
+    display:flex; flex-wrap:wrap; gap:6px;
+    margin:10px 0; padding:10px;
+    background:rgba(0,0,0,0.2); border-radius:8px;
+    border-left:3px solid #ffd700;
+  }
+  .data-badge {
+    display:inline-flex; align-items:center; gap:4px;
+    padding:4px 10px; border-radius:12px;
+    font-size:11px; font-weight:bold; white-space:nowrap;
+    position:relative;
+  }
+  .data-badge .badge-detail {
+    display:inline-block; margin-left:6px; padding-left:6px;
+    border-left:1px solid rgba(255,255,255,0.2);
+    font-weight:normal; font-size:10px; opacity:0.85;
+  }
+  .data-badge.badge-best     { background:linear-gradient(135deg, rgba(255,215,0,0.25), rgba(192,143,255,0.2)); border:1px solid #ffd700; color:#ffd700; }
+  .data-badge.badge-iron     { background:rgba(74,158,255,0.2); border:1px solid #4a9eff; color:#6fb3d9; }
+  .data-badge.badge-value    { background:rgba(192,143,255,0.2); border:1px solid #c08fff; color:#c08fff; }
+  .data-badge.badge-overseas { background:rgba(192,143,255,0.2); border:1px solid #c08fff; color:#c08fff; }
+  .data-badge.badge-warn     { background:rgba(255,165,0,0.15); border:1px solid #ff9933; color:#ffaa55; }
+  .data-badge.badge-kill     { background:rgba(255,74,74,0.15); border:1px solid #ff4a4a; color:#ff8080; opacity:0.7; }
+  @media (max-width: 600px) {
+    .horse-data-badges { padding:8px; gap:4px; }
+    .data-badge { font-size:10px; padding:3px 8px; }
+    .data-badge .badge-detail { font-size:9px; }
+  }
   .badge-empty { font-size:11px; color:#6a7090; font-style:italic; }
 </style>
 </head>
@@ -11020,6 +11049,78 @@ function getMarkByRank(rank) {
   return { key: '', label: '', mark: '' };  // 7位以下は無印
 }
 
+function getHorseDataBadges(horse, raceName) {
+  if (raceName !== '安田記念' || !horse) return '';
+  var badges = [];
+
+  // ① 前走人気
+  if (horse.prevIsOverseas) {
+    badges.push({ icon:'🌍', label:'前走海外組',     cls:'badge-overseas', detail:'別枠評価' });
+  } else if (horse.prevPop === 1) {
+    badges.push({ icon:'✅', label:'前走1人気',      cls:'badge-iron',     detail:'複勝率36%' });
+  } else if (horse.prevPop === 2) {
+    badges.push({ icon:'⭐', label:'前走2人気',      cls:'badge-best',     detail:'最多3勝' });
+  } else if (horse.prevPop === 3) {
+    badges.push({ icon:'✅', label:'前走3人気',      cls:'badge-iron',     detail:'安定' });
+  } else if (horse.prevPop === 4) {
+    badges.push({ icon:'✅', label:'前走4人気',      cls:'badge-iron',     detail:'鉄板帯' });
+  } else if (horse.prevPop && horse.prevPop >= 5) {
+    badges.push({ icon:'❌', label:'前走' + horse.prevPop + '人気', cls:'badge-kill', detail:'消し対象' });
+  }
+
+  // ② 上がり3F
+  var lf = horse.prevLast3f;
+  if (lf && lf < 99) {
+    if (lf <= 32.9)      badges.push({ icon:'⚡', label:'上がり' + lf, cls:'badge-best', detail:'異次元末脚' });
+    else if (lf <= 33.0) badges.push({ icon:'⚡', label:'上がり' + lf, cls:'badge-best', detail:'鉄板ボーダー' });
+    else if (lf <= 33.3) badges.push({ icon:'⚡', label:'上がり' + lf, cls:'badge-iron', detail:'重賞上位' });
+    else if (lf <= 33.5) badges.push({ icon:'⚡', label:'上がり' + lf, cls:'badge-iron', detail:'重賞中位' });
+    else if (lf <= 33.9) badges.push({ icon:'⚠️', label:'上がり' + lf, cls:'badge-warn', detail:'やや遅' });
+    else                 badges.push({ icon:'❌', label:'上がり' + lf, cls:'badge-kill', detail:'消し対象' });
+  }
+
+  // ③ 血統
+  var sireMap = {
+    'リアルスティール':   { cls:'badge-best',  detail:'★複勝率43.3%' },
+    'エピファネイア':     { cls:'badge-best',  detail:'単勝回収188%' },
+    'モーリス':            { cls:'badge-best',  detail:'複勝回収107%' },
+    'ロードカナロア':     { cls:'badge-iron',  detail:'1位サンプル最多' },
+    'キタサンブラック':   { cls:'badge-iron',  detail:'勝率15.7%最高' },
+    'キズナ':              { cls:'badge-iron',  detail:'複勝率31.3%' },
+    'ドゥラメンテ':        { cls:'badge-iron',  detail:'安定' },
+    'ディープインパクト': { cls:'badge-iron',  detail:'勝率14.4%' },
+    'ハービンジャー':     { cls:'badge-iron',  detail:'安定' },
+    'イスラボニータ':     { cls:'badge-value', detail:'単勝249%★穴妙味' }
+  };
+  if (horse.sire && sireMap[horse.sire]) {
+    badges.push({ icon: sireMap[horse.sire].cls === 'badge-value' ? '💎' : '🩸', label: horse.sire, cls: sireMap[horse.sire].cls, detail: sireMap[horse.sire].detail });
+  }
+
+  // ④ 性別×所属
+  var isMiuho = horse.stable && horse.stable.indexOf('美浦') >= 0;
+  var isMare = horse.sex === '牝';
+  if (isMiuho && isMare)   badges.push({ icon:'🌸', label:'美浦×牝馬',  cls:'badge-best', detail:'★★★複勝率66.7%' });
+  else if (isMiuho)        badges.push({ icon:'🏠', label:'美浦所属',   cls:'badge-iron', detail:'関東馬・地の利' });
+
+  // ⑤ 斤量（牡で軽斤量）
+  if (horse.carriedWeight && horse.carriedWeight <= 54) {
+    badges.push({ icon:'🎚️', label: horse.carriedWeight + 'kg', cls:'badge-best', detail:'★3歳異次元アドバンテージ' });
+  } else if (horse.carriedWeight && horse.carriedWeight <= 56 && !isMare) {
+    badges.push({ icon:'🎚️', label: horse.carriedWeight + 'kg', cls:'badge-iron', detail:'軽斤量' });
+  }
+
+  if (badges.length === 0) return '';
+  var html = '<div class="horse-data-badges">';
+  badges.forEach(function(b){
+    html += '<span class="data-badge ' + b.cls + '" title="' + b.detail + '">'
+         + b.icon + ' ' + b.label
+         + '<span class="badge-detail">' + b.detail + '</span>'
+         + '</span>';
+  });
+  html += '</div>';
+  return html;
+}
+
 function renderHorses() {
   const grid = document.getElementById('horseGrid');
   grid.innerHTML = '';
@@ -11131,6 +11232,8 @@ function renderHorses() {
         <span class="badge">父: ${h.father || '不明'}</span>
         <span class="badge">前走: ${prevRaceText} ${prevRankText}</span>
       </div>
+
+      ${getHorseDataBadges(h, currentRace)}
 
       <div class="score-block">
         <div class="score-top">
