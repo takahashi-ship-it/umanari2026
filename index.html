@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260602-1300';
+  var CURRENT_VERSION = '20260602-1400';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13725,38 +13725,38 @@ function renderKaime() {
 function renderAnaUmaSection(d) {
   if (!d) return '';
   var html = '<div class="ana-uma-section">';
-  html += '<h3 style="font-size:16px;font-weight:bold;color:#ffd700;margin:24px 0 8px;">' + d.title + '</h3>';
-  html += '<div style="font-size:11px;color:#a0a8c8;margin-bottom:16px;">' + d.subtitle + '</div>';
+  html += '<h3 style="font-size:16px;font-weight:bold;color:#b8860b;margin:24px 0 8px;">' + d.title + '</h3>';
+  html += '<div style="font-size:11px;color:#666;margin-bottom:16px;">' + d.subtitle + '</div>';
 
   (d.candidates || []).forEach(function(c){
     var starStr = '★'.repeat(c.stars) + '☆'.repeat(5 - c.stars);
-    html += '<div class="ana-card" style="background:linear-gradient(135deg,rgba(255,215,0,0.05),rgba(192,143,255,0.05));border-left:4px solid #ffd700;border-radius:10px;padding:14px 16px;margin-bottom:12px;">';
-    html += '<div style="font-size:12px;color:#ffd700;font-weight:bold;margin-bottom:6px;">' + c.category + '</div>';
+    html += '<div class="ana-card" style="background:#fff8e1;border:1px solid #ffd700;border-left:4px solid #ffd700;border-radius:10px;padding:14px 16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">';
+    html += '<div style="font-size:12px;color:#b8860b;font-weight:bold;margin-bottom:6px;">' + c.category + '</div>';
     html += '<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;margin-bottom:8px;">'
          + '<div>'
-         + '<span style="font-size:18px;font-weight:bold;color:#fff;">⭐ ' + c.name + '</span>'
-         + '<span style="font-size:12px;color:#a0a8c8;margin-left:8px;">(' + c.popularity + '・' + c.odds + ')</span>'
+         + '<span style="font-size:18px;font-weight:bold;color:#1a2744;">⭐ ' + c.name + '</span>'
+         + '<span style="font-size:12px;color:#666;margin-left:8px;">(' + c.popularity + '・' + c.odds + ')</span>'
          + '</div>'
-         + '<div style="font-size:14px;color:#ffd700;">妙味度 ' + starStr + '</div>'
+         + '<div style="font-size:14px;color:#b8860b;font-weight:bold;">妙味度 ' + starStr + '</div>'
          + '</div>';
-    html += '<div style="background:rgba(0,0,0,0.2);border-radius:6px;padding:6px 10px;margin-bottom:8px;display:flex;justify-content:space-between;">'
-         + '<span style="font-size:11px;color:#a0a8c8;">3着内予想</span>'
-         + '<span style="font-size:14px;font-weight:bold;color:#7AE6B5;">' + c.score + '% (' + c.total + '/194)</span>'
+    html += '<div style="background:#f5f5f5;border-radius:6px;padding:6px 10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;border:1px solid #e0e0e0;">'
+         + '<span style="font-size:12px;color:#666;font-weight:500;">3着内予想</span>'
+         + '<span style="font-size:16px;font-weight:bold;color:#2e7d32;">' + c.score + '% (' + c.total + '/194)</span>'
          + '</div>';
     html += '<ul style="margin:0;padding:0 0 0 8px;list-style:none;">';
     (c.reasons || []).forEach(function(r){
-      var color = r.icon === '⚠️' ? '#ff8080' : '#ccd0e0';
-      html += '<li style="font-size:12px;color:' + color + ';line-height:1.7;">' + r.icon + ' ' + r.text + '</li>';
+      var color = r.icon === '⚠️' ? '#d32f2f' : '#333';
+      html += '<li style="font-size:12px;color:' + color + ';line-height:1.7;font-weight:500;">' + r.icon + ' ' + r.text + '</li>';
     });
     html += '</ul>';
-    html += '<div style="font-size:11px;color:#a0a8c8;margin-top:8px;padding:6px 10px;background:rgba(0,0,0,0.15);border-radius:4px;line-height:1.5;">' + c.description + '</div>';
-    html += '<div style="margin-top:8px;padding:6px 10px;background:rgba(255,215,0,0.1);border-left:2px solid #ffd700;border-radius:4px;font-size:11px;color:#ffd700;">🎯 推奨買い目: <strong>' + c.strategy + '</strong></div>';
+    html += '<div style="font-size:11px;color:#555;margin-top:8px;padding:8px 10px;background:#f9f9f9;border-radius:4px;line-height:1.6;border:1px solid #eaeaea;">' + c.description + '</div>';
+    html += '<div style="margin-top:8px;padding:8px 10px;background:#fff3cd;border-left:3px solid #ffd700;border-radius:4px;font-size:12px;color:#856404;font-weight:500;">🎯 推奨買い目: <strong style="color:#5a4500;">' + c.strategy + '</strong></div>';
     html += '</div>';
   });
 
   if (d.summary) {
-    html += '<div style="margin-top:16px;padding:12px;background:rgba(255,215,0,0.05);border-top:2px solid #ffd700;border-radius:6px;font-size:11px;line-height:1.6;color:#ccd0e0;">';
-    html += '<strong style="color:#ffd700;">💡 戦略まとめ：</strong>' + d.summary;
+    html += '<div style="margin-top:16px;padding:14px;background:#fff8e1;border:1px solid #ffd700;border-radius:8px;font-size:12px;line-height:1.7;color:#333;">';
+    html += '<strong style="color:#b8860b;">💡 戦略まとめ：</strong>' + d.summary;
     html += '</div>';
   }
   html += '</div>';
