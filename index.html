@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260601-1700';
+  var CURRENT_VERSION = '20260601-1800';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -8342,6 +8342,48 @@ const RACE_PAST_DATA = {
         summary: '安田記念は「上がり3F」が勝敗を分ける最重要要素。過去10年で上がり1位馬の複勝率75%、33.0秒以下経験馬は勝ち馬12頭中8頭が該当する圧倒的データ。東京1600mの長い直線で「キレ味」が最強の決め手になる。逆に34.0秒以上しか出せない馬は決め手不足で苦戦傾向。直近の上がり3Fタイムを必ずチェックし、33.5秒以下の馬を中心に狙うのが2026年の絞り込み戦略。'
       }
     },
+    bloodAnalysis: {
+      title: '安田記念 父系種牡馬別 分析カード',
+      subtitle: '東京1600m過去5年データ／血統で読む適性（2021/05/24-2026/05/24）',
+      headerCards: [
+        { type:'ace',   label:'リアルスティール', mainValue:'43.3%', subValue:'複勝率★最強' },
+        { type:'iron',  label:'エピファネイア',   mainValue:'188%',  subValue:'単勝回収率★妙味' },
+        { type:'iron',  label:'モーリス',          mainValue:'107%',  subValue:'複勝回収率' },
+        { type:'block', label:'イスラボニータ',   mainValue:'249%',  subValue:'単勝回収★穴妙味' }
+      ],
+      filterSummary: {
+        title: '東京1600mは「父系で勝負が決まる」',
+        iron: { label:'主要10種牡馬 → 複勝率25%以上の鉄板帯', desc:'ロードカナロア・エピファネイア・モーリス等の主要10種牡馬が東京1600mで圧倒的な好走率。安田記念出走馬は父血統で評価が変わる。' },
+        kill: { label:'💎 イスラボニータ → 単勝回収率249%★', desc:'少サンプルだが穴での激走パターン。母父Storm Cat系の人気薄勝利と並ぶ安田記念の典型的「妙味血統」。' }
+      },
+      detailTable: [
+        { sire:'ロードカナロア',     record:'27-34-25-169', win:'10.6%', rentai:'23.9%', fukusho:'33.7%', tan:'38%',    fuku:'86%',   label:'1位サンプル最多', color:'blue'   },
+        { sire:'エピファネイア',     record:'27-20-28-141', win:'12.5%', rentai:'21.8%', fukusho:'34.7%', tan:'188%★', fuku:'95%',   label:'単勝妙味',         color:'green'  },
+        { sire:'モーリス',           record:'22-24-27-142', win:'10.2%', rentai:'21.4%', fukusho:'34.0%', tan:'141%',   fuku:'107%★', label:'複勝回収◎',       color:'green'  },
+        { sire:'ディープインパクト', record:'18-10-5-92',   win:'14.4%', rentai:'22.4%', fukusho:'26.4%', tan:'89%',    fuku:'54%',   label:'勝率高',           color:'blue'   },
+        { sire:'キズナ',             record:'17-18-11-101', win:'11.6%', rentai:'23.8%', fukusho:'31.3%', tan:'57%',    fuku:'64%',   label:'安定',             color:'blue'   },
+        { sire:'ドゥラメンテ',       record:'17-13-13-96',  win:'12.2%', rentai:'21.6%', fukusho:'30.9%', tan:'68%',    fuku:'55%',   label:'安定',             color:'blue'   },
+        { sire:'キタサンブラック',   record:'14-9-7-59',    win:'15.7%', rentai:'25.8%', fukusho:'33.7%', tan:'66%',    fuku:'67%',   label:'勝率最高',         color:'blue'   },
+        { sire:'リアルスティール',   record:'13-9-7-38',    win:'19.4%', rentai:'32.8%', fukusho:'43.3%', tan:'132%',   fuku:'108%',  label:'★複勝率最強',      color:'green'  },
+        { sire:'イスラボニータ',     record:'11-11-8-87',   win:'9.4%',  rentai:'18.8%', fukusho:'25.6%', tan:'249%★', fuku:'92%',   label:'💎穴妙味',         color:'purple' },
+        { sire:'ハービンジャー',     record:'10-15-4-80',   win:'9.2%',  rentai:'22.9%', fukusho:'26.6%', tan:'31%',    fuku:'72%',   label:'安定',             color:'blue'   }
+      ],
+      comparisonBars: [
+        { label:'リアルスティール（最強複勝率）', value:43.3, color:'blue' },
+        { label:'エピファネイア',                value:34.7, color:'blue' },
+        { label:'モーリス',                      value:34.0, color:'blue' },
+        { label:'ロードカナロア',                value:33.7, color:'blue' }
+      ],
+      filterStrategy: {
+        title: '2026年安田記念 絞り込みフィルター（血統）',
+        tags: ['リアルスティール産駒は最強','主要10種牡馬を中心に','イスラボニータ産駒の穴妙味','母父Storm Cat系の人気薄激走'],
+        buyRules: ['リアルスティール：複勝率43.3%★最強','エピファネイア：単勝回収率188%','モーリス：複勝回収率107%','キタサンブラック：勝率15.7%最高'],
+        killRules: ['主要10種牡馬以外は割引対象','東京1600m未対応血統は厳しい','パワー型短距離血統は不向き','マイル実績のない血統は警戒'],
+        overseasRules: ['イスラボニータ：単勝回収249%★穴','母父Storm Cat系で人気薄勝利歴','サトノアラジン7人気・モズアスコット9人気','ダノンキングリー8人気の例多数'],
+        finalStrategy: ['①リアルスティール産駒を最優先評価','②エピファネイア・モーリスを中心に','③イスラボニータ産駒の穴を狙う','④母父Storm Cat系の人気薄激走を警戒'],
+        summary: '東京1600mは父系種牡馬の適性が明確に出るレース。リアルスティール産駒は複勝率43.3%と圧倒的、エピファネイアは単勝回収率188%・モーリスは複勝回収率107%と回収面でも優秀。さらに母父Storm Cat系の血を持つ馬は人気薄での激走パターンが多く、過去10年でサトノアラジン7人気・モズアスコット9人気・ダノンキングリー8人気など穴を演出してきた。今年の出走馬の父血統を必ずチェックし、主要10種牡馬以外は割引、イスラボニータ産駒は穴妙味として評価するのが2026年の絞り込み戦略。'
+      }
+    },
     anaPoints: [
       '🏟️【コース特徴】東京芝1600m・G1・3歳上・直線525mのスピード持続戦',
       '🥇 馬体重 480kg未満は危険（勝ち馬は全頭480kg以上）',
@@ -8828,6 +8870,100 @@ function renderLast3fAnalysis(d) {
   return html;
 }
 
+function renderBloodAnalysis(d) {
+  if (!d) return '';
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['安田記念'] || []) : [];
+  var hbs = {};
+  horses.forEach(function(h){
+    var s = h.sire || '不明';
+    if (!hbs[s]) hbs[s] = [];
+    hbs[s].push(h.name);
+  });
+  function renderBadges(names, type){
+    if (!names || names.length === 0) return '<div class="badge-empty">該当なし</div>';
+    var cls = 'horse-badge';
+    if (type === 'best') cls += ' horse-badge-best';
+    else if (type === 'iron') cls += ' horse-badge-iron';
+    else if (type === 'value') cls += ' horse-badge-overseas';
+    var h = '<div class="badge-container">';
+    h += '<span class="badge-label">該当' + names.length + '頭：</span>';
+    names.forEach(function(n){ h += '<span class="' + cls + '">' + n + '</span>'; });
+    h += '</div>';
+    return h;
+  }
+
+  var html = '<div class="analysis-card">';
+  html += '<h3>🩸 ' + d.title + '</h3>';
+  html += '<div class="subtitle">' + d.subtitle + '</div>';
+  html += '<div class="header-cards">';
+  (d.headerCards || []).forEach(function(c){
+    html += '<div class="header-card header-card-' + c.type + '">'
+         + '<div class="header-card-label">' + c.label + '</div>'
+         + '<div class="header-card-main">' + c.mainValue + '</div>'
+         + '<div class="header-card-sub">' + c.subValue + '</div></div>';
+  });
+  html += '</div>';
+  if (d.filterSummary) {
+    html += '<div class="filter-summary">'
+         + '<div class="filter-summary-title">📌 ' + d.filterSummary.title + '</div>'
+         + '<div class="filter-2col">'
+         + '<div class="filter-block filter-block-iron"><div class="filter-block-label">✅ ' + d.filterSummary.iron.label + '</div><div class="filter-block-desc">' + d.filterSummary.iron.desc + '</div></div>'
+         + '<div class="filter-block filter-block-kill"><div class="filter-block-label">💎 ' + d.filterSummary.kill.label + '</div><div class="filter-block-desc">' + d.filterSummary.kill.desc + '</div></div>'
+         + '</div></div>';
+  }
+  if (d.comparisonBars) {
+    html += '<div class="comparison-bars"><div class="comparison-bars-title">📊 上位4種牡馬の複勝率比較</div>';
+    d.comparisonBars.forEach(function(b){
+      html += '<div class="comp-bar-row"><div class="comp-bar-label">' + b.label + '</div>'
+           + '<div class="comp-bar-bg"><div class="comp-bar-fill ' + b.color + '" style="width:' + Math.min(100, b.value * 2) + '%">' + b.value + '%</div></div></div>';
+    });
+    html += '</div>';
+  }
+  if (d.detailTable) {
+    html += '<table class="analysis-table"><thead><tr><th>種牡馬</th><th>成績</th><th>勝率</th><th>連対率</th><th>複勝率</th><th>単回収</th><th>複回収</th><th>評価</th></tr></thead><tbody>';
+    d.detailTable.forEach(function(r){
+      var names = hbs[r.sire] || [];
+      var bType = 'iron';
+      if (r.label.indexOf('★') >= 0) bType = 'best';
+      else if (r.label.indexOf('💎') >= 0) bType = 'value';
+      html += '<tr><td>' + r.sire + '</td><td>' + r.record + '</td><td>' + r.win + '</td><td>' + r.rentai + '</td><td>' + r.fukusho + '</td><td>' + r.tan + '</td><td>' + r.fuku + '</td>'
+           + '<td><span class="label-pill label-pill-' + r.color + '">' + r.label + '</span></td></tr>';
+      html += '<tr class="badge-row"><td colspan="8">' + renderBadges(names, bType) + '</td></tr>';
+    });
+    html += '</tbody></table>';
+  }
+  // その他の出走馬血統一覧
+  var listed = d.detailTable.map(function(r){ return r.sire; });
+  var others = [];
+  Object.keys(hbs).forEach(function(s){
+    if (listed.indexOf(s) < 0) hbs[s].forEach(function(n){ others.push({sire:s, name:n}); });
+  });
+  if (others.length > 0) {
+    html += '<div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.03);border-radius:6px;">'
+         + '<div style="font-size:12px;color:#a0a8c8;margin-bottom:8px;">📋 その他の父血統（東京1600mデータ少）</div>'
+         + '<div class="badge-container">';
+    others.forEach(function(o){
+      html += '<span class="horse-badge" style="opacity:0.6;background:rgba(160,168,200,0.15);border-color:#6a7090;color:#a0a8c8;">'
+           + o.name + '(' + o.sire + ')</span>';
+    });
+    html += '</div></div>';
+  }
+  if (d.filterStrategy) {
+    var fs = d.filterStrategy;
+    html += '<div class="filter-strategy"><div class="filter-strategy-title">⭐ ' + fs.title + '</div>';
+    html += '<div class="filter-tags">' + fs.tags.map(function(t){ return '<div class="filter-tag">' + t + '</div>'; }).join('') + '</div>';
+    html += '<div class="rules-3col">'
+         + '<div class="rules-block rules-block-buy"><div class="rules-block-title">🟢 買い：主要種牡馬</div><ul>' + fs.buyRules.map(function(r){ return '<li>' + r + '</li>'; }).join('') + '</ul></div>'
+         + '<div class="rules-block rules-block-kill"><div class="rules-block-title">❌ 消し：マイル不向き血統</div><ul>' + fs.killRules.map(function(r){ return '<li>' + r + '</li>'; }).join('') + '</ul></div>'
+         + '<div class="rules-block rules-block-overseas"><div class="rules-block-title">💎 妙味：イスラボニータ・Storm Cat系</div><ul>' + fs.overseasRules.map(function(r){ return '<li>' + r + '</li>'; }).join('') + '</ul></div>'
+         + '</div>';
+    html += '<div class="final-strategy"><div class="final-strategy-title">🎯 2026年の絞り込み戦略（血統）</div><ol>' + fs.finalStrategy.map(function(s){ return '<li>' + s + '</li>'; }).join('') + '</ol></div>';
+    html += '<div class="summary-text"><strong>総括</strong>：' + fs.summary + '</div></div>';
+  }
+  html += '</div>';
+  return html;
+}
+
 function renderPastData() {
   var root = document.getElementById('pastDataRoot');
   if (!root) return;
@@ -8922,6 +9058,9 @@ function renderPastData() {
   }
   if (data.last3fAnalysis) {
     html += renderLast3fAnalysis(data.last3fAnalysis);
+  }
+  if (data.bloodAnalysis) {
+    html += renderBloodAnalysis(data.bloodAnalysis);
   }
   data.sections.forEach(function(sec) {
     html += '<div class="section">';
