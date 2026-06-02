@@ -12054,7 +12054,7 @@ function renderHorses() {
             <span class="score-value">${total}/${maxS} (${pct}<span class="pct">%</span>)</span>
           </div>
           <div class="score-row">
-            <span class="score-label">🎯 3着内予想</span>
+            <span class="score-label">🎯 AI信頼度</span>
             <span class="score-value score-fukusho">${fukushoProb}<span class="pct">%</span></span>
           </div>
         </div>
@@ -13750,7 +13750,7 @@ function renderKaime() {
   jikuHtml += '<div style="font-size:10px;color:#AAC;margin-top:6px">調教 ' + (jiku.training || '—') + (jiku.popEstimate ? ' / ' + jiku.popEstimate + '番人気' : '') + '</div>';
   jikuHtml += '</div>';
   jikuHtml += '<div style="text-align:right;flex-shrink:0">';
-  jikuHtml += '<div style="font-size:10px;color:#AAC">🎯 3着内予想</div>';
+  jikuHtml += '<div style="font-size:10px;color:#AAC">🎯 AI信頼度</div>';
   jikuHtml += '<div style="font-size:22px;font-weight:800;color:#7AE6B5">' + fukushoProb + '%</div>';
   jikuHtml += '<div style="font-size:10px;color:#AAC;margin-top:2px">AIスコア ' + jikuBd.total + '/' + jikuBd.max + '</div>';
   jikuHtml += '</div>';
@@ -13939,7 +13939,7 @@ function renderRankClassification(raceName) {
   horsesWithRank.forEach(function(x){ byRank[x.rank].push(x); });
 
   var rankInfo = {
-    S: { color:'#b8860b', accentColor:'#ffd700', bg:'#fff8e1', headerBg:'#ffd700', headerColor:'#5a4500', range:'60%以上',  desc:'🌟 軸候補・3着内ほぼ確実' },
+    S: { color:'#b8860b', accentColor:'#ffd700', bg:'#fff8e1', headerBg:'#ffd700', headerColor:'#5a4500', range:'60%以上',  desc:'🌟 軸候補・最上位評価' },
     A: { color:'#e65100', accentColor:'#ff9800', bg:'#fff3e0', headerBg:'#ff9800', headerColor:'#5a2d00', range:'55-59%',   desc:'🅰️ 軸を倒せる対抗' },
     B: { color:'#1565c0', accentColor:'#2196f3', bg:'#e3f2fd', headerBg:'#2196f3', headerColor:'#fff',    range:'48-54%',   desc:'🅱️ 上位入着の可能性' },
     C: { color:'#424242', accentColor:'#9e9e9e', bg:'#f5f5f5', headerBg:'#9e9e9e', headerColor:'#fff',    range:'35-47%',   desc:'🅲 3着なら' },
@@ -13958,7 +13958,7 @@ function renderRankClassification(raceName) {
     // ヘッダー帯（背景色＋濃色文字でコントラスト確保）
     html += '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;background:' + info.headerBg + ';padding:10px 12px;">'
          + '<div style="font-size:14px;font-weight:bold;color:' + info.headerColor + ';">' + info.desc + '</div>'
-         + '<div style="font-size:11px;color:' + info.headerColor + ';opacity:0.9;font-weight:500;">3着内予想 ' + info.range + ' (' + hs.length + '頭)</div>'
+         + '<div style="font-size:11px;color:' + info.headerColor + ';opacity:0.9;font-weight:500;">AI信頼度 ' + info.range + ' (' + hs.length + '頭)</div>'
          + '</div>';
     // 馬リスト本体
     html += '<div style="display:flex;flex-direction:column;gap:6px;padding:10px 12px;">';
@@ -14219,7 +14219,7 @@ function renderAnaUmaSection(d) {
          + '<div style="font-size:14px;color:#b8860b;font-weight:bold;">妙味度 ' + starStr + '</div>'
          + '</div>';
     html += '<div style="background:#f5f5f5;border-radius:6px;padding:6px 10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;border:1px solid #e0e0e0;">'
-         + '<span style="font-size:12px;color:#666;font-weight:500;">3着内予想</span>'
+         + '<span style="font-size:12px;color:#666;font-weight:500;">AI信頼度</span>'
          + '<span style="font-size:16px;font-weight:bold;color:#2e7d32;">' + c.score + '% (' + c.total + '/194)</span>'
          + '</div>';
     html += '<ul style="margin:0;padding:0 0 0 8px;list-style:none;">';
@@ -16574,7 +16574,29 @@ function computeScoreBreakdownMeguroV4(horse, raceName) {
   };
 }
 
-function computeScoreBreakdownYasudaV1(horse, raceName) {
+// 安田記念：レース内スコア分布のキャッシュ（最大値・中央値）
+// pct 算出のシグモイド変換に使用。出走馬が変わらない前提で1度だけ計算。
+function _getYasudaScoreStats() {
+  if (typeof window !== 'undefined' && window._yasudaScoreStatsCache) return window._yasudaScoreStatsCache;
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['安田記念'] || []) : [];
+  var scores = [];
+  horses.forEach(function(h){
+    if (!h || h.isAvoided) return;
+    var bd = computeScoreBreakdownYasudaV1(h, '安田記念', true); // _rawOnly=true で再帰回避
+    if (bd && typeof bd.total === 'number') scores.push(bd.total);
+  });
+  if (!scores.length) return null;
+  scores.sort(function(a, b){ return a - b; });
+  var maxScore = scores[scores.length - 1];
+  var medScore = scores.length % 2 === 1
+    ? scores[(scores.length - 1) / 2]
+    : (scores[scores.length / 2 - 1] + scores[scores.length / 2]) / 2;
+  var stats = { maxScore: maxScore, medScore: medScore };
+  if (typeof window !== 'undefined') window._yasudaScoreStatsCache = stats;
+  return stats;
+}
+
+function computeScoreBreakdownYasudaV1(horse, raceName, _rawOnly) {
   if (!horse) return { total: 0, max: 130, pct: 0, items: {}, penalty: 0 };
 
   var items = {};
@@ -17057,7 +17079,24 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
     if (it && typeof it.score === 'number') totalScore += it.score;
   });
   totalScore = Math.max(0, totalScore);
-  var pct = Math.max(0, Math.min(99, Math.round(totalScore / 207 * 100)));
+  // 軸馬実測79%アンカー方式：レース内相対 + シグモイド圧縮
+  //   floor 8, ceil 79（軸馬実測3着内率）, center=medScore, k=4.0/(maxScore-medScore)
+  //   中央値で raw=0.5、最大スコアで raw≈0.98 → 表示% = floor + range*raw
+  var pct;
+  if (_rawOnly) {
+    pct = 0; // 内部計算用：pctは使わないので0
+  } else {
+    var stats = _getYasudaScoreStats();
+    if (stats && stats.maxScore > stats.medScore) {
+      var floorPct = 8, ceilPct = 79, range = ceilPct - floorPct;
+      var k = 4.0 / Math.max(1, stats.maxScore - stats.medScore);
+      var raw = 1 / (1 + Math.exp(-k * (totalScore - stats.medScore)));
+      pct = Math.round(floorPct + range * raw);
+    } else {
+      // 出走馬データが取れない場合のフォールバック（V系統旧式）
+      pct = Math.max(0, Math.min(99, Math.round(totalScore / 207 * 100)));
+    }
+  }
 
   // UI向けの内部値（items の外に持つ・items を score 集計用に純化）
   var _v1Detail = {
@@ -18717,7 +18756,7 @@ window.updateAIEvaluation = function(col1, col2, col3, points) {
   if (c3.S + c3.A + c3.B + c3.C + c3.D === 0) warnings.push('3列目が空');
 
   var summary;
-  if (type === '堅実重視型') summary = '上位人気馬中心の的中率重視構成。配当はやや控えめですが、3着内予想60%以上の馬を網羅していて、データ的に手堅い選択です。';
+  if (type === '堅実重視型') summary = '上位人気馬中心の的中率重視構成。配当はやや控えめですが、AI信頼度60%以上の馬を網羅していて、データ的に手堅い選択です。';
   else if (type === '妙味追求型') summary = 'S軸固定で配当跳ねを狙う構成。1着候補が明確なので、それさえ来れば中穴・大穴の3着内で配当が期待できます。';
   else if (type === 'ギャンブル型（高リスク高リターン）') summary = '1列目に夢馬券を含む大胆な構成。当たれば大配当ですが、データ的にはリスク高。投資額は控えめに、夢を買う気持ちで臨むのが吉。';
   else if (type === '標準バランス型') summary = 'S軸1頭固定の王道構成。的中率と配当のバランスが良く、安田記念のような接戦レースには合理的な選択。';
