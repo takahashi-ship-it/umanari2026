@@ -12085,7 +12085,7 @@ function renderHorses() {
             + row('前走別', v.prevRace, 12)
             + rowNote('🎯前走人気', v.prevPopRank, 10, v.prevPopNote, true)
             + rowNote('⚡上がり3F', v.speed, 15, v.speedNote, true)
-            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🐴 馬個別 (89点)</div>'
+            + '<div style="grid-column:1/-1;font-size:10px;color:#666;font-weight:700;margin-top:4px">🐴 馬個別 (94点)</div>'
             + rowNote('🩸血統', v.blood, 10, v.bloodNote, true)
             + rowNote('🎚️斤量', v.kinryoAdv, 8, v.kinryoNote, true)
             + row('🌸美浦×牝馬', v.sexStable, 8, true)
@@ -12093,6 +12093,7 @@ function renderHorses() {
             + rowNote('📏距離経験', v.distance, 8, v.distanceNote)
             + row('🔥鉄板ルール', v.teppan, 7, true)
             + rowNote('🎯東京1600m', v.tokyo1600, 10, v.tokyo1600Note, true)
+            + rowNote('🗼東京コース適性', v.tokyoAll, 5, v.tokyoAllNote, true)
             + rowNote('他場1600m', v.other1600, 5, v.other1600Note)
             + rowNote('🔄リピーター', v.repeater, 8, v.repeaterNote, true)
             + rowNote('🏆G1経験', v.g1Exp, 10, v.g1ExpNote, true)
@@ -16919,6 +16920,38 @@ function computeScoreBreakdownYasudaV1(horse, raceName, _rawOnly) {
     note: t1600.total > 0 ? buildRecord(t1600) : '実績なし'
   };
 
+  // 14b. 東京コース適性（全距離・芝／max 5）★全馬一律ルール
+  // 東京1600m実績（max10）とは別枠で、距離問わず東京芝の好走実績を独立評価
+  var tAll = {wins:0, rentai:0, fukusho:0, total:0};
+  rh.forEach(function(r){
+    if (r.course === '東京' && r.surface === '芝') {
+      tAll.total++;
+      if (r.rank === 1) tAll.wins++;
+      if (r.rank <= 2) tAll.rentai++;
+      if (r.rank <= 3) tAll.fukusho++;
+    }
+  });
+  var tokyoAllScore = 0;
+  var tokyoAllNote = '';
+  if (tAll.total === 0) {
+    tokyoAllScore = 0;
+    tokyoAllNote = '東京出走なし';
+  } else {
+    var tAllFuku = tAll.fukusho / tAll.total;
+    if (tAll.fukusho === 0)        tokyoAllScore = 1;  // 出走あるが3着内なし
+    else if (tAllFuku >= 0.60)     tokyoAllScore = 5;
+    else if (tAllFuku >= 0.40)     tokyoAllScore = 4;
+    else if (tAllFuku >= 0.25)     tokyoAllScore = 3;
+    else                            tokyoAllScore = 2;
+    // 少走馬の過大評価防止：1走のみは上限3点にクランプ
+    if (tAll.total === 1) tokyoAllScore = Math.min(tokyoAllScore, 3);
+    tokyoAllNote = '東京' + buildRecord(tAll) + '（複勝率' + Math.round(tAllFuku * 100) + '%）';
+  }
+  items.tokyoAll = {
+    score: tokyoAllScore, max: 5, label: '🗼東京コース適性',
+    note: tokyoAllNote
+  };
+
   // 15. 東京以外の芝1600m実績（max 5）
   var o1600 = {wins:0, rentai:0, fukusho:0, total:0};
   rh.forEach(function(r){
@@ -17094,7 +17127,7 @@ function computeScoreBreakdownYasudaV1(horse, raceName, _rawOnly) {
       pct = Math.round(floorPct + range * raw);
     } else {
       // 出走馬データが取れない場合のフォールバック（V系統旧式）
-      pct = Math.max(0, Math.min(99, Math.round(totalScore / 207 * 100)));
+      pct = Math.max(0, Math.min(99, Math.round(totalScore / 212 * 100)));
     }
   }
 
@@ -17118,12 +17151,14 @@ function computeScoreBreakdownYasudaV1(horse, raceName, _rawOnly) {
     jockey:     jockeyScore,
     training:   items.training.score,
     tokyo1600:  tokyo1600Score,
+    tokyoAll:   tokyoAllScore,
     other1600:  other1600Score,
     repeater:   repeaterScore,
     g1Exp:      g1Score,
     rating:     ratingScore,
     repeaterNote:  items.repeater.note,
     tokyo1600Note: items.tokyo1600.note,
+    tokyoAllNote:  items.tokyoAll.note,
     other1600Note: items.other1600.note,
     distanceNote:  items.distance.note,
     g1ExpNote:     items.g1Exp.note,
@@ -17136,7 +17171,7 @@ function computeScoreBreakdownYasudaV1(horse, raceName, _rawOnly) {
 
   return {
     total: totalScore,
-    max: 207,
+    max: 212,
     pct: pct,
     items: items,
     penalty: 0,
@@ -17152,7 +17187,7 @@ function computeScoreBreakdown(horse, raceName) {
   if (horse && horse.isAvoided) {
     return {
       total: 0,
-      max: 207,
+      max: 212,
       pct: 0,
       items: {},
       isAvoided: true,
