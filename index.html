@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260603-0300';
+  var CURRENT_VERSION = '20260603-0400';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -4937,7 +4937,7 @@ const HORSES_BY_RACE = {
       { date:'2026-04-04', course:'阪神', distance:1600, surface:'芝', name:'チャーチルCGⅢ', rank:1, pop:5, rt:110 },
       { date:'2026-02-01', course:'東京', distance:1600, surface:'芝', name:'3歳新馬', rank:1, pop:3, rt:null },
     ] },
-  { name:'アドマイヤズーム',   prevPop:1, prevIsOverseas:false, prevLast3f:33.3, sex:'牡', age:4, carriedWeight:58, jockey:'武豊',       stable:'栗東友道',   odds:4.3,   popEstimate:1,  sire:'モーリス',                motherSire:'ハーツクライ',          kyakushitsu:'先行', prevRace:'マイラーズC', prevRank:1,  prevWeight:482, notes:'前走マイラーズC1着・朝日杯FS優勝馬',
+  { name:'アドマイヤズーム',   isAvoided:true, avoidReason:'右前脚の爪を痛めたため回避（2026/6/2発表）', prevPop:1, prevIsOverseas:false, prevLast3f:33.3, sex:'牡', age:4, carriedWeight:58, jockey:'武豊',       stable:'栗東友道',   odds:4.3,   popEstimate:1,  sire:'モーリス',                motherSire:'ハーツクライ',          kyakushitsu:'先行', prevRace:'マイラーズC', prevRank:1,  prevWeight:482, notes:'★2026/6/2 右前脚の爪を痛めたため回避。秋に復帰予定（友道厩舎）',
     raceHistory:[
       { date:'2026-04-26', course:'京都', distance:1600, surface:'芝', name:'マイラーズCGⅡ', rank:1, pop:1, rt:112 },
       { date:'2025-10-13', course:'京都', distance:1400, surface:'芝', name:'MBSスワンGⅡ', rank:6, pop:2, rt:110 },
@@ -11864,11 +11864,18 @@ function renderHorses() {
     const manualMarkUI = `<div style="display:flex;gap:4px;justify-content:flex-end;align-items:center;margin-top:8px;flex-wrap:wrap"><span style="font-size:10px;color:var(--text-mute);margin-right:4px">手動印：</span>${markBtns}${manualMark?`<button onclick="setManualMark('${escName}','${manualMark}')" title="解除" style="margin-left:4px;padding:2px 6px;border-radius:var(--border-radius-md);border:1px solid var(--border);background:var(--bg);color:var(--text-sub);font-size:10px;cursor:pointer">×解除</button>`:''}</div>`;
 
     const card = document.createElement('article');
-    card.className = `horse-card ${rank.key}`;
+    card.className = `horse-card ${rank.key}${h.isAvoided ? ' horse-card-avoided' : ''}`;
+    const avoidBanner = h.isAvoided
+      ? `<div style="background:#c62828;color:#fff;padding:8px 12px;border-radius:6px 6px 0 0;margin:-12px -12px 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+           <span style="background:#fff;color:#c62828;font-size:11px;font-weight:bold;padding:3px 10px;border-radius:10px;">🚨 出走回避</span>
+           <span style="font-size:11px;font-weight:500;">${h.avoidReason || '出走回避'}</span>
+         </div>`
+      : '';
     card.innerHTML = `
+      ${avoidBanner}
       <div class="horse-head">
         <div class="horse-head-row1">
-          <span class="rank-mark ${rank.key}"${manualMark?' style="background:var(--gold)"':''}>${displayMark}</span>
+          <span class="rank-mark ${rank.key}"${manualMark?' style="background:var(--gold)"':''}>${h.isAvoided ? '🚨' : displayMark}</span>
           <span class="waku ${wakuClass}" data-field="waku">${wakuText}</span>
           ${umaText}
           <span class="horse-name">${h.name}</span>
@@ -11877,7 +11884,7 @@ function renderHorses() {
           ${popBadge}
           ${oddsBadge}
           ${siBadge}
-          <span class="rank-label ${rank.key}">${rank.label}</span>
+          <span class="rank-label ${rank.key}">${h.isAvoided ? '🚨 回避' : rank.label}</span>
         </div>
       </div>
       <div class="horse-meta">
@@ -13425,6 +13432,7 @@ function computeJikuScore(horse, raceName) {
 }
 function getAutoJiku(raceName, horses) {
   if (!horses || !horses.length) return null;
+  horses = horses.filter(function(h){ return !h.isAvoided; });
   // 予想スコアV3/V4と完全一致：computeScoreBreakdown の total を使う
   var scored = horses.map(function(h) {
     var bd = (typeof computeScoreBreakdown === 'function') ? computeScoreBreakdown(h, raceName) : null;
@@ -13435,10 +13443,11 @@ function getAutoJiku(raceName, horses) {
 }
 
 function selectJiku(horses, raceName) {
+  horses = horses.filter(function(h){ return !h.isAvoided; });
   // 1. 手動選択があればそれを優先
   if (window.selectedJiku) {
     var found = horses.find(function(h){return h.name === window.selectedJiku;});
-    if (found) return found;
+    if (found && !found.isAvoided) return found;
   }
   // 2. 軸向きスコア（複勝率・安定性）1位を優先
   var auto = getAutoJiku(raceName, horses);
@@ -13476,7 +13485,7 @@ function selectHimo(horses, jiku) {
   var _rn = (typeof window !== 'undefined' && (window.currentRaceName || window.currentRace))
             || (typeof currentRace !== 'undefined' ? currentRace : '');
   return horses
-    .filter(function(h){return h.name !== jiku.name;})
+    .filter(function(h){return h.name !== jiku.name && !h.isAvoided;})
     .map(function(h) {
       var _bd = computeScoreBreakdown(h, _rn);
       var pct = (_bd && _bd.pct) || 0;
@@ -13765,6 +13774,7 @@ function renderRankClassification(raceName) {
   if (typeof HORSES_BY_RACE === 'undefined') return '';
   var horses = HORSES_BY_RACE[raceName];
   if (!horses || !horses.length) return '';
+  horses = horses.filter(function(h){ return !h.isAvoided; });
 
   var horsesWithRank = horses.map(function(h){
     var bd = computeScoreBreakdown(h, raceName);
@@ -13831,6 +13841,7 @@ function renderRecommendedFormations(raceName) {
   if (typeof HORSES_BY_RACE === 'undefined') return '';
   var horses = HORSES_BY_RACE[raceName];
   if (!horses || !horses.length) return '';
+  horses = horses.filter(function(h){ return !h.isAvoided; });
 
   var ranked = horses.map(function(h){
     var bd = computeScoreBreakdown(h, raceName);
@@ -13926,6 +13937,7 @@ function renderCustomFormation(raceName) {
   if (typeof HORSES_BY_RACE === 'undefined') return '';
   var horses = HORSES_BY_RACE[raceName];
   if (!horses || !horses.length) return '';
+  horses = horses.filter(function(h){ return !h.isAvoided; });
 
   var ranked = horses.map(function(h){
     var bd = computeScoreBreakdown(h, raceName);
@@ -16935,6 +16947,17 @@ function computeScoreBreakdownYasudaV1(horse, raceName) {
 }
 
 function computeScoreBreakdown(horse, raceName) {
+  // ★回避馬は強制的に0%
+  if (horse && horse.isAvoided) {
+    return {
+      total: 0,
+      max: 194,
+      pct: 0,
+      items: {},
+      isAvoided: true,
+      avoidReason: horse.avoidReason || '出走回避'
+    };
+  }
   // 日本ダービーは V2
   if (raceName === '日本ダービー' || raceName === '東京優駿') {
     if (!horse) return { total: 0, max: 130, pct: 0, items: {}, penalty: 0 };
@@ -18611,10 +18634,17 @@ window.renderMaigoTab = function(raceName) {
     var h = x.horse;
     var safeName = h.name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
     var umaban = h.umaban ? h.umaban + '. ' : '';
-    btnHtml += '<button onclick="diagnoseMaigo(\'' + safeName + '\')" style="background:#fff;border:1.5px solid #ddd;border-radius:8px;padding:8px 12px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;">'
-            + '<span style="font-weight:bold;color:#1a2744;">' + umaban + h.name + '</span>'
-            + '<span style="font-size:10px;color:#666;">(' + x.pct + '%)</span>'
-            + '</button>';
+    if (h.isAvoided) {
+      btnHtml += '<button onclick="diagnoseMaigo(\'' + safeName + '\')" style="background:#ffebee;border:1.5px solid #c62828;border-radius:8px;padding:8px 12px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;">'
+              + '<span style="font-weight:bold;color:#c62828;">' + umaban + h.name + '</span>'
+              + '<span style="font-size:10px;color:#c62828;font-weight:bold;">🚨回避</span>'
+              + '</button>';
+    } else {
+      btnHtml += '<button onclick="diagnoseMaigo(\'' + safeName + '\')" style="background:#fff;border:1.5px solid #ddd;border-radius:8px;padding:8px 12px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;">'
+              + '<span style="font-weight:bold;color:#1a2744;">' + umaban + h.name + '</span>'
+              + '<span style="font-size:10px;color:#666;">(' + x.pct + '%)</span>'
+              + '</button>';
+    }
   });
   buttonsEl.innerHTML = btnHtml;
 };
@@ -18625,6 +18655,29 @@ window.diagnoseMaigo = function(horseName) {
   var horses = (typeof HORSES_BY_RACE !== 'undefined') ? HORSES_BY_RACE[raceName] : [];
   var h = horses && horses.find ? horses.find(function(x){ return x.name === horseName; }) : null;
   if (!h) return;
+
+  // ★回避馬の専用診断
+  if (h.isAvoided) {
+    var resultEl = document.getElementById('maigo-diagnosis');
+    if (!resultEl) return;
+    var umabanStr = h.umaban ? h.umaban + '. ' : '';
+    var avoidHtml = '';
+    avoidHtml += '<div style="margin-bottom:12px;padding:14px;background:#c62828;color:#fff;border-radius:8px;">';
+    avoidHtml += '<div style="font-size:20px;font-weight:bold;">' + umabanStr + h.name + '</div>';
+    avoidHtml += '<div style="font-size:12px;margin-top:4px;">🚨 出走回避</div>';
+    avoidHtml += '</div>';
+    avoidHtml += '<div style="margin-bottom:16px;padding:16px;background:#ffebee;border:2px solid #c62828;border-radius:10px;text-align:center;">';
+    avoidHtml += '<div style="font-size:18px;font-weight:bold;color:#c62828;">🚨 この馬は出走回避しました</div>';
+    avoidHtml += '<div style="font-size:13px;color:#666;margin-top:8px;">' + (h.avoidReason || '出走回避') + '</div>';
+    avoidHtml += '</div>';
+    avoidHtml += '<div style="padding:14px;background:#f5f5f5;border-radius:8px;font-size:13px;color:#666;line-height:1.7;">';
+    avoidHtml += '出走回避のため、印選定および買い目の対象外です。<br>';
+    avoidHtml += '他の馬を選択して診断してください。';
+    avoidHtml += '</div>';
+    resultEl.innerHTML = avoidHtml;
+    return;
+  }
+
   var bd = computeScoreBreakdown(h, raceName);
   var pct = bd.pct;
   var rank;
