@@ -14138,6 +14138,234 @@ function _classifyHorsesByRank(raceName) {
   return arr;
 }
 
+// ===== 夢馬券・伏兵・妙味 自動選定ロジック =====
+// 父の単勝回収率を bloodAnalysis から動的取得（V1 内部値をテーブル化したものではなく既存データを参照）
+function _getSireRecovery(sire, raceName) {
+  if (!sire || typeof RACE_PAST_DATA === 'undefined') return null;
+  var pd = RACE_PAST_DATA[raceName];
+  var rows = pd && pd.bloodAnalysis && pd.bloodAnalysis.detailTable;
+  if (!Array.isArray(rows)) return null;
+  for (var i = 0; i < rows.length; i++) {
+    if (rows[i].sire === sire) {
+      var tanRaw = String(rows[i].tan || '').replace(/[★◎]/g, '');
+      var fukuRaw = String(rows[i].fuku || '').replace(/[★◎]/g, '');
+      var fukushoRaw = String(rows[i].fukusho || '').replace(/[★◎]/g, '');
+      return {
+        tan: tanRaw, tanNum: parseFloat(tanRaw) || 0,
+        fuku: fukuRaw, fukuNum: parseFloat(fukuRaw) || 0,
+        fukushoStr: fukushoRaw, fukushoNum: parseFloat(fukushoRaw) || 0
+      };
+    }
+  }
+  return null;
+}
+
+// 馬の好走要素（positives）配列を生成
+function _getHorsePositives(horse, raceName) {
+  var p = [];
+  var stable = horse.stable || '';
+  // 美浦×牝馬 / 牝馬全体
+  if (horse.sex === '牝' && stable.indexOf('美浦') >= 0) {
+    p.push({ icon:'🌸', text:'美浦×牝馬（複勝率66.7%★★★最強条件）' });
+  } else if (horse.sex === '牝') {
+    p.push({ icon:'🌸', text:'牝馬（複勝率42.9%・単勝回収134%）' });
+  }
+  // 軽斤量
+  if (horse.carriedWeight && horse.carriedWeight <= 54) {
+    p.push({ icon:'🎚️', text:'★54kg（古馬比-4kg・制度的アドバンテージ）' });
+  } else if (horse.carriedWeight && horse.carriedWeight <= 56 && horse.sex === '牝') {
+    p.push({ icon:'🎚️', text:'56kg軽斤量（古馬比-2kg）' });
+  }
+  // 上がり3F
+  var raceHorses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE[raceName] || []).filter(function(h){ return !h.isAvoided; }) : [];
+  var allLast = raceHorses.map(function(h){ return h.prevLast3f; }).filter(function(t){ return typeof t === 'number' && t > 0 && t < 99; });
+  var minLast = allLast.length ? Math.min.apply(null, allLast) : null;
+  if (typeof horse.prevLast3f === 'number' && horse.prevLast3f < 99) {
+    if (minLast !== null && horse.prevLast3f === minLast) {
+      p.push({ icon:'⚡', text:'上がり' + horse.prevLast3f + '秒（出走馬中最速・異次元末脚）', _fastest: true });
+    } else if (horse.prevLast3f <= 33.0) {
+      p.push({ icon:'⚡', text:'上がり' + horse.prevLast3f + '秒（鉄板ボーダー）' });
+    } else if (horse.prevLast3f <= 33.5) {
+      p.push({ icon:'⚡', text:'上がり' + horse.prevLast3f + '秒（重賞上位レベル）' });
+    }
+  }
+  // 父の妙味血統
+  var sireRec = _getSireRecovery(horse.sire, raceName);
+  if (sireRec) {
+    if (sireRec.tanNum >= 200) {
+      p.push({ icon:'💎', text:'父' + horse.sire + '（単勝回収' + sireRec.tan + '★穴妙味）' });
+    } else if (sireRec.tanNum >= 130 || sireRec.fukushoNum >= 35) {
+      var note = sireRec.tanNum >= 130
+        ? '単勝回収' + sireRec.tan + '%'
+        : '複勝率' + sireRec.fukushoStr;
+      p.push({ icon:'🩸', text:'父' + horse.sire + '（東京1600m ' + note + '）' });
+    } else if (sireRec.fukushoNum >= 30) {
+      p.push({ icon:'🩸', text:'父' + horse.sire + '（複勝率' + sireRec.fukushoStr + '）' });
+    }
+  }
+  // 母父
+  var sundaySires = ['ハーツクライ','ディープインパクト','ダイワメジャー','マンハッタンカフェ','ステイゴールド','シンボリクリスエス'];
+  var stormCatSires = ['ストームキャット','Storm Cat','Hennessy','スキャットダディ',"Giant's Causeway",'ヘネシー','Bated Breath'];
+  if (horse.motherSire && sundaySires.indexOf(horse.motherSire) >= 0) {
+    p.push({ icon:'🩸', text:'母父' + horse.motherSire + '（サンデー系・東京適性）' });
+  } else if (horse.motherSire && stormCatSires.indexOf(horse.motherSire) >= 0) {
+    p.push({ icon:'💎', text:'母父' + horse.motherSire + '（Storm Cat系の穴激走パターン）' });
+  }
+  // 東京コース実績
+  if (horse.tokyoG1Win) {
+    p.push({ icon:'👑', text:'東京G1勝ち馬（地力最上位）' });
+  } else if (horse.tokyoG2Place) {
+    p.push({ icon:'🏆', text:'東京芝G2以上で好走（1〜3着の実績）' });
+  }
+  // 4歳・前走人気
+  if (horse.age === 4) {
+    p.push({ icon:'🎂', text:'4歳（過去10年最強年代・複勝率23.3%）' });
+  }
+  if (!horse.prevIsOverseas && typeof horse.prevPop === 'number' && horse.prevPop >= 1 && horse.prevPop <= 4) {
+    p.push({ icon:'🎯', text:'前走' + horse.prevPop + '人気（4人気以内・3着内率27.3%）' });
+  }
+  if (horse.prevIsOverseas) {
+    p.push({ icon:'🌍', text:'前走海外組（複勝率33.3%・別枠評価）' });
+  }
+  return p;
+}
+
+// 馬の消去要素（negatives）配列を生成
+function _getHorseNegatives(horse, raceName) {
+  var n = [];
+  var stable = horse.stable || '';
+  // 前走5人気以下（国内・着外）
+  if (!horse.prevIsOverseas && typeof horse.prevPop === 'number' && horse.prevPop >= 5
+      && (!horse.prevRank || horse.prevRank >= 4)) {
+    n.push({ icon:'⚠️', text:'前走' + horse.prevPop + '人気＆着外（0-1-0-47・複勝率1.6%）' });
+  }
+  // 上がり34秒以上
+  if (typeof horse.prevLast3f === 'number' && horse.prevLast3f >= 34.0 && horse.prevLast3f < 99) {
+    n.push({ icon:'⚠️', text:'前走上がり' + horse.prevLast3f + '秒（末脚不足・東京マイル致命的）' });
+  }
+  // 高齢
+  if (horse.age >= 7) {
+    n.push({ icon:'⚠️', text:horse.age + '歳（過去10年7歳以上は複勝率10.3%）' });
+  }
+  // 馬体重460kg未満
+  if (typeof horse.prevWeight === 'number' && horse.prevWeight > 0 && horse.prevWeight < 460) {
+    n.push({ icon:'⚠️', text:horse.prevWeight + 'kg（460kg未満・過去10年連対馬ゼロ）' });
+  }
+  // 栗東×牡馬
+  if (horse.sex === '牡' && stable.indexOf('栗東') >= 0) {
+    n.push({ icon:'⚠️', text:'栗東×牡馬（複勝率14.3%で苦戦）' });
+  }
+  // 6枠
+  if (horse.waku === 6) {
+    n.push({ icon:'⚠️', text:'6枠（過去20年複勝率10%最低）' });
+  }
+  // NHKマイル覇者ジンクス
+  if (horse.nhkMileWinnerSingleG1) {
+    n.push({ icon:'⚠️', text:'NHKマイル単独覇者（1996年以降勝利ゼロのジンクス）' });
+  }
+  // 前走マイラC 5着以下
+  if (horse.prevRace && horse.prevRace.indexOf('マイラーズC') >= 0 && horse.prevRank && horse.prevRank >= 5) {
+    n.push({ icon:'⚠️', text:'前走マイラーズC ' + horse.prevRank + '着（5着以下0-0-0-13）' });
+  }
+  // 前走G3組
+  var g3List = ['エプソムC','ダービー卿','京王杯SC'];
+  if (horse.prevRace) {
+    for (var i = 0; i < g3List.length; i++) {
+      if (horse.prevRace.indexOf(g3List[i]) >= 0) {
+        n.push({ icon:'⚠️', text:'前走G3組（1-0-0-14・複勝率6.7%）' });
+        break;
+      }
+    }
+  }
+  // 前走阪神
+  var prevHist = horse.raceHistory && horse.raceHistory[0];
+  if (prevHist && prevHist.course === '阪神') {
+    n.push({ icon:'⚠️', text:'前走阪神競馬（0-0-1-25・複勝率3.7%）' });
+  }
+  // 前走ダート
+  if (prevHist && prevHist.surface === 'ダ') {
+    n.push({ icon:'⚠️', text:'前走ダート（芝1600m未経験・0-0-0-0）' });
+  }
+  return n;
+}
+
+// 1頭を伏兵/妙味/夢馬券に分類（rank と odds と要素数から判定）
+function _classifyAnaUma(horse, raceName, rankedList) {
+  var entry = null;
+  for (var i = 0; i < rankedList.length; i++) {
+    if (rankedList[i].horse.name === horse.name) { entry = rankedList[i]; break; }
+  }
+  if (!entry) return null;
+  var rank = entry.rank;
+  var odds = horse.odds || 999;
+  var positives = _getHorsePositives(horse, raceName);
+  var negatives = _getHorseNegatives(horse, raceName);
+  var category = null;
+  if (rank === 'D' && odds >= 30 && positives.length >= 3 && negatives.length >= 1) category = 'dream';
+  else if ((rank === 'C' || rank === 'D') && odds >= 15 && odds < 30 && positives.length >= 2) category = 'value';
+  else if ((rank === 'B' || rank === 'C') && odds >= 10 && odds < 20 && positives.length >= 1) category = 'underdog';
+  return {
+    category: category, positives: positives, negatives: negatives,
+    pct: entry.pct, total: entry.total, rank: rank
+  };
+}
+
+// stars 算出（好走3+で3点、消去1+で+2、最速末脚で+1、上限5）
+function _calcAnaUmaStars(info) {
+  var s = 0;
+  if (info.positives.length >= 3) s = 3;
+  else if (info.positives.length >= 2) s = 2;
+  else s = 1;
+  if (info.negatives.length >= 1) s += 2;
+  var hasFastest = info.positives.some(function(p){ return p._fastest; });
+  if (hasFastest) s += 1;
+  return Math.max(1, Math.min(5, s));
+}
+
+// レース全体の候補抽出（緩和ルール込み）
+function _pickAnaUmaCandidates(raceName) {
+  if (typeof HORSES_BY_RACE === 'undefined') return { dream:[], value:[], underdog:[] };
+  var live = (HORSES_BY_RACE[raceName] || []).filter(function(h){ return !h.isAvoided; });
+  var ranked = _classifyHorsesByRank(raceName);
+  var groups = { dream: [], value: [], underdog: [] };
+  live.forEach(function(h) {
+    var info = _classifyAnaUma(h, raceName, ranked);
+    if (info && info.category) {
+      groups[info.category].push({ horse: h, info: info });
+    }
+  });
+  // 緩和ルール: 夢馬券が0頭なら、好走要素2つ以上で D rank + odds 25倍以上を再探索
+  if (groups.dream.length === 0) {
+    live.forEach(function(h) {
+      var entry = null;
+      for (var i = 0; i < ranked.length; i++) { if (ranked[i].horse.name === h.name) { entry = ranked[i]; break; } }
+      if (!entry || entry.rank !== 'D') return;
+      var positives = _getHorsePositives(h, raceName);
+      var negatives = _getHorseNegatives(h, raceName);
+      if ((h.odds || 0) >= 25 && positives.length >= 2) {
+        groups.dream.push({
+          horse: h, relaxed: true,
+          info: { positives: positives, negatives: negatives, pct: entry.pct, total: entry.total, rank: 'D' }
+        });
+      }
+    });
+  }
+  // 各カテゴリで odds DESC → positives DESC で並び替え・最大2頭
+  function sortAndTake(arr) {
+    arr.sort(function(a, b) {
+      var od = (b.horse.odds || 0) - (a.horse.odds || 0);
+      if (od !== 0) return od;
+      return b.info.positives.length - a.info.positives.length;
+    });
+    return arr.slice(0, 2);
+  }
+  return {
+    dream: sortAndTake(groups.dream),
+    value: sortAndTake(groups.value),
+    underdog: sortAndTake(groups.underdog)
+  };
+}
+
 function renderRankClassification(raceName) {
   var horsesWithRank = _classifyHorsesByRank(raceName);
   if (!horsesWithRank.length) return '';
