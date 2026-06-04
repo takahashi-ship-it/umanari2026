@@ -8855,6 +8855,27 @@ const RACE_PAST_DATA = {
     ],
     sections: [
       {
+        type: "table",
+        title: "人気別 成績（過去10年）",
+        headers: ["人気","成績","複勝率","傾向"],
+        rows: [
+          { cells: ["1番人気",     "1-4-2-3", "80%", "馬券内多いが勝ち切れない（勝率10%）"], highlight: true,
+            matchFn: function(h){ return h.popEstimate === 1; } },
+          { cells: ["2番人気",     "-",        "-",   "データ整備中"],
+            matchFn: function(h){ return h.popEstimate === 2; } },
+          { cells: ["3番人気",     "-",        "-",   "データ整備中"],
+            matchFn: function(h){ return h.popEstimate === 3; } },
+          { cells: ["4番人気",     "-",        "-",   "単勝回収率174%（妙味）"],
+            matchFn: function(h){ return h.popEstimate === 4; } },
+          { cells: ["5番人気",     "-",        "-",   "データ整備中"],
+            matchFn: function(h){ return h.popEstimate === 5; } },
+          { cells: ["6-9番人気",   "-",        "-",   "過去10年7勝・好走の中心／単勝回収率194.8%（中穴妙味）"], highlight: true,
+            matchFn: function(h){ return h.popEstimate >= 6 && h.popEstimate <= 9; } },
+          { cells: ["10番人気以下", "0-0-0-多数","ほぼ0%","馬券内ほぼなし"],
+            matchFn: function(h){ return h.popEstimate >= 10; } }
+        ]
+      },
+      {
         type: "html",
         title: "🔥 鉄板ルール（過去20年データ）",
         html:
@@ -12612,44 +12633,39 @@ function _summaryExtractHeadliner(raceName) {
 
 function _summaryExtractPopBest(raceName) {
   var pd = (typeof RACE_PAST_DATA !== 'undefined') ? RACE_PAST_DATA[raceName] : null;
-  if (!pd) return null;
-  function parsePct(s){ var v = parseFloat(String(s).replace(/[%★◎]/g, '')); return isNaN(v) ? -Infinity : v; }
-  // 1) prevPopAnalysis.detailTable に 単勝回収率 (tan) があれば最高を選ぶ
-  if (pd.prevPopAnalysis && Array.isArray(pd.prevPopAnalysis.detailTable)) {
-    var rowsT = pd.prevPopAnalysis.detailTable.filter(function(r){ return r.tan != null; });
-    if (rowsT.length) {
-      var bestT = rowsT[0];
-      rowsT.forEach(function(r){ if (parsePct(r.tan) > parsePct(bestT.tan)) bestT = r; });
-      return { label: bestT.pop, evidence: String(bestT.tan).replace(/★/g, ''), type: '単勝回収率' };
-    }
+  if (!pd || !Array.isArray(pd.sections)) return null;
+  // 「当日人気別」セクションのみ対象。prevPopAnalysis（前走人気）は絶対に使わない。
+  var sec = null;
+  for (var i = 0; i < pd.sections.length; i++) {
+    var s = pd.sections[i];
+    if (s && /人気別.*成績/.test(s.title || '') && Array.isArray(s.rows)) { sec = s; break; }
   }
-  // 2) sections に「人気別 成績」テーブルがあれば cells[2] (rate%) 最高
-  if (Array.isArray(pd.sections)) {
-    var sec = null;
-    for (var i = 0; i < pd.sections.length; i++) {
-      var s = pd.sections[i];
-      if (s && /人気別.*成績/.test(s.title || '') && Array.isArray(s.rows)) { sec = s; break; }
+  if (!sec) return null;
+  function parsePct(s){ var v = parseFloat(String(s).replace(/[%★◎]/g, '')); return isNaN(v) ? null : v; }
+  // 軸ゾーン：複勝率（cells[2]）が数値で最高の帯
+  var jiku = null, jikuRate = -Infinity;
+  // 中穴ゾーン：cells[3]（コメント）に「回収率N%」表記がある帯のうち数値最高
+  var ana = null, anaRecov = -Infinity;
+  sec.rows.forEach(function(r){
+    if (!r.cells || r.cells.length < 3) return;
+    var label = String(r.cells[0]).replace(/<[^>]+>/g, '');
+    var rateNum = parsePct(r.cells[2]);
+    if (rateNum != null && rateNum > jikuRate) {
+      jikuRate = rateNum;
+      jiku = { label: label, rate: rateNum };
     }
-    if (sec) {
-      var bestR = null, bestV = -Infinity;
-      sec.rows.forEach(function(r){
-        if (!r.cells || r.cells.length < 3) return;
-        var v = parsePct(r.cells[2]);
-        if (v > bestV) { bestV = v; bestR = r; }
-      });
-      if (bestR) return { label: String(bestR.cells[0]).replace(/<[^>]+>/g, ''), evidence: bestV + '%', type: '複勝率' };
+    var note = String(r.cells[3] || '');
+    var m = note.match(/回収率\s*([0-9.]+)\s*%/);
+    if (m) {
+      var rv = parseFloat(m[1]);
+      if (!isNaN(rv) && rv > anaRecov) {
+        anaRecov = rv;
+        ana = { label: label, recov: rv };
+      }
     }
-  }
-  // 3) prevPopAnalysis.detailTable の fukusho/rentai 最高（catch-all・安田記念フォールバック）
-  if (pd.prevPopAnalysis && Array.isArray(pd.prevPopAnalysis.detailTable)) {
-    var bestF = null, bestFV = -Infinity;
-    pd.prevPopAnalysis.detailTable.forEach(function(r){
-      var v = parsePct(r.fukusho || r.rentai);
-      if (v > bestFV) { bestFV = v; bestF = r; }
-    });
-    if (bestF) return { label: bestF.pop, evidence: bestFV + '%', type: '3着内率' };
-  }
-  return null;
+  });
+  if (!jiku && !ana) return null;
+  return { jiku: jiku, ana: ana };
 }
 
 function _summaryExtractAgeBest(raceName) {
@@ -12697,10 +12713,16 @@ function renderRaceSummaryBlock(raceName) {
   if (s.popZone) {
     var p = s.popZone;
     html += '<div style="background:#fff;border-radius:6px;padding:10px 12px;border-left:3px solid #1D9E75;">'
-         + '<div style="font-size:11px;color:#666;font-weight:bold;margin-bottom:4px;">🎯 狙うべき人気ゾーン</div>'
-         + '<div style="font-size:14px;font-weight:bold;color:#1D9E75;margin-bottom:4px;line-height:1.4;">'+p.label+'</div>'
-         + '<div style="font-size:10px;color:#888;">過去データ '+p.type+' '+p.evidence+'</div>'
-         + '</div>';
+         + '<div style="font-size:11px;color:#666;font-weight:bold;margin-bottom:6px;">🎯 狙うべき人気ゾーン</div>';
+    if (p.jiku) {
+      html += '<div style="font-size:13px;font-weight:bold;color:#1D9E75;line-height:1.4;">🎯 軸ゾーン：'+p.jiku.label+'</div>'
+           + '<div style="font-size:10px;color:#888;margin-bottom:6px;">複勝率 '+p.jiku.rate+'%（3着内に来やすい）</div>';
+    }
+    if (p.ana) {
+      html += '<div style="font-size:13px;font-weight:bold;color:#B8600C;line-height:1.4;">💰 中穴ゾーン：'+p.ana.label+'</div>'
+           + '<div style="font-size:10px;color:#888;">単勝回収率 '+p.ana.recov+'%（儲かる帯）</div>';
+    }
+    html += '</div>';
   }
   if (s.ageZone) {
     var a = s.ageZone;
