@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260604-0800';
+  var CURRENT_VERSION = '20260604-0900';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -5093,15 +5093,25 @@ function getPopBg(pop) {
 }
 
 // odds から人気順位を自動計算（最新の odds データから整合の取れた popEstimate を導出）
+// 回避馬（isAvoided:true）は採番対象から除外し、出走馬のみで実質人気1〜Nを採番する。
+// 回避馬の popEstimate は元の値を温存（変更しない）。
 function calcPopularity(horses) {
   if (!horses || !horses.length) return;
+  // 元のインデックスを保持して同オッズ時の安定ソートに使う
   var withOdds = horses
-    .filter(function(h) { return h.odds != null && h.odds > 0; })
-    .slice()
-    .sort(function(a, b) { return a.odds - b.odds; });
-  withOdds.forEach(function(h, i) { h.popEstimate = i + 1; });
-  horses.filter(function(h) { return !(h.odds != null && h.odds > 0); })
-    .forEach(function(h) { h.popEstimate = null; });
+    .map(function(h, idx) { return { h: h, idx: idx }; })
+    .filter(function(o) { return !o.h.isAvoided && o.h.odds != null && o.h.odds > 0; })
+    .sort(function(a, b) {
+      var d = a.h.odds - b.h.odds;
+      if (d !== 0) return d;
+      return a.idx - b.idx; // 同オッズは元の配列順（source の並びを維持）
+    });
+  withOdds.forEach(function(o, i) { o.h.popEstimate = i + 1; });
+  // odds 未確定 & 非回避の馬は null（採番不能）
+  horses.forEach(function(h) {
+    if (h.isAvoided) return; // 回避馬は触らない
+    if (!(h.odds != null && h.odds > 0)) h.popEstimate = null;
+  });
 }
 
 // 全レースの popEstimate を odds から再計算
