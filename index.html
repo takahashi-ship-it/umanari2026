@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260604-0600';
+  var CURRENT_VERSION = '20260604-0700';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -12772,6 +12772,8 @@ function renderShutsubaTable() {
     container.innerHTML = '<div style="font-size:12px;color:var(--text-sub);padding:20px;text-align:center">出走馬データを読み込み中...</div>';
     return;
   }
+  // 回避馬は出馬表から除外（実質出走馬のみ表示）
+  currentHorses = currentHorses.filter(function(h){ return !h.isAvoided; });
 
   // 登録順（netkeiba順）— レース別マップ
   var ORDER_BY_RACE = {
@@ -12884,18 +12886,25 @@ function renderOddsTab() {
   var raceName = (typeof window !== 'undefined' && window.currentRaceName)
     ? window.currentRaceName
     : (typeof currentRace !== 'undefined' ? currentRace : '');
-  var horses = (window.horses && window.horses.length)
+  var horsesAll = (window.horses && window.horses.length)
     ? window.horses
     : (HORSES_BY_RACE[raceName] || []);
+  // 回避馬は除外（実質出走馬のみで人気採番）
+  var horses = horsesAll.filter(function(h){ return !h.isAvoided; });
   if (!horses.length) {
     container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--color-text-tertiary)">データなし</div>';
     return;
   }
-  // オッズ低い順
-  var sorted = horses.slice().sort(function(a, b) { return (a.odds || 999) - (b.odds || 999); });
+  // オッズ低い順（同オッズは popEstimate 昇順で安定化＝sourceデータの順序通り）
+  var sorted = horses.slice().sort(function(a, b) {
+    var d = (a.odds || 999) - (b.odds || 999);
+    if (d !== 0) return d;
+    return (a.popEstimate || 99) - (b.popEstimate || 99);
+  });
   var html = '<div style="padding:4px 0">';
   sorted.forEach(function(h, i) {
-    var pop = h.popEstimate || (i + 1);
+    // 回避馬除外後の並び順 (i+1) を人気番号として表示（stored popEstimate のギャップに依存しない）
+    var pop = i + 1;
     var odds = (h.odds != null) ? h.odds : '--';
     var uma = (h.umaban != null) ? h.umaban : '--';
     var waku = (h.waku != null) ? h.waku : '--';
