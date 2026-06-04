@@ -14139,6 +14139,25 @@ function _classifyHorsesByRank(raceName) {
 }
 
 // ===== 夢馬券・伏兵・妙味 自動選定ロジック =====
+// レースの最強年代をデータから取得（otherDataAnalysis.sections の matchKey:'age' で tag:'best' の行）
+function _getBestAgeForRace(raceName) {
+  if (typeof RACE_PAST_DATA === 'undefined') return null;
+  var pd = RACE_PAST_DATA[raceName];
+  if (!pd || !pd.otherDataAnalysis || !Array.isArray(pd.otherDataAnalysis.sections)) return null;
+  var sec = null;
+  pd.otherDataAnalysis.sections.forEach(function(s){ if (s && s.matchKey === 'age') sec = s; });
+  if (!sec || !Array.isArray(sec.rows)) return null;
+  // tag:'best' を優先
+  var best = null;
+  for (var i = 0; i < sec.rows.length; i++) {
+    if (sec.rows[i].tag === 'best') { best = sec.rows[i]; break; }
+  }
+  if (!best || !best.label) return null;
+  var m = best.label.match(/(\d+)\s*歳/);
+  if (!m) return null;
+  return { age: parseInt(m[1], 10), rate: best.rate, label: best.label };
+}
+
 // 父の単勝回収率を bloodAnalysis から動的取得（V1 内部値をテーブル化したものではなく既存データを参照）
 function _getSireRecovery(sire, raceName) {
   if (!sire || typeof RACE_PAST_DATA === 'undefined') return null;
@@ -14218,8 +14237,12 @@ function _getHorsePositives(horse, raceName) {
   } else if (horse.tokyoG2Place) {
     p.push({ icon:'🏆', text:'東京芝G2以上で好走(1〜3着の実績)', _strong: true });
   }
-  // 4歳（弱・全4歳が持つ年代要素）
-  if (horse.age === 4) {
+  // 年齢別データから最強年代を取得し、馬の年齢と照合
+  // 最強年代に該当 → 強い要素 / 年齢データなしの場合は 4歳のみ弱い要素にフォールバック
+  var bestAge = _getBestAgeForRace(raceName);
+  if (bestAge && horse.age === bestAge.age) {
+    p.push({ icon:'🎂', text:horse.age + '歳(最強年代・複勝率' + bestAge.rate + '%)', _strong: true });
+  } else if (!bestAge && horse.age === 4) {
     p.push({ icon:'🎂', text:'4歳(過去10年最強年代・複勝率23.3%)', _strong: false });
   }
   // 前走4人気以内（強）
