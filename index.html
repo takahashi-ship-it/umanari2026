@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260603-0400';
+  var CURRENT_VERSION = '20260604-0500';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -12449,6 +12449,8 @@ function setCurrentRace(name) {
   // Refresh 出馬表 if shutsuba tab is active (or always — table is cheap)
   if (document.getElementById('shutsuba-container')) renderShutsubaTable();
   if (document.getElementById('pace-predict')) renderPacePredict();
+  // オッズタブも race 切替時に必ず再描画（タブが非アクティブでも DOM 上の古い表示を更新）
+  if (document.getElementById('odds-container') && typeof renderOddsTab === 'function') renderOddsTab();
 
   // Refresh baba prediction with current selection
   if (typeof setBaba === 'function') setBaba(currentBaba);
