@@ -12593,6 +12593,127 @@ function renderShutsubaHeader() {
                  (isFinished ? '✅ ' : '⚠️ ') + note + '</span></div>';
 }
 
+// ===== レース総評ブロック =====
+// 各レースのデータから①性格・②人気ゾーン・③年齢を自動生成（表示専用・スコア非干渉）
+function _summaryExtractHeadliner(raceName) {
+  if (typeof HORSES_BY_RACE === 'undefined') return null;
+  var horses = (HORSES_BY_RACE[raceName] || []).filter(function(h){
+    return h && !h.isAvoided && typeof h.odds === 'number' && h.odds > 0;
+  });
+  if (!horses.length) return null;
+  var top = horses[0];
+  horses.forEach(function(h){ if (h.odds < top.odds) top = h; });
+  var label, color;
+  if (top.odds <= 2.9)      { label = '絶対軸あり（1強ムード）';        color = '#A32D2D'; }
+  else if (top.odds <= 4.9) { label = '有力馬中心だが混戦含み';        color = '#B8600C'; }
+  else                       { label = '1強不在・混戦';                  color = '#185FA5'; }
+  return { label: label, color: color, topName: top.name, topOdds: top.odds };
+}
+
+function _summaryExtractPopBest(raceName) {
+  var pd = (typeof RACE_PAST_DATA !== 'undefined') ? RACE_PAST_DATA[raceName] : null;
+  if (!pd) return null;
+  function parsePct(s){ var v = parseFloat(String(s).replace(/[%★◎]/g, '')); return isNaN(v) ? -Infinity : v; }
+  // 1) prevPopAnalysis.detailTable に 単勝回収率 (tan) があれば最高を選ぶ
+  if (pd.prevPopAnalysis && Array.isArray(pd.prevPopAnalysis.detailTable)) {
+    var rowsT = pd.prevPopAnalysis.detailTable.filter(function(r){ return r.tan != null; });
+    if (rowsT.length) {
+      var bestT = rowsT[0];
+      rowsT.forEach(function(r){ if (parsePct(r.tan) > parsePct(bestT.tan)) bestT = r; });
+      return { label: bestT.pop, evidence: String(bestT.tan).replace(/★/g, ''), type: '単勝回収率' };
+    }
+  }
+  // 2) sections に「人気別 成績」テーブルがあれば cells[2] (rate%) 最高
+  if (Array.isArray(pd.sections)) {
+    var sec = null;
+    for (var i = 0; i < pd.sections.length; i++) {
+      var s = pd.sections[i];
+      if (s && /人気別.*成績/.test(s.title || '') && Array.isArray(s.rows)) { sec = s; break; }
+    }
+    if (sec) {
+      var bestR = null, bestV = -Infinity;
+      sec.rows.forEach(function(r){
+        if (!r.cells || r.cells.length < 3) return;
+        var v = parsePct(r.cells[2]);
+        if (v > bestV) { bestV = v; bestR = r; }
+      });
+      if (bestR) return { label: String(bestR.cells[0]).replace(/<[^>]+>/g, ''), evidence: bestV + '%', type: '複勝率' };
+    }
+  }
+  // 3) prevPopAnalysis.detailTable の fukusho/rentai 最高（catch-all・安田記念フォールバック）
+  if (pd.prevPopAnalysis && Array.isArray(pd.prevPopAnalysis.detailTable)) {
+    var bestF = null, bestFV = -Infinity;
+    pd.prevPopAnalysis.detailTable.forEach(function(r){
+      var v = parsePct(r.fukusho || r.rentai);
+      if (v > bestFV) { bestFV = v; bestF = r; }
+    });
+    if (bestF) return { label: bestF.pop, evidence: bestFV + '%', type: '3着内率' };
+  }
+  return null;
+}
+
+function _summaryExtractAgeBest(raceName) {
+  var pd = (typeof RACE_PAST_DATA !== 'undefined') ? RACE_PAST_DATA[raceName] : null;
+  if (!pd || !pd.otherDataAnalysis || !Array.isArray(pd.otherDataAnalysis.sections)) return null;
+  var sec = null;
+  pd.otherDataAnalysis.sections.forEach(function(s){ if (s && s.matchKey === 'age') sec = s; });
+  if (!sec || !Array.isArray(sec.rows)) return null;
+  // tag='best' を優先（データ提供側が最強年代として明示している）
+  var bestTagged = null;
+  sec.rows.forEach(function(r){ if (r.tag === 'best' && !bestTagged) bestTagged = r; });
+  if (bestTagged) return { label: bestTagged.label, evidence: bestTagged.rate + '%', desc: bestTagged.desc || '' };
+  // フォールバック: rare/kill タグを除外し、勝利数のあるロウから rate 最高
+  var best = null, bestRate = -Infinity;
+  sec.rows.forEach(function(r){
+    if (r.tag === 'rare' || r.tag === 'kill') return;
+    if (typeof r.rate === 'number' && r.rate > bestRate) { bestRate = r.rate; best = r; }
+  });
+  if (!best) return null;
+  return { label: best.label, evidence: best.rate + '%', desc: best.desc || '' };
+}
+
+function generateRaceSummary(raceName) {
+  return {
+    headliner: _summaryExtractHeadliner(raceName),
+    popZone:   _summaryExtractPopBest(raceName),
+    ageZone:   _summaryExtractAgeBest(raceName)
+  };
+}
+
+function renderRaceSummaryBlock(raceName) {
+  var s = generateRaceSummary(raceName);
+  if (!s.headliner && !s.popZone && !s.ageZone) return '';
+  var html = '<div class="race-summary-block" style="background:linear-gradient(135deg,#fff8e1,#fff3e0);border:2px solid #b8860b;border-left:6px solid #A32D2D;border-radius:10px;padding:14px 16px;margin:0 0 14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">';
+  html += '<div style="font-size:14px;font-weight:bold;color:#A32D2D;margin-bottom:10px;letter-spacing:0.04em;">🏇 レース総評（予想のヒント）</div>';
+  html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;">';
+  if (s.headliner) {
+    var h = s.headliner;
+    html += '<div style="background:#fff;border-radius:6px;padding:10px 12px;border-left:3px solid '+h.color+';">'
+         + '<div style="font-size:11px;color:#666;font-weight:bold;margin-bottom:4px;">📊 レースの性格</div>'
+         + '<div style="font-size:14px;font-weight:bold;color:'+h.color+';margin-bottom:4px;line-height:1.4;">'+h.label+'</div>'
+         + '<div style="font-size:10px;color:#888;">想定1番人気 '+h.topName+' '+h.topOdds+'倍</div>'
+         + '</div>';
+  }
+  if (s.popZone) {
+    var p = s.popZone;
+    html += '<div style="background:#fff;border-radius:6px;padding:10px 12px;border-left:3px solid #1D9E75;">'
+         + '<div style="font-size:11px;color:#666;font-weight:bold;margin-bottom:4px;">🎯 狙うべき人気ゾーン</div>'
+         + '<div style="font-size:14px;font-weight:bold;color:#1D9E75;margin-bottom:4px;line-height:1.4;">'+p.label+'</div>'
+         + '<div style="font-size:10px;color:#888;">過去データ '+p.type+' '+p.evidence+'</div>'
+         + '</div>';
+  }
+  if (s.ageZone) {
+    var a = s.ageZone;
+    html += '<div style="background:#fff;border-radius:6px;padding:10px 12px;border-left:3px solid #185FA5;">'
+         + '<div style="font-size:11px;color:#666;font-weight:bold;margin-bottom:4px;">🎂 狙うべき年齢</div>'
+         + '<div style="font-size:14px;font-weight:bold;color:#185FA5;margin-bottom:4px;line-height:1.4;">'+a.label+' が中心</div>'
+         + '<div style="font-size:10px;color:#888;">過去10年 複勝率 '+a.evidence+(a.desc?' '+a.desc:'')+'</div>'
+         + '</div>';
+  }
+  html += '</div></div>';
+  return html;
+}
+
 function renderShutsubaTable() {
   // 1. レース別ヘッダーテキストを更新
   renderShutsubaHeader();
@@ -12711,6 +12832,7 @@ function renderShutsubaTable() {
   });
 
   container.innerHTML =
+    renderRaceSummaryBlock(raceName) +
     '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;border:0.5px solid var(--border);border-radius:var(--border-radius-md)">' +
     '<table style="border-collapse:collapse;font-size:12px;min-width:720px;width:100%;white-space:nowrap">' +
     '<thead><tr style="background:#1a2744;color:#fff;font-size:11px">' +
