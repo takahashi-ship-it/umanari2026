@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260604-0900';
+  var CURRENT_VERSION = '20260604-1000';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -4931,7 +4931,7 @@ const HORSES_BY_RACE = {
 ],
 
 '安田記念': [
-  { name:'アスクイキゴミ',     tokyoG2Place:true, prevPop:4, prevIsOverseas:false, prevLast3f:33.5, sex:'牡', age:3, carriedWeight:54, jockey:'未定',       stable:'栗東藤原',   odds:13.7,  popEstimate:7,  sire:'ロードカナロア',         motherSire:'Bated Breath',         kyakushitsu:'差し', prevRace:'NHKマイルC',  prevRank:2,  prevWeight:488, notes:'前走NHKマイル2着・近2走でNHKマイル2着＋チャーチル1着',
+  { name:'アスクイキゴミ',     isAvoided:true, avoidReason:'回避（2026/6 出走見送り・複数メディア報道で確定）', tokyoG2Place:true, prevPop:4, prevIsOverseas:false, prevLast3f:33.5, sex:'牡', age:3, carriedWeight:54, jockey:'未定',       stable:'栗東藤原',   odds:13.7,  popEstimate:7,  sire:'ロードカナロア',         motherSire:'Bated Breath',         kyakushitsu:'差し', prevRace:'NHKマイルC',  prevRank:2,  prevWeight:488, notes:'★2026/6 安田記念回避（複数メディア報道）。3歳挑戦は見送り',
     raceHistory:[
       { date:'2026-05-10', course:'東京', distance:1600, surface:'芝', name:'NHKマイルGⅠ', rank:2, pop:4, rt:116 },
       { date:'2026-04-04', course:'阪神', distance:1600, surface:'芝', name:'チャーチルCGⅢ', rank:1, pop:5, rt:110 },
