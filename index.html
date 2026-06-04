@@ -12615,18 +12615,17 @@ function renderShutsubaHeader() {
 }
 
 // ===== レース総評（予想のヒント・手動データ） =====
-// レース名をキーに total を持つ。published:true で表示／false or 未定義は金曜公開予定プレースホルダ。
+// レース名をキーに items を持つ。published:true で表示／未公開は金曜公開予定プレースホルダ。
 // body 内の【...】で囲った部分が自動的にアクセント表示される。
+// 自動の人気ゾーン（軸/中穴）は別途下段に表示されるため、items 側は重複させない。
 var RACE_SUMMARY = {
   '安田記念': {
     published: true,
     items: [
       { icon:'🎯', label:'レースの性格',
         body:'【1強不在】の【中穴探し】レース。絶対軸不在で1番人気でも5倍前後の混戦' },
-      { icon:'⚓', label:'軸ゾーン',
-        body:'1番人気は複勝率80%だが勝率10%（過去10年1勝）。軸（3着内）では信頼できるが【頭固定はNG】' },
-      { icon:'💰', label:'中穴ゾーン',
-        body:'【6〜9番人気】が好走の中心（過去10年7勝）・単勝回収率【194.8%】。4番人気も回収率174%で妙味' },
+      { icon:'⚠️', label:'頭固定の注意',
+        body:'1番人気は複勝率80%で3着内は堅いが勝率10%。【頭固定はNG】、軸でも1着固定は危険' },
       { icon:'🎂', label:'狙う年齢',
         body:'【4歳が最強】（過去10年5勝・複勝率23.3%）。7歳以上は1勝・複勝率10.3%で苦戦' },
       { icon:'❌', label:'消し',
@@ -12635,34 +12634,106 @@ var RACE_SUMMARY = {
   }
 };
 
-// 本文中の【...】をアクセント span で置換（HTML 注入されないようテキスト化）
+// 本文中の【...】をアクセント span で置換（赤太字＋黄色マーカー風背景）
 function _summaryAccent(body) {
   return String(body || '').replace(/【([^】]+)】/g, function(_, w){
     return '<span style="color:#A32D2D;font-weight:bold;background:linear-gradient(transparent 60%, #fff3a8 60%);padding:0 2px;">' + w + '</span>';
   });
 }
 
+// 自動：当日人気別テーブルから軸ゾーン（複勝率最高）と中穴ゾーン（回収率最高）を抽出
+function _summaryExtractPopBest(raceName) {
+  var pd = (typeof RACE_PAST_DATA !== 'undefined') ? RACE_PAST_DATA[raceName] : null;
+  if (!pd || !Array.isArray(pd.sections)) return null;
+  // 「当日人気別」セクションのみ対象。prevPopAnalysis（前走人気）は使わない。
+  var sec = null;
+  for (var i = 0; i < pd.sections.length; i++) {
+    var s = pd.sections[i];
+    if (s && /人気別.*成績/.test(s.title || '') && Array.isArray(s.rows)) { sec = s; break; }
+  }
+  if (!sec) return null;
+  function parsePct(s){ var v = parseFloat(String(s).replace(/[%★◎]/g, '')); return isNaN(v) ? null : v; }
+  var jiku = null, jikuRate = -Infinity;
+  var ana = null, anaRecov = -Infinity;
+  sec.rows.forEach(function(r){
+    if (!r.cells || r.cells.length < 3) return;
+    var label = String(r.cells[0]).replace(/<[^>]+>/g, '');
+    var rateNum = parsePct(r.cells[2]);
+    if (rateNum != null && rateNum > jikuRate) {
+      jikuRate = rateNum;
+      jiku = { label: label, rate: rateNum };
+    }
+    var note = String(r.cells[3] || '');
+    var m = note.match(/回収率\s*([0-9.]+)\s*%/);
+    if (m) {
+      var rv = parseFloat(m[1]);
+      if (!isNaN(rv) && rv > anaRecov) {
+        anaRecov = rv;
+        ana = { label: label, recov: rv };
+      }
+    }
+  });
+  if (!jiku && !ana) return null;
+  return { jiku: jiku, ana: ana };
+}
+
 function renderRaceSummaryBlock(raceName) {
   var entry = (typeof RACE_SUMMARY !== 'undefined') ? RACE_SUMMARY[raceName] : null;
+  var popZone = _summaryExtractPopBest(raceName);
+  var hasManual = !!(entry && entry.published && Array.isArray(entry.items) && entry.items.length);
+  var hasAuto = !!popZone;
+  if (!hasManual && !hasAuto) return '';
+
   var html = '<div class="race-summary-block" style="background:linear-gradient(135deg,#fff8e1,#fff3e0);border:2px solid #b8860b;border-left:6px solid #A32D2D;border-radius:10px;padding:14px 16px;margin:0 0 14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">';
   html += '<div style="font-size:14px;font-weight:bold;color:#A32D2D;margin-bottom:10px;letter-spacing:0.04em;display:flex;align-items:center;gap:6px;">🏇 <span>レース総評（予想のヒント）</span></div>';
-  if (!entry || !entry.published || !Array.isArray(entry.items) || !entry.items.length) {
-    html += '<div style="background:#fff;border-radius:6px;padding:14px;text-align:center;color:#888;font-size:13px;font-weight:500;">'
+
+  // 1) 手動総評セクション（あれば上段）
+  if (hasManual) {
+    html += '<div style="font-size:11px;font-weight:bold;color:#B8600C;margin-bottom:6px;letter-spacing:0.04em;">📝 予想のヒント</div>';
+    html += '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">';
+    entry.items.forEach(function(it){
+      html += '<div style="background:#fff;border-radius:6px;padding:10px 12px;border-left:3px solid #A32D2D;display:flex;gap:10px;align-items:flex-start;">'
+           +   '<div style="font-size:18px;flex-shrink:0;line-height:1.2;">' + (it.icon || '・') + '</div>'
+           +   '<div style="flex:1;min-width:0;">'
+           +     '<div style="font-size:11px;font-weight:bold;color:#A32D2D;margin-bottom:3px;letter-spacing:0.04em;">' + (it.label || '') + '</div>'
+           +     '<div style="font-size:13px;color:#1a2744;line-height:1.6;">' + _summaryAccent(it.body) + '</div>'
+           +   '</div>'
+           + '</div>';
+    });
+    html += '</div>';
+  } else {
+    html += '<div style="background:#fff;border-radius:6px;padding:14px;text-align:center;color:#888;font-size:13px;font-weight:500;margin-bottom:12px;">'
          +   '📅 このレースの総評は金曜に公開予定'
-         + '</div></div>';
-    return html;
-  }
-  html += '<div style="display:flex;flex-direction:column;gap:8px;">';
-  entry.items.forEach(function(it){
-    html += '<div style="background:#fff;border-radius:6px;padding:10px 12px;border-left:3px solid #A32D2D;display:flex;gap:10px;align-items:flex-start;">'
-         +   '<div style="font-size:18px;flex-shrink:0;line-height:1.2;">' + (it.icon || '・') + '</div>'
-         +   '<div style="flex:1;min-width:0;">'
-         +     '<div style="font-size:11px;font-weight:bold;color:#A32D2D;margin-bottom:3px;letter-spacing:0.04em;">' + (it.label || '') + '</div>'
-         +     '<div style="font-size:13px;color:#1a2744;line-height:1.6;">' + _summaryAccent(it.body) + '</div>'
-         +   '</div>'
          + '</div>';
-  });
-  html += '</div></div>';
+  }
+
+  // 2) 自動：人気ゾーン（あれば下段）
+  if (hasAuto) {
+    html += '<div style="border-top:1px dashed #d4af37;margin-top:4px;padding-top:10px;">';
+    html += '<div style="font-size:11px;font-weight:bold;color:#1565c0;margin-bottom:6px;letter-spacing:0.04em;">📊 データ：人気ゾーン（過去成績から自動）</div>';
+    html += '<div style="display:flex;flex-direction:column;gap:6px;">';
+    if (popZone.jiku) {
+      html += '<div style="background:#fff;border-radius:6px;padding:8px 12px;border-left:3px solid #1D9E75;display:flex;gap:10px;align-items:center;">'
+           +   '<div style="font-size:16px;flex-shrink:0;">🎯</div>'
+           +   '<div style="flex:1;min-width:0;">'
+           +     '<div style="font-size:13px;font-weight:bold;color:#1D9E75;line-height:1.3;">軸ゾーン：' + popZone.jiku.label + '</div>'
+           +     '<div style="font-size:10px;color:#888;">複勝率 ' + popZone.jiku.rate + '%（3着内に来やすい）</div>'
+           +   '</div>'
+           + '</div>';
+    }
+    if (popZone.ana) {
+      html += '<div style="background:#fff;border-radius:6px;padding:8px 12px;border-left:3px solid #B8600C;display:flex;gap:10px;align-items:center;">'
+           +   '<div style="font-size:16px;flex-shrink:0;">💰</div>'
+           +   '<div style="flex:1;min-width:0;">'
+           +     '<div style="font-size:13px;font-weight:bold;color:#B8600C;line-height:1.3;">中穴ゾーン：' + popZone.ana.label + '</div>'
+           +     '<div style="font-size:10px;color:#888;">単勝回収率 ' + popZone.ana.recov + '%（儲かる帯）</div>'
+           +   '</div>'
+           + '</div>';
+    }
+    html += '</div></div>';
+  }
+
+  html += '</div>';
   return html;
 }
 
