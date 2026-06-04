@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260604-1200';
+  var CURRENT_VERSION = '20260604-1300';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -14095,10 +14095,8 @@ function renderKaime() {
   var rankEl = document.getElementById('rank-strategy-container');
   if (rankEl) {
     var html = renderRankStrategy(raceName);
-    // 🌠 穴馬・伏兵・夢馬券 妙味候補（注目馬の解説を先に提示）
-    var anaData = (typeof RACE_PAST_DATA !== 'undefined' && RACE_PAST_DATA[raceName])
-                  ? RACE_PAST_DATA[raceName].anaUmaAnalysis : null;
-    if (anaData) html += renderAnaUmaSection(anaData);
+    // 🌠 穴馬・伏兵・夢馬券 妙味候補（自動選定）
+    html += renderAnaUmaSection(raceName);
     // 🏆 AIランク分け（全頭のV1スコア%でS/A/B/C/D自動分類）
     html += renderRankClassification(raceName);
     // 🎯 推奨フォーメーション 3パターン
@@ -14690,45 +14688,76 @@ function renderCustomFormation(raceName) {
   return html;
 }
 
-function renderAnaUmaSection(d) {
-  if (!d) return '';
-  var html = '<div class="ana-uma-section">';
-  html += '<h3 style="font-size:16px;font-weight:bold;color:#b8860b;margin:24px 0 8px;">' + d.title + '</h3>';
-  html += '<div style="font-size:11px;color:#666;margin-bottom:16px;">' + d.subtitle + '</div>';
+// 動的版：_pickAnaUmaCandidates の結果を表示。引数は raceName。
+function renderAnaUmaSection(raceName) {
+  if (!raceName || typeof _pickAnaUmaCandidates !== 'function') return '';
+  var picks = _pickAnaUmaCandidates(raceName);
+  var hasAny = picks.dream.length || picks.value.length || picks.underdog.length;
+  if (!hasAny) return '';
+  var staticMeta = (typeof RACE_PAST_DATA !== 'undefined' && RACE_PAST_DATA[raceName])
+                   ? RACE_PAST_DATA[raceName].anaUmaAnalysis : null;
+  var title = (staticMeta && staticMeta.title) || '🌠 穴馬・伏兵・夢馬券 妙味候補';
+  var subtitle = (staticMeta && staticMeta.subtitle) || 'ランクスコア下位だが、データ的根拠ある妙味馬を自動選定';
 
-  // 回避馬は妙味候補から除外
-  var liveCandidates = (d.candidates || []).filter(function(c){ return !_isHorseAvoided(c.name); });
-  liveCandidates.forEach(function(c){
-    var starStr = '★'.repeat(c.stars) + '☆'.repeat(5 - c.stars);
+  var html = '<div class="ana-uma-section">';
+  html += '<h3 style="font-size:16px;font-weight:bold;color:#b8860b;margin:24px 0 8px;">' + title + '</h3>';
+  html += '<div style="font-size:11px;color:#666;margin-bottom:16px;">' + subtitle + '</div>';
+
+  function renderOne(g, categoryLabel) {
+    var h = g.horse;
+    var info = g.info;
+    var stars = _calcAnaUmaStars(info);
+    var starStr = '★'.repeat(stars) + '☆'.repeat(5 - stars);
+    var reasons = info.positives.concat(info.negatives);
+    var strategy, desc;
+    var posC = info.positives.length, negC = info.negatives.length;
+    if (categoryLabel.indexOf('夢馬券') >= 0) {
+      strategy = '夢の3列目（少額で配当狙い）';
+      desc = '好走要素' + posC + '個vs消去' + negC + '個の「データ矛盾型」。' + h.odds + '倍の妙味は捨て難いが、データ的には消し対象。'
+           + (g.relaxed ? '【緩和ルールで採用】' : '');
+    } else if (categoryLabel.indexOf('妙味') >= 0) {
+      strategy = '3列目押さえ';
+      desc = 'データ的根拠のある中穴。' + h.odds + '倍はランク下位のわりに好走要素が揃っており、3列目に組み込む価値あり。';
+    } else {
+      strategy = '3列目押さえ・中穴の本線級';
+      desc = 'B〜C帯の中穴候補。' + h.odds + '倍のオッズで本線級の好走要素を持つ。データ的に勝負馬の資格あり。';
+    }
+    var maxScore = (typeof computeScoreBreakdown === 'function')
+      ? (computeScoreBreakdown(h, raceName).max || 212) : 212;
     html += '<div class="ana-card" style="background:#fff8e1;border:1px solid #ffd700;border-left:4px solid #ffd700;border-radius:10px;padding:14px 16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">';
-    html += '<div style="font-size:12px;color:#b8860b;font-weight:bold;margin-bottom:6px;">' + c.category + '</div>';
+    html += '<div style="font-size:12px;color:#b8860b;font-weight:bold;margin-bottom:6px;">' + categoryLabel + '</div>';
     html += '<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;margin-bottom:8px;">'
          + '<div>'
-         + '<span style="font-size:18px;font-weight:bold;color:#1a2744;">⭐ ' + c.name + '</span>'
-         + '<span style="font-size:12px;color:#666;margin-left:8px;">(' + c.popularity + '・' + c.odds + ')</span>'
+         + '<span style="font-size:18px;font-weight:bold;color:#1a2744;">⭐ ' + h.name + '</span>'
+         + '<span style="font-size:12px;color:#666;margin-left:8px;">(' + h.popEstimate + '番人気・' + h.odds + '倍)</span>'
          + '</div>'
          + '<div style="font-size:14px;color:#b8860b;font-weight:bold;">妙味度 ' + starStr + '</div>'
          + '</div>';
     html += '<div style="background:#f5f5f5;border-radius:6px;padding:6px 10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;border:1px solid #e0e0e0;">'
          + '<span style="font-size:12px;color:#666;font-weight:500;">AI信頼度</span>'
-         + '<span style="font-size:16px;font-weight:bold;color:#2e7d32;">' + c.score + '% (' + c.total + '/194)</span>'
+         + '<span style="font-size:16px;font-weight:bold;color:#2e7d32;">' + info.pct + '% (' + info.total + '/' + maxScore + ')</span>'
          + '</div>';
     html += '<ul style="margin:0;padding:0 0 0 8px;list-style:none;">';
-    (c.reasons || []).forEach(function(r){
+    reasons.forEach(function(r){
       var color = r.icon === '⚠️' ? '#d32f2f' : '#333';
       html += '<li style="font-size:12px;color:' + color + ';line-height:1.7;font-weight:500;">' + r.icon + ' ' + r.text + '</li>';
     });
     html += '</ul>';
-    html += '<div style="font-size:11px;color:#555;margin-top:8px;padding:8px 10px;background:#f9f9f9;border-radius:4px;line-height:1.6;border:1px solid #eaeaea;">' + c.description + '</div>';
-    html += '<div style="margin-top:8px;padding:8px 10px;background:#fff3cd;border-left:3px solid #ffd700;border-radius:4px;font-size:12px;color:#856404;font-weight:500;">🎯 推奨買い目: <strong style="color:#5a4500;">' + c.strategy + '</strong></div>';
-    html += '</div>';
-  });
-
-  if (d.summary) {
-    html += '<div style="margin-top:16px;padding:14px;background:#fff8e1;border:1px solid #ffd700;border-radius:8px;font-size:12px;line-height:1.7;color:#333;">';
-    html += '<strong style="color:#b8860b;">💡 戦略まとめ：</strong>' + d.summary;
+    html += '<div style="font-size:11px;color:#555;margin-top:8px;padding:8px 10px;background:#f9f9f9;border-radius:4px;line-height:1.6;border:1px solid #eaeaea;">' + desc + '</div>';
+    html += '<div style="margin-top:8px;padding:8px 10px;background:#fff3cd;border-left:3px solid #ffd700;border-radius:4px;font-size:12px;color:#856404;font-weight:500;">🎯 推奨買い目: <strong style="color:#5a4500;">' + strategy + '</strong></div>';
     html += '</div>';
   }
+
+  picks.dream.forEach(function(g){ renderOne(g, '💎 夢馬券(大穴・データ矛盾型)'); });
+  picks.value.forEach(function(g){ renderOne(g, '🌸 妙味(中穴・構造的有利)'); });
+  picks.underdog.forEach(function(g){ renderOne(g, '🏇 伏兵(B-C帯の中穴)'); });
+
+  // 戦略まとめ（馬名を含まない汎用文章・回避や馬変動の影響を受けない）
+  html += '<div style="margin-top:16px;padding:14px;background:#fff8e1;border:1px solid #ffd700;border-radius:8px;font-size:12px;line-height:1.7;color:#333;">';
+  html += '<strong style="color:#b8860b;">💡 戦略まとめ：</strong>';
+  html += 'ランクスコア下位でも、データ的根拠（適性・血統・末脚等）を持つ馬を「3列目押さえ」として組み込むランク戦略が有効。データクリア組や構造的有利の馬は中穴の本線、データ矛盾型は夢馬券として配当妙味を狙う。芝マイル未経験・極端な末脚不足など舞台不適合の馬と回避馬は自動で除外。出馬構成やオッズの変動にあわせて毎回自動更新される。';
+  html += '</div>';
+
   html += '</div>';
   return html;
 }
