@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260604-1000';
+  var CURRENT_VERSION = '20260604-1100';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -9587,6 +9587,21 @@ function renderOtherDataAnalysis(d) {
   return html;
 }
 
+// 共通ヘルパー：現在のレースで指定馬名が isAvoided かを判定
+// レンダラ層で回避馬を一括除外するため。静的データは温存し表示時にフィルタする方針。
+function _isHorseAvoided(horseName) {
+  var raceName = (typeof window !== 'undefined' && window.currentRaceName)
+    ? window.currentRaceName
+    : (typeof currentRace !== 'undefined' ? currentRace : '');
+  if (!raceName || typeof HORSES_BY_RACE === 'undefined') return false;
+  var horses = HORSES_BY_RACE[raceName];
+  if (!horses) return false;
+  for (var i = 0; i < horses.length; i++) {
+    if (horses[i] && horses[i].name === horseName) return !!horses[i].isAvoided;
+  }
+  return false;
+}
+
 function renderClearAnalysis(d) {
   if (!d) return '';
   var html = '<div class="analysis-card">';
@@ -9611,11 +9626,15 @@ function renderClearAnalysis(d) {
          + '</div></div>';
   }
 
-  // クリア5頭セクション
+  // クリア5頭セクション（回避馬は表示から除外）
   if (d.clearHorses && d.clearHorses.length) {
+    var clearLive = d.clearHorses.filter(function(h){ return !_isHorseAvoided(h.name); });
+    var clearOrigCount = d.clearHorses.length;
     html += '<div style="background:rgba(255,215,0,0.1);border-radius:8px;padding:16px;margin:16px 0;">';
-    html += '<div style="font-size:14px;font-weight:bold;color:#ffd700;margin-bottom:12px;">🏆 全消去条件クリア！データ的最上位' + d.clearHorses.length + '頭</div>';
-    d.clearHorses.forEach(function(h, idx){
+    html += '<div style="font-size:14px;font-weight:bold;color:#ffd700;margin-bottom:12px;">🏆 全消去条件クリア！データ的最上位' + clearOrigCount + '頭'
+         + (clearLive.length < clearOrigCount ? '<span style="font-size:11px;font-weight:normal;color:#ccd0e0;"> （うち出走 ' + clearLive.length + '頭）</span>' : '')
+         + '</div>';
+    clearLive.forEach(function(h, idx){
       html += '<div style="background:rgba(255,255,255,0.05);border-left:3px solid #ffd700;border-radius:4px;padding:10px 12px;margin-bottom:8px;">'
            + '<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;">'
            + '<span style="font-size:14px;font-weight:bold;color:#fff;">' + (idx+1) + '. ' + h.name + '</span>'
@@ -9625,17 +9644,18 @@ function renderClearAnalysis(d) {
     html += '</div>';
   }
 
-  // 消去条件リスト
+  // 消去条件リスト（回避馬は該当馬一覧から除外）
   if (d.killConditionsList && d.killConditionsList.length) {
     html += '<div style="margin:16px 0;">';
     html += '<div style="font-size:14px;font-weight:bold;color:#ff8080;margin-bottom:12px;">❌ 消去条件＋該当馬一覧</div>';
     d.killConditionsList.forEach(function(c){
+      var liveHorses = (c.horses || []).filter(function(n){ return !_isHorseAvoided(n); });
       html += '<div style="background:rgba(255,74,74,0.08);border-left:3px solid #ff4a4a;border-radius:4px;padding:10px 12px;margin-bottom:8px;">'
            + '<div style="font-size:12px;font-weight:bold;color:#ff8080;margin-bottom:4px;">' + c.icon + ' ' + c.label + '</div>'
            + '<div style="font-size:11px;color:#ccd0e0;margin-bottom:6px;">' + c.desc + '</div>'
            + '<div class="badge-container">'
-           + '<span class="badge-label">該当' + c.horses.length + '頭：</span>';
-      c.horses.forEach(function(n){ html += '<span class="horse-badge horse-badge-kill">' + n + '</span>'; });
+           + '<span class="badge-label">該当' + liveHorses.length + '頭：</span>';
+      liveHorses.forEach(function(n){ html += '<span class="horse-badge horse-badge-kill">' + n + '</span>'; });
       html += '</div></div>';
     });
     html += '</div>';
@@ -9764,8 +9784,10 @@ function renderJockeyAnalysis(d) {
 
 function renderProducerAnalysis(d) {
   if (!d) return '';
+  // 回避馬は生産者別リストからも除外（静的データ温存・レンダラ層でフィルタ）
+  var liveProducerMap = (d.horseProducerMap || []).filter(function(h){ return !_isHorseAvoided(h.name); });
   var hbp = {};
-  (d.horseProducerMap || []).forEach(function(h){
+  liveProducerMap.forEach(function(h){
     var p = h.producer;
     if (!hbp[p]) hbp[p] = [];
     hbp[p].push(h.name);
@@ -9815,12 +9837,12 @@ function renderProducerAnalysis(d) {
     html += '</div>';
   }
 
-  // 全馬の生産者マッピング
-  if (d.horseProducerMap && d.horseProducerMap.length) {
+  // 全馬の生産者マッピング（回避馬除外）
+  if (liveProducerMap.length) {
     html += '<div style="margin:16px 0;">';
     html += '<div style="font-size:13px;font-weight:bold;color:#ccd0e0;margin-bottom:10px;">📋 全出走馬の生産者・所有情報</div>';
     html += '<div style="display:grid;grid-template-columns:1fr;gap:6px;">';
-    d.horseProducerMap.forEach(function(h){
+    liveProducerMap.forEach(function(h){
       var isNF = h.producer === 'ノーザンファーム';
       var bg = isNF ? 'rgba(255,215,0,0.08)' : 'rgba(255,255,255,0.03)';
       var border = isNF ? '#ffd700' : '#4a9eff';
@@ -9873,8 +9895,10 @@ function renderTokyoFormAnalysis(d) {
   }
 
   if (d.detailTable && d.detailTable.length) {
+    // 回避馬は東京コース実績カードから除外
+    var liveRows = d.detailTable.filter(function(r){ return !_isHorseAvoided(r.horse); });
     html += '<div class="data-card-list">';
-    d.detailTable.forEach(function(r){
+    liveRows.forEach(function(r){
       html += '<div class="data-card">'
            + '<div class="data-card-header">'
            + '<span class="data-name">🏇 ' + r.horse + '</span>'
@@ -14374,7 +14398,9 @@ function renderAnaUmaSection(d) {
   html += '<h3 style="font-size:16px;font-weight:bold;color:#b8860b;margin:24px 0 8px;">' + d.title + '</h3>';
   html += '<div style="font-size:11px;color:#666;margin-bottom:16px;">' + d.subtitle + '</div>';
 
-  (d.candidates || []).forEach(function(c){
+  // 回避馬は妙味候補から除外
+  var liveCandidates = (d.candidates || []).filter(function(c){ return !_isHorseAvoided(c.name); });
+  liveCandidates.forEach(function(c){
     var starStr = '★'.repeat(c.stars) + '☆'.repeat(5 - c.stars);
     html += '<div class="ana-card" style="background:#fff8e1;border:1px solid #ffd700;border-left:4px solid #ffd700;border-radius:10px;padding:14px 16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">';
     html += '<div style="font-size:12px;color:#b8860b;font-weight:bold;margin-bottom:6px;">' + c.category + '</div>';
