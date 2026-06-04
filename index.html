@@ -12614,124 +12614,54 @@ function renderShutsubaHeader() {
                  (isFinished ? '✅ ' : '⚠️ ') + note + '</span></div>';
 }
 
-// ===== レース総評ブロック =====
-// 各レースのデータから①性格・②人気ゾーン・③年齢を自動生成（表示専用・スコア非干渉）
-function _summaryExtractHeadliner(raceName) {
-  if (typeof HORSES_BY_RACE === 'undefined') return null;
-  var horses = (HORSES_BY_RACE[raceName] || []).filter(function(h){
-    return h && !h.isAvoided && typeof h.odds === 'number' && h.odds > 0;
-  });
-  if (!horses.length) return null;
-  var top = horses[0];
-  horses.forEach(function(h){ if (h.odds < top.odds) top = h; });
-  var label, color;
-  if (top.odds <= 2.9)      { label = '絶対軸あり（1強ムード）';        color = '#A32D2D'; }
-  else if (top.odds <= 4.9) { label = '有力馬中心だが混戦含み';        color = '#B8600C'; }
-  else                       { label = '1強不在・混戦';                  color = '#185FA5'; }
-  return { label: label, color: color, topName: top.name, topOdds: top.odds };
-}
-
-function _summaryExtractPopBest(raceName) {
-  var pd = (typeof RACE_PAST_DATA !== 'undefined') ? RACE_PAST_DATA[raceName] : null;
-  if (!pd || !Array.isArray(pd.sections)) return null;
-  // 「当日人気別」セクションのみ対象。prevPopAnalysis（前走人気）は絶対に使わない。
-  var sec = null;
-  for (var i = 0; i < pd.sections.length; i++) {
-    var s = pd.sections[i];
-    if (s && /人気別.*成績/.test(s.title || '') && Array.isArray(s.rows)) { sec = s; break; }
+// ===== レース総評（予想のヒント・手動データ） =====
+// レース名をキーに total を持つ。published:true で表示／false or 未定義は金曜公開予定プレースホルダ。
+// body 内の【...】で囲った部分が自動的にアクセント表示される。
+var RACE_SUMMARY = {
+  '安田記念': {
+    published: true,
+    items: [
+      { icon:'🎯', label:'レースの性格',
+        body:'【1強不在】の【中穴探し】レース。絶対軸不在で1番人気でも5倍前後の混戦' },
+      { icon:'⚓', label:'軸ゾーン',
+        body:'1番人気は複勝率80%だが勝率10%（過去10年1勝）。軸（3着内）では信頼できるが【頭固定はNG】' },
+      { icon:'💰', label:'中穴ゾーン',
+        body:'【6〜9番人気】が好走の中心（過去10年7勝）・単勝回収率【194.8%】。4番人気も回収率174%で妙味' },
+      { icon:'🎂', label:'狙う年齢',
+        body:'【4歳が最強】（過去10年5勝・複勝率23.3%）。7歳以上は1勝・複勝率10.3%で苦戦' },
+      { icon:'❌', label:'消し',
+        body:'10番人気以下は馬券内【ほぼゼロ】' }
+    ]
   }
-  if (!sec) return null;
-  function parsePct(s){ var v = parseFloat(String(s).replace(/[%★◎]/g, '')); return isNaN(v) ? null : v; }
-  // 軸ゾーン：複勝率（cells[2]）が数値で最高の帯
-  var jiku = null, jikuRate = -Infinity;
-  // 中穴ゾーン：cells[3]（コメント）に「回収率N%」表記がある帯のうち数値最高
-  var ana = null, anaRecov = -Infinity;
-  sec.rows.forEach(function(r){
-    if (!r.cells || r.cells.length < 3) return;
-    var label = String(r.cells[0]).replace(/<[^>]+>/g, '');
-    var rateNum = parsePct(r.cells[2]);
-    if (rateNum != null && rateNum > jikuRate) {
-      jikuRate = rateNum;
-      jiku = { label: label, rate: rateNum };
-    }
-    var note = String(r.cells[3] || '');
-    var m = note.match(/回収率\s*([0-9.]+)\s*%/);
-    if (m) {
-      var rv = parseFloat(m[1]);
-      if (!isNaN(rv) && rv > anaRecov) {
-        anaRecov = rv;
-        ana = { label: label, recov: rv };
-      }
-    }
-  });
-  if (!jiku && !ana) return null;
-  return { jiku: jiku, ana: ana };
-}
+};
 
-function _summaryExtractAgeBest(raceName) {
-  var pd = (typeof RACE_PAST_DATA !== 'undefined') ? RACE_PAST_DATA[raceName] : null;
-  if (!pd || !pd.otherDataAnalysis || !Array.isArray(pd.otherDataAnalysis.sections)) return null;
-  var sec = null;
-  pd.otherDataAnalysis.sections.forEach(function(s){ if (s && s.matchKey === 'age') sec = s; });
-  if (!sec || !Array.isArray(sec.rows)) return null;
-  // tag='best' を優先（データ提供側が最強年代として明示している）
-  var bestTagged = null;
-  sec.rows.forEach(function(r){ if (r.tag === 'best' && !bestTagged) bestTagged = r; });
-  if (bestTagged) return { label: bestTagged.label, evidence: bestTagged.rate + '%', desc: bestTagged.desc || '' };
-  // フォールバック: rare/kill タグを除外し、勝利数のあるロウから rate 最高
-  var best = null, bestRate = -Infinity;
-  sec.rows.forEach(function(r){
-    if (r.tag === 'rare' || r.tag === 'kill') return;
-    if (typeof r.rate === 'number' && r.rate > bestRate) { bestRate = r.rate; best = r; }
+// 本文中の【...】をアクセント span で置換（HTML 注入されないようテキスト化）
+function _summaryAccent(body) {
+  return String(body || '').replace(/【([^】]+)】/g, function(_, w){
+    return '<span style="color:#A32D2D;font-weight:bold;background:linear-gradient(transparent 60%, #fff3a8 60%);padding:0 2px;">' + w + '</span>';
   });
-  if (!best) return null;
-  return { label: best.label, evidence: best.rate + '%', desc: best.desc || '' };
-}
-
-function generateRaceSummary(raceName) {
-  return {
-    headliner: _summaryExtractHeadliner(raceName),
-    popZone:   _summaryExtractPopBest(raceName),
-    ageZone:   _summaryExtractAgeBest(raceName)
-  };
 }
 
 function renderRaceSummaryBlock(raceName) {
-  var s = generateRaceSummary(raceName);
-  if (!s.headliner && !s.popZone && !s.ageZone) return '';
+  var entry = (typeof RACE_SUMMARY !== 'undefined') ? RACE_SUMMARY[raceName] : null;
   var html = '<div class="race-summary-block" style="background:linear-gradient(135deg,#fff8e1,#fff3e0);border:2px solid #b8860b;border-left:6px solid #A32D2D;border-radius:10px;padding:14px 16px;margin:0 0 14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">';
-  html += '<div style="font-size:14px;font-weight:bold;color:#A32D2D;margin-bottom:10px;letter-spacing:0.04em;">🏇 レース総評（予想のヒント）</div>';
-  html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;">';
-  if (s.headliner) {
-    var h = s.headliner;
-    html += '<div style="background:#fff;border-radius:6px;padding:10px 12px;border-left:3px solid '+h.color+';">'
-         + '<div style="font-size:11px;color:#666;font-weight:bold;margin-bottom:4px;">📊 レースの性格</div>'
-         + '<div style="font-size:14px;font-weight:bold;color:'+h.color+';margin-bottom:4px;line-height:1.4;">'+h.label+'</div>'
-         + '<div style="font-size:10px;color:#888;">想定1番人気 '+h.topName+' '+h.topOdds+'倍</div>'
+  html += '<div style="font-size:14px;font-weight:bold;color:#A32D2D;margin-bottom:10px;letter-spacing:0.04em;display:flex;align-items:center;gap:6px;">🏇 <span>レース総評（予想のヒント）</span></div>';
+  if (!entry || !entry.published || !Array.isArray(entry.items) || !entry.items.length) {
+    html += '<div style="background:#fff;border-radius:6px;padding:14px;text-align:center;color:#888;font-size:13px;font-weight:500;">'
+         +   '📅 このレースの総評は金曜に公開予定'
+         + '</div></div>';
+    return html;
+  }
+  html += '<div style="display:flex;flex-direction:column;gap:8px;">';
+  entry.items.forEach(function(it){
+    html += '<div style="background:#fff;border-radius:6px;padding:10px 12px;border-left:3px solid #A32D2D;display:flex;gap:10px;align-items:flex-start;">'
+         +   '<div style="font-size:18px;flex-shrink:0;line-height:1.2;">' + (it.icon || '・') + '</div>'
+         +   '<div style="flex:1;min-width:0;">'
+         +     '<div style="font-size:11px;font-weight:bold;color:#A32D2D;margin-bottom:3px;letter-spacing:0.04em;">' + (it.label || '') + '</div>'
+         +     '<div style="font-size:13px;color:#1a2744;line-height:1.6;">' + _summaryAccent(it.body) + '</div>'
+         +   '</div>'
          + '</div>';
-  }
-  if (s.popZone) {
-    var p = s.popZone;
-    html += '<div style="background:#fff;border-radius:6px;padding:10px 12px;border-left:3px solid #1D9E75;">'
-         + '<div style="font-size:11px;color:#666;font-weight:bold;margin-bottom:6px;">🎯 狙うべき人気ゾーン</div>';
-    if (p.jiku) {
-      html += '<div style="font-size:13px;font-weight:bold;color:#1D9E75;line-height:1.4;">🎯 軸ゾーン：'+p.jiku.label+'</div>'
-           + '<div style="font-size:10px;color:#888;margin-bottom:6px;">複勝率 '+p.jiku.rate+'%（3着内に来やすい）</div>';
-    }
-    if (p.ana) {
-      html += '<div style="font-size:13px;font-weight:bold;color:#B8600C;line-height:1.4;">💰 中穴ゾーン：'+p.ana.label+'</div>'
-           + '<div style="font-size:10px;color:#888;">単勝回収率 '+p.ana.recov+'%（儲かる帯）</div>';
-    }
-    html += '</div>';
-  }
-  if (s.ageZone) {
-    var a = s.ageZone;
-    html += '<div style="background:#fff;border-radius:6px;padding:10px 12px;border-left:3px solid #185FA5;">'
-         + '<div style="font-size:11px;color:#666;font-weight:bold;margin-bottom:4px;">🎂 狙うべき年齢</div>'
-         + '<div style="font-size:14px;font-weight:bold;color:#185FA5;margin-bottom:4px;line-height:1.4;">'+a.label+' が中心</div>'
-         + '<div style="font-size:10px;color:#888;">過去10年 複勝率 '+a.evidence+(a.desc?' '+a.desc:'')+'</div>'
-         + '</div>';
-  }
+  });
   html += '</div></div>';
   return html;
 }
