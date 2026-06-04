@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260604-1400';
+  var CURRENT_VERSION = '20260604-1500';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -8869,20 +8869,20 @@ const RACE_PAST_DATA = {
         title: "人気別 成績（過去10年）",
         headers: ["人気","成績","複勝率","傾向"],
         rows: [
-          { cells: ["1番人気",     "1-4-2-3", "80%", "馬券内多いが勝ち切れない（勝率10%）"], highlight: true,
+          { cells: ["1番人気",      "2-3-3-2",  "80%",  "馬券内多いが勝ち切れない（勝率20%）"], highlight: true,
             matchFn: function(h){ return h.popEstimate === 1; } },
-          { cells: ["2番人気",     "-",        "-",   "データ整備中"],
+          { cells: ["2番人気",      "0-1-2-7",  "30%",  "意外と取りこぼし多い"],
             matchFn: function(h){ return h.popEstimate === 2; } },
-          { cells: ["3番人気",     "-",        "-",   "データ整備中"],
+          { cells: ["3番人気",      "1-3-1-5",  "50%",  "安定の連対多数"],
             matchFn: function(h){ return h.popEstimate === 3; } },
-          { cells: ["4番人気",     "-",        "-",   "単勝回収率174%（妙味）"],
+          { cells: ["4番人気",      "3-1-1-5",  "50%",  "最多3勝・勝率30%（妙味）"], highlight: true,
             matchFn: function(h){ return h.popEstimate === 4; } },
-          { cells: ["5番人気",     "-",        "-",   "データ整備中"],
+          { cells: ["5番人気",      "0-1-0-9",  "10%",  "急に苦戦帯に落ちる"],
             matchFn: function(h){ return h.popEstimate === 5; } },
-          { cells: ["6-9番人気",   "-",        "-",   "過去10年7勝・好走の中心／単勝回収率194.8%（中穴妙味）"], highlight: true,
-            matchFn: function(h){ return h.popEstimate >= 6 && h.popEstimate <= 9; } },
-          { cells: ["10番人気以下", "0-0-0-多数","ほぼ0%","馬券内ほぼなし"],
-            matchFn: function(h){ return h.popEstimate >= 10; } }
+          { cells: ["6-10番人気",   "4-1-2-43", "14%",  "穴ゾーン（4勝）・単回194.8%"], highlight: true,
+            matchFn: function(h){ return h.popEstimate >= 6 && h.popEstimate <= 10; } },
+          { cells: ["11番人気以下", "0-0-1-60", "1.6%", "ほぼ消し"],
+            matchFn: function(h){ return h.popEstimate >= 11; } }
         ]
       },
       {
@@ -17123,18 +17123,19 @@ function computeScoreBreakdownYasudaV1(horse, raceName, _rawOnly) {
 
   // ===== 📊 過去データ準拠（55点）=====
 
-  // 1. 人気別（max 15）★過去20年データ
-  // 1人気は歴史的名馬以外勝てない、6-9人気で6勝の中穴妙味
+  // 1. 人気別（max 15）★過去10年データ・複勝率ベース
+  // 1番人気80%, 2番30%, 3番50%, 4番50%, 5番10%, 6-10番14%, 11番以下1.6%
+  // 回収率の妙味は別項目（オッズ妙味）と中穴選定に役割分担
   var popScore = 0;
   var pop = horse.popEstimate || 99;
   var _odds = horse.odds || 999;
-  if (pop === 1) popScore = 12;
-  else if (pop === 2) popScore = 9;
-  else if (pop === 3) popScore = 10;
-  else if (pop === 4) popScore = 14;                          // ★単勝回収率174%
-  else if (pop === 5) popScore = 7;
-  else if (pop >= 6 && pop <= 9) popScore = 13;               // ★中穴ゾーン194.8%
-  else popScore = 0;                                          // 10人気以下完全消し
+  if (pop === 1)                              popScore = 15;  // 複勝率80%★最強
+  else if (pop === 2)                         popScore = 6;   // 複勝率30%
+  else if (pop === 3)                         popScore = 10;  // 複勝率50%
+  else if (pop === 4)                         popScore = 10;  // 複勝率50%（最多3勝）
+  else if (pop === 5)                         popScore = 2;   // 複勝率10%
+  else if (pop >= 6 && pop <= 10)             popScore = 3;   // 複勝率14%（穴ゾーン）
+  else                                        popScore = 0;   // 11人気以下 1.6%
   items.popularity = { score: popScore, max: 15, label: '人気別' };
 
   // 1b. 単勝オッズ別ボーナス（max 8 / 最低 -8）★過去20年
