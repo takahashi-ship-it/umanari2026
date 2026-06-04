@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260604-1100';
+  var CURRENT_VERSION = '20260604-1200';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -14109,32 +14109,48 @@ function renderKaime() {
   }
 }
 
-function renderRankClassification(raceName) {
-  if (typeof HORSES_BY_RACE === 'undefined') return '';
+// 共通ヘルパー：回避馬除外＋順位ベースで S/A/B/C/D に分類
+// S=上位2頭 / A=3-4位 / B=5-7位 / C=8-11位 / D=12位以下
+// 同点の安定ソート: total降順 → pct降順 → 馬名昇順
+function _classifyHorsesByRank(raceName) {
+  if (typeof HORSES_BY_RACE === 'undefined') return [];
   var horses = HORSES_BY_RACE[raceName];
-  if (!horses || !horses.length) return '';
-  horses = horses.filter(function(h){ return !h.isAvoided; });
-
-  var horsesWithRank = horses.map(function(h){
+  if (!horses || !horses.length) return [];
+  var live = horses.filter(function(h){ return !h.isAvoided; });
+  var arr = live.map(function(h){
     var bd = computeScoreBreakdown(h, raceName);
+    return { horse:h, bd:bd, pct:bd.pct, total:bd.total, max:bd.max };
+  });
+  arr.sort(function(a, b){
+    if (b.total !== a.total) return b.total - a.total;
+    if (b.pct !== a.pct) return b.pct - a.pct;
+    return (a.horse.name < b.horse.name) ? -1 : 1;
+  });
+  arr.forEach(function(x, i){
     var rank;
-    if (bd.pct >= 60) rank = 'S';
-    else if (bd.pct >= 55) rank = 'A';
-    else if (bd.pct >= 48) rank = 'B';
-    else if (bd.pct >= 35) rank = 'C';
-    else rank = 'D';
-    return { horse:h, bd:bd, rank:rank, pct:bd.pct, total:bd.total, max:bd.max };
-  }).sort(function(a,b){ return b.pct - a.pct; });
+    if (i < 2)       rank = 'S';   // 1-2位
+    else if (i < 4)  rank = 'A';   // 3-4位
+    else if (i < 7)  rank = 'B';   // 5-7位
+    else if (i < 11) rank = 'C';   // 8-11位
+    else             rank = 'D';   // 12位以下
+    x.rank = rank;
+  });
+  return arr;
+}
+
+function renderRankClassification(raceName) {
+  var horsesWithRank = _classifyHorsesByRank(raceName);
+  if (!horsesWithRank.length) return '';
 
   var byRank = { S:[], A:[], B:[], C:[], D:[] };
   horsesWithRank.forEach(function(x){ byRank[x.rank].push(x); });
 
   var rankInfo = {
-    S: { color:'#b8860b', accentColor:'#ffd700', bg:'#fff8e1', headerBg:'#ffd700', headerColor:'#5a4500', range:'60%以上',  desc:'🌟 軸候補・最上位評価' },
-    A: { color:'#e65100', accentColor:'#ff9800', bg:'#fff3e0', headerBg:'#ff9800', headerColor:'#5a2d00', range:'55-59%',   desc:'🅰️ 軸を倒せる対抗' },
-    B: { color:'#1565c0', accentColor:'#2196f3', bg:'#e3f2fd', headerBg:'#2196f3', headerColor:'#fff',    range:'48-54%',   desc:'🅱️ 上位入着の可能性' },
-    C: { color:'#424242', accentColor:'#9e9e9e', bg:'#f5f5f5', headerBg:'#9e9e9e', headerColor:'#fff',    range:'35-47%',   desc:'🅲 3着なら' },
-    D: { color:'#6a1b9a', accentColor:'#9c27b0', bg:'#f3e5f5', headerBg:'#9c27b0', headerColor:'#fff',    range:'35%未満',  desc:'🅳 大穴・夢馬券' }
+    S: { color:'#b8860b', accentColor:'#ffd700', bg:'#fff8e1', headerBg:'#ffd700', headerColor:'#5a4500', range:'1-2位',  desc:'🌟 軸候補・最上位評価' },
+    A: { color:'#e65100', accentColor:'#ff9800', bg:'#fff3e0', headerBg:'#ff9800', headerColor:'#5a2d00', range:'3-4位',  desc:'🅰️ 軸を倒せる対抗' },
+    B: { color:'#1565c0', accentColor:'#2196f3', bg:'#e3f2fd', headerBg:'#2196f3', headerColor:'#fff',    range:'5-7位',  desc:'🅱️ 上位入着の可能性' },
+    C: { color:'#424242', accentColor:'#9e9e9e', bg:'#f5f5f5', headerBg:'#9e9e9e', headerColor:'#fff',    range:'8-11位', desc:'🅲 3着なら' },
+    D: { color:'#6a1b9a', accentColor:'#9c27b0', bg:'#f3e5f5', headerBg:'#9c27b0', headerColor:'#fff',    range:'12位以下', desc:'🅳 大穴・夢馬券' }
   };
 
   var html = '<div class="rank-classification" style="margin:24px 0;">';
@@ -14149,7 +14165,7 @@ function renderRankClassification(raceName) {
     // ヘッダー帯（背景色＋濃色文字でコントラスト確保）
     html += '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;background:' + info.headerBg + ';padding:10px 12px;">'
          + '<div style="font-size:14px;font-weight:bold;color:' + info.headerColor + ';">' + info.desc + '</div>'
-         + '<div style="font-size:11px;color:' + info.headerColor + ';opacity:0.9;font-weight:500;">AI信頼度 ' + info.range + ' (' + hs.length + '頭)</div>'
+         + '<div style="font-size:11px;color:' + info.headerColor + ';opacity:0.9;font-weight:500;">スコア ' + info.range + ' (' + hs.length + '頭)</div>'
          + '</div>';
     // 馬リスト本体
     html += '<div style="display:flex;flex-direction:column;gap:6px;padding:10px 12px;">';
@@ -14177,21 +14193,8 @@ function renderRankClassification(raceName) {
 }
 
 function renderRecommendedFormations(raceName) {
-  if (typeof HORSES_BY_RACE === 'undefined') return '';
-  var horses = HORSES_BY_RACE[raceName];
-  if (!horses || !horses.length) return '';
-  horses = horses.filter(function(h){ return !h.isAvoided; });
-
-  var ranked = horses.map(function(h){
-    var bd = computeScoreBreakdown(h, raceName);
-    var rank;
-    if (bd.pct >= 60) rank = 'S';
-    else if (bd.pct >= 55) rank = 'A';
-    else if (bd.pct >= 48) rank = 'B';
-    else if (bd.pct >= 35) rank = 'C';
-    else rank = 'D';
-    return { horse:h, bd:bd, rank:rank, pct:bd.pct };
-  }).sort(function(a,b){ return b.pct - a.pct; });
+  var ranked = _classifyHorsesByRank(raceName);
+  if (!ranked.length) return '';
 
   var byRank = { S:[], A:[], B:[], C:[], D:[] };
   ranked.forEach(function(x){ byRank[x.rank].push(x); });
@@ -14273,21 +14276,8 @@ function renderRecommendedFormations(raceName) {
 }
 
 function renderCustomFormation(raceName) {
-  if (typeof HORSES_BY_RACE === 'undefined') return '';
-  var horses = HORSES_BY_RACE[raceName];
-  if (!horses || !horses.length) return '';
-  horses = horses.filter(function(h){ return !h.isAvoided; });
-
-  var ranked = horses.map(function(h){
-    var bd = computeScoreBreakdown(h, raceName);
-    var rank;
-    if (bd.pct >= 60) rank = 'S';
-    else if (bd.pct >= 55) rank = 'A';
-    else if (bd.pct >= 48) rank = 'B';
-    else if (bd.pct >= 35) rank = 'C';
-    else rank = 'D';
-    return { horse:h, bd:bd, rank:rank, pct:bd.pct };
-  }).sort(function(a,b){ return b.pct - a.pct; });
+  var ranked = _classifyHorsesByRank(raceName);
+  if (!ranked.length) return '';
 
   var rankColors = { S:'#b8860b', A:'#e65100', B:'#1565c0', C:'#424242', D:'#6a1b9a' };
   var rankBgs    = { S:'#fff8e1', A:'#fff3e0', B:'#e3f2fd', C:'#f5f5f5', D:'#f3e5f5' };
@@ -19564,18 +19554,9 @@ window.applyPattern = function(patternName) {
   if (!raceName || typeof HORSES_BY_RACE === 'undefined') return;
   var horses = HORSES_BY_RACE[raceName];
   if (!horses) return;
-  var ranked = horses.map(function(h){
-    var bd = computeScoreBreakdown(h, raceName);
-    var rank;
-    if (bd.pct >= 60) rank = 'S';
-    else if (bd.pct >= 55) rank = 'A';
-    else if (bd.pct >= 48) rank = 'B';
-    else if (bd.pct >= 35) rank = 'C';
-    else rank = 'D';
-    return { name:h.name, rank:rank, pct:bd.pct };
-  }).sort(function(a,b){ return b.pct - a.pct; });
+  var ranked = _classifyHorsesByRank(raceName);
   var byRank = { S:[], A:[], B:[], C:[], D:[] };
-  ranked.forEach(function(x){ byRank[x.rank].push(x.name); });
+  ranked.forEach(function(x){ byRank[x.rank].push(x.horse.name); });
 
   var col1Names = [], col2Names = [], col3Names = [];
   if (patternName === 'A') {
