@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260605-1700';
+  var CURRENT_VERSION = '20260605-1800';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -12659,7 +12659,9 @@ var RACE_SUMMARY = {
     published: true,
     items: [
       { icon:'🎯', label:'レースの性格',
-        body:'【1強不在】の【中穴探し】レース。絶対軸不在で1番人気でも5倍前後の混戦' },
+        body:'【1強不在】の【超混戦】。1番人気トロヴァトーレでも単勝4倍台で上位拮抗。AIスコアもパンジャ・ガイア・トロヴァが【僅差の3強】で、それぞれ強みが違う（調教・枠順・人気実績）。軸を1頭に絞りきれない年。【相手を広く】取り、中穴の一発も警戒したい' },
+      { icon:'☔', label:'馬場の注意',
+        body:'東京マイルは直線が長く、【稍重でも差し・決め手が有利】。道悪だから前残りとは限らない（過去20年、逃げ馬の好走はごくわずか）。重・不良まで悪化した場合のみ前優勢に振れる可能性' },
       { icon:'⚠️', label:'頭固定の注意',
         body:'1番人気は複勝率80%で3着内は堅いが勝率10%。【頭固定はNG】、軸でも1着固定は危険' },
       { icon:'🎂', label:'狙う年齢',
@@ -12700,7 +12702,7 @@ function _summaryExtractPopBest(raceName) {
       jiku = { label: label, rate: rateNum };
     }
     var note = String(r.cells[3] || '');
-    var m = note.match(/回収率\s*([0-9.]+)\s*%/);
+    var m = note.match(/(?:回収率|単回|複回)\s*([0-9.]+)\s*%/);
     if (m) {
       var rv = parseFloat(m[1]);
       if (!isNaN(rv) && rv > anaRecov) {
