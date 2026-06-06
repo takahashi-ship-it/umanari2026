@@ -14357,7 +14357,9 @@ function _getHorseNegatives(horse, raceName) {
   return n;
 }
 
-// 1頭を伏兵/妙味/夢馬券に分類（rank・odds・重み付き好走要素・適性欠如チェックで判定）
+// 1頭を伏兵/妙味/夢馬券に分類（人気順位ベース・適性欠如チェック）
+// 伏兵=5-9番人気（上位人気帯・本線寄り）、夢馬券=11番人気以下＋矛盾度（下位人気帯・大穴）、妙味=9-13番人気（中間）
+// 重なり時の優先順位: 伏兵(上位人気) → 夢馬券(下位人気+矛盾) → 妙味(中間 fallback)
 function _classifyAnaUma(horse, raceName, rankedList) {
   var entry = null;
   for (var i = 0; i < rankedList.length; i++) {
@@ -14365,7 +14367,7 @@ function _classifyAnaUma(horse, raceName, rankedList) {
   }
   if (!entry) return null;
   var rank = entry.rank;
-  var odds = horse.odds || 999;
+  var pop = horse.popEstimate || 99;
   var positives = _getHorsePositives(horse, raceName);
   var negatives = _getHorseNegatives(horse, raceName);
   var unfit = _hasFatalUnfitness(horse);
@@ -14373,10 +14375,20 @@ function _classifyAnaUma(horse, raceName, rankedList) {
   var strongs = _strongPositiveCount(positives);
   var category = null;
   // 適性欠如馬は全カテゴリから除外
+  // S/A ランクは「軸・対抗」の本線で、anaUma の中穴カテゴリには入れない
   if (!unfit.unfit) {
-    if (rank === 'D' && odds >= 30 && weighted >= 2.0 && strongs >= 1 && negatives.length >= 1) category = 'dream';
-    else if ((rank === 'C' || rank === 'D') && odds >= 15 && odds < 30 && weighted >= 2.0 && strongs >= 1) category = 'value';
-    else if ((rank === 'B' || rank === 'C') && odds >= 10 && odds < 20 && strongs >= 1) category = 'underdog';
+    // 🏇 伏兵：5-9番人気 + B/Cランク（本線級の中穴） + 強い好走要素
+    if (pop >= 5 && pop <= 9 && (rank === 'B' || rank === 'C') && strongs >= 1) {
+      category = 'underdog';
+    }
+    // 💎 夢馬券：11番人気以下 + Dランク + 重み1.5+ + 強1+ + 消去2つ以上（データ矛盾型）
+    else if (pop >= 11 && rank === 'D' && weighted >= 1.5 && strongs >= 1 && negatives.length >= 2) {
+      category = 'dream';
+    }
+    // 🌸 妙味：9-13番人気 + B/C/Dランク + 重み2.0+ + 強1+（中間帯・構造的有利）
+    else if (pop >= 9 && pop <= 13 && (rank === 'B' || rank === 'C' || rank === 'D') && weighted >= 2.0 && strongs >= 1) {
+      category = 'value';
+    }
   }
   return {
     category: category, positives: positives, negatives: negatives,
@@ -14397,7 +14409,7 @@ function _calcAnaUmaStars(info) {
   return Math.max(1, Math.min(5, s));
 }
 
-// レース全体の候補抽出（緩和ルール込み）
+// レース全体の候補抽出（人気順位ベース・緩和ルール込み）
 function _pickAnaUmaCandidates(raceName) {
   if (typeof HORSES_BY_RACE === 'undefined') return { dream:[], value:[], underdog:[] };
   var live = (HORSES_BY_RACE[raceName] || []).filter(function(h){ return !h.isAvoided; });
@@ -14409,32 +14421,75 @@ function _pickAnaUmaCandidates(raceName) {
       groups[info.category].push({ horse: h, info: info });
     }
   });
-  // 緩和ルール: 夢馬券が0頭なら、強い好走要素を1.5相当以上に緩めて D rank + odds 25倍以上を再探索
-  // ※適性欠如馬は緩和ルールでも除外したまま
-  if (groups.dream.length === 0) {
+  // 既選定馬を除外するためのヘルパー
+  function isAlreadyTaken(h) {
+    return groups.dream.concat(groups.value, groups.underdog).some(function(g){ return g.horse.name === h.name; });
+  }
+  function buildRelaxed(h, entry, positives, negatives, weighted, strongs) {
+    return {
+      horse: h, relaxed: true,
+      info: { positives: positives, negatives: negatives, pct: entry.pct, total: entry.total, rank: entry.rank,
+              unfit: { unfit: false }, weighted: weighted, strongs: strongs }
+    };
+  }
+
+  // 緩和: 伏兵 0頭 → 人気帯を 4-10 番に広げて再探索（強い好走要素1+）
+  if (groups.underdog.length === 0) {
     live.forEach(function(h) {
+      if (_hasFatalUnfitness(h).unfit) return;
+      if (isAlreadyTaken(h)) return;
       var entry = null;
       for (var i = 0; i < ranked.length; i++) { if (ranked[i].horse.name === h.name) { entry = ranked[i]; break; } }
-      if (!entry || entry.rank !== 'D') return;
-      if (_hasFatalUnfitness(h).unfit) return; // 適性欠如は除外
+      if (!entry) return;
+      var pop = h.popEstimate || 99;
+      var positives = _getHorsePositives(h, raceName);
+      var strongs = _strongPositiveCount(positives);
+      var weighted = _weightedPositiveCount(positives);
+      if (pop >= 4 && pop <= 10 && strongs >= 1) {
+        groups.underdog.push(buildRelaxed(h, entry, positives, _getHorseNegatives(h, raceName), weighted, strongs));
+      }
+    });
+  }
+  // 緩和: 妙味 0頭 → 人気帯を 8-14 番、重み 1.5+ に緩めて再探索
+  if (groups.value.length === 0) {
+    live.forEach(function(h) {
+      if (_hasFatalUnfitness(h).unfit) return;
+      if (isAlreadyTaken(h)) return;
+      var entry = null;
+      for (var i = 0; i < ranked.length; i++) { if (ranked[i].horse.name === h.name) { entry = ranked[i]; break; } }
+      if (!entry) return;
+      var pop = h.popEstimate || 99;
+      var positives = _getHorsePositives(h, raceName);
+      var weighted = _weightedPositiveCount(positives);
+      var strongs = _strongPositiveCount(positives);
+      if (pop >= 8 && pop <= 14 && weighted >= 1.5 && strongs >= 1) {
+        groups.value.push(buildRelaxed(h, entry, positives, _getHorseNegatives(h, raceName), weighted, strongs));
+      }
+    });
+  }
+  // 緩和: 夢馬券 0頭 → 人気帯を 10 番以下、消去 1+ に緩めて再探索
+  if (groups.dream.length === 0) {
+    live.forEach(function(h) {
+      if (_hasFatalUnfitness(h).unfit) return;
+      if (isAlreadyTaken(h)) return;
+      var entry = null;
+      for (var i = 0; i < ranked.length; i++) { if (ranked[i].horse.name === h.name) { entry = ranked[i]; break; } }
+      if (!entry) return;
+      var pop = h.popEstimate || 99;
       var positives = _getHorsePositives(h, raceName);
       var negatives = _getHorseNegatives(h, raceName);
       var weighted = _weightedPositiveCount(positives);
       var strongs = _strongPositiveCount(positives);
-      if ((h.odds || 0) >= 25 && weighted >= 1.5 && strongs >= 1) {
-        groups.dream.push({
-          horse: h, relaxed: true,
-          info: { positives: positives, negatives: negatives, pct: entry.pct, total: entry.total, rank: 'D',
-                  unfit: { unfit:false }, weighted: weighted, strongs: strongs }
-        });
+      if (pop >= 10 && weighted >= 1.5 && strongs >= 1 && negatives.length >= 1) {
+        groups.dream.push(buildRelaxed(h, entry, positives, negatives, weighted, strongs));
       }
     });
   }
-  // 各カテゴリで odds DESC → positives DESC で並び替え・最大2頭
+  // 各カテゴリで pct DESC → positives DESC で並び替え・最大2頭
   function sortAndTake(arr) {
     arr.sort(function(a, b) {
-      var od = (b.horse.odds || 0) - (a.horse.odds || 0);
-      if (od !== 0) return od;
+      var pd = (b.info.pct || 0) - (a.info.pct || 0);
+      if (pd !== 0) return pd;
       return b.info.positives.length - a.info.positives.length;
     });
     return arr.slice(0, 2);
