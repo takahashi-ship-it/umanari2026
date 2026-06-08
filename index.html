@@ -1378,6 +1378,10 @@
   .comp-bar-fill { height: 100%; display: flex; align-items: center; padding-left: 8px; font-size: 12px; font-weight: bold; color: #fff; white-space: nowrap; }
   .comp-bar-fill.blue { background: linear-gradient(90deg, #2a5dbf, #4a9eff); }
   .comp-bar-fill.red  { background: linear-gradient(90deg, #8a2020, #ff4a4a); }
+  .comp-bar-fill.green  { background: linear-gradient(90deg,#1c7a3e,#34c759); }
+  .comp-bar-fill.orange { background: linear-gradient(90deg,#b5641a,#ff9f40); }
+  .comp-bar-fill.purple { background: linear-gradient(90deg,#5a2d8a,#a855f7); }
+  .comp-bar-fill.gray   { background: linear-gradient(90deg,#5a6070,#9aa0b0); }
   .analysis-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 12px; color: #fff; }
   .analysis-table th { background: rgba(255,255,255,0.1); color: #ccd0e0; padding: 8px 6px; text-align: left; font-weight: normal; }
   .analysis-table td { padding: 8px 6px; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -9109,7 +9113,7 @@ const RACE_PAST_DATA = {
         summary:'1番人気が複勝40%と弱く荒れる。上位人気拮抗ゆえ軸は中身（前走・血統・コース適性）で選ぶ。' }
     },
     bloodAnalysis: {
-      title:'宝塚記念 父系種牡馬別', subtitle:'阪神2200m＝非根幹・持続力型が走る舞台',
+      title:'宝塚記念 父系種牡馬別', subtitle:'阪神2200m＝非根幹・持続力型が走る舞台', hideOthers:true,
       headerCards:[
         { type:'ace', label:'ステイゴールド系', mainValue:'5勝', subValue:'種牡馬最多の鉄板' },
         { type:'iron', label:'ハービンジャー', mainValue:'28.6%', subValue:'阪神2200血統1位' },
@@ -9129,8 +9133,8 @@ const RACE_PAST_DATA = {
       ],
       comparisonBars:[
         { label:'ハービンジャー 複勝率', value:28.6, color:'blue' },
-        { label:'ロベルト系 単勝回収率', value:142, color:'orange' },
-        { label:'ND系 単勝回収率', value:128, color:'purple' }
+        { label:'ステイゴールド系 連対率(目安)', value:25, color:'green' },
+        { label:'1番人気 複勝率(参考)', value:40, color:'orange' }
       ],
       filterStrategy:{ title:'血統での狙い',
         tags:['ステイゴールド系','トニービン内包','非根幹型','ロベルト系'],
@@ -9182,7 +9186,7 @@ const RACE_PAST_DATA = {
         summary:'宝塚は先行・4〜5歳・8枠/内枠・前走G1が王道。前走G2/G3凡走組は軸から外す。' }
     },
     clearAnalysis: {
-      title:'宝塚記念 消去ルール', subtitle:'過去10年データで切れる馬',
+      title:'宝塚記念 消去ルール', subtitle:'過去10年データで切れる馬', autoClear:true,
       headerCards:[
         { type:'kill', label:'前走G2/G3で3着以下', mainValue:'0-0-0-29', subValue:'全滅' },
         { type:'kill', label:'7歳以上G1勝ちなし', mainValue:'複勝3.6%', subValue:'壊滅' },
@@ -9653,9 +9657,9 @@ function renderBloodAnalysis(d) {
            + '<span class="label-pill label-pill-' + r.color + '">' + r.label + '</span></div>'
            + '<div class="sire-card-stats">'
            + '<div class="stat-item"><span class="stat-label">成績</span><span class="stat-value">' + r.record + '</span></div>'
-           + '<div class="stat-item"><span class="stat-label">複勝率</span><span class="stat-value stat-highlight">' + r.fukusho + '</span></div>'
-           + '<div class="stat-item"><span class="stat-label">単回収</span><span class="stat-value">' + r.tan + '</span></div>'
-           + '<div class="stat-item"><span class="stat-label">複回収</span><span class="stat-value">' + r.fuku + '</span></div>'
+           + (r.fukusho ? '<div class="stat-item"><span class="stat-label">複勝率</span><span class="stat-value stat-highlight">' + r.fukusho + '</span></div>' : '')
+           + (r.tan ? '<div class="stat-item"><span class="stat-label">単回収</span><span class="stat-value">' + r.tan + '</span></div>' : '')
+           + (r.fuku ? '<div class="stat-item"><span class="stat-label">複回収</span><span class="stat-value">' + r.fuku + '</span></div>' : '')
            + '</div>';
       if (names.length > 0) {
         var bcls = 'horse-badge';
@@ -9676,7 +9680,7 @@ function renderBloodAnalysis(d) {
   Object.keys(hbs).forEach(function(s){
     if (listed.indexOf(s) < 0) hbs[s].forEach(function(n){ others.push({sire:s, name:n}); });
   });
-  if (others.length > 0) {
+  if (others.length > 0 && !d.hideOthers) {
     html += '<div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.03);border-radius:6px;">'
          + '<div style="font-size:12px;color:#a0a8c8;margin-bottom:8px;">📋 その他の父血統（東京1600mデータ少）</div>'
          + '<div class="badge-container">';
@@ -9845,6 +9849,9 @@ function renderOtherDataAnalysis(d) {
         else if (row.label.indexOf('京王杯') >= 0 && pr.indexOf('京王杯') >= 0) ok = true;
         else if (row.label.indexOf('マイラーズ') >= 0 && pr.indexOf('マイラーズ') >= 0) ok = true;
         else if (row.label.indexOf('大阪杯') >= 0 && pr.indexOf('大阪杯') >= 0) ok = true;
+        else if (row.label.indexOf('天皇賞') >= 0 && pr.indexOf('天皇賞') >= 0) ok = true;
+        else if (row.label === 'G2' && ['日経賞','金鯱賞','阪神大賞典','目黒記念','アミールトロフィー'].indexOf(pr) >= 0) ok = true;
+        else if (row.label === 'G3' && ['ダイヤモンドS','新潟大賞典'].indexOf(pr) >= 0) ok = true;
       } else if (sec.matchKey === 'weight') {
         var w = (h.weight && typeof h.weight === 'object') ? h.weight.current : (typeof h.weight === 'number' ? h.weight : 0);
         if (!w) return;
@@ -9945,6 +9952,16 @@ function _isHorseAvoided(horseName) {
   return false;
 }
 
+// 宝塚記念 消去条件をクリアしているか（autoClear用・6歳は消去にしない＝割引のみ）
+function takaPassesClear(h){
+  if (!h || h.isAvoided) return false;
+  var g2g3=['日経賞','金鯱賞','阪神大賞典','目黒記念','アミールトロフィー','ダイヤモンドS','新潟大賞典','クイーンエリザベス2世C'];
+  if (g2g3.indexOf(h.prevRace)>=0 && h.prevRank>=3) return false; // 前走G2/G3で3着以下＝消去
+  if (h.age>=7) return false;                                     // 7歳以上＝消去
+  if (h.hanshinRecord==='0-1-0-5') return false;                  // 阪神が明確に苦手＝消去
+  return true;
+}
+
 function renderClearAnalysis(d) {
   if (!d) return '';
   var html = '<div class="analysis-card">';
@@ -9984,6 +10001,21 @@ function renderClearAnalysis(d) {
            + '<span class="mini-badge mini-badge-best">' + h.strength + '</span></div>'
            + '<div style="font-size:11px;color:#ccd0e0;margin-top:4px;">' + h.reason + '</div></div>';
     });
+    // autoClear:true のレースは、手書き上位馬に加えてクリア条件を満たす全馬を動的に追加表示
+    if (d.autoClear && typeof HORSES_BY_RACE !== 'undefined') {
+      var _raceN = (typeof window !== 'undefined' && window.currentRaceName) ? window.currentRaceName
+                   : (typeof currentRace !== 'undefined' ? currentRace : '');
+      var _all = HORSES_BY_RACE[_raceN] || [];
+      var _shown = clearLive.map(function(x){ return x.name; });
+      var _auto = _all.filter(function(h){ return takaPassesClear(h) && _shown.indexOf(h.name) < 0; });
+      _auto.forEach(function(h, j){
+        html += '<div style="background:rgba(255,255,255,0.04);border-left:3px solid #9aa86a;border-radius:4px;padding:8px 12px;margin-bottom:6px;">'
+             + '<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;">'
+             + '<span style="font-size:13px;font-weight:bold;color:#fff;">' + (clearLive.length + j + 1) + '. ' + h.name + '</span>'
+             + '<span class="mini-badge mini-badge-iron">クリア</span></div>'
+             + '<div style="font-size:11px;color:#ccd0e0;margin-top:4px;">全消去条件クリア（前走G2/G3凡走・7歳・阪神苦手のいずれにも非該当）</div></div>';
+      });
+    }
     html += '</div>';
   }
 
