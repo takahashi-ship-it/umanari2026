@@ -18081,6 +18081,233 @@ function computeScoreBreakdownYasudaV1(horse, raceName, _rawOnly) {
   };
 }
 
+/* =====================================================
+ * 宝塚記念 専用スコア V1（computeScoreBreakdownTakarazukaV1）
+ * 安田V1と同じ戻り値の形：{ total, max, pct, items, penalty }
+ * items.<key> = { score, max, label }
+ * pct は 79%アンカーのシグモイド（_getTakarazukaScoreStats）
+ * ===================================================== */
+function _getTakarazukaScoreStats() {
+  if (typeof window !== 'undefined' && window._takarazukaScoreStatsCache) return window._takarazukaScoreStatsCache;
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['宝塚記念'] || []) : [];
+  var scores = [];
+  horses.forEach(function(h){
+    if (!h || h.isAvoided) return;
+    var bd = computeScoreBreakdownTakarazukaV1(h, '宝塚記念', true); // _rawOnly=true で再帰回避
+    if (bd && typeof bd.total === 'number') scores.push(bd.total);
+  });
+  if (!scores.length) return null;
+  scores.sort(function(a, b){ return a - b; });
+  var maxScore = scores[scores.length - 1];
+  var medScore = scores.length % 2 === 1
+    ? scores[(scores.length - 1) / 2]
+    : (scores[scores.length / 2 - 1] + scores[scores.length / 2]) / 2;
+  var stats = { maxScore: maxScore, medScore: medScore };
+  if (typeof window !== 'undefined') window._takarazukaScoreStatsCache = stats;
+  return stats;
+}
+
+function computeScoreBreakdownTakarazukaV1(horse, raceName, _rawOnly) {
+  if (!horse) return { total: 0, max: 120, pct: 0, items: {}, penalty: 0 };
+  if (horse.isAvoided) return { total: 0, max: 120, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
+
+  var items = {};
+  var name = horse.name || '';
+  var rh = Array.isArray(horse.raceHistory) ? horse.raceHistory : [];
+  function isG1Name(nm){ nm = nm || ''; return nm.indexOf('GⅠ') >= 0 || nm.indexOf('G1') >= 0 || nm.indexOf('GI') >= 0; }
+  function isG2Name(nm){ nm = nm || ''; return nm.indexOf('GⅡ') >= 0 || nm.indexOf('G2') >= 0; }
+  function inList(s, arr){ s = s || ''; for (var i=0;i<arr.length;i++){ if (s.indexOf(arr[i]) >= 0) return true; } return false; }
+
+  // 1. 人気別（max 15）
+  var pop = horse.popEstimate || 99;
+  var popScore;
+  if (pop === 1)                  popScore = 15;
+  else if (pop === 2)             popScore = 15;
+  else if (pop === 3)             popScore = 9;
+  else if (pop === 4)             popScore = 6;
+  else if (pop === 5)             popScore = 9;
+  else if (pop >= 6 && pop <= 9)  popScore = 5;
+  else                            popScore = 2;  // 10番人気以下
+  items.popularity = { score: popScore, max: 15, label: '人気別' };
+
+  // 2. 前走別（max 20）prevRace + prevRank + prevIsOverseas
+  var prevRace = horse.prevRace || '';
+  var prevRank = (typeof horse.prevRank === 'number') ? horse.prevRank : 99;
+  var G1_PREV = ['天皇賞','大阪杯','有馬記念','ドバイ','クイーンエリザベス2世C','QE2世C','ジャパンC','宝塚記念','凱旋門'];
+  var G2G3_PREV = ['日経賞','金鯱賞','阪神大賞典','ダイヤモンドS','新潟大賞典','目黒記念','アミールトロフィー','中山記念','京都記念'];
+  var prevIsG1 = inList(prevRace, G1_PREV);
+  var prevIsG2G3 = !prevIsG1 && inList(prevRace, G2G3_PREV);
+  var prevScore;
+  if (prevIsG1) {
+    if (prevRank === 2)       prevScore = 20;
+    else if (prevRank === 1)  prevScore = 18;
+    else if (prevRank === 3)  prevScore = 15;
+    else if (prevRank <= 7)   prevScore = 12;
+    else                      prevScore = 6;   // 8着以下
+  } else if (prevIsG2G3) {
+    if (prevRank === 1)       prevScore = 10;
+    else if (prevRank === 2)  prevScore = 6;   // G2/G3連対は中間評価
+    else                      prevScore = 2;   // 3着以下＝消去ルール
+  } else {
+    prevScore = 4; // 未知の前走は中立寄り
+  }
+  items.prevRace = { score: prevScore, max: 20, label: '前走別' };
+
+  // 3. 近走の格（max 10）raceHistory
+  var recentScore = 0;
+  var hasG1Win = rh.some(function(r){ return isG1Name(r.name) && r.rank === 1; });
+  var arimaTop5 = rh.some(function(r){ return (r.name||'').indexOf('有馬記念') >= 0 && r.rank <= 5; });
+  var g1Top3 = rh.some(function(r){ return isG1Name(r.name) && r.rank <= 3; });
+  if (hasG1Win)      recentScore = 10;
+  else if (arimaTop5) recentScore = 8;
+  else if (g1Top3)   recentScore = 6;
+  else               recentScore = 0;
+  items.recentClass = { score: recentScore, max: 10, label: '近走の格' };
+
+  // 4. 年齢（max 10）
+  var age = horse.age || 0;
+  var ageScore;
+  if (age === 4 || age === 5) ageScore = 10;
+  else if (age === 6)         ageScore = hasG1Win ? 6 : 4;  // G1勝ち実績で6
+  else if (age >= 7)          ageScore = 1;
+  else if (age === 3)         ageScore = 1;
+  else                        ageScore = 1;
+  items.age = { score: ageScore, max: 10, label: '🎂年齢' };
+
+  // 5. 脚質（max 10）
+  var kyaku = horse.kyakushitsu || horse.style || horse.runStyle || '';
+  var kyakuScore;
+  if (kyaku.indexOf('先行') >= 0)      kyakuScore = 10;
+  else if (kyaku.indexOf('逃げ') >= 0) kyakuScore = 9;
+  else if (kyaku.indexOf('差し') >= 0) kyakuScore = 5;
+  else if (kyaku.indexOf('追込') >= 0) kyakuScore = 3;
+  else                                 kyakuScore = 5;
+  items.kyakushitsu = { score: kyakuScore, max: 10, label: '🏃脚質' };
+
+  // 6. 血統（max 10）sire / motherSire
+  var sire = horse.sire || horse.father || '';
+  var msire = horse.motherSire || '';
+  var bloodScore;
+  if (sire.indexOf('ゴールドシップ') >= 0)                                   bloodScore = 10; // ステイゴールド系
+  else if (sire.indexOf('ハービンジャー') >= 0 || msire.indexOf('ハービンジャー') >= 0) bloodScore = 9;
+  else if (sire.indexOf('ドゥラメンテ') >= 0 || sire.indexOf('ルーラーシップ') >= 0 || msire.indexOf('ルーラーシップ') >= 0) bloodScore = 8;
+  else if (sire.indexOf('ハーツクライ') >= 0 || msire.indexOf('ハーツクライ') >= 0) bloodScore = 7;
+  else if (sire.indexOf('キタサンブラック') >= 0)                            bloodScore = 6;
+  else                                                                       bloodScore = 5;
+  items.blood = { score: bloodScore, max: 10, label: '🩸血統' };
+
+  // 6b. トニービン内包ボーナス（+2）馬名判定
+  var TONYBIN = ['ビザンチンドリーム','シェイクユアハート','ミュージアムマイル','レガレイラ','タガノデュード','ミステリーウェイ'];
+  var tonybinScore = (TONYBIN.indexOf(name) >= 0) ? 2 : 0;
+  items.tonybin = { score: tonybinScore, max: 2, label: 'トニービン内包' };
+
+  // 6c. 父子二代ボーナス（+2 / +1）馬名判定
+  var FATHER2 = ['メイショウタバル','マイネルエンペラー','シェイクユアハート','シュガークン','レガレイラ','クロワデュノール'];
+  var FATHER1 = ['コスモキュランダ','マイユニバース'];
+  var fatherLineScore = (FATHER2.indexOf(name) >= 0) ? 2 : ((FATHER1.indexOf(name) >= 0) ? 1 : 0);
+  items.fatherLine = { score: fatherLineScore, max: 2, label: '父子二代' };
+
+  // 7. 枠順（max 5）waku未設定の間は一律3（暫定中立）
+  var waku = horse.waku;
+  var wakuScore;
+  if (waku == null) wakuScore = 3;
+  else if (waku === 8 || waku === 1) wakuScore = 5;
+  else if (waku === 2 || waku === 3) wakuScore = 4;
+  else if (waku === 5) wakuScore = 3;
+  else if (waku === 7) wakuScore = 2;
+  else if (waku === 4 || waku === 6) wakuScore = 1;
+  else wakuScore = 3;
+  items.waku = { score: wakuScore, max: 5, label: '🎯枠順', note: (waku == null ? '枠順発表前（暫定中立3）' : '') };
+
+  // 8. 調教（max 10）データ未整備のため暫定一律7（中立）
+  items.training = { score: 7, max: 10, label: '調教', note: '暫定中立（発表後差替）' };
+
+  // 9. 道悪適性（max 5）当日馬場未確定のため暫定0
+  items.baba = { score: 0, max: 5, label: '🌧道悪適性', note: '当日馬場未確定' };
+
+  // 10. コース適性（max 10）raceHistory / レース名
+  var rightCourses = ['中山','阪神','京都','中京','札幌','函館','小倉'];
+  function isRight(c){ return rightCourses.indexOf(c) >= 0; }
+  var courseScore = null;
+  function setC(v){ if (courseScore == null || v > courseScore) courseScore = v; }
+  rh.forEach(function(r){
+    var c = r.course || '', d = r.distance || 0, nm = r.name || '', rk = r.rank || 99;
+    var g1 = isG1Name(nm), g2 = isG2Name(nm);
+    if (nm.indexOf('宝塚記念') >= 0 && rk <= 3) setC(10);
+    if (nm.indexOf('有馬記念') >= 0 && rk === 1) setC(9);
+    if ((c === '中山' || c === '阪神') && d >= 2000 && d <= 2500 && g1 && rk === 1) setC(9);
+    if (nm.indexOf('有馬記念') >= 0 && (rk === 2 || rk === 3)) setC(8);
+    if (c === '阪神' && d >= 2000 && d <= 2200 && (g1 || g2) && rk <= 3) setC(8);
+    if (isRight(c) && d >= 1800 && d <= 2600 && g1 && rk <= 3) setC(6);
+    if (isRight(c) && d >= 1800 && d <= 2600 && rk === 1) setC(4);
+  });
+  if (courseScore == null) {
+    var hasRight = rh.some(function(r){ return isRight(r.course); });
+    var hasLeft = rh.some(function(r){ return r.course === '東京' || r.course === '新潟'; });
+    courseScore = (rh.length === 0) ? 2 : ((!hasRight && hasLeft) ? 1 : 2);
+  }
+  items.course = { score: courseScore, max: 10, label: '🏟コース適性' };
+
+  // 11. 騎手（max 5）
+  var jk = horse.jockey || '';
+  var jockeyScore;
+  if (jk.indexOf('武豊') >= 0 || jk.indexOf('レーン') >= 0) jockeyScore = 5;
+  else if (jk.indexOf('北村友') >= 0 || jk.indexOf('横山典') >= 0 || jk.indexOf('戸崎') >= 0 || jk.indexOf('横山武') >= 0 || jk.indexOf('川田') >= 0) jockeyScore = 4;
+  else if (jk.indexOf('ルメール') >= 0) jockeyScore = 1;
+  else jockeyScore = 3;
+  items.jockey = { score: jockeyScore, max: 5, label: '🧑‍🦱騎手' };
+
+  // 12. 上昇度ボーナス（+2）前走G2/G3を1着 ＋ 逃げ/先行 ＋ 4-5歳
+  var risingScore = (prevIsG2G3 && prevRank === 1 && (kyaku.indexOf('逃げ') >= 0 || kyaku.indexOf('先行') >= 0) && (age === 4 || age === 5)) ? 2 : 0;
+  items.rising = { score: risingScore, max: 2, label: '上昇度' };
+
+  // 13. 根幹/非根幹適性（加点・馬名判定）
+  var KK4 = ['メイショウタバル','ミュージアムマイル'];
+  var KK2 = ['ダノンデサイル','マイユニバース','ビザンチンドリーム','スティンガーグラス','マイネルエンペラー','コスモキュランダ','ミクニインスパイア'];
+  var KK1 = ['タガノデュード','シェイクユアハート','ジューンテイク','ファミリータイム','ミステリーウェイ','シュガークン'];
+  var konkanScore;
+  if (name === 'レガレイラ')            konkanScore = 3;
+  else if (name === 'クロワデュノール') konkanScore = 1;
+  else if (name === 'シンエンペラー')   konkanScore = 0;
+  else if (KK4.indexOf(name) >= 0)      konkanScore = 4;
+  else if (KK2.indexOf(name) >= 0)      konkanScore = 2;
+  else if (KK1.indexOf(name) >= 0)      konkanScore = 1;
+  else                                  konkanScore = 0;
+  items.konkan = { score: konkanScore, max: 4, label: '根幹/非根幹適性' };
+
+  // ===== 合計・正規化 =====
+  var totalScore = 0;
+  Object.keys(items).forEach(function(k){
+    var it = items[k];
+    if (it && typeof it.score === 'number') totalScore += it.score;
+  });
+  totalScore = Math.max(0, totalScore);
+
+  // 安田と同じ79%アンカーのシグモイド（floor8/ceil79・center=medScore）
+  var pct;
+  if (_rawOnly) {
+    pct = 0;
+  } else {
+    var stats = _getTakarazukaScoreStats();
+    if (stats && stats.maxScore > stats.medScore) {
+      var floorPct = 8, ceilPct = 79, range = ceilPct - floorPct;
+      var k2 = 4.0 / Math.max(1, stats.maxScore - stats.medScore);
+      var raw = 1 / (1 + Math.exp(-k2 * (totalScore - stats.medScore)));
+      pct = Math.round(floorPct + range * raw);
+    } else {
+      pct = Math.max(0, Math.min(99, Math.round(totalScore / 120 * 100)));
+    }
+  }
+
+  return {
+    total: totalScore,
+    max: 120,
+    pct: pct,
+    items: items,
+    penalty: 0
+  };
+}
+
 function computeScoreBreakdown(horse, raceName) {
   // ★回避馬は強制的に0%
   if (horse && horse.isAvoided) {
@@ -18111,6 +18338,10 @@ function computeScoreBreakdown(horse, raceName) {
   // 安田記念は V1
   if (raceName === '安田記念') {
     return computeScoreBreakdownYasudaV1(horse, raceName);
+  }
+  // 宝塚記念は V1（専用ロジック）
+  if (raceName === '宝塚記念') {
+    return computeScoreBreakdownTakarazukaV1(horse, raceName);
   }
   if (!horse) return { total: 0, max: 113, pct: 0, items: {}, penalty: 0 };
   var raceInfo = (typeof RACE_META !== 'undefined' && RACE_META[raceName]) || {};
