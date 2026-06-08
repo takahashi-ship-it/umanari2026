@@ -9062,7 +9062,170 @@ const RACE_PAST_DATA = {
     }
   },
   "宝塚記念": {
-    sections: [],
+    prevPopAnalysis: {
+      title: '宝塚記念 人気別成績 分析カード',
+      subtitle: '過去10年／1番人気が弱く荒れる（安田と真逆）',
+      headerCards: [
+        { type:'iron', label:'2番人気', mainValue:'複勝50%', subValue:'2-0-3-5 最も信頼' },
+        { type:'warn', label:'1番人気', mainValue:'複勝40%', subValue:'2-2-0-6 過信禁物' },
+        { type:'kill', label:'4番人気', mainValue:'複勝20%', subValue:'0-0-2-8 凹みデータ' }
+      ],
+      filterSummary: {
+        title:'人気の急所',
+        iron:{ label:'1〜2番人気は同水準', desc:'複勝40〜50%。上位人気拮抗で軸は中身で選ぶ' },
+        kill:{ label:'4番人気は危険', desc:'複勝20%の明確な凹み。10番人気以下は8.2%' }
+      },
+      detailTable: [
+        { pop:'1番人気', record:'2-2-0-6', win:'20%', rentai:'40%', fukusho:'40%', label:'やや危険', color:'orange' },
+        { pop:'2番人気', record:'2-0-3-5', win:'20%', rentai:'20%', fukusho:'50%', label:'信頼', color:'green' },
+        { pop:'3番人気', record:'3-0-0-7', win:'30%', rentai:'30%', fukusho:'30%', label:'勝ち切り', color:'blue' },
+        { pop:'4番人気', record:'0-0-2-8', win:'0%', rentai:'0%', fukusho:'20%', label:'凹み', color:'red' },
+        { pop:'5番人気', record:'0-2-1-7', win:'0%', rentai:'20%', fukusho:'30%', label:'連下', color:'gray' },
+        { pop:'6〜9番人気', record:'3-3-1-33', win:'7.5%', rentai:'15%', fukusho:'17.5%', label:'中穴', color:'gray' },
+        { pop:'10番人気以下', record:'0-2-3-56', win:'0%', rentai:'3.3%', fukusho:'8.2%', label:'大穴', color:'gray' }
+      ],
+      comparisonBars: [
+        { label:'2番人気 複勝率', value:50, color:'green' },
+        { label:'1番人気 複勝率', value:40, color:'orange' },
+        { label:'3番人気 複勝率', value:30, color:'blue' },
+        { label:'4番人気 複勝率', value:20, color:'red' },
+        { label:'10番人気以下 複勝率', value:8.2, color:'gray' }
+      ],
+      filterStrategy: {
+        title:'人気での立ち回り',
+        tags:['上位人気拮抗','荒れる','BOX向き'],
+        buyRules:['1〜2番人気は複勝50%前後で軸候補だが過信しない','3番人気は勝率30%で勝ち切り注意'],
+        killRules:['4番人気は複勝20%の凹み・軸不適','10番人気以下は基本ヒモまで'],
+        overseasRules:[],
+        finalStrategy:['軸1頭固定が難しいレース','6〜7頭BOX中心で2〜3着の中穴を広く拾う'],
+        summary:'1番人気が複勝40%と弱く荒れるレース。上位人気が拮抗するため、軸は人気でなく中身（前走・血統・コース適性）で選ぶ。'
+      }
+    },
+    otherDataAnalysis: {
+      title: '宝塚記念 脚質・年齢・枠順・前走 分析カード',
+      subtitle: '過去10年／先行有利・4〜5歳中心・8枠/内枠',
+      sections: [
+        { title:'脚質別成績', subtitle:'阪神開催 過去10年（先行有利）', matchKey:'kyakushitsu',
+          rows:[
+            { label:'逃げ', record:'1-2-1-6', rate:40.0, tag:'best', desc:'複勝率最高だが母数10と薄い' },
+            { label:'先行', record:'6-1-2-27', rate:25.0, tag:'iron', desc:'最多6勝。勝ち切るのは先行' },
+            { label:'差し', record:'3-3-5-49', rate:18.3, tag:'warn', desc:'届きにくい' },
+            { label:'追込', record:'0-3-2-40', rate:11.1, tag:'kill', desc:'勝利ゼロ' },
+            { label:'捲り', record:'0-1-0-2', rate:33.3, tag:'rare', desc:'母数3・参考' }
+          ] },
+        { title:'年齢別成績', subtitle:'1着は全頭4〜5歳', matchKey:'age',
+          rows:[
+            { label:'4歳', record:'3-2-6-27', rate:28.9, tag:'iron', desc:'複勝率トップ級' },
+            { label:'5歳', record:'7-4-4-42', rate:26.3, tag:'best', desc:'最多7勝' },
+            { label:'6歳', record:'0-3-0-23', rate:11.5, tag:'warn', desc:'勝利ゼロ・G1勝ち実績馬のみ' },
+            { label:'7歳以上', record:'0-1-0-27', rate:3.6, tag:'kill', desc:'壊滅' },
+            { label:'3歳', record:'0-0-0-1', rate:0, tag:'kill', desc:'サンプルなし' }
+          ] },
+        { title:'枠番別成績', subtitle:'阪神開催 ※枠順発表後に最終確定', matchKey:'wakuban',
+          rows:[
+            { label:'8枠', record:'5-0-1-16', rate:27.3, tag:'best', desc:'最多5勝・勝率22.7%・単回164%' },
+            { label:'1枠', record:'0-2-2-10', rate:28.6, tag:'iron', desc:'複勝率トップ' },
+            { label:'2枠', record:'1-1-2-11', rate:26.7, tag:'iron', desc:'好水準' },
+            { label:'3枠', record:'2-2-0-11', rate:26.7, tag:'iron', desc:'好水準' },
+            { label:'5枠', record:'1-2-1-13', rate:23.5, tag:'warn', desc:'標準' },
+            { label:'7枠', record:'0-2-1-17', rate:15.0, tag:'warn', desc:'勝率0%' },
+            { label:'4枠', record:'0-0-1-15', rate:6.3, tag:'kill', desc:'危険' },
+            { label:'6枠', record:'0-0-1-17', rate:5.6, tag:'kill', desc:'危険' }
+          ] },
+        { title:'前走別成績', subtitle:'前走G1組が中心・G2/G3凡走は消し', matchKey:'prevRace',
+          rows:[
+            { label:'ドバイシーマC', record:'2-1-1-6', rate:40.0, tag:'best', desc:'海外G1組は強い' },
+            { label:'大阪杯', record:'2-3-2-21', rate:25.0, tag:'iron', desc:'前走G1の有力ステップ' },
+            { label:'天皇賞(春)', record:'3-3-3-30', rate:23.1, tag:'iron', desc:'最多勝の王道ローテ' },
+            { label:'G2', record:'1-0-1-18', rate:10.0, tag:'warn', desc:'勝ち上がりのみ通用' },
+            { label:'G3', record:'0-2-0-21', rate:8.7, tag:'warn', desc:'低調' },
+            { label:'前走G2/G3で3着以下', record:'0-0-0-29', rate:0, tag:'kill', desc:'消去ルール・全滅' }
+          ] }
+      ],
+      finalStrategy: {
+        title:'まとめ',
+        items:[
+          '先行有利・4〜5歳中心・8枠/内枠が買い、4・6枠は割引',
+          '前走は国内外G1組が中心。前走G2/G3で3着以下は消去（0-0-0-29）',
+          '前走G1なら着順4着以下でも巻き返し優勝例あり（大敗でも切らない）'
+        ],
+        summary:'宝塚は先行・4〜5歳・8枠/内枠・前走G1が王道。前走G2/G3凡走組は軸から外す。'
+      }
+    },
+    bloodAnalysis: {
+      title:'宝塚記念 血統 分析カード',
+      subtitle:'阪神2200mは血統適性が出やすい舞台',
+      headerCards:[
+        { type:'iron', label:'ステイゴールド系', mainValue:'10点', subValue:'種牡馬最多5勝の鉄板' },
+        { type:'best', label:'トニービン内包', mainValue:'+2点', subValue:'人気不問で好走' }
+      ],
+      filterSummary:{
+        title:'血統の急所',
+        iron:{ label:'ステイゴールド系・ハービンジャー', desc:'非根幹2200mに最適。持続力・パワー型が強い' },
+        kill:{ label:'前走上がり最速のキレ型', desc:'ディープ系で前走上がり上位は[0-0-0-10]割引' }
+      },
+      detailTable:[
+        { sire:'ゴールドシップ', record:'最多5勝', win:'', rentai:'', fukusho:'', tan:'', fuku:'', label:'ステイゴールド系 10点', color:'green' },
+        { sire:'ハービンジャー', record:'4-0-2-15', win:'', rentai:'', fukusho:'28.6%', tan:'', fuku:'', label:'阪神2200血統1位 9点', color:'blue' },
+        { sire:'ドゥラメンテ', record:'宝塚好相性', win:'', rentai:'', fukusho:'', tan:'', fuku:'', label:'ルーラーシップ系 8点', color:'blue' },
+        { sire:'ハーツクライ', record:'好走力本物', win:'', rentai:'', fukusho:'', tan:'', fuku:'', label:'7点・人気で来る', color:'gray' },
+        { sire:'キタサンブラック', record:'2200非根幹未知数', win:'', rentai:'', fukusho:'', tan:'', fuku:'', label:'6点', color:'orange' }
+      ],
+      comparisonBars:[
+        { label:'ハービンジャー 複勝率', value:28.6, color:'blue' }
+      ],
+      filterStrategy:{
+        title:'血統での狙い',
+        tags:['ステイゴールド系','トニービン内包','非根幹型'],
+        buyRules:['ステイゴールド系(ゴールドシップ産駒)を最優先','トニービン内包6頭は人気不問で押さえ','母父ハービンジャーは阪神2200血統1位'],
+        killRules:['前走上がり最速のキレ型は割引'],
+        overseasRules:[],
+        finalStrategy:['非根幹型(ステイゴールド/ロベルト/欧州型/トニービン)を血統で加点'],
+        summary:'阪神2200は非根幹・持続力型の血統が走る舞台。ステイゴールド系が鉄板で、トニービン内包が穴で激走する。'
+      }
+    },
+    clearAnalysis: {
+      title:'宝塚記念 消去ルール 分析カード',
+      subtitle:'過去10年データで切れる馬',
+      headerCards:[
+        { type:'kill', label:'前走G2/G3で3着以下', mainValue:'0-0-0-29', subValue:'全滅・軸消し' },
+        { type:'kill', label:'7歳以上(G1勝ちなし)', mainValue:'複勝3.6%', subValue:'壊滅' }
+      ],
+      filterSummary:{
+        title:'消去の基本',
+        iron:{ label:'残すのは前走国内外G1組', desc:'前走G1なら着順4着以下でも巻き返し例あり' },
+        kill:{ label:'前走G2/G3凡走＋高齢は消し', desc:'消去ルール該当馬は軸・本線から外す' }
+      },
+      killConditionsList:[
+        { label:'前走G2/G3で3着以下', desc:'0-0-0-29で全滅。軸・本線NG（近走の格で3着ヒモ救済はあり）', horses:[], icon:'🚫', color:'red' },
+        { label:'7歳以上でG1勝ち実績なし', desc:'複勝率3.6%・壊滅', horses:[], icon:'🚫', color:'red' },
+        { label:'6歳でG1勝ち実績なし', desc:'勝利ゼロ・複勝11.5%で割引', horses:[], icon:'⚠️', color:'orange' },
+        { label:'4角10番手以下の極端な後方', desc:'0-4-0-46。内回り・直線356mで届かない', horses:[], icon:'⚠️', color:'orange' }
+      ],
+      clearHorses:[
+        { name:'メイショウタバル', reason:'前走大阪杯2着の前走G1組・5歳・先行・宝塚勝ち馬', strength:'◎' },
+        { name:'クロワデュノール', reason:'前走天皇賞春1着・4歳・先行', strength:'○' },
+        { name:'ミュージアムマイル', reason:'前走有馬1着・4歳', strength:'▲' }
+      ],
+      finalStrategy:{
+        title:'消去の結論',
+        items:[
+          '前走G2/G3凡走組(コスモ・ビザンチン・マイネル・ファミリー)は軸消し→近走の格で3着ヒモのみ',
+          '6歳以上G1勝ちなし(シェイク・マイネル)は割引',
+          '8歳ミステリーウェイ・阪神苦手ジューンテイクは消し濃厚'
+        ],
+        summary:'前走G1組を残し、前走G2/G3凡走＋高齢を消す。消去組でも有馬好走など近走の格があれば3着ヒモに残す。'
+      }
+    },
+    anaPoints: [
+      '🌹 安田記念とは真逆＝先行有利・1番人気は複勝40%で荒れる。6〜7頭BOXが基本。',
+      '🩸 ステイゴールド系が鉄板(種牡馬最多5勝)。今年はメイショウタバル(父ゴールドシップ＋母系メジロマックイーン)が血統最強。',
+      '💥 激走トリガー①：非SS系(ロベルト/ND系)×前走G1上位＝単勝回収率221%。今年はダノンデサイルが該当。',
+      '💥 激走トリガー②：牝馬×休み明け(中10週以上＋ハーツクライ/ステイゴールド内包)＝複勝回収率115%。今年は唯一の牝馬レガレイラが該当。',
+      '🎯 トニービン内包6頭(ビザンチン・シェイク・ミュージアム・レガレイラ・タガノ・ミステリー)は人気不問で押さえ。',
+      '🌧 道悪なら1番人気が崩れやすく、ゴールドシップ産駒(メイショウ)・欧州タフ馬場実績馬(ビザンチン)が浮上。',
+      '⚙️ 枠順・調教・当日馬場は未反映の暫定版。発表後に随時アップデート。'
+    ]
   },
 };
 
