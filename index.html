@@ -9121,7 +9121,7 @@ const RACE_PAST_DATA = {
         kill:{ label:'ディープ系で前走上がり最速のキレ型', desc:'阪神2200では[0-0-0-10]で割引' } },
       detailTable:[
         { sire:'ゴールドシップ', record:'最多5勝級', win:'', rentai:'', fukusho:'', tan:'', fuku:'', label:'ステイゴールド系・鉄板', color:'green' },
-        { sire:'ハービンジャー', record:'4-0-2-15', win:'', rentai:'', fukusho:'28.6%', tan:'', fuku:'', label:'阪神2200血統1位', color:'blue' },
+        { sire:'ハービンジャー', record:'4-0-2-15', win:'', rentai:'', fukusho:'28.6%', tan:'', fuku:'', label:'阪神2200血統1位', color:'blue', matchMother:true },
         { sire:'エピファネイア', record:'ロベルト系', win:'', rentai:'', fukusho:'', tan:'142%', fuku:'', label:'非SS激走系・妙味', color:'orange' },
         { sire:'ハーツクライ', record:'好走力本物', win:'', rentai:'', fukusho:'', tan:'', fuku:'', label:'人気で来る', color:'gray' },
         { sire:'ドゥラメンテ', record:'宝塚好相性', win:'', rentai:'', fukusho:'', tan:'', fuku:'', label:'リピート好走', color:'blue' },
@@ -9198,6 +9198,74 @@ const RACE_PAST_DATA = {
       finalStrategy:{ title:'消去の結論',
         items:['前走G2/G3凡走組は軸消し→近走の格があれば3着ヒモのみ','6歳以上G1勝ちなしは割引','8歳・阪神苦手は消し濃厚'],
         summary:'前走G1組を残し、前走G2/G3凡走＋高齢を消す。消去組でも有馬好走など近走の格があれば3着ヒモに残す。' }
+    },
+    kongenAnalysis: {
+      title:'宝塚記念 根幹/非根幹 × 血統相性', subtitle:'阪神2200は非根幹距離＝持続力・パワー型が走る。根幹型は割引',
+      headerCards:[
+        { type:'ace', label:'非根幹型', mainValue:'◎', subValue:'ステイゴールド/ロベルト/欧州/トニービン' },
+        { type:'iron', label:'阪神2200', mainValue:'持続力勝負', subValue:'小回り内回り・急坂' },
+        { type:'block', label:'ハイブリッド', mainValue:'○', subValue:'根幹も非根幹もこなす' },
+        { type:'kill', label:'根幹型(瞬発力)', mainValue:'△', subValue:'ディープ系/キタサンは割引' }
+      ],
+      filterSummary:{ title:'根幹/非根幹の急所',
+        iron:{ label:'非根幹型を血統で加点', desc:'持続力・パワー・器用さ・ピッチ走法が阪神2200に向く' },
+        kill:{ label:'根幹型(速いストライド)は割引', desc:'2000/2400で真価のタイプは2200非根幹で割り引く' } },
+      detailTable:[
+        { sire:'非根幹型・最上位(ステイゴールド系＋スタミナ母系)', record:'◎', label:'血統最強', color:'green',
+          kongenMatch:function(h){return h.sire==='ゴールドシップ';} },
+        { sire:'非根幹型・ロベルト系(エピファネイア)', record:'◎', label:'持続力', color:'green',
+          kongenMatch:function(h){return h.sire==='エピファネイア';} },
+        { sire:'非根幹型・欧州/トニービン(母父)', record:'○', label:'タフ馬場の底力', color:'blue',
+          kongenMatch:function(h){return ['ハービンジャー','Galileo','ジャングルポケット','High Chaparral','Sri Pekan'].indexOf(h.motherSire)>=0;} },
+        { sire:'ハイブリッド(万能)', record:'○', label:'根幹も非根幹も', color:'blue',
+          kongenMatch:function(h){return h.sire==='リオンディーズ'||h.sire==='レイデオロ';} },
+        { sire:'根幹型・ディープ系', record:'△', label:'瞬発力型・割引', color:'orange',
+          kongenMatch:function(h){return ['キズナ','アルアイン','リアルスティール'].indexOf(h.sire)>=0;} },
+        { sire:'根幹型・キタサン(2200非根幹は未知数)', record:'▲', label:'要注意', color:'red',
+          kongenMatch:function(h){return h.sire==='キタサンブラック';} }
+      ],
+      filterStrategy:{ title:'根幹/非根幹での狙い',
+        tags:['非根幹型','持続力','ピッチ走法','阪神2200'],
+        buyRules:['非根幹型(ステイゴールド/ロベルト/欧州/トニービン)を加点','メイショウタバルは父ゴールドシップ＋母系メジロマックイーンで非根幹二重最強','ダノン・ビザンチンはロベルト系で非根幹◎'],
+        killRules:['根幹型(ディープ系)は2200非根幹で割引','クロワデュノールは血統が根幹型＋2200非根幹未経験で慎重評価'],
+        overseasRules:[],
+        finalStrategy:['血統タイプ＋2000m超の非根幹実績の2軸で評価する'],
+        summary:'宝塚2200は非根幹距離。持続力・パワー型(非根幹血統)が走り、瞬発力の根幹型は割引。メイショウが血統最強、クロワは根幹型で唯一の不安。' }
+    },
+    hanshinAnalysis: {
+      title:'宝塚記念 阪神コース成績【勝-2-3-着外】', subtitle:'宝塚は阪神巧者が露骨に走る。生涯の阪神成績で適性を判定',
+      headerCards:[
+        { type:'ace', label:'メイショウタバル', mainValue:'3-1-0-0', subValue:'阪神複勝100%・宝塚勝ち' },
+        { type:'iron', label:'阪神2200複数好走', mainValue:'タガノ/シェイク', subValue:'中穴で侮れない' },
+        { type:'block', label:'阪神初', mainValue:'4頭', subValue:'ミュージアム等コース未知数' },
+        { type:'kill', label:'阪神が苦手', mainValue:'ジューンテイク', subValue:'0-1-0-5・消し補強' }
+      ],
+      filterSummary:{ title:'阪神適性の急所',
+        iron:{ label:'阪神巧者を重視', desc:'宝塚は阪神コース実績がモロに出る。複勝率の高い馬を上位評価' },
+        kill:{ label:'阪神成績が悪い馬は割引', desc:'阪神で着外続きの馬は宝塚でも苦戦' } },
+      detailTable:[
+        { sire:'メイショウタバル【3-1-0-0】複勝100%', record:'阪神巧者の筆頭・宝塚勝ち', label:'コース◎', color:'green',
+          hanshinMatch:function(h){return h.name==='メイショウタバル';} },
+        { sire:'タガノデュード【1-1-2-4】複勝50%', record:'阪神2200で複数好走', label:'中穴有力', color:'blue',
+          hanshinMatch:function(h){return h.name==='タガノデュード';} },
+        { sire:'シェイクユアハート【1-2-0-2】複勝60%', record:'阪神2000で複数好走', label:'中穴', color:'blue',
+          hanshinMatch:function(h){return h.name==='シェイクユアハート';} },
+        { sire:'阪神勝ちあり【1-0-0-0】(2200は未経験)', record:'阪神巧者だが2200は試走なし', label:'やや注意', color:'orange',
+          hanshinMatch:function(h){return ['クロワデュノール','ビザンチンドリーム','シュガークン'].indexOf(h.name)>=0;} },
+        { sire:'阪神初・コース未知数', record:'阪神出走なし。今回が初', label:'未知数', color:'orange',
+          hanshinMatch:function(h){return ['ミュージアムマイル','シンエンペラー','スティンガーグラス','ミクニインスパイア'].indexOf(h.name)>=0;} },
+        { sire:'ジューンテイク【0-1-0-5】複勝17%', record:'阪神は明確に苦手', label:'消し補強', color:'red',
+          hanshinMatch:function(h){return h.name==='ジューンテイク';} },
+        { sire:'阪神で着外【0-0-0-1】', record:'宝塚/大阪杯で着外', label:'割引', color:'red',
+          hanshinMatch:function(h){return ['レガレイラ','コスモキュランダ'].indexOf(h.name)>=0;} }
+      ],
+      filterStrategy:{ title:'阪神適性での狙い',
+        tags:['阪神巧者','コース適性','非根幹','内回り'],
+        buyRules:['メイショウタバル(阪神3-1-0-0)は今回コースを勝利済みで最上位','タガノ・シェイクは阪神複数好走で中穴・3着ヒモ','阪神2000勝ちは小さなプラス'],
+        killRules:['ジューンテイク(0-1-0-5)は阪神苦手で消し補強'],
+        overseasRules:['ミュージアム等の阪神初は地力上位でもコース不安として割引材料'],
+        finalStrategy:['阪神巧者を上位、阪神初・阪神苦手は割引'],
+        summary:'宝塚は阪神巧者が走る。メイショウが阪神【3-1-0-0】で頭一つ抜け、ジューンは阪神苦手で消し。阪神初は地力上位でも割引。' }
     },
     anaPoints: [
       '🌹 安田と真逆＝先行有利・1番人気は複勝40%で荒れる。6〜7頭BOXが基本。',
@@ -9554,7 +9622,13 @@ function renderBloodAnalysis(d) {
   if (d.detailTable) {
     html += '<div class="sire-card-list">';
     d.detailTable.forEach(function(r){
-      var names = hbs[r.sire] || [];
+      var names = (hbs[r.sire] || []).slice();
+      // matchMother:true の行は母父(motherSire)一致馬も該当に含める（安田は未使用で無影響）
+      if (r.matchMother) {
+        horses.forEach(function(h){
+          if (h.motherSire === r.sire && names.indexOf(h.name) < 0) names.push(h.name);
+        });
+      }
       var bType = 'iron';
       if (r.label.indexOf('★') >= 0) bType = 'best';
       else if (r.label.indexOf('💎') >= 0) bType = 'value';
@@ -9925,6 +9999,83 @@ function renderClearAnalysis(d) {
   return html;
 }
 
+/* =====================================================
+ * 血統UI(.sire-card)を流用した「行ごとmatchFn」汎用レンダラ
+ * renderBloodAnalysis を複製し、h.sire完全一致でなく
+ * detailTable[].<matchKeyName>(h)=真偽 で該当馬を振り分ける。
+ * 安田固有の見出し・「その他の父血統」自動一覧は持たない。
+ * ===================================================== */
+function _renderSireCardMatchFn(d, icon, matchKeyName) {
+  if (!d) return '';
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE[currentRace] || HORSES_BY_RACE[window.currentRaceName] || []) : [];
+  var html = '<div class="analysis-card">';
+  html += '<h3>' + icon + ' ' + d.title + '</h3>';
+  html += '<div class="subtitle">' + d.subtitle + '</div>';
+  html += '<div class="header-cards">';
+  (d.headerCards || []).forEach(function(c){
+    html += '<div class="header-card header-card-' + c.type + '">'
+         + '<div class="header-card-label">' + c.label + '</div>'
+         + '<div class="header-card-main">' + c.mainValue + '</div>'
+         + '<div class="header-card-sub">' + c.subValue + '</div></div>';
+  });
+  html += '</div>';
+  if (d.filterSummary) {
+    html += '<div class="filter-summary">'
+         + '<div class="filter-summary-title">📌 ' + d.filterSummary.title + '</div>'
+         + '<div class="filter-2col">'
+         + '<div class="filter-block filter-block-iron"><div class="filter-block-label">✅ ' + d.filterSummary.iron.label + '</div><div class="filter-block-desc">' + d.filterSummary.iron.desc + '</div></div>'
+         + '<div class="filter-block filter-block-kill"><div class="filter-block-label">⚠️ ' + d.filterSummary.kill.label + '</div><div class="filter-block-desc">' + d.filterSummary.kill.desc + '</div></div>'
+         + '</div></div>';
+  }
+  if (d.detailTable) {
+    html += '<div class="sire-card-list">';
+    d.detailTable.forEach(function(r){
+      var mf = r[matchKeyName];
+      var names = [];
+      if (typeof mf === 'function') {
+        horses.forEach(function(h){ try { if (mf(h)) names.push(h.name); } catch(e){} });
+      }
+      var bcls = 'horse-badge';
+      if (r.color === 'green') bcls += ' horse-badge-best';
+      else if (r.color === 'red') bcls += ' horse-badge-kill';
+      else bcls += ' horse-badge-iron';
+      html += '<div class="sire-card">'
+           + '<div class="sire-card-header"><span class="sire-name">' + icon + ' ' + r.sire + '</span>'
+           + '<span class="label-pill label-pill-' + r.color + '">' + r.label + '</span></div>'
+           + '<div class="sire-card-stats">'
+           + '<div class="stat-item"><span class="stat-label">傾向</span><span class="stat-value stat-highlight">' + (r.record || '') + '</span></div>'
+           + '</div>';
+      if (names.length > 0) {
+        html += '<div class="sire-card-badges"><span class="badge-label">該当' + names.length + '頭：</span>';
+        names.forEach(function(n){ html += '<span class="' + bcls + '">' + n + '</span>'; });
+        html += '</div>';
+      }
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+  if (d.filterStrategy) {
+    var fs = d.filterStrategy;
+    html += '<div class="filter-strategy"><div class="filter-strategy-title">⭐ ' + fs.title + '</div>';
+    html += '<div class="filter-tags">' + (fs.tags || []).map(function(t){ return '<div class="filter-tag">' + t + '</div>'; }).join('') + '</div>';
+    html += '<div class="rules-3col">'
+         + '<div class="rules-block rules-block-buy"><div class="rules-block-title">🟢 買い</div><ul>' + (fs.buyRules || []).map(function(x){ return '<li>' + x + '</li>'; }).join('') + '</ul></div>'
+         + '<div class="rules-block rules-block-kill"><div class="rules-block-title">❌ 消し・割引</div><ul>' + (fs.killRules || []).map(function(x){ return '<li>' + x + '</li>'; }).join('') + '</ul></div>';
+    if (fs.overseasRules && fs.overseasRules.length) {
+      html += '<div class="rules-block rules-block-overseas"><div class="rules-block-title">🌍 補足</div><ul>' + fs.overseasRules.map(function(x){ return '<li>' + x + '</li>'; }).join('') + '</ul></div>';
+    }
+    html += '</div>';
+    if (fs.finalStrategy && fs.finalStrategy.length) {
+      html += '<div class="final-strategy"><div class="final-strategy-title">🎯 戦略</div><ol>' + fs.finalStrategy.map(function(x){ return '<li>' + x + '</li>'; }).join('') + '</ol></div>';
+    }
+    html += '<div class="summary-text"><strong>総括</strong>：' + fs.summary + '</div></div>';
+  }
+  html += '</div>';
+  return html;
+}
+function renderKongenAnalysis(d) { return _renderSireCardMatchFn(d, '🧬', 'kongenMatch'); }
+function renderHanshinAnalysis(d) { return _renderSireCardMatchFn(d, '🏟', 'hanshinMatch'); }
+
 function renderJockeyAnalysis(d) {
   if (!d) return '';
   var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE[currentRace] || HORSES_BY_RACE[window.currentRaceName] || []) : [];
@@ -10287,6 +10438,12 @@ function renderPastData() {
   }
   if (data.clearAnalysis) {
     html += renderClearAnalysis(data.clearAnalysis);
+  }
+  if (data.kongenAnalysis) {
+    html += renderKongenAnalysis(data.kongenAnalysis);
+  }
+  if (data.hanshinAnalysis) {
+    html += renderHanshinAnalysis(data.hanshinAnalysis);
   }
   if (data.jockeyAnalysis) {
     html += renderJockeyAnalysis(data.jockeyAnalysis);
