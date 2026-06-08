@@ -20190,11 +20190,14 @@ window.diagnoseMaigo = function(horseName) {
   };
 
   var positives = [];
-  if (h.prevIsOverseas) positives.push({ icon:'🌍', text:'前走海外組（別枠評価）' });
-  else if (h.prevPop === 1) positives.push({ icon:'✅', text:'前走1人気（複勝率36%）' });
-  else if (h.prevPop === 2) positives.push({ icon:'⭐', text:'前走2人気（最多3勝・複勝率30.4%）' });
-  else if (h.prevPop === 3) positives.push({ icon:'✅', text:'前走3人気（複勝率16.7%）' });
-  else if (h.prevPop === 4) positives.push({ icon:'✅', text:'前走4人気（複勝率17.6%・鉄板帯）' });
+  var isTaka = (raceName === '宝塚記念');
+  if (!isTaka) {
+    if (h.prevIsOverseas) positives.push({ icon:'🌍', text:'前走海外組（別枠評価）' });
+    else if (h.prevPop === 1) positives.push({ icon:'✅', text:'前走1人気（複勝率36%）' });
+    else if (h.prevPop === 2) positives.push({ icon:'⭐', text:'前走2人気（最多3勝・複勝率30.4%）' });
+    else if (h.prevPop === 3) positives.push({ icon:'✅', text:'前走3人気（複勝率16.7%）' });
+    else if (h.prevPop === 4) positives.push({ icon:'✅', text:'前走4人気（複勝率17.6%・鉄板帯）' });
+  }
 
   var lf = h.prevLast3f;
   if (lf && lf < 99) {
@@ -20214,13 +20217,17 @@ window.diagnoseMaigo = function(horseName) {
     'キズナ':'父キズナ（複勝率31.3%）',
     'ドゥラメンテ':'父ドゥラメンテ（安定）'
   };
-  if (sireDescMap[sire]) positives.push({ icon:'🩸', text:sireDescMap[sire] });
-  else if (sire === 'イスラボニータ') positives.push({ icon:'💎', text:'父イスラボニータ（単勝249%★穴妙味）' });
+  if (!isTaka) {
+    if (sireDescMap[sire]) positives.push({ icon:'🩸', text:sireDescMap[sire] });
+    else if (sire === 'イスラボニータ') positives.push({ icon:'💎', text:'父イスラボニータ（単勝249%★穴妙味）' });
+  }
 
   var isMiuho = h.stable && h.stable.indexOf('美浦') >= 0;
   var isMare = h.sex === '牝';
-  if (isMiuho && isMare) positives.push({ icon:'🌸', text:'美浦×牝馬（複勝率66.7%★★★最強）' });
-  else if (isMiuho) positives.push({ icon:'🏠', text:'美浦所属（関東馬・地の利）' });
+  if (!isTaka) {
+    if (isMiuho && isMare) positives.push({ icon:'🌸', text:'美浦×牝馬（複勝率66.7%★★★最強）' });
+    else if (isMiuho) positives.push({ icon:'🏠', text:'美浦所属（関東馬・地の利）' });
+  }
 
   if (h.carriedWeight && h.carriedWeight <= 54) positives.push({ icon:'🎚️', text: h.carriedWeight + 'kg（★3歳異次元アドバンテージ）' });
   else if (h.carriedWeight && h.carriedWeight <= 56 && isMare) positives.push({ icon:'🎚️', text: h.carriedWeight + 'kg（牝馬軽斤量）' });
@@ -20238,9 +20245,40 @@ window.diagnoseMaigo = function(horseName) {
 
   var negatives = [];
   if (killReasons[horseName]) negatives.push({ icon:'⚠️', text:killReasons[horseName] });
-  if (h.prevPop && h.prevPop >= 5 && !h.prevIsOverseas) negatives.push({ icon:'❌', text:'前走' + h.prevPop + '人気（5人気以下：3着内率1.6%）' });
+  if (!isTaka && h.prevPop && h.prevPop >= 5 && !h.prevIsOverseas) negatives.push({ icon:'❌', text:'前走' + h.prevPop + '人気（5人気以下：3着内率1.6%）' });
   if (lf && lf >= 34.0) negatives.push({ icon:'⚠️', text:'前走上がり' + lf + '（末脚不足・消し対象）' });
-  if (h.age >= 7) negatives.push({ icon:'⚠️', text: h.age + '歳（7歳以上：3着内率10.3%・苦戦）' });
+  if (!isTaka && h.age >= 7) negatives.push({ icon:'⚠️', text: h.age + '歳（7歳以上：3着内率10.3%・苦戦）' });
+
+  // ★宝塚記念 専用評価：根幹非根幹コメント＋宝塚血統文言＋宝塚消去ルール
+  if (isTaka) {
+    var kt = h.kongenType || '';
+    if (kt.indexOf('非根幹◎') >= 0)       positives.push({ icon:'🧬', text:'非根幹血統◎（阪神2200の持続力勝負に最適）' });
+    else if (kt.indexOf('非根幹○') >= 0)  positives.push({ icon:'🧬', text:'非根幹型○（2200の持続力に対応）' });
+    else if (kt.indexOf('ハイブリッド') >= 0) positives.push({ icon:'🧬', text:'万能型（根幹も非根幹もこなす）' });
+    if (kt.indexOf('根幹型') >= 0) negatives.push({ icon:'🧬', text: kt + '＝2200非根幹は割引材料' });
+    if (kt.indexOf('×') >= 0)     negatives.push({ icon:'🧬', text:'血統は非根幹型だが実績が伴わない' });
+
+    var takaSireDesc = {
+      'ゴールドシップ':'🩸 ステイゴールド系（阪神2200最多5勝の鉄板）',
+      'ハービンジャー':'🩸 ハービンジャー（阪神2200血統1位・複勝28.6%）',
+      'エピファネイア':'🩸 ロベルト系（非SS×前走G1上位は単回221%）',
+      'ハーツクライ':'🩸 ハーツクライの血（好走力本物）',
+      'ドゥラメンテ':'🩸 ドゥラメンテ系（宝塚好相性）',
+      'キタサンブラック':'⚠️ キタサンブラック（2000前後が適距離・2200非根幹は未知数）'
+    };
+    var tdesc = takaSireDesc[h.sire] || takaSireDesc[h.motherSire];
+    if (tdesc) {
+      if (tdesc.indexOf('⚠️') === 0) negatives.push({ icon:'🩸', text: tdesc.replace('⚠️ ', '') });
+      else positives.push({ icon:'🩸', text: tdesc.replace('🩸 ', '') });
+    }
+
+    var takaG2G3 = ['日経賞','金鯱賞','阪神大賞典','目黒記念','アミールトロフィー','ダイヤモンドS','新潟大賞典','クイーンエリザベス2世C'];
+    if (takaG2G3.indexOf(h.prevRace) >= 0 && h.prevRank >= 3) negatives.push({ icon:'🚫', text:'前走' + h.prevRace + h.prevRank + '着＝消去ルール(前走G2G3で3着以下0-0-0-29)' });
+    if (h.age >= 7)       negatives.push({ icon:'🚫', text:'7歳以上は複勝3.6%で壊滅' });
+    else if (h.age === 6) negatives.push({ icon:'⚠️', text:'6歳はG1勝ち実績がなければ割引(勝利ゼロ)' });
+    if (h.hanshinRecord === '0-1-0-5') negatives.push({ icon:'⚠️', text:'阪神【0-1-0-5】＝阪神は明確に苦手' });
+    if (h.hanshinRecord === '3-1-0-0') positives.push({ icon:'🏟', text:'阪神【3-1-0-0】複勝100%＝今回コースを勝利済み' });
+  }
 
   var verdict, verdictColor, verdictBg, verdictIcon;
   if (isClear && pct >= 55) {
@@ -20535,7 +20573,32 @@ window.diagnoseMaigo = function(horseName) {
     }
   };
 
-  var diagnosis = customDiagnosis[horseName] ? customDiagnosis[horseName](h, bd, rank) : customDiagnosis._generic(h, bd, rank);
+  // 宝塚記念 専用エッセイ（主要6頭・安田のcustomDiagnosisは無改変）
+  var takaCustomDiagnosis = {
+    'メイショウタバル': function(h, bd, rank) {
+      return 'メイショウタバルは前走大阪杯2着の5歳。父ゴールドシップ＋母系メジロマックイーンで<strong>非根幹二重最強</strong>、阪神【3-1-0-0】で<strong>今回コースを勝利済み</strong>。単騎逃げで展開利も。武豊継続。AIスコア' + bd.total + '/' + bd.max + ' (' + bd.pct + '%)で<strong>データ1位</strong>。<br><br>→ <strong>データ上の本命</strong>。';
+    },
+    'クロワデュノール': function(h, bd, rank) {
+      return 'クロワデュノールは前走天皇賞春1着の最強4歳。実績は最上位だが、<strong>父キタサンブラックの根幹型血統で2000m超の非根幹は経験ゼロ</strong>＝阪神2200内回り急坂が唯一の不安。人気でなく中身で評価すると僅差2番手。AIスコア' + bd.total + '/' + bd.max + ' (' + bd.pct + '%)。<br><br>→ <strong>軸対抗だが2200非根幹の試走経験ゼロに注意</strong>。';
+    },
+    'ミュージアムマイル': function(h, bd, rank) {
+      return 'ミュージアムマイルは前走有馬1着の地力最上位・トニービン内包。レーンは阪神2200連対40%。ただし<strong>阪神【0-0-0-0】で今回が阪神初＋半年ぶり</strong>＝コース不安が割引材料。AIスコア' + bd.total + '/' + bd.max + ' (' + bd.pct + '%)。<br><br>→ <strong>地力上位だが阪神初を割り引く</strong>。';
+    },
+    'レガレイラ': function(h, bd, rank) {
+      return 'レガレイラは唯一の牝馬(宝塚は牝馬複勝32%)・<strong>母父ハービンジャーの非根幹巧者</strong>(エリ女/オールカマー/有馬を勝利)。牝馬×休み明けは複回115%の好データ。ただし<strong>良馬場巧者で道悪割引・宝塚11着・ルメール相性懸念</strong>。AIスコア' + bd.total + '/' + bd.max + ' (' + bd.pct + '%)。<br><br>→ <strong>連下〜3着ヒモ、道悪なら割引</strong>。';
+    },
+    'ダノンデサイル': function(h, bd, rank) {
+      return 'ダノンデサイルは前走大阪杯3着の5歳。<strong>父エピファネイア(ロベルト系)×前走G1上位＝単回221%の黄金トリガー該当</strong>。有馬2500・3着の非根幹実績。4番人気は複勝20%の凹みデータだが血統で覆す。AIスコア' + bd.total + '/' + bd.max + ' (' + bd.pct + '%)。<br><br>→ <strong>本命級の穴・3着ヒモ本線</strong>。';
+    },
+    'コスモキュランダ': function(h, bd, rank) {
+      return 'コスモキュランダは前走日経賞7着で<strong>消去ルール該当(前走G2/G3で3着以下0-0-0-29)＝軸本線NG</strong>。ただし有馬2500・2着(12人気激走)の近走の格で3着ヒモに救済。阪神【0-0-0-1】。AIスコア' + bd.total + '/' + bd.max + ' (' + bd.pct + '%)。<br><br>→ <strong>軸不可・中穴3着ヒモ</strong>。';
+    }
+  };
+
+  var diagnosis;
+  if (isTaka && takaCustomDiagnosis[horseName]) diagnosis = takaCustomDiagnosis[horseName](h, bd, rank);
+  else if (customDiagnosis[horseName]) diagnosis = customDiagnosis[horseName](h, bd, rank);
+  else diagnosis = customDiagnosis._generic(h, bd, rank);
 
   var buyAdvice;
   if (verdict === '軸として強推奨' || verdict === '押さえまで強く推奨') {
