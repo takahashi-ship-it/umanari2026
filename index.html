@@ -9280,7 +9280,7 @@ function renderPastSection(title, icon, items, horses) {
 function renderPrevPopAnalysis(d) {
   if (!d) return '';
   // 今年の出走馬を前走人気別に振り分け
-  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['安田記念'] || []) : [];
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE[currentRace] || HORSES_BY_RACE[window.currentRaceName] || []) : [];
   var hbc = { pop1:[], pop2:[], pop3:[], pop4:[], pop5plus:[], overseas:[] };
   horses.forEach(function(h){
     if (h.prevIsOverseas) hbc.overseas.push(h.name);
@@ -9387,7 +9387,7 @@ function renderPrevPopAnalysis(d) {
 
 function renderLast3fAnalysis(d) {
   if (!d) return '';
-  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['安田記念'] || []) : [];
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE[currentRace] || HORSES_BY_RACE[window.currentRaceName] || []) : [];
   var hbr = { sub329:[], at330:[], at331_333:[], at334_335:[], at336_339:[], over340:[] };
   horses.forEach(function(h){
     var lf = h.prevLast3f;
@@ -9524,7 +9524,7 @@ function renderLast3fAnalysis(d) {
 
 function renderBloodAnalysis(d) {
   if (!d) return '';
-  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['安田記念'] || []) : [];
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE[currentRace] || HORSES_BY_RACE[window.currentRaceName] || []) : [];
   var hbs = {};
   horses.forEach(function(h){
     var s = h.sire || '不明';
@@ -9634,7 +9634,7 @@ function renderBloodAnalysis(d) {
 
 function renderSexStableAnalysis(d) {
   if (!d) return '';
-  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['安田記念'] || []) : [];
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE[currentRace] || HORSES_BY_RACE[window.currentRaceName] || []) : [];
   var hbc = { miuhoMare:[], miuhoStallion:[], ritoMare:[], ritoStallion:[], overseas:[] };
   horses.forEach(function(h){
     if (h.prevIsOverseas) { hbc.overseas.push(h.name); return; }
@@ -9744,7 +9744,7 @@ function renderSexStableAnalysis(d) {
 
 function renderOtherDataAnalysis(d) {
   if (!d) return '';
-  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['安田記念'] || []) : [];
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE[currentRace] || HORSES_BY_RACE[window.currentRaceName] || []) : [];
 
   function matchHorses(sec, row){
     var matched = [];
@@ -9947,7 +9947,7 @@ function renderClearAnalysis(d) {
 
 function renderJockeyAnalysis(d) {
   if (!d) return '';
-  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['安田記念'] || []) : [];
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE[currentRace] || HORSES_BY_RACE[window.currentRaceName] || []) : [];
   var hbj = {};
   horses.forEach(function(h){
     var j = h.jockey || '未定';
