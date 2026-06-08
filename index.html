@@ -9336,7 +9336,7 @@ function renderPrevPopAnalysis(d) {
            + '<div class="stat-item"><span class="stat-label">連対率</span><span class="stat-value">' + r.rentai + '</span></div>'
            + '<div class="stat-item"><span class="stat-label">3着内率</span><span class="stat-value stat-highlight">' + r.fukusho + '</span></div>'
            + '</div>';
-      if (names.length > 0) {
+      if (!r.noBadge && names.length > 0) {
         var bcls = 'horse-badge';
         if (badgeType === 'iron') bcls += ' horse-badge-iron';
         else if (badgeType === 'kill') bcls += ' horse-badge-kill';
