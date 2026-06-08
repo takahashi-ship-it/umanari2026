@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宝塚記念2026 AI予想｜社長のAI競馬予想</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#120608; --bg2:#1c0a0e; --card:#241015; --card2:#2c141a;
+    --line:#43222a; --rose:#c8102e; --rose-d:#8e0a1f; --gold:#d9b15a; --gold-l:#f0d493;
+    --ink:#f6e9ea; --ink-d:#caa9ad; --mut:#8c6a70;
+    --good:#5fcf8e; --warn:#e8a13c; --bad:#d05a6a;
+    --mincho:"Zen Old Mincho",serif; --gothic:"Zen Kaku Gothic New",sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:var(--gothic); color:var(--ink); background:var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(200,16,46,.18), transparent 45%),
+      radial-gradient(circle at 90% 12%, rgba(217,177,90,.10), transparent 40%);
+    line-height:1.7; -webkit-font-smoothing:antialiased; padding-bottom:60px;
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:0 16px}
+  header{position:relative;overflow:hidden;text-align:center;padding:42px 16px 30px;
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#1c0a0e 0%,#120608 100%)}
+  header::before{content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(135deg,transparent 0 22px,rgba(217,177,90,.025) 22px 23px)}
+  .kicker{font-family:var(--mincho);color:var(--gold);letter-spacing:.35em;font-size:12px;font-weight:600;position:relative}
+  h1{font-family:var(--mincho);font-weight:900;font-size:clamp(34px,9vw,52px);
+    letter-spacing:.06em;line-height:1.1;margin:6px 0 2px;position:relative;
+    background:linear-gradient(180deg,#fff,var(--gold-l) 60%,var(--gold));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 2px 24px rgba(217,177,90,.15)}
+  .race-meta{position:relative;color:var(--ink-d);font-size:13px;margin-top:8px;letter-spacing:.04em}
+  .race-meta b{color:var(--rose);font-weight:700}
+  .brand{position:relative;margin-top:14px;font-size:11px;color:var(--mut);letter-spacing:.1em}
+  section{margin-top:38px}
+  .sec-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .sec-head .no{font-family:var(--mincho);font-weight:900;font-size:13px;color:var(--bg);
+    background:var(--gold);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex:none}
+  .sec-head h2{font-family:var(--mincho);font-size:21px;font-weight:700;letter-spacing:.05em}
+  .sec-head .en{font-size:10px;color:var(--mut);letter-spacing:.25em;margin-left:auto;text-transform:uppercase}
+  .notice{background:linear-gradient(135deg,rgba(232,161,60,.12),rgba(200,16,46,.08));
+    border:1px solid #5a3a1e;border-radius:12px;padding:13px 15px;font-size:12.5px;color:var(--gold-l);margin-top:18px}
+  .notice b{color:var(--gold)}
+  .pd-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .pd{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 15px 13px;position:relative;overflow:hidden}
+  .pd::after{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(var(--rose),var(--rose-d))}
+  .pd h3{font-family:var(--mincho);font-size:14px;color:var(--gold-l);margin-bottom:9px;letter-spacing:.04em}
+  .pd .row{display:flex;justify-content:space-between;font-size:12.5px;padding:3px 0;border-bottom:1px dashed #361b21}
+  .pd .row:last-child{border-bottom:none}
+  .pd .row span:last-child{font-weight:700;font-variant-numeric:tabular-nums}
+  .hi{color:var(--good)} .lo{color:var(--bad)} .nu{color:var(--ink-d)}
+  .pd.full{grid-column:1/-1}
+  .keypt{font-size:12px;color:var(--ink-d);margin-top:9px;border-top:1px solid var(--line);padding-top:9px}
+  .keypt b{color:var(--rose)}
+  .legend{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;font-size:11px;color:var(--ink-d)}
+  .legend span{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:3px 10px}
+  .h-card{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden;transition:.2s}
+  .h-card.tier1{border-color:#6b3d1a;background:linear-gradient(120deg,var(--card2),var(--card))}
+  .h-head{display:flex;align-items:center;gap:11px;padding:13px 14px;cursor:pointer}
+  .rk{font-family:var(--mincho);font-weight:900;font-size:18px;color:var(--mut);width:24px;text-align:center;flex:none}
+  .tier1 .rk{color:var(--gold)}
+  .mark{font-family:var(--mincho);font-weight:900;font-size:21px;flex:none;width:26px;text-align:center}
+  .m-honmei{color:var(--rose)} .m-taikou{color:var(--gold)} .m-tan{color:#e0843a}
+  .m-ren{color:var(--ink-d)} .m-hoshi{color:#6db3e0} .m-keshi{color:var(--mut)}
+  .h-name{flex:1;min-width:0}
+  .h-name .nm{font-family:var(--mincho);font-size:16px;font-weight:600;line-height:1.25}
+  .tier1 .h-name .nm{font-size:17px}
+  .h-name .sub{font-size:10.5px;color:var(--mut);letter-spacing:.02em}
+  .h-name .sub b{color:var(--ink-d);font-weight:500}
+  .conf{text-align:right;flex:none}
+  .conf .pct{font-family:var(--mincho);font-weight:900;font-size:22px;line-height:1;font-variant-numeric:tabular-nums}
+  .tier1 .conf .pct{font-size:25px;color:var(--gold-l)}
+  .conf .lbl{font-size:9px;color:var(--mut);letter-spacing:.15em}
+  .bar{height:5px;background:#34191f;margin:0 14px}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--rose-d),var(--rose));border-radius:0 3px 3px 0}
+  .tier1 .bar i{background:linear-gradient(90deg,#a8801f,var(--gold))}
+  .h-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+  .h-body.open{max-height:640px}
+  .h-body-in{padding:13px 14px 15px;border-top:1px solid var(--line)}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px}
+  .tag{font-size:11px;padding:3px 9px;border-radius:6px;line-height:1.4}
+  .tag.s{background:rgba(95,207,142,.12);color:var(--good);border:1px solid rgba(95,207,142,.25)}
+  .tag.w{background:rgba(208,90,106,.12);color:var(--bad);border:1px solid rgba(208,90,106,.25)}
+  .brk{display:grid;grid-template-columns:1fr 1fr;gap:5px 14px}
+  .brk .b{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-d);border-bottom:1px solid #2e161c;padding:2px 0}
+  .brk .b b{color:var(--gold-l);font-variant-numeric:tabular-nums}
+  .brk .b.pend{color:var(--mut)} .brk .b.pend b{color:var(--mut)}
+  .raw{margin-top:9px;font-size:11px;color:var(--mut);text-align:right}
+  .raw b{color:var(--ink-d)}
+  .bet{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;position:relative}
+  .bet.main{border-color:var(--rose-d);background:linear-gradient(135deg,rgba(200,16,46,.10),var(--card))}
+  .bet-lbl{display:inline-block;font-family:var(--mincho);font-weight:700;font-size:13px;letter-spacing:.08em;
+    padding:3px 12px;border-radius:6px;margin-bottom:11px}
+  .bl-axis{background:var(--rose);color:#fff}
+  .bl-form{background:var(--gold);color:var(--bg)}
+  .bl-ana{background:#3a5a8a;color:#fff} .bl-fuku{background:#2f6b4a;color:#fff}
+  .bl-yume{background:linear-gradient(90deg,#7a2d8a,#c8102e);color:#fff}
+  .bl-hoken{background:var(--card2);color:var(--gold-l);border:1px solid var(--line)}
+  .axisrow{display:flex;align-items:center;gap:12px}
+  .axisrow .big{font-family:var(--mincho);font-weight:900;font-size:24px;color:var(--rose)}
+  .axisrow .nm{font-family:var(--mincho);font-size:20px;font-weight:700}
+  .axisrow .p{margin-left:auto;font-family:var(--mincho);font-weight:900;font-size:22px;color:var(--gold-l)}
+  .formrow{display:flex;gap:10px;align-items:flex-start;font-size:13px;padding:7px 0;border-bottom:1px dashed #361b21}
+  .formrow:last-of-type{border-bottom:none}
+  .formrow .pos{font-family:var(--mincho);font-weight:700;color:var(--gold);flex:none;width:42px}
+  .formrow .hh{color:var(--ink)}
+  .formrow .hh em{font-style:normal;color:var(--rose);font-weight:700}
+  .pts{margin-top:11px;font-size:12.5px;color:var(--ink-d);background:var(--bg2);border-radius:8px;padding:9px 12px}
+  .pts b{color:var(--gold-l);font-family:var(--mincho);font-size:15px}
+  .hlist{font-size:14px;line-height:2}
+  .hlist .n{font-family:var(--mincho);font-weight:600}
+  .hlist .why{font-size:11.5px;color:var(--mut)}
+  .desc{font-size:13px;color:var(--ink-d);margin-bottom:4px}
+  footer{margin-top:46px;border-top:1px solid var(--line);padding-top:20px;text-align:center;font-size:11.5px;color:var(--mut);line-height:1.9}
+  footer b{color:var(--ink-d)}
+  .tag-mini{display:inline-block;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:2px 10px;margin:2px;font-size:11px;color:var(--ink-d)}
+  .updated{color:var(--gold);font-size:11px}
+  .backlink{display:inline-block;margin:18px 0 0;font-size:12px;color:var(--gold-l);text-decoration:none;border:1px solid var(--line);border-radius:20px;padding:6px 16px;background:var(--card)}
+</style>
+</head>
+<body>
+<header>
+  <div class="kicker">G1 ・ 春のグランプリ</div>
+  <h1>宝塚記念<span style="font-size:.55em;display:block;letter-spacing:.02em;margin-top:2px">2026 AI予想</span></h1>
+  <div class="race-meta">6/14(日) 阪神 芝<b>2200m</b> 内回り ／ 発走15:40 ／ フルゲート18頭</div>
+  <div class="brand">社長のAI競馬予想｜目指せ一口馬主 🐎</div>
+</header>
+<div class="wrap">
+  <div class="notice">
+    ⚙️ <b>暫定版（V1）</b>：枠順・調教・当日馬場（道悪）は<b>未反映</b>。発表され次第アップデートします。信頼度は確定データ（人気・前走・近走・年齢・脚質・血統・コース・騎手・根幹/非根幹・上昇度）で算出した暫定値です。
+  </div>
+  <section>
+    <div class="sec-head"><div class="no">壱</div><h2>過去10年データ</h2><div class="en">Data</div></div>
+    <div class="pd-grid">
+      <div class="pd">
+        <h3>人気別 複勝率</h3>
+        <div class="row"><span class="nu">1番人気</span><span class="lo">40%</span></div>
+        <div class="row"><span class="nu">2番人気</span><span class="hi">50%</span></div>
+        <div class="row"><span class="nu">3番人気</span><span>30%</span></div>
+        <div class="row"><span class="nu">4番人気</span><span class="lo">20%</span></div>
+        <div class="row"><span class="nu">10番人気↓</span><span class="lo">8.2%</span></div>
+        <div class="keypt"><b>1番人気が弱い（複勝40%）＝荒れる</b>。安田と真逆。</div>
+      </div>
+      <div class="pd">
+        <h3>脚質別 複勝率 <span style="font-size:10px;color:var(--gold)">★新</span></h3>
+        <div class="row"><span class="nu">逃げ</span><span class="hi">40.0%</span></div>
+        <div class="row"><span class="nu">先行</span><span class="hi">25.0%</span></div>
+        <div class="row"><span class="nu">差し</span><span>18.3%</span></div>
+        <div class="row"><span class="nu">追込</span><span class="lo">11.1%</span></div>
+        <div class="keypt"><b>先行有利</b>（最多6勝は先行）。逃げは複勝率最高だが母数薄。</div>
+      </div>
+      <div class="pd">
+        <h3>年齢別 1着内訳</h3>
+        <div class="row"><span class="nu">4〜5歳</span><span class="hi">1着10/10頭</span></div>
+        <div class="row"><span class="nu">6歳</span><span class="lo">勝利ゼロ</span></div>
+        <div class="row"><span class="nu">7歳↑</span><span class="lo">複勝3.6%</span></div>
+        <div class="keypt"><b>勝つのは全部4〜5歳</b>。6歳以上はG1勝ち実績馬のみ。</div>
+      </div>
+      <div class="pd">
+        <h3>枠順 <span style="font-size:10px;color:var(--mut)">※発表後反映</span></h3>
+        <div class="row"><span class="nu">8枠</span><span class="hi">勝率22.7%</span></div>
+        <div class="row"><span class="nu">内枠</span><span class="hi">複勝30.4%</span></div>
+        <div class="row"><span class="nu">4・6・7枠</span><span class="lo">勝率0%</span></div>
+        <div class="keypt"><b>8枠・1枠が買い</b>、4・6・7枠は危険。</div>
+      </div>
+      <div class="pd full">
+        <h3>血統 序列（阪神2200m）</h3>
+        <div class="row"><span class="nu">ステイゴールド系（ゴールドシップ等）</span><span class="hi">10点・最多5勝</span></div>
+        <div class="row"><span class="nu">ハービンジャー</span><span>9点・血統部門1位</span></div>
+        <div class="row"><span class="nu">トニービン内包</span><span>+2点・人気不問で好走</span></div>
+        <div class="row"><span class="nu">キタサンブラック</span><span class="nu">6点・2200非根幹は未知数</span></div>
+        <div class="keypt">★<b>激走トリガー</b>：非SS系（ロベルト/ND系）×前走G1上位＝単回221% ／ 牝馬×休み明け＝複回115% ／ ロベルト系単回142%</div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="sec-head"><div class="no">弐</div><h2>AI信頼度スコア</h2><div class="en">Score</div></div>
+    <div class="legend">
+      <span>◎本命</span><span>○対抗</span><span>▲単穴</span><span>△連下</span><span>☆中穴</span><span>注=伏兵</span>
+      <span style="color:var(--gold)">タップで内訳 ▽</span>
+    </div>
+    <div id="scoreList"></div>
+    <div class="raw" style="margin-top:10px">基準：79%アンカーのシグモイド（中央値43・最高93・floor8/ceil79）。枠順・調教・道悪は未加算。</div>
+  </section>
+  <section>
+    <div class="sec-head"><div class="no">参</div><h2>買い目</h2><div class="en">Bet</div></div>
+    <div class="bet main">
+      <span class="bet-lbl bl-axis">軸 ◎ データ1位</span>
+      <div class="axisrow">
+        <span class="big">◎</span>
+        <div><div class="nm">メイショウタバル</div>
+        <div style="font-size:11px;color:var(--mut)">血統最強×宝塚連覇王手×阪神【3-1-0-0】×武豊継続×単騎逃げ</div></div>
+        <span class="p">77.7%</span>
+      </div>
+    </div>
+    <div class="bet main">
+      <span class="bet-lbl bl-form">本線 ・ 3連単フォーメーション</span>
+      <div class="formrow"><span class="pos">1着</span><span class="hh"><em>メイショウタバル ・ クロワデュノール</em></span></div>
+      <div class="formrow"><span class="pos">2着</span><span class="hh">メイショウ ・ クロワ ・ ミュージアムマイル ・ レガレイラ</span></div>
+      <div class="formrow"><span class="pos">3着</span><span class="hh">上記4頭 ＋ ダノンデサイル ・ マイユニバース ・ タガノデュード ・ コスモキュランダ</span></div>
+      <div class="pts">計 <b>36点</b>（各100円＝3,600円）／ 上位人気拮抗＆荒れるレースなので1着は2頭マルチで構える</div>
+    </div>
+    <div class="bet">
+      <span class="bet-lbl bl-hoken">保険 ・ 3連複BOX</span>
+      <div class="hh" style="font-size:13.5px">メイショウ ・ クロワ ・ ミュージアム ・ レガレイラ ・ ダノン ・ タガノ</div>
+      <div class="pts">6頭BOX＝<b>20点</b>（各200円＝4,000円）／ 着順問わず3着内に来れば的中。安田で当てた買い方</div>
+    </div>
+    <div class="bet">
+      <span class="bet-lbl bl-ana">穴馬</span>
+      <div class="hlist">
+        <div><span class="n">④ダノンデサイル</span> <span class="why">— 黄金トリガー該当（非SS×前走G1上位・単回221%）＋有馬3着。4番人気凹みデータを血統で覆す本命級の穴</span></div>
+        <div><span class="n">⑮タガノデュード</span> <span class="why">— 阪神2200【1-1-2-4】複勝圏＋トニービン内包＋先行。15番人気は人気先行で過小評価</span></div>
+      </div>
+    </div>
+    <div class="bet">
+      <span class="bet-lbl bl-fuku">伏兵</span>
+      <div class="hlist">
+        <div><span class="n">⑪コスモキュランダ</span> <span class="why">— 前走G2大敗で消去ルール該当も、有馬2着の地力で3着ヒモに救済（軸本線はNG）</span></div>
+        <div><span class="n">⑩ミクニインスパイア</span> <span class="why">— 2500m【3走3好走】の中距離巧者・4歳。G1初挑戦の壁だけ</span></div>
+      </div>
+    </div>
+    <div class="bet">
+      <span class="bet-lbl bl-yume">夢馬券 🌙</span>
+      <div class="desc">⑦<span class="n" style="color:var(--gold-l)">ビザンチンドリーム</span>の一発に夢を乗せる。天皇賞春2着＋ロベルト×トニービン＋欧州タフ馬場実績（凱旋門5着）。</div>
+      <div class="formrow" style="margin-top:6px"><span class="pos">1着</span><span class="hh"><em>ビザンチンドリーム</em></span></div>
+      <div class="formrow"><span class="pos">2着</span><span class="hh">メイショウ ・ クロワ ・ ミュージアム</span></div>
+      <div class="formrow"><span class="pos">3着</span><span class="hh">メイショウ ・ クロワ ・ ミュージアム ・ レガレイラ ・ タガノ ・ コスモ</span></div>
+      <div class="pts">計 <b>15点</b>（各100円＝1,500円）／ ★<b>当日道悪なら本線級に格上げ</b>（欧州の重い芝巧者）</div>
+    </div>
+    <div class="notice" style="margin-top:6px">
+      🌧 <b>道悪になったら</b>：メイショウタバル（ゴールドシップ産駒）・ビザンチンドリームを格上げ、レガレイラ（良馬場巧者）は割引。当日の馬場で再計算します。
+    </div>
+  </section>
+  <footer>
+    <div class="updated">最終更新 2026/6/8 ・ AI予想ツール V1（暫定）</div>
+    <div style="margin-top:8px">
+      <span class="tag-mini">過去10年データ駆動</span>
+      <span class="tag-mini">血統DB照合済</span>
+      <span class="tag-mini">軸馬3着内率 80%</span>
+    </div>
+    <div style="margin-top:12px">軸より相手で勝つ。素直に過去データを信じる。<br>来たらごめんなさい🙇　それでは、また🐎</div>
+    <a class="backlink" href="index.html">← トップ（重賞カレンダー・収支レポート）へ戻る</a>
+    <div style="margin-top:10px;color:#5a3d42">※馬券は自己責任で。確率を断言するものではありません。</div>
+  </footer>
+</div>
+<script>
+const horses = [
+ {rk:1,mk:"◎",mc:"m-honmei",t1:true,nm:"メイショウタバル",ninki:2,odds:5.2,kishu:"武豊", kyaku:"逃げ",conf:77.7,raw:93,
+  s:["血統最強(ゴールドシップ×メジロM)","阪神【3-1-0-0】複勝100%","宝塚連覇王手・武豊継続","単騎逃げで展開利"],w:["逃げ切りは母数薄(自制でスコア据置)"],
+  brk:{人気:15,前走別:20,近走の格:8,年齢:10,脚質:9,"血統+α":12,コース:10,騎手:5,根幹非根幹:4,上昇度:0}},
+ {rk:2,mk:"○",mc:"m-taikou",t1:true,nm:"クロワデュノール",ninki:1,odds:2.2,kishu:"北村友",kyaku:"先行",conf:76.4,raw:84,
+  s:["天皇賞春1着・近走G1連勝","最強4歳・実績最上位","1番人気(複勝率は人気別で同点)"],w:["2200m非根幹が経験ゼロ","血統も根幹型(キタサン)","春三冠ローテ(参考メモ)"],
+  brk:{人気:15,前走別:18,近走の格:10,年齢:10,脚質:10,"血統+α":8,コース:8,騎手:4,根幹非根幹:1,上昇度:0}},
+ {rk:3,mk:"▲",mc:"m-tan",t1:true,nm:"ミュージアムマイル",ninki:3,odds:5.3,kishu:"レーン",kyaku:"差し",conf:75.2,raw:79,
+  s:["前走有馬1着・地力最上位","レーン(阪神2200連対40%)","トニービン内包"],w:["阪神【0-0-0-0】今回が初","半年ぶり・差し脚質"],
+  brk:{人気:9,前走別:18,近走の格:10,年齢:10,脚質:5,"血統+α":9,コース:9,騎手:5,根幹非根幹:4,上昇度:0}},
+ {rk:4,mk:"△",mc:"m-ren",nm:"レガレイラ",ninki:5,odds:10.2,kishu:"ルメール",kyaku:"差し",conf:71.1,raw:69,
+  s:["唯一の牝馬(牝馬複勝32%)","母父ハービンジャー・非根幹巧者","牝馬×休み明けは好データ"],w:["良馬場巧者で道悪割引","ルメール相性懸念","宝塚11着・差し脚質"],
+  brk:{人気:9,前走別:12,近走の格:8,年齢:10,脚質:5,"血統+α":13,コース:8,騎手:1,根幹非根幹:3,上昇度:0}},
+ {rk:5,mk:"△",mc:"m-ren",nm:"ダノンデサイル",ninki:4,odds:10.1,kishu:"戸崎圭",kyaku:"差し",conf:67.1,raw:63,
+  s:["黄金トリガー該当(単回221%)","有馬2500・3着の非根幹実績","エピファネイア=コースバイアス◎"],w:["4番人気は複勝20%の凹みデータ","差し脚質"],
+  brk:{人気:6,前走別:15,近走の格:8,年齢:10,脚質:5,"血統+α":5,コース:8,騎手:4,根幹非根幹:2,上昇度:0}},
+ {rk:6,mk:"☆",mc:"m-hoshi",nm:"マイユニバース",ninki:6,odds:16.8,kishu:"横山典",kyaku:"先行*",conf:57.0,raw:53,
+  s:["前走日経賞G2 1着・4歳","先行・上昇度ボーナス該当"],w:["近走G1実績薄・コース実績薄","脚質が枠依存(発表後確定)"],
+  brk:{人気:5,前走別:10,近走の格:0,年齢:10,脚質:10,"血統+α":6,コース:4,騎手:4,根幹非根幹:2,上昇度:2}},
+ {rk:7,mk:"☆",mc:"m-hoshi",nm:"タガノデュード",ninki:15,odds:54.9,kishu:"高杉",kyaku:"先行",conf:54.5,raw:51,
+  s:["阪神2200【1-1-2-4】複勝圏","トニービン内包・先行","天皇賞春6着(前走G1)"],w:["重賞勝ちなし","15番人気"],
+  brk:{人気:2,前走別:12,近走の格:0,年齢:10,脚質:10,"血統+α":9,コース:4,騎手:3,根幹非根幹:1,上昇度:0}},
+ {rk:8,mk:"☆",mc:"m-hoshi",nm:"コスモキュランダ",ninki:11,odds:41.9,kishu:"横山武",kyaku:"差し",conf:49.1,raw:47,
+  s:["有馬2着(12人気激走)","近走の格で中穴に救済"],w:["消去ルール該当(前走G2 7着)","阪神【0-0-0-1】・軸本線NG"],
+  brk:{人気:2,前走別:2,近走の格:8,年齢:10,脚質:5,"血統+α":6,コース:8,騎手:4,根幹非根幹:2,上昇度:0}},
+ {rk:9,mk:"注",mc:"m-hoshi",nm:"ミクニインスパイア",ninki:10,odds:41.7,kishu:"丹内",kyaku:"先行",conf:44.9,raw:44,
+  s:["2500m【3走3好走】の巧者","4歳・好位"],w:["G1初挑戦・阪神初"],
+  brk:{人気:2,前走別:8,近走の格:0,年齢:10,脚質:10,"血統+α":5,コース:4,騎手:3,根幹非根幹:2,上昇度:0}},
+ {rk:10,mk:"注",mc:"m-hoshi",nm:"ビザンチンドリーム",ninki:7,odds:25.3,kishu:"西村淳",kyaku:"差し",conf:42.1,raw:42,
+  s:["天皇賞春2着・穴トリガー該当","ロベルト×トニービン","道悪一発(欧州タフ実績)"],w:["消去ルール該当(前走G2 7着)","良馬場なら中穴止まり"],
+  brk:{人気:5,前走別:2,近走の格:6,年齢:10,脚質:5,"血統+α":7,コース:2,騎手:3,根幹非根幹:2,上昇度:0}},
+ {rk:11,mk:"消",mc:"m-keshi",nm:"スティンガーグラス",ninki:8,odds:40.3,kishu:"岩田望",kyaku:"差し*",conf:42.1,raw:42,
+  s:["前走G3 1着・長距離非根幹実績"],w:["2200m短縮・阪神初・脚質枠依存"],
+  brk:{人気:5,前走別:10,近走の格:0,年齢:10,脚質:5,"血統+α":5,コース:2,騎手:3,根幹非根幹:2,上昇度:0}},
+ {rk:12,mk:"消",mc:"m-keshi",nm:"シェイクユアハート",ninki:12,odds:42.2,kishu:"古川吉",kyaku:"差し",conf:39.3,raw:40,
+  s:["前走金鯱賞G2 1着","父ハーツクライ(2着)＋トニービン"],w:["6歳・近走G1実績なし"],
+  brk:{人気:2,前走別:10,近走の格:0,年齢:4,脚質:5,"血統+α":11,コース:4,騎手:3,根幹非根幹:1,上昇度:0}},
+ {rk:13,mk:"消",mc:"m-keshi",nm:"マイネルエンペラー",ninki:14,odds:54.1,kishu:"川田",kyaku:"先行",conf:39.3,raw:40,
+  s:["父ゴールドシップ連覇の最強血統"],w:["6歳・消去ルール該当・近走崩れ"],
+  brk:{人気:2,前走別:2,近走の格:0,年齢:4,脚質:10,"血統+α":12,コース:4,騎手:4,根幹非根幹:2,上昇度:0}},
+ {rk:14,mk:"消",mc:"m-keshi",nm:"ジューンテイク",ninki:9,odds:40.7,kishu:"松山",kyaku:"差し",conf:37.9,raw:39,
+  s:["京都記念2200勝ち"],w:["阪神【0-1-0-5】苦手・宝塚16着"],
+  brk:{人気:5,前走別:6,近走の格:0,年齢:10,脚質:5,"血統+α":5,コース:4,騎手:3,根幹非根幹:1,上昇度:0}},
+ {rk:15,mk:"消",mc:"m-keshi",nm:"シンエンペラー",ninki:13,odds:44.9,kishu:"坂井",kyaku:"差し",conf:37.9,raw:39,
+  s:["ND系血統(穴トリガー候補)"],w:["実績大敗続き(有馬14着)・阪神初"],
+  brk:{人気:2,前走別:12,近走の格:0,年齢:10,脚質:5,"血統+α":5,コース:2,騎手:3,根幹非根幹:0,上昇度:0}},
+ {rk:16,mk:"消",mc:"m-keshi",nm:"シュガークン",ninki:17,odds:78.9,kishu:"吉村",kyaku:"差し",conf:31.2,raw:34,
+  s:["父ドゥラメンテ(2着)・血統"],w:["下級2200勝ちのみ・前走G3 15着・約2年ぶり"],
+  brk:{人気:2,前走別:2,近走の格:0,年齢:10,脚質:5,"血統+α":10,コース:2,騎手:2,根幹非根幹:1,上昇度:0}},
+ {rk:17,mk:"消",mc:"m-keshi",nm:"ファミリータイム",ninki:16,odds:64.1,kishu:"幸",kyaku:"差し",conf:26.5,raw:30,
+  s:["母父Galileo(欧州スタミナ)"],w:["条件戦級・消去ルール該当"],
+  brk:{人気:2,前走別:2,近走の格:0,年齢:10,脚質:5,"血統+α":5,コース:2,騎手:3,根幹非根幹:1,上昇度:0}},
+ {rk:18,mk:"消",mc:"m-keshi",nm:"ミステリーウェイ",ninki:18,odds:99.3,kishu:"松本",kyaku:"差し",conf:20.7,raw:24,
+  s:["トニービン内包・2500/2600条件戦勝ち"],w:["8歳セン馬・G1大敗続き・消し濃厚"],
+  brk:{人気:2,前走別:2,近走の格:0,年齢:1,脚質:5,"血統+α":9,コース:2,騎手:2,根幹非根幹:1,上昇度:0}},
+];
+const pend = {枠順:"未",調教:"未",道悪:"未"};
+const maxconf = 77.7;
+const list = document.getElementById('scoreList');
+horses.forEach((h)=>{
+  const card = document.createElement('div');
+  card.className = 'h-card'+(h.t1?' tier1':'');
+  const w = (h.conf/maxconf*100).toFixed(0);
+  const tags = h.s.map(x=>`<span class="tag s">＋ ${x}</span>`).join('')+h.w.map(x=>`<span class="tag w">− ${x}</span>`).join('');
+  const brk = Object.entries(h.brk).map(([k,v])=>`<div class="b"><span>${k}</span><b>${v}</b></div>`).join('')+Object.entries(pend).map(([k,v])=>`<div class="b pend"><span>${k}</span><b>${v}</b></div>`).join('');
+  card.innerHTML = `
+    <div class="h-head">
+      <span class="rk">${h.rk}</span><span class="mark ${h.mc}">${h.mk}</span>
+      <div class="h-name"><div class="nm">${h.nm}</div>
+        <div class="sub"><b>${h.ninki}番人気 ${h.odds}倍</b> ・ ${h.kishu} ・ ${h.kyaku}</div></div>
+      <div class="conf"><div class="pct">${h.conf}<span style="font-size:13px">%</span></div><div class="lbl">信頼度</div></div>
+    </div>
+    <div class="bar"><i style="width:${w}%"></i></div>
+    <div class="h-body"><div class="h-body-in">
+      <div class="tags">${tags}</div><div class="brk">${brk}</div>
+      <div class="raw">素点 <b>${h.raw}</b> 点（枠順・調教・道悪は未加算）</div>
+    </div></div>`;
+  card.querySelector('.h-head').addEventListener('click',()=>{card.querySelector('.h-body').classList.toggle('open');});
+  list.appendChild(card);
+});
+</script>
+</body>
+</html>
