@@ -15277,6 +15277,25 @@ function _getHorseNegatives(horse, raceName) {
     if ((horse.age||0) >= 7) n.push({ icon:'⚠️', text:'7歳以上（複勝3.6%で壊滅）' });
     if (horse.hanshinRecord === '0-1-0-5') n.push({ icon:'⚠️', text:'阪神【0-1-0-5】（阪神は明確に苦手）' });
     if ((horse.kongenType||'').indexOf('根幹型') >= 0) n.push({ icon:'⚠️', text:horse.kongenType + '（2200非根幹は割引）' });
+    // 【金塊A】中15週以上の長期休み明け（注意・サンプル薄／宝塚日2026-06-14 と前走日付の差で判定）
+    var _rh0 = (Array.isArray(horse.raceHistory) && horse.raceHistory[0]) ? horse.raceHistory[0] : null;
+    if (_rh0 && _rh0.date) {
+      var _prevT = Date.parse(_rh0.date);
+      var _takaT = Date.parse('2026-06-14');
+      if (!isNaN(_prevT)) {
+        var _weeks = (_takaT - _prevT) / (7 * 24 * 60 * 60 * 1000);
+        if (_weeks >= 15) n.push({ icon:'⚠️', text:'中15週以上の長期休み明け（過去該当3頭は全て着外・サンプル薄）' });
+      }
+    }
+    // 【金塊B】6歳以上×G1連対歴なし（消去・過去10年の6歳以上好走馬5頭は全てG1連対）
+    var _g1ren = (Array.isArray(horse.raceHistory) ? horse.raceHistory : []).some(function(r){
+      var nm = (r && r.name) || '';
+      return (nm.indexOf('GⅠ') >= 0 || nm.indexOf('G1') >= 0 || nm.indexOf('GI') >= 0) && (r.rank <= 2);
+    });
+    var _knownNoG1Ren = (['シェイクユアハート','マイネルエンペラー','ミステリーウェイ'].indexOf(horse.name) >= 0);
+    if ((horse.age||0) >= 6 && (!_g1ren || _knownNoG1Ren)) n.push({ icon:'⚠️', text:'6歳以上×G1連対歴なし（過去10年の6歳以上好走馬5頭は全てG1連対=消し）' });
+    // 【金塊C】ダービー馬だが非三冠（注意・ダービー馬の宝塚Vは3冠馬のみ・勝ち切れず連下傾向）
+    if (horse.isDerbyWinner === true) n.push({ icon:'⚠️', text:'ダービー馬だが非三冠（ダービー馬の宝塚Vは3冠馬のみ・勝ち切れず連下傾向）' });
     return n;
   }
 
