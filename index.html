@@ -12950,7 +12950,7 @@ function renderHorses() {
         <span class="badge">前走: ${prevRaceText} ${prevRankText}</span>
       </div>
 
-      ${(function(){ var _b = getHorseDataBadges(h, currentRace); return _b ? _b : renderHorseReasonTags(h, currentRace, { limit: 3, style: 'chip', withNeg: 1 }); })()}
+      ${(function(){ var _b = getHorseDataBadges(h, currentRace); return _b ? _b : renderHorseReasonTags(h, currentRace, { limit: 3, style: 'chip', withNeg: 2 }); })()}
 
       <div class="score-block">
         <div class="score-display">
@@ -14897,7 +14897,7 @@ function renderKaime() {
     jikuHtml += '<span style="font-size:11px;color:#AAC">' + (x.score || 0) + '%</span>';
     jikuHtml += '</div>';
     // 強い好走要素を最大2個チップ表示（消去は出さない＝買う理由を簡潔に）
-    jikuHtml += renderHorseReasonTags(h, raceName, { limit: 2, onlyStrong: true, style: 'chip', withNeg: 0 });
+    jikuHtml += renderHorseReasonTags(h, raceName, { limit: 2, onlyStrong: true, style: 'chip', withNeg: 0, onDark: true });
     jikuHtml += '</div>';
   });
   if (himoExtraCount > 0) {
@@ -15102,12 +15102,20 @@ function renderHorseReasonTags(h, raceName, opts) {
   if (!pos.length && !neg.length) return '';
 
   if (style === 'chip') {
+    var onDark = !!opts.onDark;
+    // ダーク地(相手リスト等)は淡色文字、白地(信頼度カード等・既定)は濃色文字
+    var posBg = onDark ? 'rgba(15,110,86,0.25)' : 'rgba(15,110,86,0.10)';
+    var posBd = onDark ? 'rgba(95,200,150,0.5)' : 'rgba(15,110,86,0.35)';
+    var posFg = onDark ? '#cfe8df' : '#0F6E56';
+    var negBg = onDark ? 'rgba(211,99,99,0.22)' : 'rgba(211,47,47,0.10)';
+    var negBd = onDark ? 'rgba(255,138,138,0.5)' : 'rgba(211,47,47,0.35)';
+    var negFg = onDark ? '#ff8a8a' : '#d32f2f';
     var chips = '';
     pos.forEach(function(r){
-      chips += '<span style="display:inline-block;font-size:10px;line-height:1.5;padding:1px 7px;margin:2px 3px 0 0;border-radius:10px;background:rgba(15,110,86,0.10);border:0.5px solid rgba(15,110,86,0.35);color:#0F6E56;font-weight:600">' + r.icon + ' ' + r.text + '</span>';
+      chips += '<span style="display:inline-block;font-size:10px;line-height:1.5;padding:1px 7px;margin:2px 3px 0 0;border-radius:10px;background:' + posBg + ';border:0.5px solid ' + posBd + ';color:' + posFg + ';font-weight:600">' + r.icon + ' ' + r.text + '</span>';
     });
     neg.forEach(function(r){
-      chips += '<span style="display:inline-block;font-size:10px;line-height:1.5;padding:1px 7px;margin:2px 3px 0 0;border-radius:10px;background:rgba(211,47,47,0.10);border:0.5px solid rgba(211,47,47,0.35);color:#d32f2f;font-weight:600">' + r.icon + ' ' + r.text + '</span>';
+      chips += '<span style="display:inline-block;font-size:10px;line-height:1.5;padding:1px 7px;margin:2px 3px 0 0;border-radius:10px;background:' + negBg + ';border:0.5px solid ' + negBd + ';color:' + negFg + ';font-weight:600">' + r.icon + ' ' + r.text + '</span>';
     });
     return '<div style="margin-top:6px;display:flex;flex-wrap:wrap;align-items:center">' + chips + '</div>';
   }
