@@ -14894,6 +14894,40 @@ function _getSireRecovery(sire, raceName) {
 function _getHorsePositives(horse, raceName) {
   var p = [];
   var stable = horse.stable || '';
+
+  // 函館スプリントS 専用の好走要素（脚質/函館巧者/1200重賞実績/血統/リピーター）
+  if (raceName === '函館スプリントS') {
+    var hky = horse.kyakushitsu || horse.style || horse.runStyle || '';
+    if (hky === '逃げ' || hky === '先行') p.push({ icon:'🏃', text:'逃げ先行（前残りコース・複勝30%超）', _strong:true });
+    else if (hky === '自在') p.push({ icon:'🏃', text:'自在・前に行ける（函館向き）', _strong:true });
+    if (horse.hakodateAptitude === '◎') p.push({ icon:'🏟', text:'函館巧者（コース実績◎）', _strong:true });
+    else if (horse.hakodateAptitude === '○') p.push({ icon:'🏟', text:'函館で好走歴', _strong:false });
+    var hsp = horse.sprint1200 || {};
+    if (typeof hsp.opStarts === 'number' && hsp.opStarts >= 3 && (hsp.opFuku||0) >= 40) p.push({ icon:'⚡', text:'1200重賞で実績（op複勝' + hsp.opFuku + '%）', _strong:true });
+    if (horse.bloodType === '◎') p.push({ icon:'🩸', text:'函館血統◎（ロードカナロア系/テスコボーイ系）', _strong:true });
+    if (horse.sire === 'ロードカナロア' || horse.motherSire === 'ロードカナロア') p.push({ icon:'🩸', text:'ロードカナロア（5年6回馬券内の最強血統）', _strong:true });
+    if (horse.repeaterRecord != null && horse.repeaterRecord <= 3) p.push({ icon:'🔁', text:'当レース過去3着内', _strong:true });
+    if (horse.prevClass === 'G1' && !horse.isTakamatsu) p.push({ icon:'🎯', text:'前走マイルG1組（複勝46%）', _strong:false });
+    if ((horse.age||0) <= 4) p.push({ icon:'🎂', text:'4歳以下（若い馬有利）', _strong:false });
+    return p;
+  }
+
+  // 宝塚記念 専用の好走要素（根幹非根幹/阪神成績/血統/前走G1上位）
+  if (raceName === '宝塚記念') {
+    var tkt = horse.kongenType || '';
+    if (tkt.indexOf('非根幹◎') >= 0) p.push({ icon:'🧬', text:'非根幹血統◎（阪神2200の持続力勝負に最適）', _strong:true });
+    else if (tkt.indexOf('非根幹○') >= 0) p.push({ icon:'🧬', text:'非根幹型○（2200の持続力に対応）', _strong:false });
+    else if (tkt.indexOf('ハイブリッド') >= 0) p.push({ icon:'🧬', text:'万能型（根幹も非根幹もこなす）', _strong:false });
+    if (horse.hanshinRecord === '3-1-0-0') p.push({ icon:'🏟', text:'阪神【3-1-0-0】複勝100%（コース勝利済み）', _strong:true });
+    if (horse.sire === 'ゴールドシップ') p.push({ icon:'🩸', text:'ステイゴールド系（阪神2200最多5勝の鉄板）', _strong:true });
+    else if (horse.sire === 'エピファネイア') p.push({ icon:'🩸', text:'ロベルト系（非SS×前走G1上位は単回221%）', _strong:true });
+    else if (horse.sire === 'ハービンジャー' || horse.motherSire === 'ハービンジャー') p.push({ icon:'🩸', text:'ハービンジャー（阪神2200血統1位・複勝28.6%）', _strong:true });
+    var tg1 = horse.prevRace && (horse.prevRace.indexOf('天皇賞') >= 0 || horse.prevRace === '大阪杯' || horse.prevRace.indexOf('有馬') >= 0 || horse.prevRace.indexOf('ドバイ') >= 0);
+    if (tg1 && (horse.prevRank||99) <= 3) p.push({ icon:'🎯', text:'前走G1上位（' + horse.prevRace + horse.prevRank + '着）', _strong:true });
+    if (horse.age === 4 || horse.age === 5) p.push({ icon:'🎂', text:horse.age + '歳（4〜5歳が中心）', _strong:false });
+    return p;
+  }
+
   // 美浦×牝馬（強）/ 牝馬全体（弱）
   if (horse.sex === '牝' && stable.indexOf('美浦') >= 0) {
     p.push({ icon:'🌸', text:'美浦×牝馬（複勝率66.7%★★★最強条件）', _strong: true });
@@ -15023,6 +15057,29 @@ function _strongPositiveCount(positives) {
 function _getHorseNegatives(horse, raceName) {
   var n = [];
   var stable = horse.stable || '';
+
+  // 函館スプリントS 専用の消去要素
+  if (raceName === '函館スプリントS') {
+    var hky = horse.kyakushitsu || horse.style || horse.runStyle || '';
+    if (hky === '追込') n.push({ icon:'⚠️', text:'追込（直線260mで届かない・複勝9.8%）' });
+    if (horse.isTakamatsu === true) n.push({ icon:'⚠️', text:'前走高松宮記念（人気の割に不振）' });
+    if ((horse.age||0) >= 8) n.push({ icon:'⚠️', text:'8歳以上（過去【0-0-1-14】壊滅）' });
+    var hsp = horse.sprint1200 || {};
+    if (typeof hsp.opStarts === 'number' && hsp.opStarts === 0) n.push({ icon:'⚠️', text:'1200重賞格未証明（全クラス巧者だがOP以上未経験）' });
+    else if (typeof hsp.opStarts === 'number' && hsp.opStarts <= 2 && (hsp.opFuku||0) === 0) n.push({ icon:'⚠️', text:'1200重賞実績が乏しい' });
+    return n;
+  }
+
+  // 宝塚記念 専用の消去要素
+  if (raceName === '宝塚記念') {
+    var tg2g3 = ['日経賞','金鯱賞','阪神大賞典','目黒記念','アミールトロフィー','ダイヤモンドS','新潟大賞典','クイーンエリザベス2世C'];
+    if (tg2g3.indexOf(horse.prevRace) >= 0 && (horse.prevRank||0) >= 3) n.push({ icon:'⚠️', text:'前走' + horse.prevRace + horse.prevRank + '着（前走G2G3で3着以下0-0-0-29）' });
+    if ((horse.age||0) >= 7) n.push({ icon:'⚠️', text:'7歳以上（複勝3.6%で壊滅）' });
+    if (horse.hanshinRecord === '0-1-0-5') n.push({ icon:'⚠️', text:'阪神【0-1-0-5】（阪神は明確に苦手）' });
+    if ((horse.kongenType||'').indexOf('根幹型') >= 0) n.push({ icon:'⚠️', text:horse.kongenType + '（2200非根幹は割引）' });
+    return n;
+  }
+
   // 前走5人気以下（国内・着外）
   if (!horse.prevIsOverseas && typeof horse.prevPop === 'number' && horse.prevPop >= 5
       && (!horse.prevRank || horse.prevRank >= 4)) {
