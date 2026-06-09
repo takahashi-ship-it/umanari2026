@@ -9436,6 +9436,46 @@ const RACE_PAST_DATA = {
         items:['追込(ダノン)は直線260mで届かず消し','1200重賞実績の薄い血統倒れ(ダノン・シュタール)は軸消し','8歳以上は機械的に割引だが9歳ウイングは当レース2着の実績で3着ヒモ救済はあり','高松宮記念組は人気の割に割引'],
         summary:'追込・1200実績薄・高齢を消し、前に行ける1200実績馬を残す。ウイングは高齢だが当レース2着の実績で3着ヒモ救済の余地。' }
     },
+    sprint1200Analysis: {
+      title:'函館スプリントS 芝1200m実績（全クラス vs オープン以上）',
+      subtitle:'全クラスで走る馬と重賞で走る馬を分けて見る。条件戦巧者の過大評価を防ぐ',
+      headerCards:[
+        { type:'ace', label:'重賞格◎', mainValue:'op複勝50%超', subValue:'レイピア/ピューロ等' },
+        { type:'iron', label:'重賞格○', mainValue:'op実績あり', subValue:'勝ち切れずとも好走' },
+        { type:'kill', label:'重賞格未証明', mainValue:'op0戦', subValue:'ルシード=全クラスは強いが重賞未経験' },
+        { type:'block', label:'1200実績薄', mainValue:'割引', subValue:'ダノン/シュタール' }
+      ],
+      filterSummary:{ title:'1200実績の見方',
+        iron:{ label:'オープン以上(op)の成績で本当の格を測る', desc:'全クラス(all)が良くてもop実績が無い馬は重賞で通用するか未知数' },
+        kill:{ label:'全クラス巧者でもop0戦は過大評価しない', desc:'ルシードはall複勝85.7%だがop0戦＝格未証明。人気の割に注意' } },
+      detailTable:[
+        { sire:'レイピア【all 6-1-2-2/op 0-1-2-2】', record:'全クラス81.8%・op複勝60%(5戦)', label:'重賞格◎・1200堅実', color:'green',
+          sprintMatch:function(h){return h.name==='レイピア';} },
+        { sire:'ピューロマジック【all 5-1-0-5/op 3-1-0-5】', record:'1200重賞3勝だが大敗も(ムラ)', label:'重賞格◎・ムラ', color:'green',
+          sprintMatch:function(h){return h.name==='ピューロマジック';} },
+        { sire:'クラスペディア【all 2-1-1-2/op 1-1-0-2】', record:'春雷S(L)勝ち・葵S2着・OP/L連対', label:'重賞格○・1200巧者', color:'blue',
+          sprintMatch:function(h){return h.name==='クラスペディア';} },
+        { sire:'ウイングレイテスト【all 1-2-1-7/op 1-2-1-7】', record:'当レース2着・op11戦で勝ち切れず', label:'重賞格○・勝ち切れず', color:'blue',
+          sprintMatch:function(h){return h.name==='ウイングレイテスト';} },
+        { sire:'カルプスペルシュ【all 5-0-2-3/op 0-0-1-2】', record:'函館巧者(条件)・op複勝33%(3戦)', label:'函館巧者・op実績は薄め', color:'blue',
+          sprintMatch:function(h){return h.name==='カルプスペルシュ';} },
+        { sire:'インビンシブルパパ【all 1-0-0-2/op 1-0-0-2】', record:'CBC賞勝ち・当レース4着', label:'重賞勝ち・コース実績', color:'blue',
+          sprintMatch:function(h){return h.name==='インビンシブルパパ';} },
+        { sire:'エーティーマクフィ/ポッドベイダー/ジョーメッドヴィン/モズナナスター', record:'OP/L級の1200実績はあるが重賞勝ちは無い', label:'OP級', color:'gray',
+          sprintMatch:function(h){return ['エーティーマクフィ','ポッドベイダー','ジョーメッドヴィン','モズナナスター'].indexOf(h.name)>=0;} },
+        { sire:'ルシード【all 3-2-1-1/op 0-0-0-0】', record:'全クラス複勝85.7%だがオープン以上は出走ゼロ＝重賞格未証明', label:'条件戦巧者・格未証明', color:'red',
+          sprintMatch:function(h){return h.name==='ルシード';} },
+        { sire:'ダノンマッキンリー/シュタールヴィント【1200実績薄】', record:'1200オープン以上で複勝0%・本職は別距離', label:'1200実績薄・割引', color:'red',
+          sprintMatch:function(h){return ['ダノンマッキンリー','シュタールヴィント'].indexOf(h.name)>=0;} }
+      ],
+      filterStrategy:{ title:'1200実績での狙い',
+        tags:['オープン以上の実績','条件戦巧者に注意','1200巧者','重賞格'],
+        buyRules:['オープン以上(op)で連対実績のある馬を重視(レイピア/クラスペ/ウイング/ピューロ)','函館巧者カルプスはop実績薄めでも函館コース実績で補える'],
+        killRules:['全クラスは強いがop0戦のルシードは重賞格未証明＝人気(3番)の割に過大評価注意','1200実績の薄いダノン・シュタールは血統が良くても割引'],
+        overseasRules:[],
+        finalStrategy:['全クラス成績(all)でなくオープン以上(op)の実績で本当の1200の格を測る'],
+        summary:'1200は全クラス成績でなくオープン以上の実績で測る。ルシードは全クラス巧者だがop0戦で格未証明、ダノン・シュタールは1200実績薄で割引。' }
+    },
     anaPoints: [
       '🐎 函館芝1200は前残り(直線260m)。逃げ先行有利・追込は複勝9.8%で壊滅。',
       '🩸 ロードカナロアが5年6回馬券内の最強血統。今年は母父カルプス・父シュタール。',
@@ -10290,6 +10330,7 @@ function _renderSireCardMatchFn(d, icon, matchKeyName) {
 }
 function renderKongenAnalysis(d) { return _renderSireCardMatchFn(d, '🧬', 'kongenMatch'); }
 function renderHanshinAnalysis(d) { return _renderSireCardMatchFn(d, '🏟', 'hanshinMatch'); }
+function renderSprint1200Analysis(d) { return _renderSireCardMatchFn(d, '🏇', 'sprintMatch'); }
 
 function renderJockeyAnalysis(d) {
   if (!d) return '';
@@ -10659,6 +10700,9 @@ function renderPastData() {
   }
   if (data.hanshinAnalysis) {
     html += renderHanshinAnalysis(data.hanshinAnalysis);
+  }
+  if (data.sprint1200Analysis) {
+    html += renderSprint1200Analysis(data.sprint1200Analysis);
   }
   if (data.jockeyAnalysis) {
     html += renderJockeyAnalysis(data.jockeyAnalysis);
