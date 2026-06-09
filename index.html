@@ -19009,15 +19009,21 @@ function computeScoreBreakdownHakodateSprintV1(horse, raceName, _rawOnly) {
   var repScore = (rep == null) ? 0 : (rep <= 3 ? 4 : rep <= 5 ? 2 : 1);
   items.repeater = { score: repScore, max: 4, label: '🔁当レース実績', group:'horse' };
 
-  // 前走クラス＋着順（max16）＋高松宮ペナルティ-4
+  // 前走クラス＋着順（max16）＝金塊データで精緻化
+  //  金塊②高松宮ペナルティ(案A・着順依存)：掲示板級(5着内)は勝ち切れないが来る→-2に緩和／6着以下の凡走は-4
+  //  金塊①マイルG1組(高松宮以外のG1)で前走5着内＝複勝46%の鉄板→+3ボーナス(今年該当0だが汎用ロジック)
   var pc = h.prevClass || '';
   var classBase = pc === 'G1' ? 12 : pc === 'G2' ? 10 : pc === 'G3' ? 9 : pc === 'L' ? 7 : pc === 'OP' ? 7 : pc === '3勝' ? 5 : 0;
   var pr = (typeof h.prevRank === 'number') ? h.prevRank : 99;
   var rankAdj = pr <= 3 ? 4 : pr <= 5 ? 2 : pr <= 9 ? 0 : -2;
-  var prevScore = Math.max(0, Math.min(16, classBase + rankAdj));
-  var takaPen = h.isTakamatsu ? 4 : 0;
-  prevScore = Math.max(0, prevScore - takaPen);
-  items.prevRace = { score: prevScore, max: 16, label: '📋前走格', note: (h.isTakamatsu ? '高松宮組-4（人気の割に不振）' : ''), group:'data' };
+  var takaPen = h.isTakamatsu ? (pr <= 5 ? 2 : 4) : 0;
+  var isMileG1 = (pc === 'G1' && !h.isTakamatsu);
+  var mileG1Bonus = (isMileG1 && pr <= 5) ? 3 : 0;
+  var prevScore = Math.max(0, Math.min(16, classBase + rankAdj - takaPen + mileG1Bonus));
+  var prevNote = '';
+  if (h.isTakamatsu) prevNote = (pr <= 5) ? '高松宮組だが掲示板級-2（勝ち切れないが来る）' : '高松宮組-4（人気の割に大敗）';
+  else if (mileG1Bonus) prevNote = '前走マイルG1組+3（複勝46%の鉄板）';
+  items.prevRace = { score: prevScore, max: 16, label: '📋前走格', note: prevNote, group:'data' };
 
   // 血統（max14）◎14/○9/△4
   var bt = h.bloodType || '';
