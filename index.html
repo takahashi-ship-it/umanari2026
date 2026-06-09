@@ -20731,6 +20731,7 @@ window.diagnoseMaigo = function(horseName) {
 
   var positives = [];
   var isTaka = (raceName === '宝塚記念');
+  var isHakodate = (raceName === '函館スプリントS');
   if (!isTaka) {
     if (h.prevIsOverseas) positives.push({ icon:'🌍', text:'前走海外組（別枠評価）' });
     else if (h.prevPop === 1) positives.push({ icon:'✅', text:'前走1人気（複勝率36%）' });
@@ -21077,38 +21078,23 @@ window.diagnoseMaigo = function(horseName) {
     // ========== 汎用ロジック ==========
 
     '_generic': function(horse, bd, rank) {
+      // 社長節フォールバック（全レース共通：安田の脇役にも効く）
       var pct = bd.pct;
+      var name = horse.name;
+      var prevStr = (horse.prevRace || '') + (horse.prevRank ? horse.prevRank + '着' : '');
+      var age = (horse.age || '?') + '歳';
+      var sireStr = horse.sire ? '父' + horse.sire + '。' : '';
       var p = '';
-      var prevPopStr = horse.prevIsOverseas ? '海外組' :
-                       (horse.prevPop ? horse.prevPop + '人気' : '');
-      p += horse.name + 'は前走' + (horse.prevRace || '') +
-           (horse.prevRank ? ' ' + horse.prevRank + '着' : '') +
-           (prevPopStr ? '（' + prevPopStr + '）' : '') +
-           'の' + (horse.age || '?') + '歳' + (horse.sex || '') + '馬。';
-      if (horse.sire) {
-        var sireComments = {
-          'リアルスティール': '父リアルスティールは東京1600m複勝率43.3%★最強血統',
-          'エピファネイア': '父エピファネイアは東京1600m単勝回収率188%★',
-          'モーリス': '父モーリスは東京1600m複勝回収107%◎',
-          'ロードカナロア': '父ロードカナロアは東京1600m最強種牡馬',
-          'キタサンブラック': '父キタサンブラックは勝率15.7%★最高',
-          'キズナ': '父キズナは複勝率31.3%',
-          'イスラボニータ': '父イスラボニータは単勝回収249%★穴妙味'
-        };
-        if (sireComments[horse.sire]) p += sireComments[horse.sire] + '。';
-        else p += '父' + horse.sire + '。';
+      if (pct >= 55) {
+        p = name + '、データはかなり推してます。前走' + prevStr + 'の' + age + '。' + sireStr +
+            'AIスコアは' + pct + '%で上位評価でした。雰囲気じゃなく数字が「買え」と言ってる1頭なんですよね🐎';
+      } else if (pct >= 42) {
+        p = name + 'は前走' + prevStr + 'の' + age + '。' + sireStr +
+            'AIスコア' + pct + '%で中位。買うなら相手の一角か、3着のヒモまでかなと。';
+      } else {
+        p = name + '、正直データ的には今回は厳しめ(' + pct + '%)。前走' + prevStr +
+            '。よほど展開が向けば…という1頭です。無理には狙いません。';
       }
-      p += '<br><br>AIスコア' + bd.total + '/' + bd.max + ' (' + pct + '%)で' + rank + 'ランク。';
-      if (horse.prevLast3f && horse.prevLast3f < 99) {
-        if (horse.prevLast3f <= 33.0) p += '前走上がり' + horse.prevLast3f + '秒は鉄板ボーダーで末脚は健在。';
-        else if (horse.prevLast3f <= 33.5) p += '前走上がり' + horse.prevLast3f + '秒は重賞上位レベル。';
-        else if (horse.prevLast3f >= 34.0) p += '前走上がり' + horse.prevLast3f + '秒は末脚不足で苦戦予想。';
-      }
-      p += '<br><br>';
-      if (pct >= 55) p += '→ <strong>相手として推奨</strong>。';
-      else if (pct >= 48) p += '→ <strong>3列目押さえまで</strong>。';
-      else if (pct >= 35) p += '→ <strong>消し寄りの押さえ</strong>。';
-      else p += '→ <strong>完全消し推奨</strong>。';
       return p;
     }
   };
@@ -21135,8 +21121,34 @@ window.diagnoseMaigo = function(horseName) {
     }
   };
 
+  // 函館スプリントS 専用エッセイ（主力7頭・安田/宝塚は無改変）
+  var hakodateCustomDiagnosis = {
+    'カルプスペルシュ': function(h, bd, rank) {
+      return 'データさん、今回はこの馬を一番に推してきました。5番人気のカルプスペルシュです。正直、前走の愛知杯11着だけ見ると「え、これが本命?」って思いますよね。私も最初そう思いましたw でも愛知杯は1400m。この馬の本当の舞台は、函館の1200mなんです。なんてったって函館巧者。HTB杯もTVh賞も、函館の1200で勝ってる。コースを知り尽くしてるんですよね。しかも脚質は先行——この前残りの函館で、前に行ける馬。これがデカい。血統も推せます。母父ロードカナロア。このレース、過去5年で6回も馬券に絡んでる最強血統なんですよ。データが「買え」って言ってる。AIスコアは堂々の1位。人気は5番手だけど、データで見たら一番上だった。雰囲気じゃなく、数字です。だから◎を打ちます🐎（来なかったらごめんなさい🙇 でもこの馬、信じてます）';
+    },
+    'インビンシブルパパ': function(h, bd, rank) {
+      return '対抗はインビンシブルパパ。この馬、去年のこのレースで逃げて4着なんですよ。コース実績バッチリ。しかもその後CBC賞を勝って、重賞ウイナーになりました。函館の1200を前で運べる——これ以上ない適性です。不安は前走の高松宮記念15着。でもあれは中京の1200、メンバーも一線級。ここは相手が落ちるし、得意の函館に戻る。巻き返してくれると思ってます🐎';
+    },
+    'クラスペディア': function(h, bd, rank) {
+      return '単穴はクラスペディア。前走の春雷Sを先行して勝ち切ったのが効いてます。1200の重賞級で、前に行ける。葵Sでも2着(この時逃げてます)。実は1200の成績、けっこう優秀なんですよね。7番人気と地味な扱いだけど、データ的にはもっと買われていい。世代戦中心の実績をどう見るかですが、私は推したい中穴です。';
+    },
+    'ウイングレイテスト': function(h, bd, rank) {
+      return '連下はウイングレイテスト。…9歳です。はい、年齢は確かにネックw でも去年のこのレース、2着なんですよ。父スクリーンヒーロー×母父サクラユタカオー、函館にドンピシャの血統。正直、データは「8歳以上は壊滅」と言ってる。でもこの馬だけは、当レース2着の実績で別枠。3着に粘る一発、警戒しときます。';
+    },
+    'レイピア': function(h, bd, rank) {
+      return '1番人気のレイピア。強いです、これは認めます。オーシャンS2着・高松宮5着、1200の重賞でずっと堅実。脚質も自在で前にも行ける。ただね、函館は初。そして前走高松宮組は「人気の割に走らない」のがこのレースのデータなんですよ。能力は上位、でも軸には推し切れなかった。相手の中心、という評価です。';
+    },
+    'ルシード': function(h, bd, rank) {
+      return 'そして3番人気のルシード。芝1200だけ見ると【3-2-1-1】、複勝率85%。確かに1200は走るんです。先行できるのもいい。…でも、全部3勝クラス以下なんですよね。オープン以上、つまり重賞レベルでの1200実績がゼロ。ここで一気に相手が強くなる。3番人気はちょっと買われすぎかなと。私は軸にはしません。妙味というより、人気先行の危険な1頭、と見てます。';
+    },
+    'ダノンマッキンリー': function(h, bd, rank) {
+      return '最後に、惜しい1頭。ダノンマッキンリー。父モーリスは函館1200の超優秀血統で、血統だけなら本当に魅力的なんです。でも…脚質が追込。函館の直線は260mしかなくて、後ろから行く馬は届かない(複勝率9.8%)。しかも本人の1200実績もほぼ無い。血統は最高、でも舞台が合わない。今回は消し、です。血統だけでは買えないんですよね…。';
+    }
+  };
+
   var diagnosis;
-  if (isTaka && takaCustomDiagnosis[horseName]) diagnosis = takaCustomDiagnosis[horseName](h, bd, rank);
+  if (isHakodate && hakodateCustomDiagnosis[horseName]) diagnosis = hakodateCustomDiagnosis[horseName](h, bd, rank);
+  else if (isTaka && takaCustomDiagnosis[horseName]) diagnosis = takaCustomDiagnosis[horseName](h, bd, rank);
   else if (customDiagnosis[horseName]) diagnosis = customDiagnosis[horseName](h, bd, rank);
   else diagnosis = customDiagnosis._generic(h, bd, rank);
 
