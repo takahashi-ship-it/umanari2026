@@ -9303,13 +9303,7 @@ const RACE_PAST_DATA = {
         finalStrategy:['阪神巧者を上位、阪神初・阪神苦手は割引'],
         summary:'宝塚は阪神巧者が走る。メイショウが阪神【3-1-0-0】で頭一つ抜け、ジューンは阪神苦手で消し。阪神初は地力上位でも割引。' }
     },
-    anaPoints: [
-      '🌹 安田と真逆＝先行有利・1番人気は複勝40%で荒れる。6〜7頭BOXが基本。',
-      '🩸 ステイゴールド系が鉄板。今年はメイショウタバル(父ゴールドシップ＋母系メジロマックイーン)が血統最強。',
-      '🎯 トニービン内包6頭(ビザンチン/シェイク/ミュージアム/レガレイラ/タガノ/ミステリー)は人気不問で押さえ。',
-      '💥 激走トリガー：非SS系×前走G1上位＝単回221%(ダノン)／牝馬×休み明け＝複回115%(レガレイラ)。',
-      '⚙️ 枠順・調教・当日馬場は未反映の暫定版。枠順は6/11(木)公開予定。'
-    ],
+    anaPoints: [],
     himitsuData4: {
       title:'宝塚4つの㊙️データ🐎',
       subtitle:'非根幹 × 血統 × G1掲示板 × 前走3着以内。いくつ当てはまるか——データで見る信頼度チェック',
@@ -10838,7 +10832,7 @@ function renderHimitsuData4(d) {
   if (Array.isArray(d.conditions) && d.conditions.length) {
     html += '<div style="background:rgba(255,255,255,0.04);border-radius:var(--border-radius-md);padding:9px 11px;margin-bottom:12px">';
     d.conditions.forEach(function(c) {
-      html += '<div style="font-size:11px;line-height:1.6;color:var(--text-sub)">' + c + '</div>';
+      html += '<div style="font-size:11px;line-height:1.6;color:#c8cfe0">' + c + '</div>';
     });
     html += '</div>';
   }
@@ -10856,12 +10850,12 @@ function renderHimitsuData4(d) {
       html += '</div>';
     }
     if (g.comment) {
-      html += '<div style="font-size:11px;line-height:1.7;color:var(--text-sub)">' + g.comment + '</div>';
+      html += '<div style="font-size:11px;line-height:1.7;color:#d5dcea">' + g.comment + '</div>';
     }
     html += '</div>';
   });
   if (d.summary) {
-    html += '<div style="margin-top:6px;padding:10px 12px;background:rgba(15,110,86,0.08);border-radius:var(--border-radius-md);font-size:12px;line-height:1.7;color:var(--text)">' + d.summary + '</div>';
+    html += '<div style="margin-top:6px;padding:10px 12px;background:rgba(15,110,86,0.08);border-radius:var(--border-radius-md);font-size:12px;line-height:1.7;color:#ffffff">' + d.summary + '</div>';
   }
   html += '</div>';
   return html;
