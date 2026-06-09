@@ -9330,7 +9330,18 @@ const RACE_PAST_DATA = {
           horses:['シンエンペラー','ジューンテイク','シュガークン'],
           comment:'4つとも当てはまらず。データ的には、今回は見送りの組です。' }
       ],
-      summary:'伏兵を狙うなら、私はG1掲示板組か上がり馬(前走3着以内)から。この4条件、いくつ持ってるかが宝塚を解く鍵だと思ってます🐎'
+      summary:'伏兵を狙うなら、私はG1掲示板組か上がり馬(前走3着以内)から。この4条件、いくつ持ってるかが宝塚を解く鍵だと思ってます🐎',
+      extraData: {
+        heading:'㊙️ さらに㊙️な金塊データ',
+        items:[
+          { tier:'orange', label:'A 中15週以上の長期休み明け（注意・過去該当3頭は全着外/サンプル薄）',
+            horses:['ミュージアムマイル','レガレイラ','スティンガーグラス'] },
+          { tier:'bronze', label:'B 6歳以上×G1連対歴なし（消去・過去10年の6歳以上好走馬5頭は全てG1連対）',
+            horses:['シェイクユアハート','マイネルエンペラー','ミステリーウェイ'] },
+          { tier:'orange', label:'C 非三冠のダービー馬（注意・ダービー馬の宝塚Vは3冠馬のみ・勝ち切れず連下傾向）',
+            horses:['クロワデュノール','ダノンデサイル'] }
+        ]
+      }
     }
   },
   '函館スプリントS': {
@@ -10857,6 +10868,7 @@ function renderHimitsuData4(d) {
     gold:   { head:'linear-gradient(135deg,#B8960C 0%,#F0D98A 50%,#B8960C 100%)', headText:'#1a1a1a', chip:'linear-gradient(135deg,#E8C766,#B8960C)', chipText:'#1a1a1a', border:'rgba(232,199,102,0.75)' },
     silver: { head:'linear-gradient(135deg,#9aa3b5 0%,#e6ebf5 50%,#9aa3b5 100%)', headText:'#1a1a1a', chip:'linear-gradient(135deg,#dfe5f0,#9aa3b5)', chipText:'#1a1a1a', border:'rgba(207,214,230,0.65)' },
     bronze: { head:'linear-gradient(135deg,#7a4f28 0%,#b07c46 50%,#7a4f28 100%)', headText:'#ffffff', chip:'#8a5a2b', chipText:'#ffffff', border:'rgba(176,124,70,0.6)' },
+    orange: { head:'linear-gradient(135deg,#EF9F27 0%,#F6C66B 50%,#EF9F27 100%)', headText:'#1a1a1a', chip:'linear-gradient(135deg,#F6C66B,#EF9F27)', chipText:'#1a1a1a', border:'rgba(239,159,39,0.6)' },
     dark:   { head:'#2a3050', headText:'#cfd6e6', chip:'#3a4675', chipText:'#ffffff', border:'rgba(160,168,200,0.32)' },
     gray:   { head:'#363c54', headText:'#a0a8c8', chip:'#4a5170', chipText:'#e8edf7', border:'rgba(138,147,160,0.3)' }
   };
@@ -10924,6 +10936,31 @@ function renderHimitsuData4(d) {
     }
     html += '</div></div>';
   });
+
+  // 追加金塊データセクション（任意・extraData）— groupsの下/summaryの上。既存TIERS配色を流用し統一感
+  if (d.extraData && Array.isArray(d.extraData.items) && d.extraData.items.length) {
+    if (d.extraData.heading) {
+      html += '<div style="font-size:12px;font-weight:800;letter-spacing:0.5px;color:#E8C766;margin:14px 0 8px;'
+        + 'padding-bottom:5px;border-bottom:1px solid rgba(184,150,12,0.4)">' + d.extraData.heading + '</div>';
+    }
+    d.extraData.items.forEach(function(it) {
+      var t = TIERS[it.tier] || TIERS.gray;
+      html += '<div style="border:1px solid ' + t.border + ';border-radius:11px;overflow:hidden;margin-bottom:9px;background:rgba(255,255,255,0.03)">';
+      // 見出しバー（格付けグラデ・既存groupと同系統）
+      html += '<div style="background:' + t.head + ';padding:7px 12px;font-size:11px;font-weight:800;'
+        + 'letter-spacing:0.3px;color:' + t.headText + '">' + (it.label || '') + '</div>';
+      // 該当馬チップ（既存と同じチップ装飾を流用）
+      if (Array.isArray(it.horses) && it.horses.length) {
+        html += '<div style="padding:9px 12px;display:flex;flex-wrap:wrap;gap:5px">';
+        it.horses.forEach(function(name) {
+          html += '<span style="background:' + t.chip + ';color:' + t.chipText + ';font-size:10px;font-weight:600;'
+            + 'padding:3px 9px;border-radius:9px;box-shadow:0 1px 2px rgba(0,0,0,0.25)">' + name + '</span>';
+        });
+        html += '</div>';
+      }
+      html += '</div>';
+    });
+  }
 
   // summary：白文字＋金の上枠線で締め
   if (d.summary) {
