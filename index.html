@@ -9311,6 +9311,140 @@ const RACE_PAST_DATA = {
       '⚙️ 枠順・調教・当日馬場は未反映の暫定版。枠順は6/11(木)公開予定。'
     ]
   },
+  '函館スプリントS': {
+    sections: [],
+    prevPopAnalysis: {
+      title:'函館スプリントS 人気別成績', subtitle:'過去10年／5番人気内で73%だが1番人気は過信禁物・荒れる',
+      headerCards:[
+        { type:'ace', label:'3番人気', mainValue:'3着内50%', subValue:'3勝・勝率30%で最良' },
+        { type:'iron', label:'1番人気', mainValue:'3着内60%', subValue:'2-1-3-4 勝率20%は平凡' },
+        { type:'block', label:'5番人気内', mainValue:'73%', subValue:'馬券内30頭中22頭' },
+        { type:'kill', label:'6〜10番人気', mainValue:'3着内10.6%', subValue:'中穴の罠ゾーン' }
+      ],
+      filterSummary:{ title:'人気の急所',
+        iron:{ label:'5番人気内を軸に・3番5番が妙味', desc:'1番人気は勝率20%で過信禁物。3番人気は勝率30%で最良' },
+        kill:{ label:'6〜10番人気は3着内10.6%の罠', desc:'狙うなら11番人気以下の大穴の方がまだ期待値あり' } },
+      detailTable:[
+        { pop:'1番人気', record:'2-1-3-4', win:'20%', rentai:'30%', fukusho:'60%', label:'過信禁物', color:'orange', noBadge:true },
+        { pop:'2番人気', record:'1-2-0-7', win:'10%', rentai:'30%', fukusho:'30%', label:'平凡', color:'gray', noBadge:true },
+        { pop:'3番人気', record:'3-0-2-5', win:'30%', rentai:'30%', fukusho:'50%', label:'最良', color:'green', noBadge:true },
+        { pop:'4番人気', record:'1-1-1-7', win:'10%', rentai:'20%', fukusho:'30%', label:'standard', color:'gray', noBadge:true },
+        { pop:'5番人気', record:'2-2-0-6', win:'20%', rentai:'40%', fukusho:'40%', label:'連対良', color:'blue', noBadge:true },
+        { pop:'6〜10番人気', record:'0-3-2-42', win:'0%', rentai:'6.4%', fukusho:'10.6%', label:'罠ゾーン', color:'red', noBadge:true },
+        { pop:'11番人気以下', record:'1-1-2-47', win:'2%', rentai:'3.9%', fukusho:'7.8%', label:'大穴', color:'gray', noBadge:true }
+      ],
+      comparisonBars:[
+        { label:'1番人気 3着内率', value:60, color:'orange' },
+        { label:'3番人気 3着内率', value:50, color:'green' },
+        { label:'6〜10番人気 3着内率', value:10.6, color:'red' }
+      ],
+      filterStrategy:{ title:'人気での立ち回り',
+        tags:['5番人気内軸','3番5番妙味','荒れる','1番人気過信禁物'],
+        buyRules:['5番人気内で馬券内73%・軸はこのゾーン','3番人気は勝率30%・5番人気は連対40%で妙味'],
+        killRules:['1番人気は勝率20%で過信しない','6〜10番人気は3着内10.6%の罠'],
+        overseasRules:['荒れ年は11番人気以下の大穴が一発'],
+        finalStrategy:['軸は5番人気内・相手に中穴と大穴を散らす'],
+        summary:'5番人気内で馬券内73%だが1番人気は勝率20%と平凡で荒れやすい。3番5番人気が妙味で、6〜10番人気は罠。' }
+    },
+    bloodAnalysis: {
+      title:'函館スプリントS 父系種牡馬別', subtitle:'函館芝1200洋芝＝ロードカナロアが最強血統・テスコボーイ系も', hideOthers:true,
+      headerCards:[
+        { type:'ace', label:'ロードカナロア', mainValue:'5年6回', subValue:'産駒が毎年のように馬券内' },
+        { type:'iron', label:'テスコボーイ系(母父)', mainValue:'○', subValue:'サクラユタカオー等が好相性' },
+        { type:'block', label:'ビッグアーサー', mainValue:'2年連続', subValue:'同コース種牡馬上位' },
+        { type:'kill', label:'欧州マイル型', mainValue:'△', subValue:'スプリント特化でないと割引' }
+      ],
+      filterSummary:{ title:'血統の急所',
+        iron:{ label:'ロードカナロアが最重要', desc:'父産駒が5年で6回馬券内・母父も◎。今年はシュタール(父)・カルプス(母父)' },
+        kill:{ label:'血統◎でも1200実績が伴わないと危険', desc:'ダノン(父モーリス)・シュタール(父ロードカナロア)は実績薄で割引' } },
+      detailTable:[
+        { sire:'ロードカナロア', record:'5年6回馬券内', fukusho:'', label:'最強血統', color:'green' },
+        { sire:'モーリス', record:'函館1200種牡馬2位', fukusho:'', label:'コース◎血統', color:'blue' },
+        { sire:'スクリーンヒーロー', record:'ロベルト系・洋芝', fukusho:'', label:'洋芝向き', color:'blue' },
+        { sire:'サクラユタカオー', record:'テスコボーイ系・母父で好走', fukusho:'', label:'母父◎', color:'orange', matchMother:true },
+        { sire:'ダイワメジャー', record:'同コース種牡馬3位', fukusho:'', label:'母父でも可', color:'orange', matchMother:true },
+        { sire:'アジアエクスプレス', record:'ヘニーヒューズ系パワー', fukusho:'', label:'パワー型', color:'gray' },
+        { sire:'ミスターメロディ', record:'Scat Daddy系', fukusho:'', label:'パワー型', color:'gray' }
+      ],
+      comparisonBars:[
+        { label:'ロードカナロア 馬券内(5年)', value:60, color:'green' },
+        { label:'モーリス 函館1200単回(参考)', value:73, color:'blue' },
+        { label:'欧州マイル型(目安)', value:25, color:'orange' }
+      ],
+      filterStrategy:{ title:'血統での狙い',
+        tags:['ロードカナロア','テスコボーイ系','洋芝パワー','函館巧者血統'],
+        buyRules:['ロードカナロア(父・母父とも)を最優先','テスコボーイ系/サクラ系の母父は隠れ好相性(ウイング・エーティー)','モーリス/ダイワメジャー等の同コース上位種牡馬'],
+        killRules:['血統◎でも1200重賞実績が伴わない馬(ダノン・シュタール)は割引'],
+        overseasRules:['欧州マイル型(モズアスコット等)はスプリント特化でないと割引'],
+        finalStrategy:['血統は買い材料だが必ず1200実績で裏取りする'],
+        summary:'ロードカナロアが5年6回馬券内で最強。テスコボーイ系母父も好相性。ただし血統◎でも1200実績が伴わない馬は割引。' }
+    },
+    otherDataAnalysis: {
+      title:'函館スプリントS 脚質・年齢・前走', subtitle:'前残り・若い馬・前走4着内/マイルG1組',
+      sections:[
+        { title:'脚質別成績', subtitle:'過去20年（前残りコース直線260m）', matchKey:'kyakushitsu',
+          rows:[
+            { label:'逃げ', record:'3-3-1-13', rate:35.0, tag:'best', desc:'複勝35%・単回148%の好成績' },
+            { label:'先行', record:'9-9-4-53', rate:29.3, tag:'iron', desc:'最多9勝・前に行ける馬が中心' },
+            { label:'差し', record:'6-6-10-84', rate:20.8, tag:'warn', desc:'届きにくい' },
+            { label:'追込', record:'2-2-5-83', rate:9.8, tag:'kill', desc:'壊滅・直線260mでは届かない' }
+          ] },
+        { title:'年齢別成績', subtitle:'5歳以下が馬券内30頭中23頭', matchKey:'age',
+          rows:[
+            { label:'3歳', record:'3-2-1-12', rate:33.3, tag:'best', desc:'斤量恩恵で最良（今年は該当なし）' },
+            { label:'4歳', record:'3-1-5-19', rate:32.1, tag:'iron', desc:'複勝率トップ級' },
+            { label:'5歳', record:'4-2-2-39', rate:17.0, tag:'warn', desc:'頭数多く勝ち切る' },
+            { label:'6歳', record:'0-3-0-24', rate:11.1, tag:'warn', desc:'勝利ゼロ' },
+            { label:'7歳', record:'0-2-1-10', rate:23.1, tag:'warn', desc:'たまに好走' },
+            { label:'8歳以上', record:'0-0-1-14', rate:6.7, tag:'kill', desc:'壊滅（9歳ウイングは実績で別評価）' }
+          ] },
+        { title:'前走レース別', subtitle:'マイルG1組◎・高松宮組は人気の割に不振', matchKey:'prevRace',
+          rows:[
+            { label:'マイルG1組', record:'3-2-2-7', rate:46.2, tag:'best', desc:'NHKマイル/桜花賞等からの短縮が好成績' },
+            { label:'高松宮記念', record:'2-0-1-17', rate:15.0, tag:'warn', desc:'人気の割に不振・勝ち切れない' },
+            { label:'前走4着以内(直近4年)', record:'4-3-2-16', rate:36.0, tag:'iron', desc:'勢い重視' },
+            { label:'前走5着以下(直近4年)', record:'0-1-2-36', rate:7.7, tag:'kill', desc:'巻き返しは稀' }
+          ] }
+      ],
+      finalStrategy:{ title:'まとめ',
+        items:['逃げ先行が中心・追込は壊滅','3〜4歳の若い馬が優秀(今年は4歳が中心)','前走4着以内の勢いある馬・マイルG1組は短縮で好走','前走高松宮記念組は人気の割に勝ち切れず注意(今年4頭該当)'],
+        summary:'前残り・若い馬・前走好走馬が王道。マイルG1短縮組は買い、高松宮組は人気の割に割引。' }
+    },
+    clearAnalysis: {
+      title:'函館スプリントS 消去ルール', subtitle:'過去10年データで切れる馬', autoClear:true,
+      headerCards:[
+        { type:'kill', label:'追込脚質', mainValue:'複勝9.8%', subValue:'直線260mで届かない' },
+        { type:'kill', label:'1200重賞実績薄', mainValue:'割引', subValue:'血統だけでは買えない' },
+        { type:'kill', label:'8歳以上', mainValue:'0-0-1-14', subValue:'高齢は壊滅' },
+        { type:'block', label:'前走5着以下', mainValue:'3着内7.7%', subValue:'重賞組以外は割引' }
+      ],
+      filterSummary:{ title:'消去の基本',
+        iron:{ label:'残すのは前に行ける1200実績馬', desc:'逃げ先行・自在で1200(特にオープン以上)に実績がある馬' },
+        kill:{ label:'追込・1200実績薄・高齢は消し', desc:'血統が良くても1200実績が伴わない馬は軸から外す' } },
+      killConditionsList:[
+        { label:'追込脚質', desc:'複勝9.8%・直線260mで届かない', horses:['ダノンマッキンリー'], icon:'🚫', color:'red' },
+        { label:'1200重賞実績が乏しい', desc:'オープン以上の1200で実績薄・血統倒れ', horses:['ダノンマッキンリー','シュタールヴィント'], icon:'🚫', color:'red' },
+        { label:'8歳以上の高齢', desc:'過去10年【0-0-1-14】で壊滅', horses:['ウイングレイテスト'], icon:'⚠️', color:'orange' },
+        { label:'前走高松宮記念組(人気の割に不振)', desc:'勝ち切れず・人気先行に注意', horses:['レイピア','インビンシブルパパ','ピューロマジック','エーティーマクフィ'], icon:'⚠️', color:'orange' }
+      ],
+      clearHorses:[
+        { name:'カルプスペルシュ', reason:'先行・母父ロードカナロア・函館巧者(HTB杯/TVh賞勝ち)', strength:'◎' },
+        { name:'インビンシブルパパ', reason:'逃げ・CBC賞勝ち・前年当レース4着のコース実績', strength:'○' },
+        { name:'クラスペディア', reason:'先行・春雷S勝ち・1200巧者', strength:'▲' }
+      ],
+      finalStrategy:{ title:'消去の結論',
+        items:['追込(ダノン)は直線260mで届かず消し','1200重賞実績の薄い血統倒れ(ダノン・シュタール)は軸消し','8歳以上は機械的に割引だが9歳ウイングは当レース2着の実績で3着ヒモ救済はあり','高松宮記念組は人気の割に割引'],
+        summary:'追込・1200実績薄・高齢を消し、前に行ける1200実績馬を残す。ウイングは高齢だが当レース2着の実績で3着ヒモ救済の余地。' }
+    },
+    anaPoints: [
+      '🐎 函館芝1200は前残り(直線260m)。逃げ先行有利・追込は複勝9.8%で壊滅。',
+      '🩸 ロードカナロアが5年6回馬券内の最強血統。今年は母父カルプス・父シュタール。',
+      '🎯 枠は内外フラット(宝塚と真逆)。7枠の単回297.8%だけ突出だが基本は枠不問。',
+      '⚡ 逃げ2頭(インビンシブルパパ・ピューロマジック)で先手争い。共倒れ展開なら差し・自在に展開利。',
+      '💡 1番人気は勝率20%で過信禁物・荒れやすい。データ軸は人気薄でも該当馬(カルプス5番/クラスペ7番/ウイング10番)。',
+      '⚙️ 枠順・調教・馬体重・当日馬場は未反映の暫定版。'
+    ]
+  },
 };
 
 function renderPastSection(title, icon, items, horses) {
@@ -9978,6 +10112,21 @@ function takaPassesClear(h){
   return true;
 }
 
+// 函館スプリントS 消去条件をクリアしているか（autoClear用）
+function hakodatePassesClear(h){
+  if (!h || h.isAvoided) return false;
+  if (h.kyakushitsu==='追込') return false;                                            // 追込は壊滅(複勝9.8%)
+  if (h.sprint1200 && h.sprint1200.opStarts<=2 && h.sprint1200.opFuku===0) return false; // 1200重賞実績が乏しい
+  if (h.age>=8) return false;                                                          // 8歳以上の高齢(0-0-0-8)
+  return true;
+}
+
+// レース別の消去判定ヘルパー
+function _passesClearForRace(h, raceName){
+  if (raceName === '函館スプリントS') return hakodatePassesClear(h);
+  return takaPassesClear(h); // 既定（宝塚）
+}
+
 function renderClearAnalysis(d) {
   if (!d) return '';
   var html = '<div class="analysis-card">';
@@ -10023,7 +10172,7 @@ function renderClearAnalysis(d) {
                    : (typeof currentRace !== 'undefined' ? currentRace : '');
       var _all = HORSES_BY_RACE[_raceN] || [];
       var _shown = clearLive.map(function(x){ return x.name; });
-      var _auto = _all.filter(function(h){ return takaPassesClear(h) && _shown.indexOf(h.name) < 0; });
+      var _auto = _all.filter(function(h){ return _passesClearForRace(h, _raceN) && _shown.indexOf(h.name) < 0; });
       _auto.forEach(function(h, j){
         html += '<div style="background:rgba(255,255,255,0.04);border-left:3px solid #9aa86a;border-radius:4px;padding:8px 12px;margin-bottom:6px;">'
              + '<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;">'
