@@ -14904,8 +14904,10 @@ function _getHorsePositives(horse, raceName) {
     else if (horse.hakodateAptitude === '○') p.push({ icon:'🏟', text:'函館で好走歴', _strong:false });
     var hsp = horse.sprint1200 || {};
     if (typeof hsp.opStarts === 'number' && hsp.opStarts >= 3 && (hsp.opFuku||0) >= 40) p.push({ icon:'⚡', text:'1200重賞で実績（op複勝' + hsp.opFuku + '%）', _strong:true });
-    if (horse.bloodType === '◎') p.push({ icon:'🩸', text:'函館血統◎（ロードカナロア系/テスコボーイ系）', _strong:true });
+    // 血統の好走要素は排他（同一血統の二重strong計上を防ぐ・strongは最大1個）
     if (horse.sire === 'ロードカナロア' || horse.motherSire === 'ロードカナロア') p.push({ icon:'🩸', text:'ロードカナロア（5年6回馬券内の最強血統）', _strong:true });
+    else if (horse.bloodType === '◎') p.push({ icon:'🩸', text:'函館血統◎（テスコボーイ系/モーリス等）', _strong:true });
+    else if (horse.bloodType === '○') p.push({ icon:'🩸', text:'函館で通用する血統', _strong:false });
     if (horse.repeaterRecord != null && horse.repeaterRecord <= 3) p.push({ icon:'🔁', text:'当レース過去3着内', _strong:true });
     if (horse.prevClass === 'G1' && !horse.isTakamatsu) p.push({ icon:'🎯', text:'前走マイルG1組（複勝46%）', _strong:false });
     if ((horse.age||0) <= 4) p.push({ icon:'🎂', text:'4歳以下（若い馬有利）', _strong:false });
