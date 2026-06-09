@@ -12769,7 +12769,7 @@ function renderHorses() {
         <span class="badge">前走: ${prevRaceText} ${prevRankText}</span>
       </div>
 
-      ${getHorseDataBadges(h, currentRace)}
+      ${(function(){ var _b = getHorseDataBadges(h, currentRace); return _b ? _b : renderHorseReasonTags(h, currentRace, { limit: 3, style: 'chip', withNeg: 1 }); })()}
 
       <div class="score-block">
         <div class="score-display">
@@ -14707,13 +14707,16 @@ function renderKaime() {
     var c = _rankColors[i % _rankColors.length];
     var badge = _rankLabels[i % _rankLabels.length];
     var umaNo = (h.umaban != null) ? h.umaban + '番' : '';
-    jikuHtml += '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;'
-      + 'background:rgba(255,255,255,0.04);border-radius:var(--border-radius-md);'
-      + 'border-left:2px solid ' + c + ';margin-bottom:4px">';
+    jikuHtml += '<div style="padding:7px 10px;background:rgba(255,255,255,0.04);'
+      + 'border-radius:var(--border-radius-md);border-left:2px solid ' + c + ';margin-bottom:4px">';
+    jikuHtml += '<div style="display:flex;align-items:center;gap:8px">';
     jikuHtml += '<span style="font-size:14px;font-weight:700;color:' + c + ';min-width:18px">' + badge + '</span>';
     if (umaNo) jikuHtml += '<span style="font-size:10px;color:#AAC">' + umaNo + '</span>';
     jikuHtml += '<span style="font-size:13px;font-weight:600;color:#FFFFFF;flex:1">' + h.name + '</span>';
     jikuHtml += '<span style="font-size:11px;color:#AAC">' + (x.score || 0) + '%</span>';
+    jikuHtml += '</div>';
+    // 強い好走要素を最大2個チップ表示（消去は出さない＝買う理由を簡潔に）
+    jikuHtml += renderHorseReasonTags(h, raceName, { limit: 2, onlyStrong: true, style: 'chip', withNeg: 0 });
     jikuHtml += '</div>';
   });
   if (himoExtraCount > 0) {
