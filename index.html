@@ -10843,10 +10843,14 @@ function renderHimitsuData4(d) {
   html += '<div style="text-align:center;margin-bottom:8px">'
     + '<span style="display:inline-block;font-size:10px;font-weight:800;letter-spacing:2px;color:#1a1a1a;'
     + 'background:linear-gradient(135deg,#E8C766,#B8960C);padding:3px 14px;border-radius:20px;box-shadow:0 1px 5px rgba(0,0,0,0.35)">㊙️ SPECIAL DATA ㊙️</span></div>';
-  // 金グラデ文字タイトル
+  // 金グラデ文字タイトル（㊙️🐎は別spanで透明塗りを打ち消し本来のカラー絵文字に戻す）
+  var _emojiKeep = 'style="-webkit-text-fill-color:initial;background:none;-webkit-background-clip:border-box;background-clip:border-box"';
+  var titleHtml = (d.title || '')
+    .replace(/㊙️/g, '<span ' + _emojiKeep + '>㊙️</span>')
+    .replace(/🐎/g, '<span ' + _emojiKeep + '>🐎</span>');
   html += '<h3 style="text-align:center;font-size:20px;font-weight:800;margin:2px 0 4px;line-height:1.25;'
     + 'background:linear-gradient(135deg,#F0D98A,#FFF7DA,#E8C766,#B8960C);-webkit-background-clip:text;background-clip:text;'
-    + '-webkit-text-fill-color:transparent;color:#E8C766;text-shadow:0 1px 2px rgba(0,0,0,0.25)">' + d.title + '</h3>';
+    + '-webkit-text-fill-color:transparent;color:#E8C766;text-shadow:0 1px 2px rgba(0,0,0,0.25)">' + titleHtml + '</h3>';
   // 金の区切り線
   html += '<div style="height:2px;background:linear-gradient(90deg,transparent,#B8960C,#E8C766,#B8960C,transparent);margin:7px 0 9px"></div>';
   if (d.subtitle) html += '<div style="text-align:center;font-size:12px;line-height:1.6;color:#a0a8c8;margin-bottom:13px">' + d.subtitle + '</div>';
@@ -10866,8 +10870,8 @@ function renderHimitsuData4(d) {
     html += '<div style="border:1px solid ' + t.border + ';border-radius:11px;overflow:hidden;margin-bottom:11px;background:rgba(255,255,255,0.03)">';
     // 見出しバー（格付けグラデ）
     html += '<div style="background:' + t.head + ';padding:8px 13px;display:flex;align-items:center;gap:8px">'
-      + '<span style="font-size:14px;line-height:1">' + g.level + '</span>'
-      + '<span style="font-size:12px;font-weight:800;letter-spacing:0.3px;color:' + t.headText + '">' + g.label + '</span></div>';
+      + '<span style="font-size:14px;line-height:1;white-space:nowrap;flex-shrink:0">' + g.level + '</span>'
+      + '<span style="font-size:12px;font-weight:800;letter-spacing:0.3px;color:' + t.headText + ';flex:1;min-width:0">' + g.label + '</span></div>';
     // ボディ
     html += '<div style="padding:10px 13px">';
     if (Array.isArray(g.horses) && g.horses.length) {
