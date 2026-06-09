@@ -14967,7 +14967,18 @@ function _getHorsePositives(horse, raceName) {
 }
 
 // 致命的な適性欠如：芝マイル近辺の経験ゼロ・前走非芝×芝マイル未経験・極端な末脚不足
-function _hasFatalUnfitness(horse) {
+function _hasFatalUnfitness(horse, raceName) {
+  // 函館スプリントS：スプリント戦。致命除外は「追込脚質」のみ（直線260mで届かず壊滅）。距離経験での除外はしない
+  if (raceName === '函館スプリントS') {
+    var _ky = horse.kyakushitsu || horse.style || horse.runStyle || '';
+    if (_ky === '追込') return { unfit: true, reason: '追込脚質（直線260mで届かず壊滅）' };
+    return { unfit: false };
+  }
+  // 宝塚記念：中距離G1。芝マイル経験必須の除外は外す（致命除外なし＝消去はnegatives側で表現）
+  if (raceName === '宝塚記念') {
+    return { unfit: false };
+  }
+  // それ以外（安田等・東京マイル前提）：従来判定を完全維持
   var hist = Array.isArray(horse.raceHistory) ? horse.raceHistory : [];
   // 芝1400-1800m の出走経験を集計
   var turfMileExp = hist.filter(function(r){
@@ -15080,7 +15091,7 @@ function _classifyAnaUma(horse, raceName, rankedList) {
   var pop = horse.popEstimate || 99;
   var positives = _getHorsePositives(horse, raceName);
   var negatives = _getHorseNegatives(horse, raceName);
-  var unfit = _hasFatalUnfitness(horse);
+  var unfit = _hasFatalUnfitness(horse, raceName);
   var weighted = _weightedPositiveCount(positives);
   var strongs = _strongPositiveCount(positives);
   var category = null;
@@ -15146,7 +15157,7 @@ function _pickAnaUmaCandidates(raceName) {
   // 緩和: 伏兵 0頭 → 人気帯を 4-10 番に広げて再探索（強い好走要素1+）
   if (groups.underdog.length === 0) {
     live.forEach(function(h) {
-      if (_hasFatalUnfitness(h).unfit) return;
+      if (_hasFatalUnfitness(h, raceName).unfit) return;
       if (isAlreadyTaken(h)) return;
       var entry = null;
       for (var i = 0; i < ranked.length; i++) { if (ranked[i].horse.name === h.name) { entry = ranked[i]; break; } }
@@ -15163,7 +15174,7 @@ function _pickAnaUmaCandidates(raceName) {
   // 緩和: 妙味 0頭 → 人気帯を 8-14 番、重み 1.5+ に緩めて再探索
   if (groups.value.length === 0) {
     live.forEach(function(h) {
-      if (_hasFatalUnfitness(h).unfit) return;
+      if (_hasFatalUnfitness(h, raceName).unfit) return;
       if (isAlreadyTaken(h)) return;
       var entry = null;
       for (var i = 0; i < ranked.length; i++) { if (ranked[i].horse.name === h.name) { entry = ranked[i]; break; } }
@@ -15180,7 +15191,7 @@ function _pickAnaUmaCandidates(raceName) {
   // 緩和: 夢馬券 0頭 → 人気帯を 10 番以下、消去 1+ に緩めて再探索
   if (groups.dream.length === 0) {
     live.forEach(function(h) {
-      if (_hasFatalUnfitness(h).unfit) return;
+      if (_hasFatalUnfitness(h, raceName).unfit) return;
       if (isAlreadyTaken(h)) return;
       var entry = null;
       for (var i = 0; i < ranked.length; i++) { if (ranked[i].horse.name === h.name) { entry = ranked[i]; break; } }
