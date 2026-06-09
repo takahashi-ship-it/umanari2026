@@ -18473,6 +18473,94 @@ function computeScoreBreakdownTakarazukaV1(horse, raceName, _rawOnly) {
   };
 }
 
+/* =====================================================
+ * 函館スプリントS 専用スコア V1（試算用・ディスパッチャ未接続）
+ * 返り値は宝塚V1と同形：{ total, max, pct, items:{key:{score,max,label,note}}, penalty }
+ * ===================================================== */
+function computeScoreBreakdownHakodateSprintV1(horse, raceName, _rawOnly) {
+  if (!horse) return { total: 0, max: 100, pct: 0, items: {}, penalty: 0 };
+  if (horse.isAvoided) return { total: 0, max: 100, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
+  var h = horse;
+  var items = {};
+
+  // 脚質（max22）逃げ/先行22・自在20・差し10・追込3
+  var ky = h.kyakushitsu || h.style || h.runStyle || '';
+  var kyScore = (ky.indexOf('逃げ') >= 0 || ky.indexOf('先行') >= 0) ? 22
+              : (ky.indexOf('自在') >= 0) ? 20
+              : (ky.indexOf('差し') >= 0) ? 10
+              : (ky.indexOf('追込') >= 0) ? 3 : 10;
+  items.kyakushitsu = { score: kyScore, max: 22, label: '🏃脚質' };
+
+  // 函館巧者（max8）◎8/○6/△3/×0
+  var hak = h.hakodateAptitude || '';
+  var hakScore = hak === '◎' ? 8 : hak === '○' ? 6 : hak === '△' ? 3 : 0;
+  items.hakodate = { score: hakScore, max: 8, label: '🏟函館巧者' };
+
+  // 1200距離適性（max8）sprint1200の実数ベース
+  var sp = h.sprint1200 || {};
+  var opS = (typeof sp.opStarts === 'number') ? sp.opStarts : 0;
+  var opF = (typeof sp.opFuku === 'number') ? sp.opFuku : 0;
+  var distScore, distNote;
+  if (opS === 0) { distScore = 2; distNote = '全クラス巧者だが重賞格未証明'; }
+  else if (opS <= 2 && opF === 0) { distScore = 1; distNote = '1200重賞実績ほぼ無し'; }
+  else if (opF >= 60) { distScore = 8; distNote = 'オープン以上で複勝率60%以上'; }
+  else if (opF >= 40) { distScore = 6; distNote = 'オープン以上で複勝率40%台'; }
+  else if (opF >= 1)  { distScore = 4; distNote = 'オープン以上で複勝率1〜39%'; }
+  else                { distScore = 3; distNote = 'オープン経験あるが複勝0%'; }
+  items.sprint = { score: distScore, max: 8, label: '⚡1200距離適性', note: distNote };
+
+  // リピーター（max4）当レース最高着順 1-3着→4 / 4-5→2 / その他数値→1 / null→0
+  var rep = h.repeaterRecord;
+  var repScore = (rep == null) ? 0 : (rep <= 3 ? 4 : rep <= 5 ? 2 : 1);
+  items.repeater = { score: repScore, max: 4, label: '🔁当レース実績' };
+
+  // 前走クラス＋着順（max16）＋高松宮ペナルティ-4
+  var pc = h.prevClass || '';
+  var classBase = pc === 'G1' ? 12 : pc === 'G2' ? 10 : pc === 'G3' ? 9 : pc === 'L' ? 7 : pc === 'OP' ? 7 : pc === '3勝' ? 5 : 0;
+  var pr = (typeof h.prevRank === 'number') ? h.prevRank : 99;
+  var rankAdj = pr <= 3 ? 4 : pr <= 5 ? 2 : pr <= 9 ? 0 : -2;
+  var prevScore = Math.max(0, Math.min(16, classBase + rankAdj));
+  var takaPen = h.isTakamatsu ? 4 : 0;
+  prevScore = Math.max(0, prevScore - takaPen);
+  items.prevRace = { score: prevScore, max: 16, label: '📋前走格', note: (h.isTakamatsu ? '高松宮組-4（人気の割に不振）' : '') };
+
+  // 血統（max14）◎14/○9/△4
+  var bt = h.bloodType || '';
+  var btScore = bt === '◎' ? 14 : bt === '○' ? 9 : bt === '△' ? 4 : 0;
+  items.blood = { score: btScore, max: 14, label: '🩸血統' };
+
+  // 人気（max10）1→8 / 2-3→10 / 4-5→8 / 6-9→5 / 10以上→3
+  var pop = h.popEstimate || 99;
+  var popScore = pop === 1 ? 8 : (pop <= 3 ? 10 : pop <= 5 ? 8 : pop <= 9 ? 5 : 3);
+  items.popularity = { score: popScore, max: 10, label: '⭐人気' };
+
+  // 年齢（max8）3-4→8 / 5→6 / 6→4 / 7→3 / 8+→1
+  var age = h.age || 0;
+  var ageScore = age <= 4 ? 8 : age === 5 ? 6 : age === 6 ? 4 : age === 7 ? 3 : 1;
+  items.age = { score: ageScore, max: 8, label: '🎂年齢' };
+
+  // 斤量（max5）<=55→5 / 56→4 / 57→3 / 58+→2
+  var cw = h.carriedWeight || 0;
+  var cwScore = cw <= 55 ? 5 : cw <= 56 ? 4 : cw <= 57 ? 3 : 2;
+  items.weight = { score: cwScore, max: 5, label: '🎚️斤量' };
+
+  // 騎手（max5）当レース勝ち鞍ありの騎手→5 / 未定→2 / その他→3
+  var jk = h.jockey || '';
+  var aceJ = ['浜中','武豊','池添','横山武史','北村友一','戸崎圭太','藤岡佑介'];
+  var jScore = (jk === '未定' || jk === '') ? 2 : (aceJ.some(function(n){ return jk.indexOf(n) >= 0; }) ? 5 : 3);
+  items.jockey = { score: jScore, max: 5, label: '🧑‍🦱騎手' };
+
+  // 枠（配点なし）
+  items.waku = { score: 0, max: 0, label: '🎯枠順', note: '配点なし' };
+
+  var total = 0, max = 0;
+  Object.keys(items).forEach(function(k){ var it = items[k]; if (it && typeof it.score === 'number') { total += it.score; max += (it.max || 0); } });
+  total = Math.max(0, total);
+  var pct = max > 0 ? Math.max(0, Math.min(99, Math.round(total / max * 100))) : 0;
+
+  return { total: total, max: max, pct: pct, items: items, penalty: 0 };
+}
+
 function computeScoreBreakdown(horse, raceName) {
   // ★回避馬は強制的に0%
   if (horse && horse.isAvoided) {
