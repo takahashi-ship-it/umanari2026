@@ -15129,7 +15129,7 @@ function _getHorseNegatives(horse, raceName) {
   // 宝塚記念 専用の消去要素
   if (raceName === '宝塚記念') {
     var tg2g3 = ['日経賞','金鯱賞','阪神大賞典','目黒記念','アミールトロフィー','ダイヤモンドS','新潟大賞典','クイーンエリザベス2世C'];
-    if (tg2g3.indexOf(horse.prevRace) >= 0 && (horse.prevRank||0) >= 3) n.push({ icon:'⚠️', text:'前走' + horse.prevRace + horse.prevRank + '着（前走G2G3で3着以下0-0-0-29）' });
+    if (!horse.prevIsOverseas && tg2g3.indexOf(horse.prevRace) >= 0 && (horse.prevRank||0) >= 3) n.push({ icon:'⚠️', text:'前走' + horse.prevRace + horse.prevRank + '着（前走G2G3で3着以下0-0-0-29）' });
     if ((horse.age||0) >= 7) n.push({ icon:'⚠️', text:'7歳以上（複勝3.6%で壊滅）' });
     if (horse.hanshinRecord === '0-1-0-5') n.push({ icon:'⚠️', text:'阪神【0-1-0-5】（阪神は明確に苦手）' });
     if ((horse.kongenType||'').indexOf('根幹型') >= 0) n.push({ icon:'⚠️', text:horse.kongenType + '（2200非根幹は割引）' });
