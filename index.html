@@ -10699,6 +10699,10 @@ function renderPastData() {
   }
 
   var html = '';
+  // 宝塚4つの㊙️データ（過去10年タブ最上部に表示）
+  if (data.himitsuData4) {
+    html += renderHimitsuData4(data.himitsuData4);
+  }
   if (data.prevPopAnalysis) {
     html += renderPrevPopAnalysis(data.prevPopAnalysis);
   }
@@ -10809,10 +10813,6 @@ function renderPastData() {
   // 穴馬条件・該当馬バッジ（NHKマイルC のみ）
   if (typeof renderAnaBadges === 'function') {
     html += renderAnaBadges(currentRace);
-  }
-  // 宝塚4つの㊙️データ（過去10年タブ最下部に必ず最後に表示）
-  if (data.himitsuData4) {
-    html += renderHimitsuData4(data.himitsuData4);
   }
   root.innerHTML = html;
 }
