@@ -9309,7 +9309,35 @@ const RACE_PAST_DATA = {
       '🎯 トニービン内包6頭(ビザンチン/シェイク/ミュージアム/レガレイラ/タガノ/ミステリー)は人気不問で押さえ。',
       '💥 激走トリガー：非SS系×前走G1上位＝単回221%(ダノン)／牝馬×休み明け＝複回115%(レガレイラ)。',
       '⚙️ 枠順・調教・当日馬場は未反映の暫定版。枠順は6/11(木)公開予定。'
-    ]
+    ],
+    himitsuData4: {
+      title:'宝塚4つの㊙️データ🐎',
+      subtitle:'非根幹 × 血統 × G1掲示板 × 前走3着以内。いくつ当てはまるか——データで見る信頼度チェック',
+      conditions:[
+        '🧬 非根幹：阪神2200の非根幹距離に強い血統タイプ(非根幹◎/○・ハイブリッド)',
+        '🩸 血統：宝塚で実績ある血統(ステイゴールド系/ロベルト系/ハービンジャー/ハーツクライ系)',
+        '🏆 G1掲示板：G1で5着以内の実績',
+        '🔥 前走3着以内：前走で好走した勢い・上がり馬'
+      ],
+      groups:[
+        { level:'㊙️㊙️㊙️㊙️', label:'4つ該当（データ的に文句なしの本命級）', color:'green',
+          horses:['タバル(非根幹◎/ステイゴールド系/大阪杯2着/G1掲示板)','ダノンデサイル(非根幹◎/ロベルト系/大阪杯3着/G1掲示板)','ミュージアムマイル(非根幹○/ハーツクライ系/有馬1着/G1掲示板)'],
+          comment:'4つ全部に当てはまった3頭。データ的には、もう文句なしです。本命タバルもこの中。素直にここから狙います🐎' },
+        { level:'㊙️㊙️㊙️', label:'3つ該当（あと一歩・十分買える）', color:'blue',
+          horses:['レガレイラ(非根幹◎/ハービンジャー/G1掲示板・前走有馬4着で惜)','ビザンチンドリーム(非根幹◎/ロベルト系/天皇賞春2着・前走は海外帰り)','シェイクユアハート(非根幹○/ハーツクライ系/前走金鯱賞1着・G1掲示板だけ無)'],
+          comment:'惜しくも3つ。でも十分買える馬たちです。特にシェイクユアハートは12番人気でこの内容、ちょっと面白い伏兵かなと思ってます👀' },
+        { level:'㊙️㊙️', label:'2つ該当（条件次第）', color:'orange',
+          horses:['クロワデュノール(G1掲示板/前走天皇賞春1着・血統と非根幹が不安)','マイユニバース(非根幹○/前走日経賞1着)','マイネルエンペラー(非根幹○/ステイゴールド系・G1実績が無い大穴)','スティンガーグラス(非根幹○/前走ダイヤS1着)','タガノデュード(非根幹○/ハーツクライ系)'],
+          comment:'2つ該当。1番人気クロワもここなんですよね。能力は認めますが、宝塚のデータ的にはあと2つ足りない、というのが私の正直な見立てです🤔' },
+        { level:'㊙️', label:'1つ該当', color:'gray',
+          horses:['ミクニインスパイア(前走日経賞2着)','コスモキュランダ(有馬2着のG1掲示板)','ファミリータイム(非根幹○)','ミステリーウェイ(非根幹○)'],
+          comment:'1つだけ。コスモは有馬2着の格があるので3着ヒモには残しますが、基本は軸からは外す組です。' },
+        { level:'―', label:'該当なし', color:'gray',
+          horses:['シンエンペラー','ジューンテイク','シュガークン'],
+          comment:'4つとも当てはまらず。データ的には、今回は見送りの組です。' }
+      ],
+      summary:'伏兵を狙うなら、私はG1掲示板組か上がり馬(前走3着以内)から。この4条件、いくつ持ってるかが宝塚を解く鍵だと思ってます🐎'
+    }
   },
   '函館スプリントS': {
     sections: [],
@@ -10788,7 +10816,55 @@ function renderPastData() {
   if (typeof renderAnaBadges === 'function') {
     html += renderAnaBadges(currentRace);
   }
+  // 宝塚4つの㊙️データ（過去10年タブ最下部に必ず最後に表示）
+  if (data.himitsuData4) {
+    html += renderHimitsuData4(data.himitsuData4);
+  }
   root.innerHTML = html;
+}
+
+function renderHimitsuData4(d) {
+  if (!d) return '';
+  var colorMap = {
+    green:  { bar:'#0F6E56', bg:'rgba(15,110,86,0.08)' },
+    blue:   { bar:'#2D6FA3', bg:'rgba(45,111,163,0.08)' },
+    orange: { bar:'#EF9F27', bg:'rgba(239,159,39,0.08)' },
+    gray:   { bar:'#8A93A0', bg:'rgba(138,147,160,0.08)' }
+  };
+  var html = '<div class="analysis-card" style="margin-top:14px">';
+  html += '<h3>' + d.title + '</h3>';
+  if (d.subtitle) html += '<div class="subtitle" style="margin-bottom:10px">' + d.subtitle + '</div>';
+  // 4条件の凡例
+  if (Array.isArray(d.conditions) && d.conditions.length) {
+    html += '<div style="background:rgba(255,255,255,0.04);border-radius:var(--border-radius-md);padding:9px 11px;margin-bottom:12px">';
+    d.conditions.forEach(function(c) {
+      html += '<div style="font-size:11px;line-height:1.6;color:var(--text-sub)">' + c + '</div>';
+    });
+    html += '</div>';
+  }
+  // グループごとに見出し＋馬チップ＋社長コメント
+  (d.groups || []).forEach(function(g) {
+    var cm = colorMap[g.color] || colorMap.gray;
+    html += '<div style="background:' + cm.bg + ';border-left:3px solid ' + cm.bar + ';border-radius:var(--border-radius-md);padding:9px 12px;margin-bottom:10px">';
+    html += '<div style="font-size:12px;font-weight:700;color:' + cm.bar + ';margin-bottom:6px">'
+          + '<span style="margin-right:6px">' + g.level + '</span>' + g.label + '</div>';
+    if (Array.isArray(g.horses) && g.horses.length) {
+      html += '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">';
+      g.horses.forEach(function(name) {
+        html += '<span style="background:' + cm.bar + ';color:#fff;font-size:10px;font-weight:500;padding:2px 8px;border-radius:9px">' + name + '</span>';
+      });
+      html += '</div>';
+    }
+    if (g.comment) {
+      html += '<div style="font-size:11px;line-height:1.7;color:var(--text-sub)">' + g.comment + '</div>';
+    }
+    html += '</div>';
+  });
+  if (d.summary) {
+    html += '<div style="margin-top:6px;padding:10px 12px;background:rgba(15,110,86,0.08);border-radius:var(--border-radius-md);font-size:12px;line-height:1.7;color:var(--text)">' + d.summary + '</div>';
+  }
+  html += '</div>';
+  return html;
 }
 
 function renderLeftCourseRanking(data) {
