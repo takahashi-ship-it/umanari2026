@@ -12937,6 +12937,21 @@ function renderHorses() {
               ) : '')
             + '<div class="score-item" style="grid-column:1/-1;border-top:1px solid #ddd;margin-top:4px;padding-top:4px"><div class="si-label" style="font-weight:700">合計</div><div class="si-val" style="font-weight:700;font-size:14px">'+total+'/'+maxS+' ('+pct+'%)</div></div>'
             + '</div>';
+        })() : (breakdown.items && Object.keys(breakdown.items).some(function(k){ return breakdown.items[k] && breakdown.items[k].label!==undefined; })) ? (function(){
+          // label付きitemsを総なめで汎用描画（宝塚V1/函館V1等・各自の正しい項目とmaxで表示）
+          var html = '<div class="score-detail">';
+          Object.keys(breakdown.items).forEach(function(k){
+            var it = breakdown.items[k];
+            if (!it || it.label===undefined) return;
+            if ((it.max||0)===0 && !it.score) return;          // 配点0(枠順0/0等)は省略
+            var p = it.max>0 ? it.score/it.max : 0;
+            var c = it.score<0?'#A32D2D': p>=0.7?'#0F6E56': p>=0.4?'#2563eb': it.score>0?'#888':'#bbb';
+            html += '<div class="score-item" title="'+((it.note||'').replace(/"/g,'&quot;'))
+                  + '"><div class="si-label">'+it.label+'</div><div class="si-val" style="color:'+c
+                  + '">'+it.score+'/'+it.max+'</div></div>';
+          });
+          html += '<div class="score-item" style="grid-column:1/-1;border-top:1px solid #ddd;margin-top:4px;padding-top:4px"><div class="si-label" style="font-weight:700">合計</div><div class="si-val" style="font-weight:700;font-size:14px">'+total+'/'+maxS+' ('+pct+'%)</div></div>';
+          return html + '</div>';
         })() : `<div class="score-detail">
           <div class="score-item"><div class="si-label">人気</div><div class="si-val">${(bdItems.popularity && bdItems.popularity.score) || 0}/20</div></div>
           <div class="score-item"><div class="si-label">枠順</div><div class="si-val">${(bdItems.waku && bdItems.waku.score) || 0}/15</div></div>
