@@ -10002,6 +10002,8 @@ function renderOtherDataAnalysis(d) {
         else if (row.label.indexOf('天皇賞') >= 0 && pr.indexOf('天皇賞') >= 0) ok = true;
         else if (row.label === 'G2' && ['日経賞','金鯱賞','阪神大賞典','目黒記念','アミールトロフィー'].indexOf(pr) >= 0) ok = true;
         else if (row.label === 'G3' && ['ダイヤモンドS','新潟大賞典'].indexOf(pr) >= 0) ok = true;
+        else if (row.label.indexOf('前走4着以内') >= 0 && typeof h.prevRank === 'number' && h.prevRank <= 4) ok = true;
+        else if (row.label.indexOf('前走5着以下') >= 0 && typeof h.prevRank === 'number' && h.prevRank >= 5) ok = true;
       } else if (sec.matchKey === 'weight') {
         var w = (h.weight && typeof h.weight === 'object') ? h.weight.current : (typeof h.weight === 'number' ? h.weight : 0);
         if (!w) return;
