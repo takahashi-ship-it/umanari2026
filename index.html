@@ -14972,9 +14972,12 @@ function _getHorsePositives(horse, raceName) {
     else if (tkt.indexOf('非根幹○') >= 0) p.push({ icon:'🧬', text:'非根幹型○（2200の持続力に対応）', _strong:false });
     else if (tkt.indexOf('ハイブリッド') >= 0) p.push({ icon:'🧬', text:'万能型（根幹も非根幹もこなす）', _strong:false });
     if (horse.hanshinRecord === '3-1-0-0') p.push({ icon:'🏟', text:'阪神【3-1-0-0】複勝100%（コース勝利済み）', _strong:true });
-    if (horse.sire === 'ゴールドシップ') p.push({ icon:'🩸', text:'ステイゴールド系（阪神2200最多5勝の鉄板）', _strong:true });
+    // 宝塚血統タグは最初にマッチした1種のみ発火（複数タグ防止・函館ロードカナロア排他化と同思想）
+    // 優先：ハービンジャー → ステイゴールド系 → ロベルト系 → ハーツクライ系
+    if (horse.sire === 'ハービンジャー' || horse.motherSire === 'ハービンジャー') p.push({ icon:'🩸', text:'ハービンジャー（阪神2200血統1位・複勝28.6%）', _strong:true });
+    else if (horse.sire === 'ゴールドシップ') p.push({ icon:'🩸', text:'ステイゴールド系（阪神2200最多5勝の鉄板）', _strong:true });
     else if (horse.sire === 'エピファネイア') p.push({ icon:'🩸', text:'ロベルト系（非SS×前走G1上位は単回221%）', _strong:true });
-    else if (horse.sire === 'ハービンジャー' || horse.motherSire === 'ハービンジャー') p.push({ icon:'🩸', text:'ハービンジャー（阪神2200血統1位・複勝28.6%）', _strong:true });
+    else if (horse.sire === 'ハーツクライ' || horse.motherSire === 'ハーツクライ' || horse.sire === 'スワーヴリチャード' || horse.motherSire === 'スワーヴリチャード') p.push({ icon:'🩸', text:'ハーツクライ系（阪神2200・宝塚で実績ある血統）', _strong:true });
     var tg1 = horse.prevRace && (horse.prevRace.indexOf('天皇賞') >= 0 || horse.prevRace === '大阪杯' || horse.prevRace.indexOf('有馬') >= 0 || horse.prevRace.indexOf('ドバイ') >= 0);
     if (tg1 && (horse.prevRank||99) <= 3) p.push({ icon:'🎯', text:'前走G1上位（' + horse.prevRace + horse.prevRank + '着）', _strong:true });
     if (horse.age === 4 || horse.age === 5) p.push({ icon:'🎂', text:horse.age + '歳（4〜5歳が中心）', _strong:false });
