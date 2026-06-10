@@ -18845,8 +18845,8 @@ function _getTakarazukaScoreStats() {
 }
 
 function computeScoreBreakdownTakarazukaV1(horse, raceName, _rawOnly) {
-  if (!horse) return { total: 0, max: 120, pct: 0, items: {}, penalty: 0 };
-  if (horse.isAvoided) return { total: 0, max: 120, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
+  if (!horse) return { total: 0, max: 124, pct: 0, items: {}, penalty: 0 };
+  if (horse.isAvoided) return { total: 0, max: 124, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
 
   var items = {};
   var name = horse.name || '';
@@ -19012,6 +19012,14 @@ function computeScoreBreakdownTakarazukaV1(horse, raceName, _rawOnly) {
   else                                  konkanScore = 0;
   items.konkan = { score: konkanScore, max: 4, label: '根幹/非根幹適性', group:'horse' };
 
+  // 14. 【記事金塊C】母父フレンチデピュティ＝特効薬血統（+4・父系bloodとは別系統の独立加点）
+  var frenchDeputyScore = (msire.indexOf('フレンチデピュティ') >= 0) ? 4 : 0;
+  items.frenchDeputy = { score: frenchDeputyScore, max: 4, label: '🩸母父フレンチデピュティ', note: (frenchDeputyScore ? '阪神2200で勝率20%の特効薬血統(+4)' : ''), group:'horse' };
+
+  // 15. 【記事金塊A】前走4角12番手以下＝壊滅（-5・脚質とは別の"前走の事実"・海外は代用値で除外）
+  var positionGapScore = (!horse.prevIsOverseas && (horse.prevCorner4||0) >= 12) ? -5 : 0;
+  items.positionGap = { score: positionGapScore, max: 0, label: '⚠️前走4角12番手', note: (positionGapScore ? '前走4角12番手以下(阪神宝塚【0-0-0-16】全滅・-5)' : ''), group:'data' };
+
   // ===== 合計・正規化 =====
   var totalScore = 0;
   Object.keys(items).forEach(function(k){
@@ -19032,13 +19040,13 @@ function computeScoreBreakdownTakarazukaV1(horse, raceName, _rawOnly) {
       var raw = 1 / (1 + Math.exp(-k2 * (totalScore - stats.medScore)));
       pct = Math.round(floorPct + range * raw);
     } else {
-      pct = Math.max(0, Math.min(99, Math.round(totalScore / 120 * 100)));
+      pct = Math.max(0, Math.min(99, Math.round(totalScore / 124 * 100)));
     }
   }
 
   return {
     total: totalScore,
-    max: 120,
+    max: 124,
     pct: pct,
     items: items,
     penalty: 0
