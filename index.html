@@ -19153,9 +19153,10 @@ function computeScoreBreakdownHakodateSprintV1(horse, raceName, _rawOnly) {
   var btScore = bt === '◎' ? 14 : bt === '○' ? 9 : bt === '△' ? 4 : 0;
   items.blood = { score: btScore, max: 14, label: '🩸血統', group:'horse' };
 
-  // 人気（max10）1→8 / 2-3→10 / 4-5→8 / 6-9→5 / 10以上→3
+  // 人気（max10）鉄板データ②：1番複勝60%/2-3番優勢/4番だけ凹む(複勝20%)/6番以下壊滅(複勝8.2%)
+  // 1→8 / 2-3→10 / 4→6(★凹み) / 5→8 / 6-9→4(★壊滅) / 10以上→3
   var pop = h.popEstimate || 99;
-  var popScore = pop === 1 ? 8 : (pop <= 3 ? 10 : pop <= 5 ? 8 : pop <= 9 ? 5 : 3);
+  var popScore = pop === 1 ? 8 : (pop <= 3 ? 10 : pop === 4 ? 6 : pop === 5 ? 8 : pop <= 9 ? 4 : 3);
   items.popularity = { score: popScore, max: 10, label: '⭐人気', group:'data' };
 
   // 年齢（max8）3-4→8 / 5→6 / 6→4 / 7→3 / 8+→1
