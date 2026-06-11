@@ -19094,18 +19094,22 @@ function computeScoreBreakdownHakodateSprintV1(horse, raceName, _rawOnly) {
               : (ky.indexOf('追込') >= 0) ? 3 : 10;
   items.kyakushitsu = { score: kyScore, max: 22, label: '🏃脚質', group:'data' };
 
-  // 函館巧者（max8）◎8/○6/△3/×は文脈依存（1200重賞実績ある馬は函館初でも救済）
-  // ※函館は内外フラットでコース特殊性が低く「函館初」の減点が過剰なため、1200オープン以上の実績で対応力を担保
+  // 函館巧者（max8）＝函館コース実績"専用"（実成績ベース・函館芝1200の複勝率で算出）
+  // ※op複勝率の救済は1200距離適性項目に任せ、ここでは純粋に函館コース成績だけを見る＝二重解消
+  // ※函館芝1200のみカウント（函館ダ1000等は芝1200適性の根拠でないため除外）。サンプル薄(1戦)は満点にしない
   var hak = h.hakodateAptitude || '';
-  var _sp = h.sprint1200 || {};
-  var _opS = (typeof _sp.opStarts === 'number') ? _sp.opStarts : 0;
-  var _opF = (typeof _sp.opFuku === 'number') ? _sp.opFuku : 0;
+  var _hr = Array.isArray(h.raceHistory) ? h.raceHistory : [];
+  var _h12 = _hr.filter(function(r){ return r && r.course === '函館' && r.surface === '芝' && r.distance === 1200; });
+  var _hn = _h12.length;
+  var _hf = _h12.filter(function(r){ return typeof r.rank === 'number' && r.rank <= 3; }).length;
+  var _hpct = _hn > 0 ? (_hf / _hn * 100) : 0;
   var hakScore, hakNote = '';
-  if (hak === '◎') { hakScore = 8; }
-  else if (hak === '○') { hakScore = 6; }
-  else if (hak === '△') { hakScore = 3; }
-  else if (_opS >= 3 && _opF >= 40) { hakScore = 3; hakNote = '函館初だが1200重賞実績で対応力あり(3)'; }
-  else { hakScore = 0; hakNote = '函館実績薄・1200重賞実績も乏しい(0)'; }
+  if (_hn >= 3 && _hpct >= 66)      { hakScore = 8; hakNote = '函館芝1200【複勝' + Math.round(_hpct) + '%】' + _hn + '戦の実績◎'; }
+  else if (_hn >= 3 && _hpct >= 40) { hakScore = 6; hakNote = '函館芝1200【複勝' + Math.round(_hpct) + '%】' + _hn + '戦'; }
+  else if (_hn >= 2 && _hpct >= 50) { hakScore = 6; hakNote = '函館芝1200【複勝' + Math.round(_hpct) + '%】' + _hn + '戦（連対歴）'; }
+  else if (_hn >= 1 && _hpct > 0)   { hakScore = 4; hakNote = '函館芝1200複勝歴ありだがサンプル薄(' + _hn + '戦)で中位'; }
+  else if (_hn >= 1 && _hpct === 0) { hakScore = 2; hakNote = '函館芝1200で' + _hn + '戦複勝0%（過大評価是正）'; }
+  else                              { hakScore = 3; hakNote = '函館芝1200未経験＝中立（未経験≠不適性）'; }
   items.hakodate = { score: hakScore, max: 8, label: '🏟函館巧者', note: hakNote, group:'horse' };
 
   // 1200距離適性（max8）sprint1200の実数ベース
