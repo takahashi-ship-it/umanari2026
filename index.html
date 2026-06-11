@@ -18847,8 +18847,8 @@ function _getTakarazukaScoreStats() {
 }
 
 function computeScoreBreakdownTakarazukaV1(horse, raceName, _rawOnly) {
-  if (!horse) return { total: 0, max: 124, pct: 0, items: {}, penalty: 0 };
-  if (horse.isAvoided) return { total: 0, max: 124, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
+  if (!horse) return { total: 0, max: 126, pct: 0, items: {}, penalty: 0 };
+  if (horse.isAvoided) return { total: 0, max: 126, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
 
   var items = {};
   var name = horse.name || '';
@@ -19032,6 +19032,15 @@ function computeScoreBreakdownTakarazukaV1(horse, raceName, _rawOnly) {
   }
   items.longLayoff = { score: longLayoffScore, max: 0, label: '⚠️中15週以上', note: (longLayoffScore ? '長期休み明け(過去該当3頭【0-0-0-3】全着外・サンプル薄のため-3)' : ''), group:'data' };
 
+  // 17. 【上がり馬】条件戦を連勝で駆け上がってきた若い馬（+2・新軸＝前走除く連勝。前走1着は前走別が評価＝二重なし）
+  var _juryo = ['G1','G2','G3'];
+  var _streak = [];
+  for (var _wi = 1; _wi < rh.length; _wi++) { if (rh[_wi] && rh[_wi].rank === 1) _streak.push(rh[_wi]); else break; }
+  var _hasLower = _streak.some(function(r){ return _juryo.indexOf(r.grade) < 0; });
+  var _prevRankWS = (rh[0] && typeof rh[0].rank === 'number') ? rh[0].rank : 99;
+  var winStreakScore = (_streak.length >= 2 && _hasLower && (age === 4 || age === 5) && _prevRankWS <= 6) ? 2 : 0;
+  items.winStreak = { score: winStreakScore, max: 2, label: '🔥連勝の勢い', note: (winStreakScore ? '条件戦を連勝で駆け上がってきた若い上がり馬(前走除く2連勝以上・下級から・4-5歳・前走6着内)(+2)' : ''), group:'data' };
+
   // ===== 合計・正規化 =====
   var totalScore = 0;
   Object.keys(items).forEach(function(k){
@@ -19052,13 +19061,13 @@ function computeScoreBreakdownTakarazukaV1(horse, raceName, _rawOnly) {
       var raw = 1 / (1 + Math.exp(-k2 * (totalScore - stats.medScore)));
       pct = Math.round(floorPct + range * raw);
     } else {
-      pct = Math.max(0, Math.min(99, Math.round(totalScore / 124 * 100)));
+      pct = Math.max(0, Math.min(99, Math.round(totalScore / 126 * 100)));
     }
   }
 
   return {
     total: totalScore,
-    max: 124,
+    max: 126,
     pct: pct,
     items: items,
     penalty: 0
