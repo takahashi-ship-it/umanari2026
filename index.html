@@ -19081,8 +19081,8 @@ function _getHakodateSprintScoreStats() {
 }
 
 function computeScoreBreakdownHakodateSprintV1(horse, raceName, _rawOnly) {
-  if (!horse) return { total: 0, max: 103, pct: 0, items: {}, penalty: 0 };
-  if (horse.isAvoided) return { total: 0, max: 103, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
+  if (!horse) return { total: 0, max: 107, pct: 0, items: {}, penalty: 0 };
+  if (horse.isAvoided) return { total: 0, max: 107, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
   var h = horse;
   var items = {};
 
@@ -19180,6 +19180,10 @@ function computeScoreBreakdownHakodateSprintV1(horse, raceName, _rawOnly) {
   // 【記事金塊】前走ちょうど3着の上積み（max3・既存rankAdj+4は1-3着共通・上積みは3着限定で二重でない）
   var prevThirdScore = (h.prevRank === 3) ? 3 : 0;
   items.prevThird = { score: prevThirdScore, max: 3, label: '🔥前走3着', note: (prevThirdScore ? '前走3着は函館SS過去【4-0-1-4】複勝55.6%で1着2着より好成績(+3)' : ''), group:'data' };
+
+  // 【記事金塊④】牝馬×前走4角3番手以内（max4・新軸：牝馬の勝ち馬は全て前走4角3番手以内＝前で運べる牝馬は買い）
+  var mareFrontScore = (h.sex === '牝' && h.prevCorner4 && h.prevCorner4 <= 3) ? 4 : 0;
+  items.mareFront = { score: mareFrontScore, max: 4, label: '♀前で運べる牝馬', note: (mareFrontScore ? '牝馬の勝ち馬は全て前走4角3番手以内(函館SS鉄板データ・前で運べる牝馬は買い)(+4)' : ''), group:'horse' };
 
   var total = 0, max = 0;
   Object.keys(items).forEach(function(k){ var it = items[k]; if (it && typeof it.score === 'number') { total += it.score; max += (it.max || 0); } });
