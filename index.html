@@ -9213,7 +9213,7 @@ const RACE_PAST_DATA = {
         iron:{ label:'残すのは前走国内外G1組', desc:'前走G1なら着順4着以下でも巻き返し例あり' },
         kill:{ label:'前走G2/G3凡走＋高齢は消し', desc:'消去該当馬は軸・本線から外す' } },
       killConditionsList:[
-        { label:'前走G2/G3で3着以下', desc:'0-0-0-29で全滅。軸・本線NG（近走の格で3着ヒモ救済はあり）', horses:['コスモキュランダ','ビザンチンドリーム','マイネルエンペラー','ファミリータイム'], icon:'🚫', color:'red' },
+        { label:'前走G2/G3で3着以下', desc:'0-0-0-29で全滅。軸・本線NG（近走の格で3着ヒモ救済はあり）。海外戦は格・条件が異なり対象外', horses:['コスモキュランダ','マイネルエンペラー','ファミリータイム','シュガークン'], icon:'🚫', color:'red' },
         { label:'7歳以上でG1勝ち実績なし', desc:'複勝率3.6%・壊滅', horses:['ミステリーウェイ'], icon:'🚫', color:'red' },
         { label:'6歳でG1勝ち実績なし', desc:'勝利ゼロ・複勝11.5%で割引', horses:['シェイクユアハート','マイネルエンペラー'], icon:'⚠️', color:'orange' },
         { label:'阪神が明確に苦手', desc:'宝塚は阪神巧者有利・阪神成績が極端に悪い馬は消し補強', horses:['ジューンテイク'], icon:'⚠️', color:'orange' }
@@ -10209,7 +10209,7 @@ function _isHorseAvoided(horseName) {
 function takaPassesClear(h){
   if (!h || h.isAvoided) return false;
   var g2g3=['日経賞','金鯱賞','阪神大賞典','目黒記念','アミールトロフィー','ダイヤモンドS','新潟大賞典','クイーンエリザベス2世C'];
-  if (g2g3.indexOf(h.prevRace)>=0 && h.prevRank>=3) return false; // 前走G2/G3で3着以下＝消去
+  if (!h.prevIsOverseas && g2g3.indexOf(h.prevRace)>=0 && h.prevRank>=3) return false; // 前走G2/G3で3着以下＝消去（海外戦は対象外）
   if (h.age>=7) return false;                                     // 7歳以上＝消去
   if (h.hanshinRecord==='0-1-0-5') return false;                  // 阪神が明確に苦手＝消去
   return true;
@@ -21081,7 +21081,7 @@ window.diagnoseMaigo = function(horseName) {
     }
 
     var takaG2G3 = ['日経賞','金鯱賞','阪神大賞典','目黒記念','アミールトロフィー','ダイヤモンドS','新潟大賞典','クイーンエリザベス2世C'];
-    if (takaG2G3.indexOf(h.prevRace) >= 0 && h.prevRank >= 3) negatives.push({ icon:'🚫', text:'前走' + h.prevRace + h.prevRank + '着＝消去ルール(前走G2G3で3着以下0-0-0-29)' });
+    if (!h.prevIsOverseas && takaG2G3.indexOf(h.prevRace) >= 0 && h.prevRank >= 3) negatives.push({ icon:'🚫', text:'前走' + h.prevRace + h.prevRank + '着＝消去ルール(前走G2G3で3着以下0-0-0-29)' });
     if (h.age >= 7)       negatives.push({ icon:'🚫', text:'7歳以上は複勝3.6%で壊滅' });
     else if (h.age === 6) negatives.push({ icon:'⚠️', text:'6歳はG1勝ち実績がなければ割引(勝利ゼロ)' });
     if (h.hanshinRecord === '0-1-0-5') negatives.push({ icon:'⚠️', text:'阪神【0-1-0-5】＝阪神は明確に苦手' });
