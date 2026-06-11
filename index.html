@@ -19022,6 +19022,16 @@ function computeScoreBreakdownTakarazukaV1(horse, raceName, _rawOnly) {
   var positionGapScore = (!horse.prevIsOverseas && (horse.prevCorner4||0) >= 12) ? -5 : 0;
   items.positionGap = { score: positionGapScore, max: 0, label: '⚠️前走4角12番手', note: (positionGapScore ? '前走4角12番手以下(阪神宝塚【0-0-0-16】全滅・-5)' : ''), group:'data' };
 
+  // 16. 【記事金塊A2】中15週以上の長期休み明け（-3・新軸＝レース間隔。サンプル薄3頭【0-0-0-3】のため軽め）
+  var longLayoffScore = 0;
+  var _rh0 = (rh && rh[0]) ? rh[0] : null;
+  if (_rh0 && _rh0.date) {
+    var _prevT = Date.parse(_rh0.date);
+    var _takaT = Date.parse('2026-06-14');
+    if (!isNaN(_prevT) && (_takaT - _prevT) / (7 * 24 * 60 * 60 * 1000) >= 15) longLayoffScore = -3;
+  }
+  items.longLayoff = { score: longLayoffScore, max: 0, label: '⚠️中15週以上', note: (longLayoffScore ? '長期休み明け(過去該当3頭【0-0-0-3】全着外・サンプル薄のため-3)' : ''), group:'data' };
+
   // ===== 合計・正規化 =====
   var totalScore = 0;
   Object.keys(items).forEach(function(k){
