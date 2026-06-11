@@ -19103,12 +19103,14 @@ function computeScoreBreakdownHakodateSprintV1(horse, raceName, _rawOnly) {
   var _hn = _h12.length;
   var _hf = _h12.filter(function(r){ return typeof r.rank === 'number' && r.rank <= 3; }).length;
   var _hpct = _hn > 0 ? (_hf / _hn * 100) : 0;
+  var _hbest = _h12.reduce(function(m, r){ var rk = (typeof r.rank === 'number') ? r.rank : 99; return rk < m ? rk : m; }, 99);
   var hakScore, hakNote = '';
   if (_hn >= 3 && _hpct >= 66)      { hakScore = 8; hakNote = '函館芝1200【複勝' + Math.round(_hpct) + '%】' + _hn + '戦の実績◎'; }
   else if (_hn >= 3 && _hpct >= 40) { hakScore = 6; hakNote = '函館芝1200【複勝' + Math.round(_hpct) + '%】' + _hn + '戦'; }
   else if (_hn >= 2 && _hpct >= 50) { hakScore = 6; hakNote = '函館芝1200【複勝' + Math.round(_hpct) + '%】' + _hn + '戦（連対歴）'; }
   else if (_hn >= 1 && _hpct > 0)   { hakScore = 4; hakNote = '函館芝1200複勝歴ありだがサンプル薄(' + _hn + '戦)で中位'; }
-  else if (_hn >= 1 && _hpct === 0) { hakScore = 2; hakNote = '函館芝1200で' + _hn + '戦複勝0%（過大評価是正）'; }
+  else if (_hn >= 1 && _hbest <= 5) { hakScore = 4; hakNote = '函館芝1200複勝0%だがベスト' + _hbest + '着（掲示板〜あと一歩＝中間評価）'; }
+  else if (_hn >= 1)                { hakScore = 2; hakNote = '函館芝1200で' + _hn + '戦複勝0%・ベスト' + _hbest + '着（明確な凡走）'; }
   else                              { hakScore = 3; hakNote = '函館芝1200未経験＝中立（未経験≠不適性）'; }
   items.hakodate = { score: hakScore, max: 8, label: '🏟函館巧者', note: hakNote, group:'horse' };
 
