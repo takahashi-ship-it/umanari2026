@@ -18926,7 +18926,12 @@ function computeScoreBreakdownTakarazukaV1(horse, raceName, _rawOnly) {
   var prevIsG1 = inList(prevRace, G1_PREV);
   var prevIsG2G3 = !prevIsG1 && inList(prevRace, G2G3_PREV);
   var prevScore;
-  if (prevIsG1) {
+  if (horse.prevIsOverseas === true) {
+    // 海外戦は敵地・別メンバー・別条件で着順の意味が国内と異なる→着順での大幅減点を避けクラス基準で中立評価
+    if (prevIsG1)        prevScore = (prevRank <= 3) ? 16 : 8;   // 海外G1: 掲示板16 / それ以外8
+    else if (prevIsG2G3) prevScore = (prevRank <= 3) ? 10 : 6;   // 海外G2/G3: 掲示板10 / それ以外6
+    else                 prevScore = 6;                          // 海外その他: 6(中立)
+  } else if (prevIsG1) {
     if (prevRank === 2)       prevScore = 20;
     else if (prevRank === 1)  prevScore = 18;
     else if (prevRank === 3)  prevScore = 15;
