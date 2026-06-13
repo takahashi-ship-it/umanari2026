@@ -21152,6 +21152,17 @@ window.diagnoseMaigo = function(horseName) {
     else if (h.age === 6) negatives.push({ icon:'⚠️', text:'6歳はG1勝ち実績がなければ割引(勝利ゼロ)' });
     if (h.hanshinRecord === '0-1-0-5') negatives.push({ icon:'⚠️', text:'阪神【0-1-0-5】＝阪神は明確に苦手' });
     if (h.hanshinRecord === '3-1-0-0') positives.push({ icon:'🏟', text:'阪神【3-1-0-0】複勝100%＝今回コースを勝利済み' });
+    // ★スコア材料(computeScoreBreakdownTakarazukaV1のitems)を好走要素に取り込む（diagnoseMaigoのpositivesが狭かったバグ修正）
+    var _ti = bd && bd.items ? bd.items : {};
+    if (_ti.winStreak && _ti.winStreak.score > 0) positives.push({ icon:'🔥', text:'条件戦を連勝で駆け上がってきた若い上がり馬（前走除く連勝）' });
+    if (_ti.prevRace && _ti.prevRace.score >= 10) positives.push({ icon:'📋', text:'前走good（前走G1で3着内 or 前走G2/G3で1着級）' });
+    if (_ti.recentClass && _ti.recentClass.score >= 6) positives.push({ icon:'🏆', text:'近走の格（近走G1好走・前年有馬掲示板級）' });
+    if (h.age === 4 || h.age === 5) positives.push({ icon:'🎂', text:'宝塚最強世代の4〜5歳' });
+    if (_ti.rising && _ti.rising.score > 0) positives.push({ icon:'📈', text:'上昇中（前走G2/G3勝ち＋先行＋4-5歳の上昇度ボーナス）' });
+    var _tk = h.kyakushitsu || '';
+    if (_tk.indexOf('先行') >= 0 || _tk.indexOf('逃げ') >= 0) positives.push({ icon:'🏃', text:'先行有利の宝塚で前に行ける脚質' });
+    if (h.training === 'S') positives.push({ icon:'🐎', text:'調教S（うましる・今年最高クラスの仕上がり）' });
+    else if (h.training === 'A') positives.push({ icon:'🐎', text:'調教A（うましる・好仕上がり）' });
   }
 
   var verdict, verdictColor, verdictBg, verdictIcon;
@@ -21159,10 +21170,10 @@ window.diagnoseMaigo = function(horseName) {
     verdict = '軸として強推奨'; verdictColor = '#2e7d32'; verdictBg = '#e8f5e9'; verdictIcon = '🟢';
   } else if (pct >= 55) {
     verdict = '押さえまで強く推奨'; verdictColor = '#1565c0'; verdictBg = '#e3f2fd'; verdictIcon = '🔵';
-  } else if (pct >= 48 && positives.length >= 3) {
-    verdict = '押さえまでは買い'; verdictColor = '#f57c00'; verdictBg = '#fff3e0'; verdictIcon = '🟡';
-  } else if (pct >= 35 && positives.length >= 2) {
-    verdict = 'データ悪いが妙味あり'; verdictColor = '#e65100'; verdictBg = '#ffe0b2'; verdictIcon = '🟠';
+  } else if (pct >= 42 && positives.length >= 2) {
+    verdict = '押さえ・3着ヒモ候補'; verdictColor = '#f57c00'; verdictBg = '#fff3e0'; verdictIcon = '🟡';
+  } else if (pct >= 35 && positives.length >= 1) {
+    verdict = 'データ的に妙味あり・3着ヒモ'; verdictColor = '#e65100'; verdictBg = '#ffe0b2'; verdictIcon = '🟠';
   } else {
     verdict = '完全消し推奨'; verdictColor = '#c62828'; verdictBg = '#ffebee'; verdictIcon = '🔴';
   }
@@ -21488,8 +21499,8 @@ window.diagnoseMaigo = function(horseName) {
   var buyAdvice;
   if (verdict === '軸として強推奨' || verdict === '押さえまで強く推奨') {
     buyAdvice = ['☑️ 軸として固定','☑️ 2列目・3列目に組み込む','☐ 完全消し'];
-  } else if (verdict === '押さえまでは買い' || verdict === 'データ悪いが妙味あり') {
-    buyAdvice = ['☐ 軸として固定','☑️ 3列目に組み込む','☐ 完全消し'];
+  } else if (verdict === '押さえ・3着ヒモ候補' || verdict === 'データ的に妙味あり・3着ヒモ') {
+    buyAdvice = ['☐ 軸として固定','☑️ 3列目に組み込む（3着ヒモ）','☐ 完全消し'];
   } else {
     buyAdvice = ['☐ 軸として固定','☐ 3列目に組み込む','☑️ 完全消し'];
   }
