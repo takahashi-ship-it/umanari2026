@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260614-2330';
+  var CURRENT_VERSION = '20260614-2350';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1771,764 +1771,6 @@
         </div>
       </div>
 
-      <!-- 皐月賞 -->
-      <div class="card" style="border:1.5px solid #639922">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">皐月賞</div>
-            <div style="font-size:11px;color:var(--text-mute)">4/19（土）中山 芝2000m G1</div>
-          </div>
-          <span style="background:#E1F5EE;color:#0F6E56;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">★ 的中！</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
-          3連単1着固定　軸4番ロブチェン　相手1,5,6,7,8,9,12,14,15,17,18（11頭）各500円・110点
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">投資</div>
-            <div style="font-size:13px;font-weight:600">55,000円</div>
-          </div>
-          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#0F6E56">払戻</div>
-            <div style="font-size:13px;font-weight:700;color:#0F6E56">200,550円</div>
-          </div>
-          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#0F6E56">収支</div>
-            <div style="font-size:13px;font-weight:700;color:#0F6E56">+145,550円</div>
-          </div>
-        </div>
-        <button onclick="toggleResult('satsuki')"
-          style="width:100%;padding:6px;border:1px solid #639922;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#0F6E56;font-weight:500">
-          結果を見る ▼
-        </button>
-        <div id="result-satsuki" style="display:none;margin-top:8px;padding:10px;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
-          <div style="font-weight:500;margin-bottom:4px;color:#0F6E56">✅ 的中！確定着順</div>
-          <div>🥇 1着：4番 ロブチェン（松山弘平・1番人気）コースレコード1:56.5</div>
-          <div>🥈 2着：15番 リアライズシリウス（4番人気）</div>
-          <div>🥉 3着：9番 ライヒスアドラー（9番人気）</div>
-          <div>4着：5番 アスクエジンバラ</div>
-          <div>5着：6番 フォルテアンジェロ</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #a3d9a5">
-            3連単 4-15-9：<strong>40,110円</strong>（99番人気）<br>
-            払戻：40,110円 × 5（500円購入）= <strong style="font-size:15px;color:#0F6E56">200,550円</strong>
-          </div>
-          <div style="color:#0F6E56;font-size:11px;margin-top:4px">
-            ✅ 軸ロブチェン（1番人気）が逃げ切りコースレコードV！9番人気ライヒスアドラー3着で高配当的中！
-          </div>
-        </div>
-      </div>
-
-      <!-- 青葉賞 -->
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">青葉賞</div>
-            <div style="font-size:11px;color:var(--text-mute)">4/25（土）東京 芝2400m G2</div>
-          </div>
-          <span style="background:#FCEBEB;color:#A32D2D;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">外れ</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
-          3連単2頭軸マルチ　軸4番×15番　相手5,6,7,8,10,11,12,13
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">投資</div>
-            <div style="font-size:13px;font-weight:600">4,800円</div>
-          </div>
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">払戻</div>
-            <div style="font-size:13px;font-weight:600;color:#A32D2D">0円</div>
-          </div>
-          <div style="background:#FCEBEB;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#A32D2D">収支</div>
-            <div style="font-size:13px;font-weight:700;color:#A32D2D">-4,800円</div>
-          </div>
-        </div>
-        <button onclick="toggleResult('aoba')"
-          style="width:100%;padding:6px;border:0.5px solid var(--border);
-                 background:var(--bg-soft);border-radius:var(--border-radius-md);
-                 font-size:11px;cursor:pointer;color:var(--text-sub)">
-          結果を見る ▼
-        </button>
-        <div id="result-aoba" style="display:none;margin-top:8px;padding:10px;
-             background:var(--bg-soft);border-radius:var(--border-radius-md);
-             font-size:12px;line-height:1.9">
-          <div style="font-weight:500;margin-bottom:4px">確定着順</div>
-          <div>🥇 1着：16番 ゴーイントゥスカイ（武豊・4番人気）</div>
-          <div>🥈 2着：7番 タイダルロック（3番人気）</div>
-          <div>🥉 3着：4番 ブラックオリンピア（1番人気）</div>
-          <div style="color:#A32D2D;margin-top:4px">🚑 競走中止：15番 ノーブルサヴェージ（D.レーン・故障）</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid var(--border)">
-            3連単払戻：<strong>17,700円</strong>（43番人気）
-          </div>
-          <div style="color:#A32D2D;font-size:11px;margin-top:4px">
-            ❌ 敗因：軸の15番ノーブルサヴェージが故障競走中止のため不成立
-          </div>
-        </div>
-      </div>
-
-      <!-- フローラステークス -->
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">フローラステークス</div>
-            <div style="font-size:11px;color:var(--text-mute)">4/26（日）東京 芝2000m G2</div>
-          </div>
-          <span style="background:#FCEBEB;color:#A32D2D;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">外れ</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
-          3連単1頭軸マルチ　軸2番　相手3,5,7,10,11,12（90点）
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">投資</div>
-            <div style="font-size:13px;font-weight:600">9,000円</div>
-          </div>
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">払戻</div>
-            <div style="font-size:13px;font-weight:600;color:#A32D2D">0円</div>
-          </div>
-          <div style="background:#FCEBEB;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#A32D2D">収支</div>
-            <div style="font-size:13px;font-weight:700;color:#A32D2D">-9,000円</div>
-          </div>
-        </div>
-        <button onclick="toggleResult('flora')"
-          style="width:100%;padding:6px;border:0.5px solid var(--border);
-                 background:var(--bg-soft);border-radius:var(--border-radius-md);
-                 font-size:11px;cursor:pointer;color:var(--text-sub)">
-          結果を見る ▼
-        </button>
-        <div id="result-flora" style="display:none;margin-top:8px;padding:10px;
-             background:var(--bg-soft);border-radius:var(--border-radius-md);
-             font-size:12px;line-height:1.9">
-          <div style="font-weight:500;margin-bottom:4px">確定着順</div>
-          <div>🥇 1着：5番 ラフターラインズ（D.レーン・1番人気）</div>
-          <div>🥈 2着：13番 エンネ（M.ディー・3番人気）</div>
-          <div>🥉 3着：7番 リアライズルミナス（松山弘平・5番人気）</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid var(--border)">
-            3連単払戻：<strong>7,920円</strong>
-          </div>
-          <div style="color:#A32D2D;font-size:11px;margin-top:4px">
-            ❌ 敗因：軸のラベルセーヌ（2番）が5着。消しにしたエンネ（7枠）が2着に激走
-          </div>
-        </div>
-      </div>
-
-      <!-- マイラーズカップ -->
-      <div class="card" style="border:1.5px solid #639922">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">マイラーズカップ</div>
-            <div style="font-size:11px;color:var(--text-mute)">4/26（日）京都 芝1600m G2</div>
-          </div>
-          <span style="background:#E1F5EE;color:#0F6E56;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">★ 的中！</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
-          3連単1頭軸マルチ　軸9番　相手1,2,5,7,10,18（90点）
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">投資</div>
-            <div style="font-size:13px;font-weight:600">9,000円</div>
-          </div>
-          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#0F6E56">払戻</div>
-            <div style="font-size:13px;font-weight:700;color:#0F6E56">70,140円</div>
-          </div>
-          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#0F6E56">収支</div>
-            <div style="font-size:13px;font-weight:700;color:#0F6E56">+61,140円</div>
-          </div>
-        </div>
-        <button onclick="toggleResult('mailers')"
-          style="width:100%;padding:6px;border:1px solid #639922;
-                 background:#E1F5EE;border-radius:var(--border-radius-md);
-                 font-size:11px;cursor:pointer;color:#0F6E56;font-weight:500">
-          結果を見る ▼
-        </button>
-        <div id="result-mailers" style="display:none;margin-top:8px;padding:10px;
-             background:#E1F5EE;border-radius:var(--border-radius-md);
-             font-size:12px;line-height:1.9">
-          <div style="font-weight:500;margin-bottom:4px;color:#0F6E56">✅ 的中！確定着順</div>
-          <div>🥇 1着：9番 アドマイヤズーム（武豊・1番人気）</div>
-          <div>🥈 2着：1番 ドラゴンブースト（丹内祐次・9番人気）</div>
-          <div>🥉 3着：7番 ベラジオボンド（北村友一・5番人気）</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #a3d9a5">
-            3連単払戻：<strong style="font-size:15px;color:#0F6E56">70,140円</strong>
-          </div>
-          <div style="color:#0F6E56;font-size:11px;margin-top:4px">
-            ✅ 的中根拠：1番人気複勝率88%×調教S×中28週の十分な間隔
-          </div>
-        </div>
-      </div>
-
-      <!-- 天皇賞（春） -->
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">天皇賞（春）</div>
-            <div style="font-size:11px;color:var(--text-mute)">5/3（日）京都 芝3200m G1</div>
-          </div>
-          <span style="background:#FCEBEB;color:#A32D2D;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">外れ</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
-          3連単1頭軸マルチ　軸3番アドマイヤテラ　相手1,4,7,8,11,12,14（7頭）各500円・126点
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">投資</div>
-            <div style="font-size:13px;font-weight:600">63,000円</div>
-          </div>
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">払戻</div>
-            <div style="font-size:13px;font-weight:600;color:#A32D2D">0円</div>
-          </div>
-          <div style="background:#FCEBEB;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#A32D2D">収支</div>
-            <div style="font-size:13px;font-weight:700;color:#A32D2D">-63,000円</div>
-          </div>
-        </div>
-        <button onclick="toggleResult('haruten')"
-          style="width:100%;padding:6px;border:0.5px solid var(--border);background:var(--bg-soft);border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:var(--text-sub)">
-          結果を見る ▼
-        </button>
-        <div id="result-haruten" style="display:none;margin-top:8px;padding:10px;background:var(--bg-soft);border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
-          <div style="font-weight:500;margin-bottom:4px">確定着順</div>
-          <div>🥇 1着：7番 クロワデュノール（北村友一・1番人気）写真判定</div>
-          <div>🥈 2着：15番 ヴェルテンベルク（松若風馬・12番人気）158番人気激走！</div>
-          <div>🥉 3着：3番 アドマイヤテラ（武豊・2番人気）← 軸馬・3着</div>
-          <div>4着：12番 ヘデントール</div>
-          <div>5着：4番 アクアヴァーナル</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid var(--border)">
-            3連単 7-15-3：<strong>70,630円</strong>（158番人気）
-          </div>
-          <div style="color:#A32D2D;font-size:11px;margin-top:4px">
-            ❌ 敗因：軸アドマイヤテラは3着に粘ったが、2着のヴェルテンベルク（15番）が相手に含まれていなかった。15番を相手に入れていれば70,630円×5=353,150円の的中だった。
-          </div>
-        </div>
-      </div>
-
-      <!-- 京都新聞杯 -->
-      <div class="card" style="border:1.5px solid #639922">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">京都新聞杯</div>
-            <div style="font-size:11px;color:var(--text-mute)">5/9（土）京都 芝2200m G2</div>
-          </div>
-          <span style="background:#E1F5EE;color:#0F6E56;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">★ 的中！</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
-          3連単1頭軸マルチ　軸5番コンジェスタス　相手2,1,15,12,8,9（6頭）90点・各200円・16,800円
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">投資</div>
-            <div style="font-size:13px;font-weight:600">16,800円</div>
-          </div>
-          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#0F6E56">払戻</div>
-            <div style="font-size:13px;font-weight:700;color:#0F6E56">74,860円</div>
-          </div>
-          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#0F6E56">収支</div>
-            <div style="font-size:13px;font-weight:700;color:#0F6E56">+58,060円</div>
-          </div>
-        </div>
-        <button onclick="toggleResult('kyotoshinbun')"
-          style="width:100%;padding:6px;border:1px solid #639922;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#0F6E56;font-weight:500">
-          結果を見る ▼
-        </button>
-        <div id="result-kyotoshinbun" style="display:none;margin-top:8px;padding:10px;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
-          <div style="font-weight:500;margin-bottom:4px;color:#0F6E56">✅ 的中！確定着順</div>
-          <div>🥇 1着：5番 コンジェスタス（西村淳也・4番人気14.1倍）★軸馬</div>
-          <div>🥈 2着：15番 ベレシート（北村友一・1番人気1.9倍）</div>
-          <div>🥉 3着：6番 ラディアントスター（10番人気42.3倍）</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #a3d9a5">
-            単勝5番：1,370円 / 複勝5番：390円<br>
-            馬連5-15：1,540円 / 馬単5→15：4,310円<br>
-            3連複5-6-15：13,940円<br>
-            3連単 5→15→6：<strong style="font-size:15px;color:#0F6E56">74,860円</strong> 🎉
-          </div>
-          <div style="color:#0F6E56;font-size:11px;margin-top:4px">
-            ✅ 軸コンジェスタス（4番人気・3枠5番・コントレイル産駒）が1着！データトリプル該当が見事に的中。10番人気ラディアントスター3着の波乱もマルチでカバーし完璧的中。
-          </div>
-        </div>
-      </div>
-
-      <!-- エプソムカップ -->
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">エプソムカップ</div>
-            <div style="font-size:11px;color:var(--text-mute)">5/9（土）東京 芝1800m G3</div>
-          </div>
-          <span style="background:#FCEBEB;color:#A32D2D;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">外れ</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
-          3連単1頭軸マルチ　軸14番サクラファレル　相手11,16,4,6,2,8（6頭）90点・各200円・16,800円
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">投資</div>
-            <div style="font-size:13px;font-weight:600">16,800円</div>
-          </div>
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">払戻</div>
-            <div style="font-size:13px;font-weight:600;color:#A32D2D">0円</div>
-          </div>
-          <div style="background:#FCEBEB;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#A32D2D">収支</div>
-            <div style="font-size:13px;font-weight:700;color:#A32D2D">-16,800円</div>
-          </div>
-        </div>
-        <button onclick="toggleResult('epsomc')"
-          style="width:100%;padding:6px;border:1px solid var(--border);background:var(--bg-soft);border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:var(--text);font-weight:500">
-          結果を見る ▼
-        </button>
-        <div id="result-epsomc" style="display:none;margin-top:8px;padding:10px;background:#FCEBEB;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
-          <div style="font-weight:500;margin-bottom:4px;color:#A32D2D">❌ 外れ・確定着順</div>
-          <div>🥇 1着：11番 トロヴァトーレ（C.ルメール・2番人気4.2倍）</div>
-          <div>🥈 2着：16番 ステレンボッシュ（戸崎圭太・6番人気13.3倍）</div>
-          <div>🥉 3着：17番 レガーロデルシエロ（岩田康誠・9番人気19.4倍）</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #f5b1ad">
-            3連単 11→16→17：<strong>108,330円</strong><br>
-            軸サクラファレル（1番人気5.8倍）は着外で不的中
-          </div>
-          <div style="color:#A32D2D;font-size:11px;margin-top:4px">
-            ❌ 敗因：サクラファレル（D.レーン）は4歳・東京2戦2勝・調教Aの好データだったが着外。1着トロヴァトーレ・2着ステレンボッシュ・3着レガーロデルシエロは相手には含まれていたが、軸違いで不的中。
-          </div>
-        </div>
-      </div>
-
-      <!-- NHKマイルC -->
-      <div class="card" style="border:1.5px solid #639922">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">NHKマイルC</div>
-            <div style="font-size:11px;color:var(--text-mute)">5/10（日）東京 芝1600m G1</div>
-          </div>
-          <span style="background:#E1F5EE;color:#0F6E56;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">★ 的中！</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
-          3連単ボックス　07,10,11,12,16,17,18番（7頭・210点）各200円　合計42,000円
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">投資</div>
-            <div style="font-size:13px;font-weight:600">42,000円</div>
-          </div>
-          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#0F6E56">払戻</div>
-            <div style="font-size:13px;font-weight:700;color:#0F6E56">52,300円</div>
-          </div>
-          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#0F6E56">収支</div>
-            <div style="font-size:13px;font-weight:700;color:#0F6E56">+10,300円</div>
-          </div>
-        </div>
-        <button onclick="toggleResult('nhkmilec')"
-          style="width:100%;padding:6px;border:1px solid #639922;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#0F6E56;font-weight:500">
-          結果を見る ▼
-        </button>
-        <div id="result-nhkmilec" style="display:none;margin-top:8px;padding:10px;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
-          <div style="font-weight:500;margin-bottom:4px;color:#0F6E56">✅ 的中！確定着順</div>
-          <div>🥇 1着：17番 ロデオドライブ（D.レーン・3番人気6.1倍）</div>
-          <div>🥈 2着：16番 アスクイキゴミ（戸崎圭太・5番人気9.9倍）</div>
-          <div>🥉 3着：11番 アドマイヤクワッズ（坂井瑠星・6番人気10.7倍）</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #a3d9a5">
-            単勝17番：460円 / 複勝17番：230円・16番：300円・11番：300円<br>
-            馬連16-17：1,710円 / 3連複11-16-17：6,160円<br>
-            3連単 17→16→11：<strong style="font-size:15px;color:#0F6E56">26,150円</strong> 🎉<br>
-            ボックス7頭中3頭が1〜3着でヒット → 26,150円 × 200円 = <strong>52,300円払戻</strong>
-          </div>
-          <div style="color:#0F6E56;font-size:11px;margin-top:4px">
-            ✅ 軸エコロアルバ（2番人気）は着外。3連単ボックス7頭（07・10・11・12・16・17・18）で的中目（17→16→11）をカバー。8枠勢2頭（17ロデオドライブ・16アスクイキゴミ）と6枠アドマイヤクワッズで確保。
-          </div>
-        </div>
-      </div>
-
-      <!-- 新潟大賞典 -->
-      <div class="card" style="border:1.5px solid #c0392b">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">新潟大賞典</div>
-            <div style="font-size:11px;color:var(--text-mute)">5/16（土）新潟 芝2000m G3</div>
-          </div>
-          <span style="background:#FBEAF0;color:#c0392b;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">✗ 不的中（馬券購入なし）</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
-          軸ドゥラドーレス・スコア1位シュガークン共に着外。3連単810,010円の超万馬券発生。馬券購入なし
-        </div>
-        <button onclick="toggleResult('niigatadaishoten')"
-          style="width:100%;padding:6px;border:1px solid #c0392b;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#c0392b;font-weight:500">
-          結果を見る ▼
-        </button>
-        <div id="result-niigatadaishoten" style="display:none;margin-top:8px;padding:10px;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
-          <div style="font-weight:500;margin-bottom:4px;color:#c0392b">✗ 軸2頭着外・超万馬券</div>
-          <div>🥇 1着：3番 グランディア（7番人気12.3倍）</div>
-          <div>🥈 2着：11番 バレエマスター（13番人気34.5倍）</div>
-          <div>🥉 3着：9番 フクノブルーレイク（12番人気18.7倍）</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #f5b7c9">
-            3連単 3→11→9：<strong style="font-size:15px;color:#c0392b">810,010円</strong>（1449番人気の超万馬券）
-          </div>
-          <div style="color:#c0392b;font-size:11px;margin-top:4px">
-            軸ドゥラドーレス（1人気3.1倍）・シュガークン（2人気5.5倍）共に着外。1番人気・2番人気が過去10年0勝のデータ通り。ハンデ戦の荒れを過小評価。馬券購入なしのため収支影響なし
-          </div>
-        </div>
-      </div>
-
-      <!-- ヴィクトリアマイル -->
-      <div class="card" style="border:1.5px solid #c0392b">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">ヴィクトリアマイル</div>
-            <div style="font-size:11px;color:var(--text-mute)">5/17（日）東京 芝1600m G1</div>
-          </div>
-          <span style="background:#E1F5EE;color:#0F6E56;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">★ 的中（点数過多でマイナス）</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
-          3連単1着固定流し　軸：12エンブロイダリー　相手：03,04,06,07,08,09,10,11,13,14,16,17,18（13頭・156点）各300円　合計46,800円
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">投資</div>
-            <div style="font-size:13px;font-weight:600">46,800円</div>
-          </div>
-          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#0F6E56">払戻</div>
-            <div style="font-size:13px;font-weight:700;color:#0F6E56">11,010円</div>
-          </div>
-          <div style="background:#FBEAF0;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#c0392b">収支</div>
-            <div style="font-size:13px;font-weight:700;color:#c0392b">-35,790円</div>
-          </div>
-        </div>
-        <button onclick="toggleResult('victoriamile')"
-          style="width:100%;padding:6px;border:1px solid #c0392b;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#c0392b;font-weight:500">
-          結果を見る ▼
-        </button>
-        <div id="result-victoriamile" style="display:none;margin-top:8px;padding:10px;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
-          <div style="font-weight:500;margin-bottom:4px;color:#0F6E56">✅ 的中！確定着順</div>
-          <div>🥇 1着：12番 エンブロイダリー（C.ルメール・1番人気2.2倍）</div>
-          <div>🥈 2着：8番 カムニャック（2番人気5.7倍）</div>
-          <div>🥉 3着：7番 クイーンズウォーク（3番人気8.4倍）</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #f5b7c9">
-            3連単 12→8→7：<strong style="font-size:15px;color:#0F6E56">3,670円</strong>（100円あたり）<br>
-            購入：300円×156点 → 払戻：3,670円 × 3倍 = <strong>11,010円払戻</strong>
-          </div>
-          <div style="color:#c0392b;font-size:11px;margin-top:4px">
-            ⚠️ 完璧的中（スコア1位×AI推奨×義英真本命の三位一体）だが、相手13頭の156点購入で点数過多。1〜3番人気決着の3,670円配当では回収不可。次回は相手6〜8頭に絞る運用へ
-          </div>
-        </div>
-      </div>
-
-      <!-- 平安ステークス -->
-      <div class="card" style="border:1.5px solid #c0392b">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">平安ステークス</div>
-            <div style="font-size:11px;color:var(--text-mute)">5/23（土）京都 ダ1900m G3</div>
-          </div>
-          <span style="background:#FBEAF0;color:#c0392b;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">✗ ハズレ（軸◎1着・買い目外2着）</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
-          3連単5頭BOX　03,09,11,14,16番（5頭・60点）各100円　合計6,000円
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">投資</div>
-            <div style="font-size:13px;font-weight:600">6,000円</div>
-          </div>
-          <div style="background:#FBEAF0;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#A32D2D">払戻</div>
-            <div style="font-size:13px;font-weight:700;color:#A32D2D">0円</div>
-          </div>
-          <div style="background:#FBEAF0;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#A32D2D">収支</div>
-            <div style="font-size:13px;font-weight:700;color:#A32D2D">-6,000円</div>
-          </div>
-        </div>
-        <button onclick="toggleResult('heianstakes')"
-          style="width:100%;padding:6px;border:1px solid #c0392b;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#c0392b;font-weight:500">
-          結果を見る ▼
-        </button>
-        <div id="result-heianstakes" style="display:none;margin-top:8px;padding:10px;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
-          <div style="font-weight:500;margin-bottom:4px;color:#0F6E56">✅ 軸◎は完璧的中（ただし3連単ハズレ）</div>
-          <div>🥇 1着：14番 ロードクロンヌ（横山和生・1番人気2.9倍）</div>
-          <div>🥈 2着：5番 ヴァルツァーシャル（9番人気・買い目外）</div>
-          <div>🥉 3着：11番 タイトニット（4番人気）</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #f5b7c9">
-            3連単 14→5→11：<strong style="font-size:15px;color:#c0392b">33,730円</strong>（83番人気の大波乱）<br>
-            ※3連複 14-5-11なら<strong>7,770円</strong>的中だった
-          </div>
-          <div style="color:#A32D2D;font-size:11px;margin-top:4px">
-            軸◎ロードクロンヌ1着・穴馬リスト◎タイトニット3着で軸馬予想は完璧的中。ただし2着に9人気ヴァルツァーシャル（買い目外）が突っ込み3連単83人気の大波乱に。3連複14-5-11なら7,770円的中だった。買い目構成の課題が残るレース
-          </div>
-        </div>
-      </div>
-
-      <!-- オークス -->
-      <div class="card" style="border:1.5px solid #c0392b">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">オークス</div>
-            <div style="font-size:11px;color:var(--text-mute)">5/24（日）東京 芝2400m G1</div>
-          </div>
-          <span style="background:#FBEAF0;color:#c0392b;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">✗ ハズレ（◎軸固定マルチで撃沈）</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
-          3連単1頭軸マルチ　軸：10スターアニス　相手：02,03,08,12,13,15,16,18（8頭・168点）各100円　合計16,800円
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">投資</div>
-            <div style="font-size:13px;font-weight:600">16,800円</div>
-          </div>
-          <div style="background:#FBEAF0;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#A32D2D">払戻</div>
-            <div style="font-size:13px;font-weight:700;color:#A32D2D">0円</div>
-          </div>
-          <div style="background:#FBEAF0;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#A32D2D">収支</div>
-            <div style="font-size:13px;font-weight:700;color:#A32D2D">-16,800円</div>
-          </div>
-        </div>
-        <button onclick="toggleResult('oaks2026')"
-          style="width:100%;padding:6px;border:1px solid #c0392b;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#c0392b;font-weight:500">
-          結果を見る ▼
-        </button>
-        <div id="result-oaks2026" style="display:none;margin-top:8px;padding:10px;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
-          <div style="font-weight:500;margin-bottom:4px;color:#c0392b">✗ 軸◎スターアニス着外・3連単マルチ撃沈</div>
-          <div>🥇 1着：16番 ジュウリョクピエロ（今村聖奈・5番人気7.6倍）</div>
-          <div>🥈 2着：12番 ドリームコア（C.ルメール・3番人気6.9倍）</div>
-          <div>🥉 3着：18番 ラフターラインズ（D.レーン・2番人気3.5倍）</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #f5b7c9">
-            3連単 16→12→18：<strong style="font-size:15px;color:#c0392b">大波乱配当</strong><br>
-            ※相手8頭中3頭が掲示板入り、軸違いで不的中。3連複16-12-18なら<strong>3,220円</strong>的中だった
-          </div>
-          <div style="margin-top:8px;padding:8px;background:#fff;border-radius:6px;border-left:3px solid #c0392b">
-            <div style="font-weight:700;color:#c0392b;margin-bottom:4px;font-size:11px">📝 オークス2026 敗因分析</div>
-            <div style="color:#444;font-size:11px;line-height:1.7">
-              <strong>① 軸馬の選定ミス</strong>：桜花賞馬スターアニスは484kg・距離延長・東京コース初経験など複数のリスク要因があったが、最終決定では桜花賞馬への過信を優先。馬体重データの反映タイミングが遅かった。<br>
-              <strong>② 買い目構成の致命的欠陥</strong>：3連単1頭軸マルチ（168点）は軸馬絶対依存型。軸馬1頭が飛んだ瞬間に全部外れる構造。平安Sでも同じパターンで負けたのに学習できていなかった。<br>
-              <strong>③ 的中していれば</strong>：相手8頭中3頭（ドリームコア・ラフターラインズ・ジュウリョクピエロ）が掲示板に。3連複16-12-18で3,220円的中だった。3連単マルチを諦めて3連複BOXに切り替えていれば的中の可能性大。<br>
-              <strong>④ AIスコアの判断</strong>：AIスコアは最終的に「ドリームコア＝スターアニス同率1位」と判定。ドリームコア◎にしていれば2着的中で3連単・馬連的中の可能性があった。「軸馬はAIに従う」スタンスを守りきれなかった。<br>
-              <strong>⑤ 次回への課題</strong>：1着固定マルチ→1着固定流し or 3連複に変更。軸馬を1頭に絞らない構成。AIスコアと馬体重データを優先。桜花賞馬への過信を避ける（過去オークスでも桜花賞馬は意外と勝てていない）。
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 葵ステークス（予想完璧的中・馬券購入なし） -->
-      <div class="card" style="border:1.5px solid #639922">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">葵ステークス</div>
-            <div style="font-size:11px;color:var(--text-mute)">5/30（土）京都 芝1200m G3</div>
-          </div>
-          <span style="background:#E1F5EE;color:#0F6E56;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">★ 予想完璧的中（馬券購入なし）</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
-          ◎軸デアヴェローチェ・○ヒシアイラ・△タマモイカロス（上位7頭中6頭に印馬）
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">投資</div>
-            <div style="font-size:13px;font-weight:600">0円</div>
-          </div>
-          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#0F6E56">仮想払戻</div>
-            <div style="font-size:13px;font-weight:700;color:#0F6E56">単勝870円</div>
-          </div>
-          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#0F6E56">仮想馬単</div>
-            <div style="font-size:13px;font-weight:700;color:#0F6E56">9,530円</div>
-          </div>
-        </div>
-        <button onclick="toggleResult('aoi2026')"
-          style="width:100%;padding:6px;border:1px solid #639922;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#0F6E56;font-weight:500">
-          結果を見る ▼
-        </button>
-        <div id="result-aoi2026" style="display:none;margin-top:8px;padding:10px;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
-          <div style="font-weight:500;margin-bottom:4px;color:#0F6E56">✅ 予想完璧的中（馬券購入なし・仮想的中レポート）</div>
-          <div>🥇 1着：デアヴェローチェ（5番人気8.7倍） ◎本命</div>
-          <div>🥈 2着：ヒシアイラ（6番人気8.8倍） ○対抗</div>
-          <div>🥉 3着：タマモイカロス（3人気6.9倍） ✕完全消し（誤算）</div>
-          <div>4着：ガラベイヤ（10人気28.5倍）△</div>
-          <div>5着：トップアタック（15人気86.0倍）🌠夢馬</div>
-          <div>6着：エイシンディード（2人気4.7倍）ヒモ</div>
-          <div>7着：タガノアラリア（1人気3.8倍）☆</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #a3d9a5">
-            単勝デアヴェローチェ：<strong>870円</strong>　馬単◎→○：<strong>9,530円</strong>　ワイド軸×ヒシ：<strong>1,480円</strong><br>
-            3連単 71,630円・3連複 11,190円（タマモイカロス3着が誤算）
-          </div>
-          <div style="margin-top:8px;padding:8px;background:#fff;border-radius:6px;border-left:3px solid #639922">
-            <div style="font-weight:700;color:#0F6E56;margin-bottom:4px;font-size:11px">📝 葵ステークス2026 振り返り</div>
-            <div style="color:#444;font-size:11px;line-height:1.7">
-              <strong>✅ 成功</strong>：◎軸デアヴェローチェ的中、上位7頭中6頭が印馬。V3精緻化＋4点修正＋ペナルティ＋枠順修正＋AI予想連動が完全機能した。<br>
-              <strong>✗ 失敗</strong>：3着タマモイカロス（3人気）を「3人気壊滅-15」ペナルティで完全消しにしたのが唯一の誤算。<br>
-              <strong>💡 学び</strong>：V3ペナルティルールが効きすぎ。タマモイカロスの1200m連対率100%データを反映できていなかった。<br>
-              <strong>🎯 次回</strong>：V3に「該当距離適性」項目追加・完全消しデータを「複勝率0%」のみに限定。馬券購入再開を検討。
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 日本ダービー（3連単45,000円→235,250円・回収率523%大爆発） -->
-      <div class="card" style="border:1.5px solid #FFD700;background:#FFFEF5">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">日本ダービー</div>
-            <div style="font-size:11px;color:var(--text-mute)">5/31（日）東京 芝2400m G1</div>
-          </div>
-          <span style="background:#FFE89E;color:#A87800;font-size:11px;font-weight:800;padding:2px 10px;border-radius:9px">★ 3連単的中・回収率523%</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
-          ◎軸ロブチェン（1人気2.7倍・AIスコア121点ダントツ1位）／3連単1着固定フォーメーション 軸17→相手10頭（90点×500円）
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">投資</div>
-            <div style="font-size:13px;font-weight:600">45,000円</div>
-          </div>
-          <div style="background:#FFF3C4;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#A87800">払戻</div>
-            <div style="font-size:13px;font-weight:700;color:#A87800">235,250円</div>
-          </div>
-          <div style="background:#FFF3C4;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#A87800">純利益</div>
-            <div style="font-size:13px;font-weight:700;color:#A87800">+190,250円</div>
-          </div>
-        </div>
-        <button onclick="toggleResult('derby2026')"
-          style="width:100%;padding:6px;border:1px solid #FFD700;background:#FFF3C4;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#A87800;font-weight:600">
-          結果を見る ▼
-        </button>
-        <div id="result-derby2026" style="display:none;margin-top:8px;padding:10px;background:#FFFEF5;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
-          <div style="font-weight:600;margin-bottom:4px;color:#A87800">✅ 3連単 17→13→5 的中（47,050円 × 5口 = 235,250円）</div>
-          <div>🥇 1着：ロブチェン（1人気2.7倍） ◎本命</div>
-          <div>🥈 2着：パントルナイーフ（4人気9.1倍） フォーメーション相手</div>
-          <div>🥉 3着：バステール（11人気34.0倍） D群押さえ</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #E8C84A">
-            単勝<strong>270円</strong>・複勝[130/250/650]・馬連<strong>1,460円</strong>・馬単<strong>2,290円</strong>・3連複<strong>14,280円</strong>・3連単<strong>47,050円</strong>
-          </div>
-          <div style="margin-top:6px">
-            買い目：3連単1着固定フォーメーション　軸17番ロブチェン　相手1,5,6,7,9,11,13,14,15,16（10頭）各500円・90点
-          </div>
-          <div style="margin-top:8px;padding:8px;background:#fff;border-radius:6px;border-left:3px solid #FFD700">
-            <div style="font-weight:700;color:#A87800;margin-bottom:4px;font-size:11px">📝 日本ダービー2026 振り返り</div>
-            <div style="color:#444;font-size:11px;line-height:1.7">
-              <strong>✅ 成功</strong>：AIスコア121点ダントツ1位ロブチェンが1着完璧的中。ランク戦略D群押さえの11人気バステールが3着に来て大爆発。<br>
-              <strong>✗ 想定外</strong>：対抗○ゴーイン4着・▲フォルテ12着で2-3着候補は来なかったが、フォーメーション10頭の押さえで補完できた。<br>
-              <strong>💡 学び</strong>：「完全消し」より「押さえ」の重要性を実証。当日馬体重448kgフォルテの軽さが響いた。パントルナイーフを完全消しせず押さえて正解。<br>
-              <strong>🎯 次回</strong>：ランク戦略の「ABC全部押さえ」or「フォーメーション10頭」が安定的中型。投資45,000円→払戻235,250円（回収率523%・+190,250円）。
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 目黒記念（軸◎ウィクトル2着的中・ガミ） -->
-      <div class="card" style="border:1.5px solid #639922">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">目黒記念</div>
-            <div style="font-size:11px;color:var(--text-mute)">5/31（日）東京 芝2500m G2</div>
-          </div>
-          <span style="background:#FAEEDA;color:#854F0B;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">★ 軸的中（ガミ）</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
-          ◎軸ウィクトルウェルス（1人気3.0倍）2着的中／3連単マルチ 軸6→相手7頭（126点×100円）／3週連続軸馬3着内的中
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">投資</div>
-            <div style="font-size:13px;font-weight:600">12,600円</div>
-          </div>
-          <div style="background:#FAEEDA;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#854F0B">払戻</div>
-            <div style="font-size:13px;font-weight:700;color:#854F0B">4,410円</div>
-          </div>
-          <div style="background:#FBEAF0;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#A32D2D">純損益</div>
-            <div style="font-size:13px;font-weight:700;color:#A32D2D">-8,190円</div>
-          </div>
-        </div>
-        <button onclick="toggleResult('meguro2026')"
-          style="width:100%;padding:6px;border:1px solid #639922;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#0F6E56;font-weight:500">
-          結果を見る ▼
-        </button>
-        <div id="result-meguro2026" style="display:none;margin-top:8px;padding:10px;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
-          <div style="font-weight:600;margin-bottom:4px;color:#0F6E56">✅ 軸◎ウィクトル2着・3連単的中だがガミ（126点×100円→4,410円）</div>
-          <div>🥇 1着：ファイアンクランツ（3人気4.6倍） ▲ヒモ</div>
-          <div>🥈 2着：ウィクトルウェルス（1人気3.0倍） ◎本命</div>
-          <div>🥉 3着：ダノンシーマ（2人気3.8倍） ☆ヒモ</div>
-          <div>4着：ミラージュナイト（4人気9.7倍） △</div>
-          <div>5着：キングスコール（7人気17.2倍） △（上位5頭中5頭に印馬）</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #a3d9a5">
-            単勝<strong>460円</strong>・複勝[150/130/130]・馬連<strong>660円</strong>・馬単<strong>1,370円</strong>・3連複<strong>780円</strong>・3連単<strong>4,410円</strong>
-          </div>
-          <div style="margin-top:6px">
-            買い目：3連単マルチ　軸6番ウィクトルウェルス　相手1,4,8,9,11,13,14（7頭・126点）各100円
-          </div>
-          <div style="margin-top:8px;padding:8px;background:#fff;border-radius:6px;border-left:3px solid #639922">
-            <div style="font-weight:700;color:#0F6E56;margin-bottom:4px;font-size:11px">📝 目黒記念2026 振り返り</div>
-            <div style="color:#444;font-size:11px;line-height:1.7">
-              <strong>✅ 成功</strong>：◎軸ウィクトル2着・上位5頭中5頭が印馬の完璧な印精度。3週連続軸馬3着内的中達成（平安S/ダービー/目黒）。<br>
-              <strong>✗ 失敗</strong>：3連単4,410円の低配当で126点マルチではガミ。1〜3人気で堅く収まったレースで点数を絞れなかった。<br>
-              <strong>💡 学び</strong>：人気サイド3頭で決まる素直な堅レースは「マルチ→1着固定」or「3連複」で十分。ヴィクトリアマイル教訓の再発。<br>
-              <strong>🎯 次回</strong>：堅レース判定（1-3人気スコア集中時）は3連複BOX or 1着固定流しに切替。
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 安田記念（3連複的中だが収支マイナス） -->
-      <div class="card" style="border:1.5px solid #c0392b">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">安田記念</div>
-            <div style="font-size:11px;color:var(--text-mute)">6/7（日）東京 芝1600m G1</div>
-          </div>
-          <span style="background:#FBEAF0;color:#c0392b;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">★ 的中（3連複・収支マイナス）</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
-          ◎ガイアフォース軸。3連複6頭ボックス的中（4-11-14・162倍）。3連単マルチは2着同着も相手から11を外し獲り逃し
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
-          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">投資</div>
-            <div style="font-size:13px;font-weight:600">56,400円</div>
-          </div>
-          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#0F6E56">払戻</div>
-            <div style="font-size:13px;font-weight:700;color:#0F6E56">48,600円</div>
-          </div>
-          <div style="background:#FBEAF0;border-radius:var(--border-radius-md);padding:7px;text-align:center">
-            <div style="font-size:10px;color:#c0392b">収支</div>
-            <div style="font-size:13px;font-weight:700;color:#c0392b">-7,800円</div>
-          </div>
-        </div>
-        <button onclick="toggleResult('yasuda2026')"
-          style="width:100%;padding:6px;border:1px solid #c0392b;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#c0392b;font-weight:500">
-          結果を見る ▼
-        </button>
-        <div id="result-yasuda2026" style="display:none;margin-top:8px;padding:10px;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
-          <div style="font-weight:600;margin-bottom:4px;color:#0F6E56">✅ 3連複 4-11-14 的中（162倍・1点）だが3連単獲り逃しで収支マイナス</div>
-          <div>🥇 1着：4番 シックスペンス（武豊）</div>
-          <div>🥈 2着：11番 ワールズエンド ＝ 14番 ガイアフォース（◎軸・1番人気2.9倍）2着同着</div>
-          <div>4着：13番 セイウンハーデス</div>
-          <div>5着：16番 パンジャタワー</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #f5b7c9">
-            3連複 4-11-14：<strong style="font-size:15px;color:#0F6E56">48,600円</strong>（162倍×300円）<br>
-            投資：3連単マルチ50,400円＋3連複6頭BOX6,000円＝56,400円 → 払戻48,600円・収支-7,800円
-          </div>
-          <div style="color:#c0392b;font-size:11px;margin-top:4px">
-            ◎軸ガイアフォース2着同着で4戦連続軸馬3着内的中（平安S/ダービー/目黒/安田）。後3F33.0は出走馬中最速。3連複は的中したが、2着同着で本来3連単も2本当たりだったところ、相手から11ワールズエンド（伏兵筆頭★5・AIは推奨）を外して獲り逃し、収支マイナスに。
-          </div>
-        </div>
-      </div>
-
       <!-- 宝塚記念（◎○▲完全1-2-3着的中だがトリガミ・収支マイナス） -->
       <div class="card" style="border:1.5px solid #639922">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
@@ -2617,6 +1859,764 @@
           </div>
           <div style="color:#c0392b;font-size:11px;margin-top:4px">
             ◎カルプス5着。△ピューロ1着・▲レイピア3着と印は捉えたが、軸カルプスがクビ・クビ差の5着惜敗。軸1頭マルチで相手にピューロ(7)も入れていたが、軸が飛んで不的中。牝馬は前で運べのデータは的中（ピューロ1着）も、勝ったのは本命でなく相手だった。軸選びが明暗を分けた一戦。
+          </div>
+        </div>
+      </div>
+
+      <!-- 安田記念（3連複的中だが収支マイナス） -->
+      <div class="card" style="border:1.5px solid #c0392b">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">安田記念</div>
+            <div style="font-size:11px;color:var(--text-mute)">6/7（日）東京 芝1600m G1</div>
+          </div>
+          <span style="background:#FBEAF0;color:#c0392b;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">★ 的中（3連複・収支マイナス）</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          ◎ガイアフォース軸。3連複6頭ボックス的中（4-11-14・162倍）。3連単マルチは2着同着も相手から11を外し獲り逃し
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">56,400円</div>
+          </div>
+          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#0F6E56">払戻</div>
+            <div style="font-size:13px;font-weight:700;color:#0F6E56">48,600円</div>
+          </div>
+          <div style="background:#FBEAF0;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#c0392b">収支</div>
+            <div style="font-size:13px;font-weight:700;color:#c0392b">-7,800円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('yasuda2026')"
+          style="width:100%;padding:6px;border:1px solid #c0392b;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#c0392b;font-weight:500">
+          結果を見る ▼
+        </button>
+        <div id="result-yasuda2026" style="display:none;margin-top:8px;padding:10px;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
+          <div style="font-weight:600;margin-bottom:4px;color:#0F6E56">✅ 3連複 4-11-14 的中（162倍・1点）だが3連単獲り逃しで収支マイナス</div>
+          <div>🥇 1着：4番 シックスペンス（武豊）</div>
+          <div>🥈 2着：11番 ワールズエンド ＝ 14番 ガイアフォース（◎軸・1番人気2.9倍）2着同着</div>
+          <div>4着：13番 セイウンハーデス</div>
+          <div>5着：16番 パンジャタワー</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #f5b7c9">
+            3連複 4-11-14：<strong style="font-size:15px;color:#0F6E56">48,600円</strong>（162倍×300円）<br>
+            投資：3連単マルチ50,400円＋3連複6頭BOX6,000円＝56,400円 → 払戻48,600円・収支-7,800円
+          </div>
+          <div style="color:#c0392b;font-size:11px;margin-top:4px">
+            ◎軸ガイアフォース2着同着で4戦連続軸馬3着内的中（平安S/ダービー/目黒/安田）。後3F33.0は出走馬中最速。3連複は的中したが、2着同着で本来3連単も2本当たりだったところ、相手から11ワールズエンド（伏兵筆頭★5・AIは推奨）を外して獲り逃し、収支マイナスに。
+          </div>
+        </div>
+      </div>
+
+      <!-- 目黒記念（軸◎ウィクトル2着的中・ガミ） -->
+      <div class="card" style="border:1.5px solid #639922">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">目黒記念</div>
+            <div style="font-size:11px;color:var(--text-mute)">5/31（日）東京 芝2500m G2</div>
+          </div>
+          <span style="background:#FAEEDA;color:#854F0B;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">★ 軸的中（ガミ）</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          ◎軸ウィクトルウェルス（1人気3.0倍）2着的中／3連単マルチ 軸6→相手7頭（126点×100円）／3週連続軸馬3着内的中
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">12,600円</div>
+          </div>
+          <div style="background:#FAEEDA;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#854F0B">払戻</div>
+            <div style="font-size:13px;font-weight:700;color:#854F0B">4,410円</div>
+          </div>
+          <div style="background:#FBEAF0;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#A32D2D">純損益</div>
+            <div style="font-size:13px;font-weight:700;color:#A32D2D">-8,190円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('meguro2026')"
+          style="width:100%;padding:6px;border:1px solid #639922;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#0F6E56;font-weight:500">
+          結果を見る ▼
+        </button>
+        <div id="result-meguro2026" style="display:none;margin-top:8px;padding:10px;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
+          <div style="font-weight:600;margin-bottom:4px;color:#0F6E56">✅ 軸◎ウィクトル2着・3連単的中だがガミ（126点×100円→4,410円）</div>
+          <div>🥇 1着：ファイアンクランツ（3人気4.6倍） ▲ヒモ</div>
+          <div>🥈 2着：ウィクトルウェルス（1人気3.0倍） ◎本命</div>
+          <div>🥉 3着：ダノンシーマ（2人気3.8倍） ☆ヒモ</div>
+          <div>4着：ミラージュナイト（4人気9.7倍） △</div>
+          <div>5着：キングスコール（7人気17.2倍） △（上位5頭中5頭に印馬）</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #a3d9a5">
+            単勝<strong>460円</strong>・複勝[150/130/130]・馬連<strong>660円</strong>・馬単<strong>1,370円</strong>・3連複<strong>780円</strong>・3連単<strong>4,410円</strong>
+          </div>
+          <div style="margin-top:6px">
+            買い目：3連単マルチ　軸6番ウィクトルウェルス　相手1,4,8,9,11,13,14（7頭・126点）各100円
+          </div>
+          <div style="margin-top:8px;padding:8px;background:#fff;border-radius:6px;border-left:3px solid #639922">
+            <div style="font-weight:700;color:#0F6E56;margin-bottom:4px;font-size:11px">📝 目黒記念2026 振り返り</div>
+            <div style="color:#444;font-size:11px;line-height:1.7">
+              <strong>✅ 成功</strong>：◎軸ウィクトル2着・上位5頭中5頭が印馬の完璧な印精度。3週連続軸馬3着内的中達成（平安S/ダービー/目黒）。<br>
+              <strong>✗ 失敗</strong>：3連単4,410円の低配当で126点マルチではガミ。1〜3人気で堅く収まったレースで点数を絞れなかった。<br>
+              <strong>💡 学び</strong>：人気サイド3頭で決まる素直な堅レースは「マルチ→1着固定」or「3連複」で十分。ヴィクトリアマイル教訓の再発。<br>
+              <strong>🎯 次回</strong>：堅レース判定（1-3人気スコア集中時）は3連複BOX or 1着固定流しに切替。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 日本ダービー（3連単45,000円→235,250円・回収率523%大爆発） -->
+      <div class="card" style="border:1.5px solid #FFD700;background:#FFFEF5">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">日本ダービー</div>
+            <div style="font-size:11px;color:var(--text-mute)">5/31（日）東京 芝2400m G1</div>
+          </div>
+          <span style="background:#FFE89E;color:#A87800;font-size:11px;font-weight:800;padding:2px 10px;border-radius:9px">★ 3連単的中・回収率523%</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          ◎軸ロブチェン（1人気2.7倍・AIスコア121点ダントツ1位）／3連単1着固定フォーメーション 軸17→相手10頭（90点×500円）
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">45,000円</div>
+          </div>
+          <div style="background:#FFF3C4;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#A87800">払戻</div>
+            <div style="font-size:13px;font-weight:700;color:#A87800">235,250円</div>
+          </div>
+          <div style="background:#FFF3C4;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#A87800">純利益</div>
+            <div style="font-size:13px;font-weight:700;color:#A87800">+190,250円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('derby2026')"
+          style="width:100%;padding:6px;border:1px solid #FFD700;background:#FFF3C4;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#A87800;font-weight:600">
+          結果を見る ▼
+        </button>
+        <div id="result-derby2026" style="display:none;margin-top:8px;padding:10px;background:#FFFEF5;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
+          <div style="font-weight:600;margin-bottom:4px;color:#A87800">✅ 3連単 17→13→5 的中（47,050円 × 5口 = 235,250円）</div>
+          <div>🥇 1着：ロブチェン（1人気2.7倍） ◎本命</div>
+          <div>🥈 2着：パントルナイーフ（4人気9.1倍） フォーメーション相手</div>
+          <div>🥉 3着：バステール（11人気34.0倍） D群押さえ</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #E8C84A">
+            単勝<strong>270円</strong>・複勝[130/250/650]・馬連<strong>1,460円</strong>・馬単<strong>2,290円</strong>・3連複<strong>14,280円</strong>・3連単<strong>47,050円</strong>
+          </div>
+          <div style="margin-top:6px">
+            買い目：3連単1着固定フォーメーション　軸17番ロブチェン　相手1,5,6,7,9,11,13,14,15,16（10頭）各500円・90点
+          </div>
+          <div style="margin-top:8px;padding:8px;background:#fff;border-radius:6px;border-left:3px solid #FFD700">
+            <div style="font-weight:700;color:#A87800;margin-bottom:4px;font-size:11px">📝 日本ダービー2026 振り返り</div>
+            <div style="color:#444;font-size:11px;line-height:1.7">
+              <strong>✅ 成功</strong>：AIスコア121点ダントツ1位ロブチェンが1着完璧的中。ランク戦略D群押さえの11人気バステールが3着に来て大爆発。<br>
+              <strong>✗ 想定外</strong>：対抗○ゴーイン4着・▲フォルテ12着で2-3着候補は来なかったが、フォーメーション10頭の押さえで補完できた。<br>
+              <strong>💡 学び</strong>：「完全消し」より「押さえ」の重要性を実証。当日馬体重448kgフォルテの軽さが響いた。パントルナイーフを完全消しせず押さえて正解。<br>
+              <strong>🎯 次回</strong>：ランク戦略の「ABC全部押さえ」or「フォーメーション10頭」が安定的中型。投資45,000円→払戻235,250円（回収率523%・+190,250円）。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 葵ステークス（予想完璧的中・馬券購入なし） -->
+      <div class="card" style="border:1.5px solid #639922">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">葵ステークス</div>
+            <div style="font-size:11px;color:var(--text-mute)">5/30（土）京都 芝1200m G3</div>
+          </div>
+          <span style="background:#E1F5EE;color:#0F6E56;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">★ 予想完璧的中（馬券購入なし）</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          ◎軸デアヴェローチェ・○ヒシアイラ・△タマモイカロス（上位7頭中6頭に印馬）
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">0円</div>
+          </div>
+          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#0F6E56">仮想払戻</div>
+            <div style="font-size:13px;font-weight:700;color:#0F6E56">単勝870円</div>
+          </div>
+          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#0F6E56">仮想馬単</div>
+            <div style="font-size:13px;font-weight:700;color:#0F6E56">9,530円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('aoi2026')"
+          style="width:100%;padding:6px;border:1px solid #639922;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#0F6E56;font-weight:500">
+          結果を見る ▼
+        </button>
+        <div id="result-aoi2026" style="display:none;margin-top:8px;padding:10px;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
+          <div style="font-weight:500;margin-bottom:4px;color:#0F6E56">✅ 予想完璧的中（馬券購入なし・仮想的中レポート）</div>
+          <div>🥇 1着：デアヴェローチェ（5番人気8.7倍） ◎本命</div>
+          <div>🥈 2着：ヒシアイラ（6番人気8.8倍） ○対抗</div>
+          <div>🥉 3着：タマモイカロス（3人気6.9倍） ✕完全消し（誤算）</div>
+          <div>4着：ガラベイヤ（10人気28.5倍）△</div>
+          <div>5着：トップアタック（15人気86.0倍）🌠夢馬</div>
+          <div>6着：エイシンディード（2人気4.7倍）ヒモ</div>
+          <div>7着：タガノアラリア（1人気3.8倍）☆</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #a3d9a5">
+            単勝デアヴェローチェ：<strong>870円</strong>　馬単◎→○：<strong>9,530円</strong>　ワイド軸×ヒシ：<strong>1,480円</strong><br>
+            3連単 71,630円・3連複 11,190円（タマモイカロス3着が誤算）
+          </div>
+          <div style="margin-top:8px;padding:8px;background:#fff;border-radius:6px;border-left:3px solid #639922">
+            <div style="font-weight:700;color:#0F6E56;margin-bottom:4px;font-size:11px">📝 葵ステークス2026 振り返り</div>
+            <div style="color:#444;font-size:11px;line-height:1.7">
+              <strong>✅ 成功</strong>：◎軸デアヴェローチェ的中、上位7頭中6頭が印馬。V3精緻化＋4点修正＋ペナルティ＋枠順修正＋AI予想連動が完全機能した。<br>
+              <strong>✗ 失敗</strong>：3着タマモイカロス（3人気）を「3人気壊滅-15」ペナルティで完全消しにしたのが唯一の誤算。<br>
+              <strong>💡 学び</strong>：V3ペナルティルールが効きすぎ。タマモイカロスの1200m連対率100%データを反映できていなかった。<br>
+              <strong>🎯 次回</strong>：V3に「該当距離適性」項目追加・完全消しデータを「複勝率0%」のみに限定。馬券購入再開を検討。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- オークス -->
+      <div class="card" style="border:1.5px solid #c0392b">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">オークス</div>
+            <div style="font-size:11px;color:var(--text-mute)">5/24（日）東京 芝2400m G1</div>
+          </div>
+          <span style="background:#FBEAF0;color:#c0392b;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">✗ ハズレ（◎軸固定マルチで撃沈）</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          3連単1頭軸マルチ　軸：10スターアニス　相手：02,03,08,12,13,15,16,18（8頭・168点）各100円　合計16,800円
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">16,800円</div>
+          </div>
+          <div style="background:#FBEAF0;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#A32D2D">払戻</div>
+            <div style="font-size:13px;font-weight:700;color:#A32D2D">0円</div>
+          </div>
+          <div style="background:#FBEAF0;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#A32D2D">収支</div>
+            <div style="font-size:13px;font-weight:700;color:#A32D2D">-16,800円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('oaks2026')"
+          style="width:100%;padding:6px;border:1px solid #c0392b;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#c0392b;font-weight:500">
+          結果を見る ▼
+        </button>
+        <div id="result-oaks2026" style="display:none;margin-top:8px;padding:10px;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
+          <div style="font-weight:500;margin-bottom:4px;color:#c0392b">✗ 軸◎スターアニス着外・3連単マルチ撃沈</div>
+          <div>🥇 1着：16番 ジュウリョクピエロ（今村聖奈・5番人気7.6倍）</div>
+          <div>🥈 2着：12番 ドリームコア（C.ルメール・3番人気6.9倍）</div>
+          <div>🥉 3着：18番 ラフターラインズ（D.レーン・2番人気3.5倍）</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #f5b7c9">
+            3連単 16→12→18：<strong style="font-size:15px;color:#c0392b">大波乱配当</strong><br>
+            ※相手8頭中3頭が掲示板入り、軸違いで不的中。3連複16-12-18なら<strong>3,220円</strong>的中だった
+          </div>
+          <div style="margin-top:8px;padding:8px;background:#fff;border-radius:6px;border-left:3px solid #c0392b">
+            <div style="font-weight:700;color:#c0392b;margin-bottom:4px;font-size:11px">📝 オークス2026 敗因分析</div>
+            <div style="color:#444;font-size:11px;line-height:1.7">
+              <strong>① 軸馬の選定ミス</strong>：桜花賞馬スターアニスは484kg・距離延長・東京コース初経験など複数のリスク要因があったが、最終決定では桜花賞馬への過信を優先。馬体重データの反映タイミングが遅かった。<br>
+              <strong>② 買い目構成の致命的欠陥</strong>：3連単1頭軸マルチ（168点）は軸馬絶対依存型。軸馬1頭が飛んだ瞬間に全部外れる構造。平安Sでも同じパターンで負けたのに学習できていなかった。<br>
+              <strong>③ 的中していれば</strong>：相手8頭中3頭（ドリームコア・ラフターラインズ・ジュウリョクピエロ）が掲示板に。3連複16-12-18で3,220円的中だった。3連単マルチを諦めて3連複BOXに切り替えていれば的中の可能性大。<br>
+              <strong>④ AIスコアの判断</strong>：AIスコアは最終的に「ドリームコア＝スターアニス同率1位」と判定。ドリームコア◎にしていれば2着的中で3連単・馬連的中の可能性があった。「軸馬はAIに従う」スタンスを守りきれなかった。<br>
+              <strong>⑤ 次回への課題</strong>：1着固定マルチ→1着固定流し or 3連複に変更。軸馬を1頭に絞らない構成。AIスコアと馬体重データを優先。桜花賞馬への過信を避ける（過去オークスでも桜花賞馬は意外と勝てていない）。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平安ステークス -->
+      <div class="card" style="border:1.5px solid #c0392b">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">平安ステークス</div>
+            <div style="font-size:11px;color:var(--text-mute)">5/23（土）京都 ダ1900m G3</div>
+          </div>
+          <span style="background:#FBEAF0;color:#c0392b;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">✗ ハズレ（軸◎1着・買い目外2着）</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          3連単5頭BOX　03,09,11,14,16番（5頭・60点）各100円　合計6,000円
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">6,000円</div>
+          </div>
+          <div style="background:#FBEAF0;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#A32D2D">払戻</div>
+            <div style="font-size:13px;font-weight:700;color:#A32D2D">0円</div>
+          </div>
+          <div style="background:#FBEAF0;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#A32D2D">収支</div>
+            <div style="font-size:13px;font-weight:700;color:#A32D2D">-6,000円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('heianstakes')"
+          style="width:100%;padding:6px;border:1px solid #c0392b;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#c0392b;font-weight:500">
+          結果を見る ▼
+        </button>
+        <div id="result-heianstakes" style="display:none;margin-top:8px;padding:10px;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
+          <div style="font-weight:500;margin-bottom:4px;color:#0F6E56">✅ 軸◎は完璧的中（ただし3連単ハズレ）</div>
+          <div>🥇 1着：14番 ロードクロンヌ（横山和生・1番人気2.9倍）</div>
+          <div>🥈 2着：5番 ヴァルツァーシャル（9番人気・買い目外）</div>
+          <div>🥉 3着：11番 タイトニット（4番人気）</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #f5b7c9">
+            3連単 14→5→11：<strong style="font-size:15px;color:#c0392b">33,730円</strong>（83番人気の大波乱）<br>
+            ※3連複 14-5-11なら<strong>7,770円</strong>的中だった
+          </div>
+          <div style="color:#A32D2D;font-size:11px;margin-top:4px">
+            軸◎ロードクロンヌ1着・穴馬リスト◎タイトニット3着で軸馬予想は完璧的中。ただし2着に9人気ヴァルツァーシャル（買い目外）が突っ込み3連単83人気の大波乱に。3連複14-5-11なら7,770円的中だった。買い目構成の課題が残るレース
+          </div>
+        </div>
+      </div>
+
+      <!-- ヴィクトリアマイル -->
+      <div class="card" style="border:1.5px solid #c0392b">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">ヴィクトリアマイル</div>
+            <div style="font-size:11px;color:var(--text-mute)">5/17（日）東京 芝1600m G1</div>
+          </div>
+          <span style="background:#E1F5EE;color:#0F6E56;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">★ 的中（点数過多でマイナス）</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          3連単1着固定流し　軸：12エンブロイダリー　相手：03,04,06,07,08,09,10,11,13,14,16,17,18（13頭・156点）各300円　合計46,800円
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">46,800円</div>
+          </div>
+          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#0F6E56">払戻</div>
+            <div style="font-size:13px;font-weight:700;color:#0F6E56">11,010円</div>
+          </div>
+          <div style="background:#FBEAF0;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#c0392b">収支</div>
+            <div style="font-size:13px;font-weight:700;color:#c0392b">-35,790円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('victoriamile')"
+          style="width:100%;padding:6px;border:1px solid #c0392b;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#c0392b;font-weight:500">
+          結果を見る ▼
+        </button>
+        <div id="result-victoriamile" style="display:none;margin-top:8px;padding:10px;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
+          <div style="font-weight:500;margin-bottom:4px;color:#0F6E56">✅ 的中！確定着順</div>
+          <div>🥇 1着：12番 エンブロイダリー（C.ルメール・1番人気2.2倍）</div>
+          <div>🥈 2着：8番 カムニャック（2番人気5.7倍）</div>
+          <div>🥉 3着：7番 クイーンズウォーク（3番人気8.4倍）</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #f5b7c9">
+            3連単 12→8→7：<strong style="font-size:15px;color:#0F6E56">3,670円</strong>（100円あたり）<br>
+            購入：300円×156点 → 払戻：3,670円 × 3倍 = <strong>11,010円払戻</strong>
+          </div>
+          <div style="color:#c0392b;font-size:11px;margin-top:4px">
+            ⚠️ 完璧的中（スコア1位×AI推奨×義英真本命の三位一体）だが、相手13頭の156点購入で点数過多。1〜3番人気決着の3,670円配当では回収不可。次回は相手6〜8頭に絞る運用へ
+          </div>
+        </div>
+      </div>
+
+      <!-- 新潟大賞典 -->
+      <div class="card" style="border:1.5px solid #c0392b">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">新潟大賞典</div>
+            <div style="font-size:11px;color:var(--text-mute)">5/16（土）新潟 芝2000m G3</div>
+          </div>
+          <span style="background:#FBEAF0;color:#c0392b;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">✗ 不的中（馬券購入なし）</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          軸ドゥラドーレス・スコア1位シュガークン共に着外。3連単810,010円の超万馬券発生。馬券購入なし
+        </div>
+        <button onclick="toggleResult('niigatadaishoten')"
+          style="width:100%;padding:6px;border:1px solid #c0392b;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#c0392b;font-weight:500">
+          結果を見る ▼
+        </button>
+        <div id="result-niigatadaishoten" style="display:none;margin-top:8px;padding:10px;background:#FBEAF0;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
+          <div style="font-weight:500;margin-bottom:4px;color:#c0392b">✗ 軸2頭着外・超万馬券</div>
+          <div>🥇 1着：3番 グランディア（7番人気12.3倍）</div>
+          <div>🥈 2着：11番 バレエマスター（13番人気34.5倍）</div>
+          <div>🥉 3着：9番 フクノブルーレイク（12番人気18.7倍）</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #f5b7c9">
+            3連単 3→11→9：<strong style="font-size:15px;color:#c0392b">810,010円</strong>（1449番人気の超万馬券）
+          </div>
+          <div style="color:#c0392b;font-size:11px;margin-top:4px">
+            軸ドゥラドーレス（1人気3.1倍）・シュガークン（2人気5.5倍）共に着外。1番人気・2番人気が過去10年0勝のデータ通り。ハンデ戦の荒れを過小評価。馬券購入なしのため収支影響なし
+          </div>
+        </div>
+      </div>
+
+      <!-- NHKマイルC -->
+      <div class="card" style="border:1.5px solid #639922">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">NHKマイルC</div>
+            <div style="font-size:11px;color:var(--text-mute)">5/10（日）東京 芝1600m G1</div>
+          </div>
+          <span style="background:#E1F5EE;color:#0F6E56;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">★ 的中！</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          3連単ボックス　07,10,11,12,16,17,18番（7頭・210点）各200円　合計42,000円
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">42,000円</div>
+          </div>
+          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#0F6E56">払戻</div>
+            <div style="font-size:13px;font-weight:700;color:#0F6E56">52,300円</div>
+          </div>
+          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#0F6E56">収支</div>
+            <div style="font-size:13px;font-weight:700;color:#0F6E56">+10,300円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('nhkmilec')"
+          style="width:100%;padding:6px;border:1px solid #639922;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#0F6E56;font-weight:500">
+          結果を見る ▼
+        </button>
+        <div id="result-nhkmilec" style="display:none;margin-top:8px;padding:10px;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
+          <div style="font-weight:500;margin-bottom:4px;color:#0F6E56">✅ 的中！確定着順</div>
+          <div>🥇 1着：17番 ロデオドライブ（D.レーン・3番人気6.1倍）</div>
+          <div>🥈 2着：16番 アスクイキゴミ（戸崎圭太・5番人気9.9倍）</div>
+          <div>🥉 3着：11番 アドマイヤクワッズ（坂井瑠星・6番人気10.7倍）</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #a3d9a5">
+            単勝17番：460円 / 複勝17番：230円・16番：300円・11番：300円<br>
+            馬連16-17：1,710円 / 3連複11-16-17：6,160円<br>
+            3連単 17→16→11：<strong style="font-size:15px;color:#0F6E56">26,150円</strong> 🎉<br>
+            ボックス7頭中3頭が1〜3着でヒット → 26,150円 × 200円 = <strong>52,300円払戻</strong>
+          </div>
+          <div style="color:#0F6E56;font-size:11px;margin-top:4px">
+            ✅ 軸エコロアルバ（2番人気）は着外。3連単ボックス7頭（07・10・11・12・16・17・18）で的中目（17→16→11）をカバー。8枠勢2頭（17ロデオドライブ・16アスクイキゴミ）と6枠アドマイヤクワッズで確保。
+          </div>
+        </div>
+      </div>
+
+      <!-- エプソムカップ -->
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">エプソムカップ</div>
+            <div style="font-size:11px;color:var(--text-mute)">5/9（土）東京 芝1800m G3</div>
+          </div>
+          <span style="background:#FCEBEB;color:#A32D2D;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">外れ</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          3連単1頭軸マルチ　軸14番サクラファレル　相手11,16,4,6,2,8（6頭）90点・各200円・16,800円
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">16,800円</div>
+          </div>
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">払戻</div>
+            <div style="font-size:13px;font-weight:600;color:#A32D2D">0円</div>
+          </div>
+          <div style="background:#FCEBEB;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#A32D2D">収支</div>
+            <div style="font-size:13px;font-weight:700;color:#A32D2D">-16,800円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('epsomc')"
+          style="width:100%;padding:6px;border:1px solid var(--border);background:var(--bg-soft);border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:var(--text);font-weight:500">
+          結果を見る ▼
+        </button>
+        <div id="result-epsomc" style="display:none;margin-top:8px;padding:10px;background:#FCEBEB;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
+          <div style="font-weight:500;margin-bottom:4px;color:#A32D2D">❌ 外れ・確定着順</div>
+          <div>🥇 1着：11番 トロヴァトーレ（C.ルメール・2番人気4.2倍）</div>
+          <div>🥈 2着：16番 ステレンボッシュ（戸崎圭太・6番人気13.3倍）</div>
+          <div>🥉 3着：17番 レガーロデルシエロ（岩田康誠・9番人気19.4倍）</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #f5b1ad">
+            3連単 11→16→17：<strong>108,330円</strong><br>
+            軸サクラファレル（1番人気5.8倍）は着外で不的中
+          </div>
+          <div style="color:#A32D2D;font-size:11px;margin-top:4px">
+            ❌ 敗因：サクラファレル（D.レーン）は4歳・東京2戦2勝・調教Aの好データだったが着外。1着トロヴァトーレ・2着ステレンボッシュ・3着レガーロデルシエロは相手には含まれていたが、軸違いで不的中。
+          </div>
+        </div>
+      </div>
+
+      <!-- 京都新聞杯 -->
+      <div class="card" style="border:1.5px solid #639922">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">京都新聞杯</div>
+            <div style="font-size:11px;color:var(--text-mute)">5/9（土）京都 芝2200m G2</div>
+          </div>
+          <span style="background:#E1F5EE;color:#0F6E56;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">★ 的中！</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          3連単1頭軸マルチ　軸5番コンジェスタス　相手2,1,15,12,8,9（6頭）90点・各200円・16,800円
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">16,800円</div>
+          </div>
+          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#0F6E56">払戻</div>
+            <div style="font-size:13px;font-weight:700;color:#0F6E56">74,860円</div>
+          </div>
+          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#0F6E56">収支</div>
+            <div style="font-size:13px;font-weight:700;color:#0F6E56">+58,060円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('kyotoshinbun')"
+          style="width:100%;padding:6px;border:1px solid #639922;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#0F6E56;font-weight:500">
+          結果を見る ▼
+        </button>
+        <div id="result-kyotoshinbun" style="display:none;margin-top:8px;padding:10px;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
+          <div style="font-weight:500;margin-bottom:4px;color:#0F6E56">✅ 的中！確定着順</div>
+          <div>🥇 1着：5番 コンジェスタス（西村淳也・4番人気14.1倍）★軸馬</div>
+          <div>🥈 2着：15番 ベレシート（北村友一・1番人気1.9倍）</div>
+          <div>🥉 3着：6番 ラディアントスター（10番人気42.3倍）</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #a3d9a5">
+            単勝5番：1,370円 / 複勝5番：390円<br>
+            馬連5-15：1,540円 / 馬単5→15：4,310円<br>
+            3連複5-6-15：13,940円<br>
+            3連単 5→15→6：<strong style="font-size:15px;color:#0F6E56">74,860円</strong> 🎉
+          </div>
+          <div style="color:#0F6E56;font-size:11px;margin-top:4px">
+            ✅ 軸コンジェスタス（4番人気・3枠5番・コントレイル産駒）が1着！データトリプル該当が見事に的中。10番人気ラディアントスター3着の波乱もマルチでカバーし完璧的中。
+          </div>
+        </div>
+      </div>
+
+      <!-- 天皇賞（春） -->
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">天皇賞（春）</div>
+            <div style="font-size:11px;color:var(--text-mute)">5/3（日）京都 芝3200m G1</div>
+          </div>
+          <span style="background:#FCEBEB;color:#A32D2D;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">外れ</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          3連単1頭軸マルチ　軸3番アドマイヤテラ　相手1,4,7,8,11,12,14（7頭）各500円・126点
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">63,000円</div>
+          </div>
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">払戻</div>
+            <div style="font-size:13px;font-weight:600;color:#A32D2D">0円</div>
+          </div>
+          <div style="background:#FCEBEB;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#A32D2D">収支</div>
+            <div style="font-size:13px;font-weight:700;color:#A32D2D">-63,000円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('haruten')"
+          style="width:100%;padding:6px;border:0.5px solid var(--border);background:var(--bg-soft);border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:var(--text-sub)">
+          結果を見る ▼
+        </button>
+        <div id="result-haruten" style="display:none;margin-top:8px;padding:10px;background:var(--bg-soft);border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
+          <div style="font-weight:500;margin-bottom:4px">確定着順</div>
+          <div>🥇 1着：7番 クロワデュノール（北村友一・1番人気）写真判定</div>
+          <div>🥈 2着：15番 ヴェルテンベルク（松若風馬・12番人気）158番人気激走！</div>
+          <div>🥉 3着：3番 アドマイヤテラ（武豊・2番人気）← 軸馬・3着</div>
+          <div>4着：12番 ヘデントール</div>
+          <div>5着：4番 アクアヴァーナル</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid var(--border)">
+            3連単 7-15-3：<strong>70,630円</strong>（158番人気）
+          </div>
+          <div style="color:#A32D2D;font-size:11px;margin-top:4px">
+            ❌ 敗因：軸アドマイヤテラは3着に粘ったが、2着のヴェルテンベルク（15番）が相手に含まれていなかった。15番を相手に入れていれば70,630円×5=353,150円の的中だった。
+          </div>
+        </div>
+      </div>
+
+      <!-- マイラーズカップ -->
+      <div class="card" style="border:1.5px solid #639922">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">マイラーズカップ</div>
+            <div style="font-size:11px;color:var(--text-mute)">4/26（日）京都 芝1600m G2</div>
+          </div>
+          <span style="background:#E1F5EE;color:#0F6E56;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">★ 的中！</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          3連単1頭軸マルチ　軸9番　相手1,2,5,7,10,18（90点）
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">9,000円</div>
+          </div>
+          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#0F6E56">払戻</div>
+            <div style="font-size:13px;font-weight:700;color:#0F6E56">70,140円</div>
+          </div>
+          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#0F6E56">収支</div>
+            <div style="font-size:13px;font-weight:700;color:#0F6E56">+61,140円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('mailers')"
+          style="width:100%;padding:6px;border:1px solid #639922;
+                 background:#E1F5EE;border-radius:var(--border-radius-md);
+                 font-size:11px;cursor:pointer;color:#0F6E56;font-weight:500">
+          結果を見る ▼
+        </button>
+        <div id="result-mailers" style="display:none;margin-top:8px;padding:10px;
+             background:#E1F5EE;border-radius:var(--border-radius-md);
+             font-size:12px;line-height:1.9">
+          <div style="font-weight:500;margin-bottom:4px;color:#0F6E56">✅ 的中！確定着順</div>
+          <div>🥇 1着：9番 アドマイヤズーム（武豊・1番人気）</div>
+          <div>🥈 2着：1番 ドラゴンブースト（丹内祐次・9番人気）</div>
+          <div>🥉 3着：7番 ベラジオボンド（北村友一・5番人気）</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #a3d9a5">
+            3連単払戻：<strong style="font-size:15px;color:#0F6E56">70,140円</strong>
+          </div>
+          <div style="color:#0F6E56;font-size:11px;margin-top:4px">
+            ✅ 的中根拠：1番人気複勝率88%×調教S×中28週の十分な間隔
+          </div>
+        </div>
+      </div>
+
+      <!-- フローラステークス -->
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">フローラステークス</div>
+            <div style="font-size:11px;color:var(--text-mute)">4/26（日）東京 芝2000m G2</div>
+          </div>
+          <span style="background:#FCEBEB;color:#A32D2D;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">外れ</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          3連単1頭軸マルチ　軸2番　相手3,5,7,10,11,12（90点）
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">9,000円</div>
+          </div>
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">払戻</div>
+            <div style="font-size:13px;font-weight:600;color:#A32D2D">0円</div>
+          </div>
+          <div style="background:#FCEBEB;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#A32D2D">収支</div>
+            <div style="font-size:13px;font-weight:700;color:#A32D2D">-9,000円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('flora')"
+          style="width:100%;padding:6px;border:0.5px solid var(--border);
+                 background:var(--bg-soft);border-radius:var(--border-radius-md);
+                 font-size:11px;cursor:pointer;color:var(--text-sub)">
+          結果を見る ▼
+        </button>
+        <div id="result-flora" style="display:none;margin-top:8px;padding:10px;
+             background:var(--bg-soft);border-radius:var(--border-radius-md);
+             font-size:12px;line-height:1.9">
+          <div style="font-weight:500;margin-bottom:4px">確定着順</div>
+          <div>🥇 1着：5番 ラフターラインズ（D.レーン・1番人気）</div>
+          <div>🥈 2着：13番 エンネ（M.ディー・3番人気）</div>
+          <div>🥉 3着：7番 リアライズルミナス（松山弘平・5番人気）</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid var(--border)">
+            3連単払戻：<strong>7,920円</strong>
+          </div>
+          <div style="color:#A32D2D;font-size:11px;margin-top:4px">
+            ❌ 敗因：軸のラベルセーヌ（2番）が5着。消しにしたエンネ（7枠）が2着に激走
+          </div>
+        </div>
+      </div>
+
+      <!-- 青葉賞 -->
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">青葉賞</div>
+            <div style="font-size:11px;color:var(--text-mute)">4/25（土）東京 芝2400m G2</div>
+          </div>
+          <span style="background:#FCEBEB;color:#A32D2D;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">外れ</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          3連単2頭軸マルチ　軸4番×15番　相手5,6,7,8,10,11,12,13
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">4,800円</div>
+          </div>
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">払戻</div>
+            <div style="font-size:13px;font-weight:600;color:#A32D2D">0円</div>
+          </div>
+          <div style="background:#FCEBEB;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#A32D2D">収支</div>
+            <div style="font-size:13px;font-weight:700;color:#A32D2D">-4,800円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('aoba')"
+          style="width:100%;padding:6px;border:0.5px solid var(--border);
+                 background:var(--bg-soft);border-radius:var(--border-radius-md);
+                 font-size:11px;cursor:pointer;color:var(--text-sub)">
+          結果を見る ▼
+        </button>
+        <div id="result-aoba" style="display:none;margin-top:8px;padding:10px;
+             background:var(--bg-soft);border-radius:var(--border-radius-md);
+             font-size:12px;line-height:1.9">
+          <div style="font-weight:500;margin-bottom:4px">確定着順</div>
+          <div>🥇 1着：16番 ゴーイントゥスカイ（武豊・4番人気）</div>
+          <div>🥈 2着：7番 タイダルロック（3番人気）</div>
+          <div>🥉 3着：4番 ブラックオリンピア（1番人気）</div>
+          <div style="color:#A32D2D;margin-top:4px">🚑 競走中止：15番 ノーブルサヴェージ（D.レーン・故障）</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid var(--border)">
+            3連単払戻：<strong>17,700円</strong>（43番人気）
+          </div>
+          <div style="color:#A32D2D;font-size:11px;margin-top:4px">
+            ❌ 敗因：軸の15番ノーブルサヴェージが故障競走中止のため不成立
+          </div>
+        </div>
+      </div>
+
+      <!-- 皐月賞 -->
+      <div class="card" style="border:1.5px solid #639922">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">皐月賞</div>
+            <div style="font-size:11px;color:var(--text-mute)">4/19（土）中山 芝2000m G1</div>
+          </div>
+          <span style="background:#E1F5EE;color:#0F6E56;font-size:11px;font-weight:700;padding:2px 10px;border-radius:9px">★ 的中！</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">
+          3連単1着固定　軸4番ロブチェン　相手1,5,6,7,8,9,12,14,15,17,18（11頭）各500円・110点
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+          <div style="background:var(--bg-soft);border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:var(--text-mute)">投資</div>
+            <div style="font-size:13px;font-weight:600">55,000円</div>
+          </div>
+          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#0F6E56">払戻</div>
+            <div style="font-size:13px;font-weight:700;color:#0F6E56">200,550円</div>
+          </div>
+          <div style="background:#E1F5EE;border-radius:var(--border-radius-md);padding:7px;text-align:center">
+            <div style="font-size:10px;color:#0F6E56">収支</div>
+            <div style="font-size:13px;font-weight:700;color:#0F6E56">+145,550円</div>
+          </div>
+        </div>
+        <button onclick="toggleResult('satsuki')"
+          style="width:100%;padding:6px;border:1px solid #639922;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:11px;cursor:pointer;color:#0F6E56;font-weight:500">
+          結果を見る ▼
+        </button>
+        <div id="result-satsuki" style="display:none;margin-top:8px;padding:10px;background:#E1F5EE;border-radius:var(--border-radius-md);font-size:12px;line-height:1.9">
+          <div style="font-weight:500;margin-bottom:4px;color:#0F6E56">✅ 的中！確定着順</div>
+          <div>🥇 1着：4番 ロブチェン（松山弘平・1番人気）コースレコード1:56.5</div>
+          <div>🥈 2着：15番 リアライズシリウス（4番人気）</div>
+          <div>🥉 3着：9番 ライヒスアドラー（9番人気）</div>
+          <div>4着：5番 アスクエジンバラ</div>
+          <div>5着：6番 フォルテアンジェロ</div>
+          <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid #a3d9a5">
+            3連単 4-15-9：<strong>40,110円</strong>（99番人気）<br>
+            払戻：40,110円 × 5（500円購入）= <strong style="font-size:15px;color:#0F6E56">200,550円</strong>
+          </div>
+          <div style="color:#0F6E56;font-size:11px;margin-top:4px">
+            ✅ 軸ロブチェン（1番人気）が逃げ切りコースレコードV！9番人気ライヒスアドラー3着で高配当的中！
           </div>
         </div>
       </div>
