@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260615-0030';
+  var CURRENT_VERSION = '20260615-0100';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2631,6 +2631,9 @@
     <!-- ⑤ TAB: 買い目 -->
     <div class="panel" id="tab-kaime">
       <div id="pn-kaime" class="pn">
+
+        <!-- 堅レース度バナー（買い目タブ最上部・買い目構成の目安） -->
+        <div id="volatility-banner" style="margin-bottom:16px"></div>
 
         <!-- 軸馬カード（強調デザイン・最初に表示） -->
         <div style="background:linear-gradient(135deg,#1a2744 0%,#2d4a8a 100%);border-radius:16px 16px 0 0;padding:14px 16px 10px;border:2px solid #4a7fd4;border-bottom:none">
@@ -20237,6 +20240,62 @@ function computeRaceVolatility(raceName) {
   };
 }
 
+// 堅レース度バナーのHTML生成（買い目タブ最上部・カードUI・?ツールチップ付き）
+// 表示専用：computeRaceVolatility/スコア/印/買い目ロジックには非干渉。
+function buildVolatilityBanner(raceName) {
+  var key = raceName;
+  if (raceName && raceName.indexOf('エプソム') >= 0) key = 'エプソムC';
+  if (raceName && raceName.indexOf('NHK') >= 0)    key = 'NHKマイルC';
+  var vol = (typeof computeRaceVolatility === 'function') ? computeRaceVolatility(key) : null;
+  if (!vol) return '';
+  // 色分け：堅=緑系 / 中=金系(サイト基調) / 波乱=赤系
+  var c = vol.verdict === '堅'
+      ? { bg:'#E1F5EE', bd:'var(--green)', fg:'#0F6E56', icon:'🎯', rec:'推奨：3連単1着固定6頭(30点)でトリガミ回避' }
+    : vol.verdict === '波乱'
+      ? { bg:'#FBEAF0', bd:'var(--red)', fg:'var(--red)', icon:'🌶', rec:'推奨：相手を10-12頭に拡大・万馬券狙い' }
+      : { bg:'var(--gold-bg)', bd:'var(--gold)', fg:'#8A6D08', icon:'⚖️', rec:'推奨：1着固定6-8頭・状況で調整' };
+  // 境界僅差は推奨に幅を持たせる（宝塚67・ダービー63対策）
+  if (vol.score >= 65 && vol.score <= 69) {
+    c.rec = '堅(やや中寄り)。1着固定6頭が基本だが、中穴が複数なら7-8頭も検討';
+  } else if (vol.score >= 60 && vol.score <= 64) {
+    c.rec = '中(やや堅寄り)。6-8頭で。穴の魅力次第で調整';
+  }
+  var f = vol.factors;
+  var h = '';
+  h += '<div style="border:2px solid ' + c.bd + ';border-radius:16px;padding:14px 16px;background:' + c.bg + ';box-shadow:0 1px 4px rgba(0,0,0,0.06)">';
+  // 見出し行（大きめ・太字 ＋ 右端「?」）
+  h += '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">';
+  h += '<span style="font-size:17px;font-weight:800;color:' + c.fg + ';letter-spacing:.02em">' + c.icon + ' 堅レース度 ' + vol.score + ' 【' + vol.verdict + '】</span>';
+  h += '<button onclick="toggleVolHelp()" aria-label="堅レース度の説明" style="flex:none;width:24px;height:24px;border-radius:50%;border:1.5px solid ' + c.bd + ';background:#fff;color:' + c.fg + ';font-size:13px;font-weight:800;cursor:pointer;line-height:1">?</button>';
+  h += '</div>';
+  // 推奨文
+  h += '<div style="font-size:13px;color:var(--text-sub);margin-top:6px;line-height:1.5">' + c.rec + '</div>';
+  // 指標行
+  h += '<div style="font-size:12px;color:var(--text-sub);margin-top:8px;line-height:1.7;display:flex;flex-wrap:wrap;gap:4px 14px">';
+  h += '<span>◎gap <strong>' + f.gap + '</strong>・人気スコア一致 <strong>' + f.popInTop3 + '/3</strong></span>';
+  h += '<span>上位6頭[1-4番' + f.topPop + '/5-9番' + f.midPop + '/10↓' + f.bigPop + ']</span>';
+  h += '</div>';
+  // ?ツールチップ（普段は閉じ）
+  h += '<div id="vol-help" style="display:none;margin-top:10px;padding:10px 12px;background:#fff;border:1px solid ' + c.bd + ';border-radius:10px;font-size:11px;color:var(--text-sub);line-height:1.7;width:100%;box-sizing:border-box">';
+  h += '<div style="font-weight:700;color:' + c.fg + ';margin-bottom:4px">【堅レース度とは】</div>';
+  h += '出走馬の事前スコアと人気の分布から算出する0-100の目安スコア(確率ではない)。65以上=堅・42未満=波乱。<br>';
+  h += '・<strong>◎gap</strong>：◎(スコア1位)と2位のスコア差。大きいほど軸が抜けて堅い。<br>';
+  h += '・<strong>人気スコア一致</strong>：スコア上位3頭のうち3番人気以内が何頭か。多いほど人気とAI評価が一致=堅。<br>';
+  h += '・<strong>上位6頭の人気内訳</strong>：実際に買う相手6頭の人気分布。5-9番(中穴)・10番↓(大穴)が多いほど波乱寄り。<br>';
+  h += '・堅=1着固定6頭で効率重視 / 波乱=相手拡大で万馬券狙い。<br>';
+  h += '<span style="color:var(--text-mute)">※確定オッズ反映後の判定が正確。堅でも配当は跳ねうるため、あくまで買い目構成の目安です。</span>';
+  h += '</div>';
+  h += '</div>';
+  return h;
+}
+
+// 「?」ツールチップ開閉（toggleResultと同方式の軽量display切替）
+function toggleVolHelp() {
+  var e = document.getElementById('vol-help');
+  if (!e) return;
+  e.style.display = (e.style.display === 'none' || !e.style.display) ? 'block' : 'none';
+}
+
 function renderKaimokuAI(raceName) {
   var container = document.getElementById('ai-kaimoku-container');
 
@@ -20245,33 +20304,9 @@ function renderKaimokuAI(raceName) {
   if (raceName && raceName.indexOf('エプソム') >= 0) key = 'エプソムC';
   if (raceName && raceName.indexOf('NHK') >= 0)    key = 'NHKマイルC';
 
-  // 堅レース度バナー（表示専用・既存の買い目ロジック/相手頭数には非干渉）
-  // KAIMOKU_DATA未整備のレースでも出走馬さえあれば表示する（早期returnの前に生成）
-  var _volBanner = '';
-  var _vol = (typeof computeRaceVolatility === 'function') ? computeRaceVolatility(key) : null;
-  if (_vol) {
-    var _vc = _vol.verdict === '堅'
-        ? { bg:'#E1F5EE', bd:'#0F6E56', fg:'#0F6E56', icon:'🎯', rec:'推奨：3連単1着固定6頭(30点)でトリガミ回避' }
-      : _vol.verdict === '波乱'
-        ? { bg:'#FBEAF0', bd:'#c0392b', fg:'#c0392b', icon:'🌶', rec:'推奨：相手を10-12頭に拡大・万馬券狙い' }
-        : { bg:'#FAEEDA', bd:'#B8600C', fg:'#854F0B', icon:'⚖️', rec:'推奨：1着固定6-8頭・状況で調整' };
-    // 境界僅差は推奨に幅を持たせる（宝塚67・ダービー63対策）
-    if (_vol.score >= 65 && _vol.score <= 69) {
-      _vc.rec = '堅(やや中寄り)。1着固定6頭が基本だが、中穴が複数なら7-8頭も検討';
-    } else if (_vol.score >= 60 && _vol.score <= 64) {
-      _vc.rec = '中(やや堅寄り)。6-8頭で。穴の魅力次第で調整';
-    }
-    _volBanner += '<div style="border:1px solid ' + _vc.bd + ';border-left:4px solid ' + _vc.bd + ';border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:12px;background:' + _vc.bg + '">';
-    _volBanner += '<div style="font-size:13px;font-weight:700;color:' + _vc.fg + '">' + _vc.icon + ' 堅レース度 ' + _vol.score + '【' + _vol.verdict + '】→ ' + _vc.rec + '</div>';
-    _volBanner += '<div style="font-size:11px;color:var(--text-sub);margin-top:4px">◎gap ' + _vol.factors.gap + '・人気スコア一致 ' + _vol.factors.popInTop3 + '/3・上位6頭の人気内訳[1-4番' + _vol.factors.topPop + '頭/5-9番' + _vol.factors.midPop + '頭/10番↓' + _vol.factors.bigPop + '頭]</div>';
-    _volBanner += '<div style="font-size:10px;color:var(--text-mute);margin-top:3px">※確定オッズ反映後の判定が正確(暫定値は参考)。堅でも配当は跳ねうるため目安です。</div>';
-    _volBanner += '</div>';
-  }
-
   var data = KAIMOKU_DATA[key];
   if (!data) {
-    var emptyHtml = _volBanner
-      + '<div class="card" style="background:#FAEEDA;border-left:3px solid #B8600C">'
+    var emptyHtml = '<div class="card" style="background:#FAEEDA;border-left:3px solid #B8600C">'
       + '<div style="font-size:12px;color:#854F0B">🎯 AI予想買い目はこのレースでは準備中です</div></div>';
     if (container) container.innerHTML = emptyHtml;
     return emptyHtml;
@@ -20298,9 +20333,6 @@ function renderKaimokuAI(raceName) {
   var jikuRankInfo = (typeof getJikuRank === 'function') ? getJikuRank(key) : null;
 
   var html = '';
-
-  // 堅レース度バナー（上で生成済み・表示専用）
-  html += _volBanner;
 
   // 予想の基本方針（買い目タブ最上部に固定表示）
   html += '<div style="border:1px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:16px;background:var(--color-background-secondary)">';
@@ -20680,6 +20712,8 @@ function sw(t) {
     window.excludedHimo = [];
     if (typeof renderKaime === 'function') renderKaime();
     if (typeof renderKaimokuAI === 'function') renderKaimokuAI(window.currentRaceName || currentRace);
+    var _vb = document.getElementById('volatility-banner');
+    if (_vb && typeof buildVolatilityBanner === 'function') _vb.innerHTML = buildVolatilityBanner(window.currentRaceName || currentRace);
   } else if (t === 'shutsuba') {
     setTimeout(function() {
       if (typeof renderShutsubaTable === 'function') renderShutsubaTable();
