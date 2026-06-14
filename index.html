@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260614-2300';
+  var CURRENT_VERSION = '20260614-2330';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -19125,15 +19125,30 @@ function computeScoreBreakdownTakarazukaV1(horse, raceName, _rawOnly) {
   var positionGapScore = (!horse.prevIsOverseas && (horse.prevCorner4||0) >= 12) ? -5 : 0;
   items.positionGap = { score: positionGapScore, max: 0, label: '⚠️前走4角12番手', note: (positionGapScore ? '前走4角12番手以下(阪神宝塚【0-0-0-16】全滅・-5)' : ''), group:'data' };
 
-  // 16. 【記事金塊A2】中15週以上の長期休み明け（-3・新軸＝レース間隔。サンプル薄3頭【0-0-0-3】のため軽め）
+  // 16. 【記事金塊A2＋2026宝塚検証】長期休み明け（段階式）
+  //  ≥15週かつ<23週：-3（中間隔・サンプル薄3頭【0-0-0-3】のため軽め）
+  //  ≥23週かつ前走が前年（年またぎ＝前年最終戦→年明け初戦G1）：-3に追加-8＝計-11
+  //  根拠：2026宝塚で半年ブランクの実力馬ミュージアム(有馬1着・24週)9着・レガレイラ(GI3勝・24週)7着＝着外で裏取り
   var longLayoffScore = 0;
+  var _llNote = '';
   var _rh0 = (rh && rh[0]) ? rh[0] : null;
   if (_rh0 && _rh0.date) {
     var _prevT = Date.parse(_rh0.date);
     var _takaT = Date.parse('2026-06-14');
-    if (!isNaN(_prevT) && (_takaT - _prevT) / (7 * 24 * 60 * 60 * 1000) >= 15) longLayoffScore = -3;
+    if (!isNaN(_prevT)) {
+      var _wks = (_takaT - _prevT) / (7 * 24 * 60 * 60 * 1000);
+      var _prevYear = parseInt(String(_rh0.date).slice(0, 4), 10);
+      var _spanYear = (_prevYear < 2026); // 前走が前年＝年またぎの年内初戦
+      if (_wks >= 23 && _spanYear) {
+        longLayoffScore = -11;
+        _llNote = '23週以上の年内初戦G1は実力馬でも割引(2026宝塚でミュージアム9着・レガ7着で検証・計-11)';
+      } else if (_wks >= 15) {
+        longLayoffScore = -3;
+        _llNote = '長期休み明け(過去該当3頭【0-0-0-3】全着外・サンプル薄のため-3)';
+      }
+    }
   }
-  items.longLayoff = { score: longLayoffScore, max: 0, label: '⚠️中15週以上', note: (longLayoffScore ? '長期休み明け(過去該当3頭【0-0-0-3】全着外・サンプル薄のため-3)' : ''), group:'data' };
+  items.longLayoff = { score: longLayoffScore, max: 0, label: '⚠️中15週以上', note: _llNote, group:'data' };
 
   // 17. 【上がり馬】条件戦を連勝で駆け上がってきた若い馬（+2・新軸＝前走除く連勝。前走1着は前走別が評価＝二重なし）
   var _juryo = ['G1','G2','G3'];
