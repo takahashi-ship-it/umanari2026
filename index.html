@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260614-2350';
+  var CURRENT_VERSION = '20260615-0010';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -20205,6 +20205,35 @@ function renderYumaBaken(raceName) {
   return html;
 }
 
+// 堅レース度判定（表示専用・買い目ロジックには非干渉）
+// 当年スコア分布から「堅/中/波乱」を算出。過去配当ではなく出走馬構成で判定。
+function computeRaceVolatility(raceName) {
+  var hs = (typeof HORSES_BY_RACE !== 'undefined' && HORSES_BY_RACE[raceName]) ? HORSES_BY_RACE[raceName] : null;
+  if (!hs) return null;
+  var arr = hs.filter(function(h){ return h && !h.isAvoided; }).map(function(h){
+    return { name: h.name, total: computeScoreBreakdown(h, raceName).total, pop: h.popEstimate || 99 };
+  });
+  if (arr.length < 3) return null;
+  arr.sort(function(a, b){ return b.total - a.total; });
+  var top3 = arr.slice(0, 3);
+  var popInTop3   = top3.filter(function(x){ return x.pop <= 3; }).length;   // a. 上位人気がスコアtop3を占める
+  var gap         = arr[0].total - arr[1].total;                             // b. ◎の抜け具合
+  var bigPopInTop3= top3.filter(function(x){ return x.pop >= 10; }).length;  // c. 二桁人気が上位印に混入
+  var anaCand     = arr.slice(0, 8).filter(function(x){ return x.pop >= 8; }).length; // d. 穴候補
+  var score = 40;
+  score += popInTop3 * 10;                                  // 人気-スコア一致(最大+30)
+  score += (gap >= 15 ? 15 : gap >= 10 ? 8 : gap >= 5 ? 3 : 0); // ◎の抜け具合
+  score -= bigPopInTop3 * 18;                               // 二桁人気が上位印=波乱
+  score -= Math.min(anaCand, 4) * 6;                        // 穴候補=波乱
+  score = Math.max(0, Math.min(100, score));
+  var verdict = score >= 65 ? '堅' : score >= 42 ? '中' : '波乱';
+  return {
+    race: raceName, score: score, verdict: verdict,
+    factors: { gap: gap, popInTop3: popInTop3, bigPopInTop3: bigPopInTop3, anaCand: anaCand },
+    top3: top3
+  };
+}
+
 function renderKaimokuAI(raceName) {
   var container = document.getElementById('ai-kaimoku-container');
 
@@ -20213,9 +20242,27 @@ function renderKaimokuAI(raceName) {
   if (raceName && raceName.indexOf('エプソム') >= 0) key = 'エプソムC';
   if (raceName && raceName.indexOf('NHK') >= 0)    key = 'NHKマイルC';
 
+  // 堅レース度バナー（表示専用・既存の買い目ロジック/相手頭数には非干渉）
+  // KAIMOKU_DATA未整備のレースでも出走馬さえあれば表示する（早期returnの前に生成）
+  var _volBanner = '';
+  var _vol = (typeof computeRaceVolatility === 'function') ? computeRaceVolatility(key) : null;
+  if (_vol) {
+    var _vc = _vol.verdict === '堅'
+        ? { bg:'#E1F5EE', bd:'#0F6E56', fg:'#0F6E56', icon:'🎯', rec:'推奨：3連単1着固定6頭(30点)でトリガミ回避' }
+      : _vol.verdict === '波乱'
+        ? { bg:'#FBEAF0', bd:'#c0392b', fg:'#c0392b', icon:'🌶', rec:'推奨：相手を10-12頭に拡大・万馬券狙い' }
+        : { bg:'#FAEEDA', bd:'#B8600C', fg:'#854F0B', icon:'⚖️', rec:'推奨：1着固定6-8頭・状況で調整' };
+    _volBanner += '<div style="border:1px solid ' + _vc.bd + ';border-left:4px solid ' + _vc.bd + ';border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:12px;background:' + _vc.bg + '">';
+    _volBanner += '<div style="font-size:13px;font-weight:700;color:' + _vc.fg + '">' + _vc.icon + ' 堅レース度 ' + _vol.score + '【' + _vol.verdict + '】→ ' + _vc.rec + '</div>';
+    _volBanner += '<div style="font-size:11px;color:var(--text-sub);margin-top:4px">◎gap ' + _vol.factors.gap + '・人気スコア一致 ' + _vol.factors.popInTop3 + '/3・二桁人気 ' + _vol.factors.bigPopInTop3 + '</div>';
+    _volBanner += '<div style="font-size:10px;color:var(--text-mute);margin-top:3px">※確定オッズ反映後の判定が正確(暫定値は参考)。堅でも配当は跳ねうるため目安です。</div>';
+    _volBanner += '</div>';
+  }
+
   var data = KAIMOKU_DATA[key];
   if (!data) {
-    var emptyHtml = '<div class="card" style="background:#FAEEDA;border-left:3px solid #B8600C">'
+    var emptyHtml = _volBanner
+      + '<div class="card" style="background:#FAEEDA;border-left:3px solid #B8600C">'
       + '<div style="font-size:12px;color:#854F0B">🎯 AI予想買い目はこのレースでは準備中です</div></div>';
     if (container) container.innerHTML = emptyHtml;
     return emptyHtml;
@@ -20242,6 +20289,9 @@ function renderKaimokuAI(raceName) {
   var jikuRankInfo = (typeof getJikuRank === 'function') ? getJikuRank(key) : null;
 
   var html = '';
+
+  // 堅レース度バナー（上で生成済み・表示専用）
+  html += _volBanner;
 
   // 予想の基本方針（買い目タブ最上部に固定表示）
   html += '<div style="border:1px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:16px;background:var(--color-background-secondary)">';
