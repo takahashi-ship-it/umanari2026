@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260615-0010';
+  var CURRENT_VERSION = '20260615-0030';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -20216,21 +20216,24 @@ function computeRaceVolatility(raceName) {
   if (arr.length < 3) return null;
   arr.sort(function(a, b){ return b.total - a.total; });
   var top3 = arr.slice(0, 3);
-  var popInTop3   = top3.filter(function(x){ return x.pop <= 3; }).length;   // a. 上位人気がスコアtop3を占める
-  var gap         = arr[0].total - arr[1].total;                             // b. ◎の抜け具合
-  var bigPopInTop3= top3.filter(function(x){ return x.pop >= 10; }).length;  // c. 二桁人気が上位印に混入
-  var anaCand     = arr.slice(0, 8).filter(function(x){ return x.pop >= 8; }).length; // d. 穴候補
+  var top6 = arr.slice(0, 6);
+  // P2配点：実戦(1着軸6頭相手)に合わせ、判定対象をスコア上位6頭の人気内訳に。
+  var popInTop3 = top3.filter(function(x){ return x.pop <= 3; }).length;          // a. 上位人気がスコアtop3を占める
+  var gap       = arr[0].total - arr[1].total;                                    // b. ◎の抜け具合
+  var topPop    = top6.filter(function(x){ return x.pop <= 4; }).length;          // 上位6頭の1-4番人気数
+  var midPop    = top6.filter(function(x){ return x.pop >= 5 && x.pop <= 9; }).length; // 中穴(5-9番)
+  var bigPop    = top6.filter(function(x){ return x.pop >= 10; }).length;         // 大穴(10番↓)
   var score = 40;
   score += popInTop3 * 10;                                  // 人気-スコア一致(最大+30)
   score += (gap >= 15 ? 15 : gap >= 10 ? 8 : gap >= 5 ? 3 : 0); // ◎の抜け具合
-  score -= bigPopInTop3 * 18;                               // 二桁人気が上位印=波乱
-  score -= Math.min(anaCand, 4) * 6;                        // 穴候補=波乱
+  score -= midPop * 4;                                      // 上位6頭に中穴=軽い波乱
+  score -= bigPop * 6;                                      // 上位6頭に大穴=強い波乱
   score = Math.max(0, Math.min(100, score));
   var verdict = score >= 65 ? '堅' : score >= 42 ? '中' : '波乱';
   return {
     race: raceName, score: score, verdict: verdict,
-    factors: { gap: gap, popInTop3: popInTop3, bigPopInTop3: bigPopInTop3, anaCand: anaCand },
-    top3: top3
+    factors: { gap: gap, popInTop3: popInTop3, topPop: topPop, midPop: midPop, bigPop: bigPop },
+    top3: top3, top6: top6
   };
 }
 
@@ -20252,9 +20255,15 @@ function renderKaimokuAI(raceName) {
       : _vol.verdict === '波乱'
         ? { bg:'#FBEAF0', bd:'#c0392b', fg:'#c0392b', icon:'🌶', rec:'推奨：相手を10-12頭に拡大・万馬券狙い' }
         : { bg:'#FAEEDA', bd:'#B8600C', fg:'#854F0B', icon:'⚖️', rec:'推奨：1着固定6-8頭・状況で調整' };
+    // 境界僅差は推奨に幅を持たせる（宝塚67・ダービー63対策）
+    if (_vol.score >= 65 && _vol.score <= 69) {
+      _vc.rec = '堅(やや中寄り)。1着固定6頭が基本だが、中穴が複数なら7-8頭も検討';
+    } else if (_vol.score >= 60 && _vol.score <= 64) {
+      _vc.rec = '中(やや堅寄り)。6-8頭で。穴の魅力次第で調整';
+    }
     _volBanner += '<div style="border:1px solid ' + _vc.bd + ';border-left:4px solid ' + _vc.bd + ';border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:12px;background:' + _vc.bg + '">';
     _volBanner += '<div style="font-size:13px;font-weight:700;color:' + _vc.fg + '">' + _vc.icon + ' 堅レース度 ' + _vol.score + '【' + _vol.verdict + '】→ ' + _vc.rec + '</div>';
-    _volBanner += '<div style="font-size:11px;color:var(--text-sub);margin-top:4px">◎gap ' + _vol.factors.gap + '・人気スコア一致 ' + _vol.factors.popInTop3 + '/3・二桁人気 ' + _vol.factors.bigPopInTop3 + '</div>';
+    _volBanner += '<div style="font-size:11px;color:var(--text-sub);margin-top:4px">◎gap ' + _vol.factors.gap + '・人気スコア一致 ' + _vol.factors.popInTop3 + '/3・上位6頭の人気内訳[1-4番' + _vol.factors.topPop + '頭/5-9番' + _vol.factors.midPop + '頭/10番↓' + _vol.factors.bigPop + '頭]</div>';
     _volBanner += '<div style="font-size:10px;color:var(--text-mute);margin-top:3px">※確定オッズ反映後の判定が正確(暫定値は参考)。堅でも配当は跳ねうるため目安です。</div>';
     _volBanner += '</div>';
   }
