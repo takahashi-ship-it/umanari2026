@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260615-0140';
+  var CURRENT_VERSION = '20260615-0141';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -3016,6 +3016,50 @@ document.querySelectorAll('#contentTabs .tab').forEach(t => {
  *  setCurrentRace() で HORSES / window.horses が差し替わる。
  * ===================================================== */
 const HORSES_BY_RACE = {
+  'しらさぎステークス': [
+    {name:'ベラジオボンド', sex:'牡', age:5, carriedWeight:57.0, jockey:'北村友', stable:'栗東上村', odds:6.5, popEstimate:1, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'ファンダム', sex:'牡', age:4, carriedWeight:57.0, jockey:'北村宏', stable:'美浦辻', odds:7.0, popEstimate:2, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'ファーヴェント', sex:'牡', age:5, carriedWeight:57.0, jockey:'高杉', stable:'栗東藤原', odds:7.2, popEstimate:3, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'エコロアルバ', sex:'牡', age:3, carriedWeight:53.0, jockey:'横山和', stable:'美浦田村', odds:8.4, popEstimate:4, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'エルトンバローズ', sex:'牡', age:6, carriedWeight:58.0, jockey:'松若', stable:'栗東杉山晴', odds:12.7, popEstimate:5, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'ミニトランザット', sex:'牡', age:4, carriedWeight:57.0, jockey:'松山', stable:'栗東杉山佳', odds:12.7, popEstimate:6, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'キープカルム', sex:'牡', age:5, carriedWeight:58.0, jockey:'坂井', stable:'栗東中竹', odds:12.8, popEstimate:7, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'カズミクラーシュ', sex:'牡', age:5, carriedWeight:57.0, jockey:'幸', stable:'栗東吉岡', odds:13.9, popEstimate:8, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'ショウナンアデイブ', sex:'牡', age:7, carriedWeight:57.0, jockey:'池添', stable:'栗東高野', odds:15.1, popEstimate:9, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'サイルーン', sex:'セ', age:7, carriedWeight:57.0, jockey:'岩田望', stable:'美浦堀', odds:17.8, popEstimate:10, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'スイープアワーズ', sex:'牡', age:6, carriedWeight:57.0, jockey:'国分優', stable:'栗東宮地', odds:18.7, popEstimate:11, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'タガノエルピーダ', sex:'牝', age:5, carriedWeight:55.0, jockey:'未定', stable:'栗東斉藤崇', odds:24.2, popEstimate:12, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'テリオスララ', sex:'牝', age:4, carriedWeight:55.0, jockey:'Mデムー', stable:'美浦田島', odds:29.9, popEstimate:13, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'スマートワイス', sex:'牡', age:5, carriedWeight:57.0, jockey:'川田', stable:'栗東大久保', odds:31.1, popEstimate:14, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'ブエナオンダ', sex:'牡', age:5, carriedWeight:58.0, jockey:'田口', stable:'栗東須貝', odds:34.8, popEstimate:15, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'ファインライン', sex:'牡', age:5, carriedWeight:57.0, jockey:'小崎', stable:'栗東松永幹', odds:38.2, popEstimate:16, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'メタルスピード', sex:'牡', age:6, carriedWeight:57.0, jockey:'菱田', stable:'美浦斎藤誠', odds:42.5, popEstimate:17, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'スリールミニョン', sex:'牝', age:4, carriedWeight:55.0, jockey:'永島', stable:'栗東高橋康', odds:66.9, popEstimate:18, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'メイショウシンタケ', sex:'牡', age:8, carriedWeight:57.0, jockey:'未定', stable:'栗東千田', odds:155.6, popEstimate:19, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'シンフォーエバー', sex:'牡', age:4, carriedWeight:57.0, jockey:'未定', stable:'栗東森秀', odds:238.0, popEstimate:20, waku:null, wakuban:null, umaban:null, raceHistory:[]}
+  ],
+  '府中牝馬S': [
+    {name:'ヴァルキリーバース', sex:'牝', age:4, carriedWeight:null, jockey:'ルメール', stable:'美浦田中博', odds:5.5, popEstimate:1, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'ルージュソリテール', sex:'牝', age:4, carriedWeight:null, jockey:'西塚', stable:'栗東藤原', odds:7.0, popEstimate:2, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'ニシノティアモ', sex:'牝', age:5, carriedWeight:null, jockey:'津村', stable:'美浦上原佑', odds:7.1, popEstimate:3, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'パラディレーヌ', sex:'牝', age:4, carriedWeight:null, jockey:'原', stable:'栗東千田', odds:8.9, popEstimate:4, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'コガネノソラ', sex:'牝', age:5, carriedWeight:null, jockey:'菊沢', stable:'美浦菊沢', odds:11.3, popEstimate:5, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'エストゥペンダ', sex:'牝', age:4, carriedWeight:null, jockey:'荻野極', stable:'美浦高柳瑞', odds:11.7, popEstimate:6, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'ユキワリザクラ', sex:'牝', age:5, carriedWeight:null, jockey:'ゴンサルベ', stable:'美浦田中剛', odds:14.3, popEstimate:7, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'ウイントワイライト', sex:'牝', age:4, carriedWeight:null, jockey:'横山典', stable:'栗東西園翔', odds:15.5, popEstimate:8, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'テレサ', sex:'牝', age:4, carriedWeight:null, jockey:'戸崎圭', stable:'栗東杉山晴', odds:16.0, popEstimate:9, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'ビップデイジー', sex:'牝', age:4, carriedWeight:null, jockey:'西村淳', stable:'栗東松下', odds:18.1, popEstimate:10, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'セキトバイースト', sex:'牝', age:5, carriedWeight:null, jockey:'浜中', stable:'栗東四位', odds:21.1, popEstimate:11, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'テリオスララ', sex:'牝', age:4, carriedWeight:null, jockey:'未定', stable:'美浦田島', odds:21.2, popEstimate:12, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'マカナ', sex:'牝', age:4, carriedWeight:null, jockey:'未定', stable:'美浦伊藤大', odds:23.3, popEstimate:13, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'タガノエルピーダ', sex:'牝', age:5, carriedWeight:null, jockey:'石川', stable:'栗東斉藤崇', odds:25.6, popEstimate:14, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'ホールネス', sex:'牝', age:6, carriedWeight:null, jockey:'未定', stable:'栗東藤原', odds:44.2, popEstimate:15, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'ミアネーロ', sex:'牝', age:5, carriedWeight:null, jockey:'大野', stable:'美浦林', odds:62.7, popEstimate:16, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'ブラウンラチェット', sex:'牝', age:4, carriedWeight:null, jockey:'未定', stable:'美浦手塚久', odds:66.9, popEstimate:17, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'キーパフォーマー', sex:'牝', age:5, carriedWeight:null, jockey:'未定', stable:'栗東辻野', odds:111.9, popEstimate:18, waku:null, wakuban:null, umaban:null, raceHistory:[]},
+    {name:'セントメモリーズ', sex:'牝', age:5, carriedWeight:null, jockey:'木幡巧', stable:'美浦松尾', odds:143.7, popEstimate:19, waku:null, wakuban:null, umaban:null, raceHistory:[]}
+  ],
+
 "天皇賞（春）": [
   {
     name: "クロワデュノール",
