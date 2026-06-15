@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260616-0154';
+  var CURRENT_VERSION = '20260616-0155';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -19877,68 +19877,102 @@ function _getTakarazukaScoreStats() {
 
 
 function computeScoreBreakdownShirasagiV1(horse, raceName, _rawOnly) {
-  // しらさぎステークス(阪神芝1600m外・混合別定) 専用スコア v1
-  // 確定6項目=人気20/前走4角13/前走距離5/年齢10/脚質10/血統10 + 枠5(確定後) = max73
-  if (!horse) return { total:0, max:73, pct:0, items:{}, penalty:0 };
-  if (horse.isAvoided) return { total:0, max:73, pct:0, items:{}, isAvoided:true, avoidReason:(horse.avoidReason||'回避') };
+  // しらさぎステークス専用スコア v2 (keibahint一次データ準拠)
+  // 満点78(人気20/上がり13/脚質10/年齢10/牝馬5/前走距離5/血統10/枠5) + 専用減点最大-10
+  if (!horse) return { total:0, max:78, pct:0, items:{}, penalty:0 };
+  if (horse.isAvoided) return { total:0, max:78, pct:0, items:{}, isAvoided:true, avoidReason:(horse.avoidReason||'回避') };
   var rh = Array.isArray(horse.raceHistory) ? horse.raceHistory : [];
   var rh0 = (rh && rh[0]) ? rh[0] : null;
   var items = {};
+
   var pop = horse.popEstimate || 99; var popScore;
   if (pop === 1) popScore = 20;
   else if (pop === 4) popScore = 13;
-  else if (pop === 2) popScore = 10;
-  else if (pop === 5 || pop === 6 || pop === 8 || pop === 9) popScore = 8;
-  else if (pop === 3 || pop === 7) popScore = 5;
-  else popScore = 3;
+  else if (pop === 2 || pop === 5) popScore = 10;
+  else if (pop >= 6 && pop <= 9) popScore = 7;
+  else if (pop === 3) popScore = 3;
+  else if (pop === 10) popScore = 4;
+  else popScore = 2;
   items.popularity = { score: popScore, max:20, label:'人気別', group:'data' };
-  var prevC4 = (rh0 && typeof rh0.corner4 === 'number') ? rh0.corner4 : null;
-  var c4Score;
-  if (prevC4 === null) c4Score = 7;
-  else if (prevC4 <= 7) c4Score = 13;
-  else c4Score = 5;
-  items.prevCorner = { score: c4Score, max:13, label:'前走4角位置', note:'7番手以内=前有利', group:'data' };
+
+  var prevL3f = (rh0 && typeof rh0.last3f === 'number') ? rh0.last3f : null;
+  var l3fScore;
+  if (prevL3f === null) l3fScore = 3;
+  else if (prevL3f < 33.0) l3fScore = 10;
+  else if (prevL3f < 34.0) l3fScore = 8;
+  else if (prevL3f < 34.5) l3fScore = 5;
+  else if (prevL3f < 35.0) l3fScore = 3;
+  else l3fScore = 1;
+  var bonus = 0;
+  try {
+    var field = (HORSES_BY_RACE && HORSES_BY_RACE['しらさぎステークス']) ? HORSES_BY_RACE['しらさぎステークス'] : [];
+    var times = field.map(function(hh){ var r=(hh.raceHistory||[])[0]; return (r&&typeof r.last3f==='number')?r.last3f:999; });
+    var minT = Math.min.apply(null, times);
+    if (prevL3f !== null && prevL3f === minT && minT < 999) bonus = 3;
+  } catch(e) { bonus = 0; }
+  items.last3f = { score: l3fScore + bonus, max:13, label:'⚡前走上がり', note:(bonus>0?'出走馬中最速+3':''), group:'data' };
+
+  var KYAKU = {
+    'エコロアルバ':'中団','エルトンバローズ':'先行','カズミクラーシュ':'先行','キープカルム':'中団',
+    'サイルーン':'中団','ショウナンアデイブ':'先行','シンフォーエバー':'先行','スイープアワーズ':'後方',
+    'スマートワイス':'先行','スリールミニョン':'先行','タガノエルピーダ':'逃げ','テリオスララ':'逃げ',
+    'ファインライン':'中団','ファンダム':'先行','ファーヴェント':'先行','ブエナオンダ':'中団',
+    'ベラジオボンド':'先行','ミニトランザット':'中団','メイショウシンタケ':'後方','メタルスピード':'逃げ'
+  };
+  var KSCORE = {'先行':10,'中団':6,'後方':6,'逃げ':3};
+  var kyaku = KYAKU[horse.name] || null;
+  var kyakuScore = kyaku ? KSCORE[kyaku] : 6;
+  items.kyakushitsu = { score: kyakuScore, max:10, label:'🏃脚質', note:(kyaku||'未設定'), group:'data' };
+
+  var age = horse.age || 0; var ageScore;
+  if (age === 5) ageScore = 10; else if (age === 4) ageScore = 10;
+  else if (age === 3) ageScore = 9; else if (age === 6) ageScore = 5;
+  else ageScore = 1;
+  items.age = { score: ageScore, max:10, label:'🎂年齢', group:'data' };
+
+  var sex = horse.sex || '';
+  var mareScore = (sex.indexOf('牝') >= 0) ? 5 : 0;
+  items.mare = { score: mareScore, max:5, label:'♀牝馬恩恵', group:'data' };
+
   var prevD = (rh0 && typeof rh0.distance === 'number') ? rh0.distance : null;
   var dScore;
-  if (prevD === null) dScore = 3;
-  else if (prevD >= 1600) dScore = 5;
-  else if (prevD >= 1400) dScore = 3;
-  else dScore = 1;
+  if (prevD === null) dScore = 2;
+  else if (prevD === 1600) dScore = 5;
+  else if (prevD === 1800) dScore = 4;
+  else if (prevD === 1400 || prevD === 1200) dScore = 2;
+  else dScore = 0;
   items.prevDist = { score: dScore, max:5, label:'前走距離', group:'data' };
-  var age = horse.age || 0; var ageScore;
-  if (age === 5) ageScore = 10; else if (age === 4) ageScore = 9;
-  else if (age === 3) ageScore = 7; else if (age === 6) ageScore = 5;
-  else if (age === 7) ageScore = 2; else ageScore = 0;
-  items.age = { score: ageScore, max:10, label:'🎂年齢', group:'data' };
-  var KYAKU = {
-    'エコロアルバ':'差し','エルトンバローズ':'先行','カズミクラーシュ':'先行','キープカルム':'差し',
-    'サイルーン':'差し','ショウナンアデイブ':'先行','シンフォーエバー':'先行','スイープアワーズ':'追込',
-    'スマートワイス':'先行','スリールミニョン':'先行','タガノエルピーダ':'逃げ','テリオスララ':'逃げ',
-    'ファインライン':'差し','ファンダム':'先行','ファーヴェント':'先行','ブエナオンダ':'差し',
-    'ベラジオボンド':'先行','ミニトランザット':'差し','メイショウシンタケ':'追込','メタルスピード':'逃げ'
-  };
-  var KSCORE = {'先行':10,'差し':5,'追込':5,'逃げ':3};
-  var kyaku = KYAKU[horse.name] || null;
-  var kyakuScore = kyaku ? KSCORE[kyaku] : 5;
-  items.kyakushitsu = { score: kyakuScore, max:10, label:'🏃脚質', note:(kyaku||'未設定'), group:'data' };
+
   var sire = horse.sire || ''; var b5 = horse.blood5gen || [];
   var bloodScore;
-  if (sire === 'ディープインパクト' || sire === 'キズナ' || sire === 'ディープブリランテ' || b5.indexOf('ディープインパクト') >= 0) bloodScore = 10;
+  if (sire === 'ディープインパクト' || sire === 'キズナ' || sire === 'ディープブリランテ' || sire === 'ワールドエース' || b5.indexOf('ディープインパクト') >= 0) bloodScore = 10;
   else if (sire === 'ロードカナロア') bloodScore = 8;
   else bloodScore = 5;
   items.blood = { score: bloodScore, max:10, label:'🩸血統', group:'horse' };
+
   var wakuScore = 0;
   if (horse.waku) {
     var w = horse.waku;
-    if (w === 7) wakuScore = 5; else if (w === 2) wakuScore = 4;
-    else if (w >= 4 && w <= 6) wakuScore = 3; else wakuScore = 1;
+    if (w === 7) wakuScore = 5;
+    else if (w === 2 || w === 4 || w === 5 || w === 6) wakuScore = 3;
+    else wakuScore = 1;
   }
   items.waku = { score: wakuScore, max:5, label:'🎯枠順', note:(horse.waku?'':'枠順発表前は暫定0'), group:'data' };
-  var totalScore = popScore + c4Score + dScore + ageScore + kyakuScore + bloodScore + wakuScore;
+
+  var kc = 0;
+  if (rh0) {
+    if (typeof rh0.distance === 'number' && rh0.distance >= 2000) kc++;
+    if (rh0.rank === 5) kc++;
+    if (rh0.grade === 'G2') kc++;
+  }
+  var penalty = (kc >= 3) ? -10 : (kc === 2) ? -8 : (kc === 1) ? -4 : 0;
+  if (penalty !== 0) items.keshi = { score: penalty, max:0, label:'⚠消去減点', note:kc+'条件該当', group:'data' };
+
+  var totalScore = popScore + (l3fScore+bonus) + kyakuScore + ageScore + mareScore + dScore + bloodScore + wakuScore + penalty;
   totalScore = Math.max(0, totalScore);
-  var M = 73;
+  var M = 78;
   var pct = Math.max(0, Math.min(99, Math.round(totalScore / M * 100)));
-  return { total: totalScore, max: M, pct: pct, items: items, penalty: 0 };
+  return { total: totalScore, max: M, pct: pct, items: items, penalty: penalty };
 }
 
 function computeScoreBreakdownTakarazukaV1(horse, raceName, _rawOnly) {
