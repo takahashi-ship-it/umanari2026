@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260615-0151';
+  var CURRENT_VERSION = '20260615-0152';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7146,6 +7146,41 @@ const RACE_PAST_DATA = {
     ]
   },
   'しらさぎステークス': {
+
+    bloodAnalysis: {
+      title:'しらさぎS 血統傾向（阪神芝1600m外）',
+      subtitle:'過去10年(米子S含む)。ディープインパクト直系とロードカナロアが好相性。2023年はディープ系が1-2-3着独占で3連単122万。',
+      hideOthers:true,
+      headerCards:[
+        { type:'ace',  label:'ディープ直系', mainValue:'2-3-1', subValue:'当該重賞で複数好走・キズナ等含む◎' },
+        { type:'iron', label:'ロードカナロア', mainValue:'複40%', subValue:'スピード性能でマイル○' },
+        { type:'block',label:'コース5年上位', mainValue:'エピファ/モーリス', subValue:'阪神芝1600の種牡馬上位' },
+        { type:'kill', label:'マイラーズC組', mainValue:'0-0-0-7', subValue:'格上げ組は血統不問で割引' }
+      ],
+      filterSummary:{ title:'血統の急所',
+        iron:{ label:'ディープ直系が鉄板', desc:'ディープ/キズナ/ディープブリランテ等。直線の長い阪神外回りで瞬発力が活きる' },
+        kill:{ label:'血統より前走位置', desc:'血統が良くても前走4角8番手以下・後方一気タイプは割引(当レースは前有利)' } },
+      detailTable:[
+        { sire:'ディープインパクト', record:'当該重賞2勝2着3回3着1回◎', label:'本線', color:'green' },
+        { sire:'キズナ', record:'ディープ直系・同条件相性良◎', label:'本線(直系)', color:'green' },
+        { sire:'ディープブリランテ', record:'ディープ直系・2020年3着例', label:'直系', color:'green' },
+        { sire:'ワールドエース', record:'ディープ直系・2023年勝ち馬(メイショウシンタケ)', label:'直系', color:'green' },
+        { sire:'ロードカナロア', record:'当該重賞1勝2着1回・複勝40%○', label:'スピード型', color:'blue' },
+        { sire:'モーリス', record:'阪神芝1600コース5年上位', label:'コース適性', color:'blue' },
+        { sire:'エピファネイア', record:'阪神芝1600コース5年1位', label:'コース適性', color:'blue' }
+      ],
+      comparisonBars:[
+        { label:'ディープ直系(当該重賞・好走多)', value:40, color:'green' },
+        { label:'ロードカナロア(複勝率)', value:40, color:'blue' }
+      ],
+      filterStrategy:{ title:'血統での狙い',
+        tags:['ディープ直系◎','ロードカナロア○','前走位置とセットで判断'],
+        buyRules:['ディープインパクト直系(キズナ/ディープブリランテ/ワールドエース等)','ロードカナロア産駒(マイルのスピード)'],
+        killRules:['血統が良くても前走4角後方・追込一手は当レースで割引'],
+        overseasRules:[],
+        finalStrategy:['ディープ直系×前走4角7番手以内×5歳が理想形','ロードカナロアはスピードを活かせる先行〜好位で'],
+        summary:'阪神芝1600m外は瞬発力勝負。ディープ直系が中心、ロードカナロアがスピードで対抗。ただし血統単体でなく前走位置(前有利)とセットで評価する。' }
+    },
     anaPoints: [
       '【G3昇格1年目】2025年に米子S（オープン特別/L）からG3へ昇格。過去傾向は前身・米子S時代を含む。メンバーの質が上がるため傾向が変わる可能性あり＝過去データは「法則」でなく「指針」として扱う。',
       '【中波乱型】3連単は2023年122万・2025年51万の大波乱がある一方、2016-2017年は7千円台の堅い決着も。振れ幅が大きく、堅レース度判定は確定オッズ後の当年スコア分布で見るべきレース。',
