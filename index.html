@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260615-0145';
+  var CURRENT_VERSION = '20260615-0146';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7056,6 +7056,72 @@ function getActiveConditions() {
  *     html : { type:"html",  title?, html:"..." }
  * ===================================================== */
 const RACE_PAST_DATA = {
+  'しらさぎステークス': {
+    anaPoints: [
+      '【G3昇格1年目】2025年に米子S（オープン特別/L）からG3へ昇格。過去傾向は前身・米子S時代を含む。メンバーの質が上がるため傾向が変わる可能性あり＝過去データは「法則」でなく「指針」として扱う。',
+      '【中波乱型】3連単は2023年122万・2025年51万の大波乱がある一方、2016-2017年は7千円台の堅い決着も。振れ幅が大きく、堅レース度判定は確定オッズ後の当年スコア分布で見るべきレース。',
+      '【前が有利】1着馬の前走4角は7番手以内が中心（2018-2024で7番手以内3着内率31%対8番手以下7%）。当日も先行が最安定（複勝率37%）。最後方からの突き抜けは10年で皆無。好位～中団で脚を使える馬を重視。',
+      '【5歳中心】5歳が3着内率36%で最良、4歳が次点。7歳以上は苦戦。',
+      '【外枠有利】7枠が4勝・複勝率41%と突出（米子S時代含め6-8枠優勢）。阪神芝1600外回りで直線が長く外からスムーズに脚を使える形。※枠確定後にハイライト有効化。',
+      '【血統】ディープインパクト直系（キズナ等含む）と父ロードカナロアが好相性。2023年はディープ系が1-2-3着独占で122万馬券。',
+      '【前走距離】近年の勝ち馬は前走1600m以上が中心。マイラーズC組は近年振るわず、六甲S等のL/OP組が好走。'
+    ],
+    summary: 'G3昇格1年目で前身・米子S時代を含む過去データ。中波乱型で、上位人気を軸にしつつ中穴を絡めたい。前走4角7番手以内・先行～好位の前有利、5歳中心、外枠（特に7枠）有利、ディープ系/ロードカナロアが好血統。最後方一気は決まりにくい。',
+    sections: [
+      { type:'table', title:'人気別 成績（過去10年・米子S含む）', headers:['人気','勝-2-3-着外','複勝率','傾向'],
+        rows:[
+          { cells:['1番人気','3-4-0-2','78%','軸の中心。連対率77%と安定'], matchFn:function(h){return h.popEstimate===1;}, highlight:true },
+          { cells:['2番人気','2-1-0-6','33%','勝ち切りはあるが信頼度はやや落ちる'], matchFn:function(h){return h.popEstimate===2;}, highlight:true },
+          { cells:['3番人気','0-0-1-8','11%','勝利ゼロ・複勝率最低の罠ゾーン'], matchFn:function(h){return h.popEstimate===3;}, highlight:true },
+          { cells:['4番人気','1-1-2-5','44%','穴の入口。複勝率は上位並み'], matchFn:function(h){return h.popEstimate===4;}, highlight:true },
+          { cells:['5番人気','1-0-1-7','22%','2025年勝ち馬キープカルムはこのゾーン'], matchFn:function(h){return h.popEstimate===5;}, highlight:true },
+          { cells:['6～10番人気','2-3-5-?','約20%','中穴の好走多数。延べ10頭が3着内'], matchFn:function(h){return h.popEstimate>=6&&h.popEstimate<=10;}, highlight:true },
+          { cells:['11番人気以下','1-0-2-34','8%','基本苦戦だが2023メイショウシンタケ(10人気)の例も'], matchFn:function(h){return h.popEstimate>=11;}, highlight:true }
+        ] },
+      { type:'table', title:'年齢別 成績（過去10年）', headers:['年齢','勝-2-3-着外','3着内率','傾向'],
+        rows:[
+          { cells:['3歳','1-0-0-1','50%','少数だが好走例あり'], matchFn:function(h){return h.age===3;}, highlight:true },
+          { cells:['4歳','4-3-2-18','33%','5歳に次ぐ中心ゾーン'], matchFn:function(h){return h.age===4;}, highlight:true },
+          { cells:['5歳','5-4-4-23','36%','最良ゾーン。今年の中心'], matchFn:function(h){return h.age===5;}, highlight:true },
+          { cells:['6歳','1-4-2-30','17%','連下まで'], matchFn:function(h){return h.age===6;}, highlight:true },
+          { cells:['7歳','0-0-2-18','10%','苦戦。3着まで'], matchFn:function(h){return h.age===7;}, highlight:true },
+          { cells:['8歳以上','0-0-0-8','0%','圏外。2023勝ち馬メイショウシンタケも今回は8歳'], matchFn:function(h){return h.age>=8;}, highlight:true }
+        ] },
+      { type:'table', title:'血統別 傾向（過去10年・当該コース）', headers:['種牡馬系統','傾向','—'],
+        rows:[
+          { cells:['ディープインパクト直系','2勝2着3回3着1回。キズナ・ディープブリランテ等直系も含め好相性','◎'],
+            matchFn:function(h){ var b=h.blood5gen||[]; var s=h.sire||''; return s==='ディープインパクト'||s==='キズナ'||s==='ディープブリランテ'|| b.indexOf('ディープインパクト')>=0; }, highlight:true },
+          { cells:['ロードカナロア','1勝2着1回・複勝率40%。スピード性能を活かせる','○'],
+            matchFn:function(h){ return (h.sire||'')==='ロードカナロア'; }, highlight:true },
+          { cells:['その他','上記以外。コース適性は個別に判断','—'],
+            matchFn:function(h){ var b=h.blood5gen||[]; var s=h.sire||''; var deep=(s==='ディープインパクト'||s==='キズナ'||s==='ディープブリランテ'||b.indexOf('ディープインパクト')>=0); var lk=(s==='ロードカナロア'); return !deep&&!lk; }, highlight:false }
+        ] },
+      { type:'table', title:'脚質別 傾向（過去10年）※当日脚質は確定後に反映', headers:['脚質','勝-2-3-着外','複勝率','傾向'],
+        rows:[
+          { cells:['逃げ','1-0-0-8','11%','単騎で楽なら別だが目標にされやすい'] },
+          { cells:['先行','4-4-3-19','37%','最安定。好位で流れに乗れる馬'] },
+          { cells:['差し','2-4-2-35','19%','届く舞台だが過信は禁物'] },
+          { cells:['追込','2-1-4-29','19%','最後方一気は決まらず、中団～の差しが理想'] }
+        ] },
+      { type:'table', title:'枠順別 成績（過去10年）※枠確定後にハイライト有効化', headers:['枠','勝-2-3-着外','複勝率','傾向'],
+        rows:[
+          { cells:['1枠','1-0-0-11','8%','内は基本不利だが稀に好走'], matchFn:function(h){return h.waku===1;}, highlight:true },
+          { cells:['2枠','1-2-1-8','33%','内枠では健闘'], matchFn:function(h){return h.waku===2;}, highlight:true },
+          { cells:['3枠','0-1-0-12','8%','低調'], matchFn:function(h){return h.waku===3;}, highlight:true },
+          { cells:['4枠','1-2-1-10','29%','中枠は標準'], matchFn:function(h){return h.waku===4;}, highlight:true },
+          { cells:['5枠','1-2-1-11','27%','中枠は標準'], matchFn:function(h){return h.waku===5;}, highlight:true },
+          { cells:['6枠','1-1-2-12','25%','外の入口'], matchFn:function(h){return h.waku===6;}, highlight:true },
+          { cells:['7枠','4-0-3-10','41%','★最強ゾーン。4勝・複勝率41%'], matchFn:function(h){return h.waku===7;}, highlight:true },
+          { cells:['8枠','0-1-1-17','10%','外すぎても窮屈。低調'], matchFn:function(h){return h.waku===8;}, highlight:true }
+        ] },
+      { type:'table', title:'前走4コーナー通過順別（過去10年）', headers:['前走4角','傾向','—'],
+        rows:[
+          { cells:['7番手以内','3着内率約30%。前走で前にいた馬が中心(2018-24は31%)','◎'] },
+          { cells:['8番手以下','3着内率約16%(2018-24は7%)。前走後方は割引','△'] }
+        ] },
+      { type:'html', html:'<div style="font-size:12px;color:#666;line-height:1.6;margin-top:8px;">※データは前身「米子ステークス」(2015-2024、2024年は京都施行)＋2025年しらさぎSの集計。G3昇格でメンバーの質が上がるため傾向は変わりうる。枠順別・脚質別のハイライトは出走確定（枠順・当日脚質）後に有効化。出典：競馬ナビ/JRA-VAN系の一次データをユーザーが提供。</div>' }
+    ]
+  },
   "天皇賞（春）": {
     sections: [
       {
