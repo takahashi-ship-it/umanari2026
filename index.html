@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260615-0148';
+  var CURRENT_VERSION = '20260615-0149';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2696,7 +2696,7 @@
     <div class="modal-icon">🏇</div>
     <h4>ページ準備中</h4>
     <div class="modal-race" id="modalRaceName"></div>
-    <p>このレースの予想は準備中です。<br>現在は「天皇賞（春）」「NHKマイルC」「ヴィクトリアマイル」「新潟大賞典」「京都新聞杯」「エプソムC」「オークス」「平安ステークス」が閲覧可能です。</p>
+    <p>このレースの予想は準備中です。<br>現在閲覧できるのは、カレンダーで「予想中」または「終了」バッジが付いているレースです。</p>
     <button id="modalClose">閉じる</button>
   </div>
 </div>
@@ -2855,7 +2855,7 @@ const STATUS_BADGE = {
 };
 
 const TARGET_RACE_NAME = "オークス";
-const SUPPORTED_RACES = new Set(["天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS"]);
+const SUPPORTED_RACES = new Set(["天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S",]);
 
 function getDefaultDisplayMonth() {
   // 直近の「予想中」(SUPPORTED && upcoming) レースの開催月を返す
