@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260615-0146';
+  var CURRENT_VERSION = '20260615-0147';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7056,6 +7056,76 @@ function getActiveConditions() {
  *     html : { type:"html",  title?, html:"..." }
  * ===================================================== */
 const RACE_PAST_DATA = {
+  '府中牝馬S': {
+    anaPoints: [
+      '【新設1年目・3つの過去の寄せ集め注意】府中牝馬S(東京1800ハンデ)は2025年新設。傾向の基データは(a)旧マーメイドS=阪神/京都2000mハンデ牝馬(時期・ハンデ・牝馬は引継ぎだがコース別)(b)東京1800コース傾向/旧エプソムC=コースは一致だが混合・別定。見る角度で使うデータが違う＝過去傾向は「指針」。',
+      '【荒れる】マーメイドS系は上位人気の信頼度が低く、4番人気が勝率35%・単回収264と妙味、5番人気以下が3着内の過半数、2桁人気3勝。しらさぎ(中波乱)より荒れ寄り。堅レース度は波乱側に出やすい。',
+      '【格上挑戦が有利＝最重要】前走G1組は全滅(8頭0勝0連対)。前走3勝クラス・OP特別からの格上挑戦組が3着内の過半数。実績・格より「上り調子」を見るレース。前走の格は気にしすぎない。',
+      '【軽ハンデ妙味】51kg以下が過去10回で5勝・うち4勝が7番人気以下。56kg以上は苦戦。※ハンデ確定後にハイライト有効化。',
+      '【脚質】先行～中団が中心。逃げ切り・後方一気とも極端は不利(4角10番手以下の勝利1頭のみ)。好位でメンバー上位の上がりを使える馬。',
+      '【年齢】4～5歳中心。ただし4歳の3番人気以内は過信禁物(0-0-1-11)。',
+      '【枠】内外フラット(マーメイドS系もエプソムC系も枠の有利不利は小さい)。しらさぎと違い枠は強調しない。当日の馬場(梅雨・連続開催後半)の方が重要。',
+      '【血統】東京1800ではキズナ・ジャスタウェイ・リアルスティールが優秀。ドゥラメンテ・ロードカナロア・モーリス・キタサンブラックもコース上位。旧エプソムC系はディープ系とSadler\'s Wells/Nureyev内包のパワー血統が道悪で台頭。'
+    ],
+    summary: '新設1年目で基データは旧マーメイドS(2000mハンデ)＋東京1800コース傾向の寄せ集め。荒れ度は高く、上位人気を軸にしつつ伏兵を厚く。最大の特徴は「格上挑戦有利」=前走G1組は全滅・3勝クラス/OP組が好走。先行～中団の好位差し、4～5歳中心、軽ハンデ妙味、東京1800向きの瞬発+持続血統(キズナ等)。枠は内外フラット。',
+    sections: [
+      { type:'table', title:'人気別 成績（旧マーメイドS＋2025府中牝馬）', headers:['人気','勝-2-3-着外','3着内率','傾向'],
+        rows:[
+          { cells:['1番人気','1-1-1-7','30%','信頼度は低め。軸でも相手は広めに'], matchFn:function(h){return h.popEstimate===1;}, highlight:true },
+          { cells:['2番人気','0-2-1-7','30%','勝ち切れない'], matchFn:function(h){return h.popEstimate===2;}, highlight:true },
+          { cells:['3番人気','1-2-1-6','40%','連下中心'], matchFn:function(h){return h.popEstimate===3;}, highlight:true },
+          { cells:['4番人気','1-1-1-7','30%','妙味ゾーン(過去20年では勝率35%・単回収264)'], matchFn:function(h){return h.popEstimate===4;}, highlight:true },
+          { cells:['5番人気','1-1-2-6','40%','複勝率は上位並み'], matchFn:function(h){return h.popEstimate===5;}, highlight:true },
+          { cells:['6～9番人気','3-2-3-32','20%','伏兵の好走多数'], matchFn:function(h){return h.popEstimate>=6&&h.popEstimate<=9;}, highlight:true },
+          { cells:['10番人気以下','3-1-1-53','9%','2桁人気が3勝。一発警戒'], matchFn:function(h){return h.popEstimate>=10;}, highlight:true }
+        ] },
+      { type:'table', title:'前走クラス別 傾向（格上挑戦が有利＝最重要）', headers:['前走','傾向','評価'],
+        rows:[
+          { cells:['前走G1','8頭全滅(0勝0連対)。人気でも割引','×'],
+            matchFn:function(h){ var r=(h.raceHistory||[])[0]; return r&&r.grade==='G1'; }, highlight:true },
+          { cells:['前走G2','連下まで。勝ち切りは少ない','△'],
+            matchFn:function(h){ var r=(h.raceHistory||[])[0]; return r&&r.grade==='G2'; }, highlight:true },
+          { cells:['前走G3','標準。福島牝馬S/新潟大賞典等','○'],
+            matchFn:function(h){ var r=(h.raceHistory||[])[0]; return r&&r.grade==='G3'; }, highlight:true },
+          { cells:['前走OP/L・3勝クラス(格上挑戦)','★3着内の過半数。実績劣っても上り調子なら買い','◎'],
+            matchFn:function(h){ var r=(h.raceHistory||[])[0]; if(!r) return false; if(r.grade) return false; var n=r.raceName||''; return n.indexOf('3勝')>=0||n.indexOf('(L)')>=0||n.indexOf('(OP)')>=0||n.indexOf('S(')>=0||n.indexOf('クラス')>=0; }, highlight:true }
+        ] },
+      { type:'table', title:'年齢別 成績（旧マーメイドS＋2025府中牝馬）', headers:['年齢','勝-2-3-着外','3着内率','傾向'],
+        rows:[
+          { cells:['4歳','5-3-4-42','22%','中心。ただし3番人気以内は過信禁物(0-0-1-11)'], matchFn:function(h){return h.age===4;}, highlight:true },
+          { cells:['5歳','4-5-5-58','19%','頭数最多の中心ゾーン'], matchFn:function(h){return h.age===5;}, highlight:true },
+          { cells:['6歳','1-2-1-16','20%','3着内率は引けを取らない'], matchFn:function(h){return h.age===6;}, highlight:true },
+          { cells:['7歳以上','0-0-0-2','0%','苦戦'], matchFn:function(h){return h.age>=7;}, highlight:true }
+        ] },
+      { type:'table', title:'血統別 傾向（東京芝1800m）', headers:['種牡馬','傾向','評価'],
+        rows:[
+          { cells:['キズナ','東京1800で複勝率40-42%。瞬発+持続','◎'],
+            matchFn:function(h){return (h.sire||'')==='キズナ';}, highlight:true },
+          { cells:['ジャスタウェイ／リアルスティール','少数精鋭で高率。要警戒','◎'],
+            matchFn:function(h){var s=h.sire||'';return s==='ジャスタウェイ'||s==='リアルスティール';}, highlight:true },
+          { cells:['ドゥラメンテ／ロードカナロア／モーリス／キタサンブラック','コース種牡馬上位','○'],
+            matchFn:function(h){var s=h.sire||'';return s==='ドゥラメンテ'||s==='ロードカナロア'||s==='モーリス'||s==='キタサンブラック';}, highlight:true },
+          { cells:['ディープ系／Sadler\'s Wells・Nureyev内包','旧エプソムCで好走。道悪でパワー型台頭','○'],
+            matchFn:function(h){var b=h.blood5gen||[];var s=h.sire||'';return s==='ディープインパクト'||s==='キズナ'||b.indexOf('ディープインパクト')>=0||b.indexOf("Sadler's Wells")>=0||b.indexOf('Nureyev')>=0||b.indexOf('Kingmambo')>=0;}, highlight:true }
+        ] },
+      { type:'table', title:'脚質別 傾向（旧マーメイドS／エプソムC）※当日脚質は確定後', headers:['脚質','勝-2-3-着外','複勝率','傾向'],
+        rows:[
+          { cells:['逃げ','3-0-0-19','14%','逃げ切りは稀(エイシンヒカリ級のみ)'] },
+          { cells:['先行','6-8-4-49','27%','最安定。好位で運べる馬'] },
+          { cells:['差し','4-7-11-99','18%','中団からの差しが理想'] },
+          { cells:['追込','7-5-5-70','20%','後方一気(4角10番手以下)の勝利は1頭のみ'] }
+        ] },
+      { type:'table', title:'負担重量別 成績（旧マーメイドS）※ハンデ確定後にハイライト', headers:['斤量','勝-2-3-着外','3着内率','傾向'],
+        rows:[
+          { cells:['50kg以下','3-0-0-19','14%','軽ハンデは妙味(5勝中4勝が7番人気以下)'], matchFn:function(h){return h.carriedWeight!=null&&h.carriedWeight<=50;}, highlight:true },
+          { cells:['51kg','2-3-0-18','22%','軽量で連対も'], matchFn:function(h){return h.carriedWeight===51;}, highlight:true },
+          { cells:['52-54kg','2-4-8-54','標準','中量ゾーン'], matchFn:function(h){return h.carriedWeight!=null&&h.carriedWeight>=52&&h.carriedWeight<=54;}, highlight:true },
+          { cells:['55-55.5kg','3-2-2-12','37%','実力上位の中量。最も3着内率高い'], matchFn:function(h){return h.carriedWeight!=null&&h.carriedWeight>=55&&h.carriedWeight<=55.5;}, highlight:true },
+          { cells:['56kg以上','0-1-0-8','11%','トップハンデは苦戦'], matchFn:function(h){return h.carriedWeight!=null&&h.carriedWeight>=56;}, highlight:true }
+        ] },
+      { type:'html', html:'<div style="font-size:12px;color:#444;line-height:1.7;margin-top:8px;"><b>今年の有力馬・前哨戦回顧</b><br>・<b>コガネノソラ</b>(福島牝馬S G3勝・9人気)：中団後ろから3-4角で外一気、上位人気をねじ伏せる差し脚。東京替わりでも末脚評価。<br>・<b>ヴァルキリーバース</b>(東風S L勝・4人気)：前傾馬場を好位直後から差し切り。マイラーでなく好位～中団で脚を使うタイプ。充実期。<br>・<b>ルージュソリテール</b>(阪神牝馬S G2・3着/5人気)：2番手から最後まで止まらず3着。前残りの東京1800でも再現しやすい。<br>・<b>ビップデイジー</b>(阪神牝馬S G2・5着/9人気)：中団前目から上がり33.4。距離延長で追走楽なら前進も。<br>・<b>テレサ</b>(福島牝馬S G3・5着)：番手から勝ちに行き甘く。府中で同型なら差される懸念。<br>・<b>パラディレーヌ</b>(福島牝馬S 1人気8着→ヴィクトリアマイル12着)：人気での取りこぼし。見直すならもうひと押し欲しい。<br><span style="color:#888;">※基データ：旧マーメイドS(2014-2024 阪神/京都2000mハンデ)＋旧エプソムC/東京1800コース傾向＋2025府中牝馬。新設1年目につき傾向は指針。前走クラス別・血統別は確定済みフィールドで照合、斤量別はハンデ確定後に有効化。出典：JRA/競馬ナビ/keibalab系の一次データをユーザー提供。</span></div>' }
+    ]
+  },
   'しらさぎステークス': {
     anaPoints: [
       '【G3昇格1年目】2025年に米子S（オープン特別/L）からG3へ昇格。過去傾向は前身・米子S時代を含む。メンバーの質が上がるため傾向が変わる可能性あり＝過去データは「法則」でなく「指針」として扱う。',
