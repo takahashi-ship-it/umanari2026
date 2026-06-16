@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260616-0156';
+  var CURRENT_VERSION = '20260616-0157';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7147,127 +7147,148 @@ const RACE_PAST_DATA = {
   },
   'しらさぎステークス': {
 
-    shiraWakuAnalysis: {
-      title:'しらさぎS 枠順別（枠確定後にハイライト）',
-      subtitle:'過去10年(米子S含む)。7枠が4勝・複勝41%で突出。阪神芝1600外回りで外からスムーズに脚を使える形が有利。3枠は3着内薄。※枠順発表後に該当馬が点灯。',
-      headerCards:[
-        { type:'ace',  label:'7枠', mainValue:'複41%', subValue:'4勝・最強ゾーン' },
-        { type:'iron', label:'2枠', mainValue:'複33%', subValue:'内では健闘' },
-        { type:'block',label:'4～6枠', mainValue:'複25-29%', subValue:'中枠は標準' },
-        { type:'kill', label:'3枠', mainValue:'複8%', subValue:'3着内薄の低調枠' }
-      ],
-      detailTable:[
-        { sire:'7枠', record:'複勝41%・4勝★・配点5', label:'◎', color:'green', kongenMatch:function(h){ return h.waku===7; } },
-        { sire:'2枠', record:'複勝33%・配点4', label:'○', color:'blue', kongenMatch:function(h){ return h.waku===2; } },
-        { sire:'4・5・6枠', record:'複勝25-29%・配点3', label:'△', color:'iron', kongenMatch:function(h){ return h.waku===4||h.waku===5||h.waku===6; } },
-        { sire:'1・8枠', record:'複勝8-10%・配点1', label:'△', color:'iron', kongenMatch:function(h){ return h.waku===1||h.waku===8; } },
-        { sire:'3枠', record:'複勝8%・3着内薄・配点1', label:'×', color:'red', kongenMatch:function(h){ return h.waku===3; } }
-      ],
-      filterStrategy:{ title:'枠順での狙い',
-        tags:['7枠が最強','外枠有利','3枠は割引'],
-        buyRules:['7枠を最重視','6-8枠の外からスムーズに運べる形'],
-        killRules:['3枠は過去10年3着内が薄い'],
-        overseasRules:[],
-        finalStrategy:['7枠×先行×前走7番手以内が理想形'],
-        summary:'阪神芝1600外は7枠が突出(4勝・複41%)。外有利だが8枠は窮屈、3枠は低調。枠順発表後に該当馬が点灯します。' }
-    },
-
     shiraPopAnalysis: {
-      title:'しらさぎS 人気別（複勝率順）',
-      subtitle:'過去10年(米子S含む)。1番人気は複勝78%で堅実だが勝ち切りは少なく相手は中穴に散る。3番人気は複勝11%の罠ゾーン。',
+      title:'しらさぎS 人気別（複勝率順・配点）',
+      subtitle:'過去10年(keibahint)。1番人気複80%で堅実も勝ち切りは4勝のみで荒れる。3番人気は複10%の罠。5番人気は複30%で2番人気と同等。',
       headerCards:[
-        { type:'ace',  label:'1番人気', mainValue:'複78%', subValue:'軸の中心(但し5回が2着)' },
-        { type:'iron', label:'4番人気', mainValue:'複44%', subValue:'妙味ゾーン・相手の本線' },
-        { type:'block',label:'5～9番人気', mainValue:'複22%', subValue:'中穴が3着内に多数' },
-        { type:'kill', label:'3番人気', mainValue:'複11%', subValue:'勝利ゼロの罠ゾーン' }
+        { type:'ace',  label:'1番人気', mainValue:'複80%', subValue:'軸・配点20' },
+        { type:'iron', label:'4番人気', mainValue:'複40%', subValue:'妙味・配点13' },
+        { type:'block',label:'2・5番人気', mainValue:'複30%', subValue:'配点10' },
+        { type:'kill', label:'3番人気', mainValue:'複10%', subValue:'罠・配点3' }
       ],
       detailTable:[
-        { sire:'1番人気', record:'複勝78%・配点20★', label:'◎', color:'green', kongenMatch:function(h){ return h.popEstimate===1; } },
-        { sire:'4番人気', record:'複勝44%・配点13', label:'○', color:'blue', kongenMatch:function(h){ return h.popEstimate===4; } },
-        { sire:'2番人気', record:'複勝33%・配点10', label:'○', color:'blue', kongenMatch:function(h){ return h.popEstimate===2; } },
-        { sire:'5・6・8・9番人気', record:'複勝22%・配点8(中穴)', label:'△', color:'iron', kongenMatch:function(h){ return [5,6,8,9].indexOf(h.popEstimate)>=0; } },
-        { sire:'3・7番人気', record:'複勝11%・配点5(罠)', label:'×', color:'red', kongenMatch:function(h){ return h.popEstimate===3||h.popEstimate===7; } },
-        { sire:'10番人気以下', record:'複勝8%・配点3', label:'△', color:'iron', kongenMatch:function(h){ return h.popEstimate>=10; } }
+        { sire:'1番人気', record:'複80%(4-4-0-2)・配点20', label:'◎', color:'green', kongenMatch:function(h){ return h.popEstimate===1; } },
+        { sire:'4番人気', record:'複40%(1-1-2-6)・配点13', label:'○', color:'blue', kongenMatch:function(h){ return h.popEstimate===4; } },
+        { sire:'2・5番人気', record:'複30%・配点10', label:'○', color:'blue', kongenMatch:function(h){ return h.popEstimate===2||h.popEstimate===5; } },
+        { sire:'6〜9番人気', record:'複20%・配点7(中穴)', label:'△', color:'iron', kongenMatch:function(h){ return h.popEstimate>=6&&h.popEstimate<=9; } },
+        { sire:'3番人気', record:'複10%(0-0-1-9)・配点3★罠', label:'×', color:'red', kongenMatch:function(h){ return h.popEstimate===3; } },
+        { sire:'10番人気', record:'複11%・配点4', label:'△', color:'iron', kongenMatch:function(h){ return h.popEstimate===10; } },
+        { sire:'11番人気以下', record:'壊滅(母数少)・配点2', label:'×', color:'red', kongenMatch:function(h){ return h.popEstimate>=11; } }
       ],
-      filterStrategy:{ title:'人気での狙い',
-        tags:['1番人気は軸','相手は4番人気以下','3番人気は消し'],
-        buyRules:['1番人気を軸に','4番人気は相手の本線','中穴(5-9番)を厚く'],
-        killRules:['3番人気は複勝11%=過信禁物'],
-        overseasRules:[],
-        finalStrategy:['1番人気→2-3着もケア','頭は中穴まで広げる'],
-        summary:'1番人気は来るが勝ち切らない。相手は4番人気以下の中穴に散る中波乱型。3番人気は罠。' }
+      filterStrategy:{ title:'人気での狙い', tags:['1番人気は軸','4番人気妙味','3番人気は消し'],
+        buyRules:['1番人気を軸','4番人気は相手本線','中穴(6-9番)を厚く'], killRules:['3番人気は複10%=罠'],
+        overseasRules:[], finalStrategy:['1番人気→2-3着もケア・頭は中穴'],
+        summary:'1番人気は来るが勝ち切らない(4勝)。相手は4番人気以下に散る中波乱。3番人気は罠。' }
     },
-    shiraAgeAnalysis: {
-      title:'しらさぎS 年齢別',
-      subtitle:'過去10年。5歳が3着内率36%で最良、4歳が次点。7歳以上は苦戦、8歳以上は圏外。',
+    shiraL3fAnalysis: {
+      title:'しらさぎS 前走上がり3F（速い脚を評価）',
+      subtitle:'過去10年(keibahint)。上がり3F1位馬が複勝54.5%、6位以下は10.7%。速い上がりを使える馬が中心。配点は前走32秒台を突出評価＋出走馬中最速に+3。',
       headerCards:[
-        { type:'ace',  label:'5歳', mainValue:'36%', subValue:'最良ゾーン・今年の中心' },
-        { type:'iron', label:'4歳', mainValue:'33%', subValue:'次点の中心' },
-        { type:'block',label:'6歳', mainValue:'17%', subValue:'連下まで' },
-        { type:'kill', label:'7歳～', mainValue:'10%↓', subValue:'苦戦・8歳は圏外' }
+        { type:'ace',  label:'前走3F1位', mainValue:'複54.5%', subValue:'上がり最速級・配点満点' },
+        { type:'iron', label:'前走3F2-3位', mainValue:'複50%', subValue:'上位の脚' },
+        { type:'block',label:'前走32秒台', mainValue:'配点10', subValue:'速い上がりの実績' },
+        { type:'kill', label:'前走3F6位以下', mainValue:'複10.7%', subValue:'目立つ脚なしは割引' }
       ],
       detailTable:[
-        { sire:'5歳', record:'3着内率36%・配点10★', label:'◎', color:'green', kongenMatch:function(h){ return h.age===5; } },
-        { sire:'4歳', record:'3着内率33%・配点9', label:'○', color:'blue', kongenMatch:function(h){ return h.age===4; } },
-        { sire:'3歳', record:'少数だが好走例あり・配点7', label:'△', color:'iron', kongenMatch:function(h){ return h.age===3; } },
-        { sire:'6歳', record:'3着内率17%・配点5', label:'△', color:'iron', kongenMatch:function(h){ return h.age===6; } },
-        { sire:'7歳', record:'3着内率10%・配点2', label:'×', color:'red', kongenMatch:function(h){ return h.age===7; } },
-        { sire:'8歳以上', record:'圏外0%・配点0', label:'×', color:'red', kongenMatch:function(h){ return h.age>=8; } }
+        { sire:'前走上がり32秒台', record:'最速級・配点10(＋最速で+3)', label:'◎', color:'green', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r&&typeof r.last3f==='number'&&r.last3f<33.0; } },
+        { sire:'前走33秒台前半', record:'配点5', label:'○', color:'blue', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r&&typeof r.last3f==='number'&&r.last3f>=33.0&&r.last3f<33.5; } },
+        { sire:'前走33秒台後半', record:'配点3', label:'△', color:'iron', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r&&typeof r.last3f==='number'&&r.last3f>=33.5&&r.last3f<34.0; } },
+        { sire:'前走34秒台以降', record:'配点2以下', label:'×', color:'red', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r&&typeof r.last3f==='number'&&r.last3f>=34.0; } }
       ],
-      filterStrategy:{ title:'年齢での狙い',
-        tags:['5歳中心','4歳まで','7歳以上は割引'],
-        buyRules:['5歳を最重視','4歳も中心'],
-        killRules:['7歳以上は苦戦','8歳は圏外'],
-        overseasRules:[],
-        finalStrategy:['5歳>4歳の優先順位で'],
-        summary:'5歳が最良、4歳が次点。7歳以上は割引、8歳以上は消し。' }
-    },
-    shiraPosAnalysis: {
-      title:'しらさぎS 前走4コーナー位置（前が有利）',
-      subtitle:'過去10年。前走4角7番手以内が3着内率約30%(近年31%)に対し8番手以下は16%(近年7%)。後方一気は10年で皆無。',
-      headerCards:[
-        { type:'ace',  label:'前走7番手以内', mainValue:'30%', subValue:'前にいた馬が中心(近年31%)' },
-        { type:'iron', label:'当日先行', mainValue:'複37%', subValue:'好位が最安定' },
-        { type:'block',label:'前走8番手以下', mainValue:'16%', subValue:'近年は7%まで激減' },
-        { type:'kill', label:'後方一気', mainValue:'0勝', subValue:'最後方からの突き抜け皆無' }
-      ],
-      detailTable:[
-        { sire:'前走4角7番手以内', record:'3着内率30%(近年31%)・配点13★', label:'◎', color:'green', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r&&typeof r.corner4==='number'&&r.corner4<=7; } },
-        { sire:'前走4角8番手以下', record:'3着内率16%(近年7%)・配点5', label:'×', color:'red', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r&&typeof r.corner4==='number'&&r.corner4>=8; } }
-      ],
-      filterStrategy:{ title:'前走位置での狙い',
-        tags:['前走で前にいた馬','好位差し','後方一気は消し'],
-        buyRules:['前走4角7番手以内を重視','当日も先行で運べる馬'],
-        killRules:['前走後方・追込一手は割引(近年特に)'],
-        overseasRules:[],
-        finalStrategy:['前走7番手以内×先行脚質が理想'],
-        summary:'阪神芝1600外は前有利。前走で前にいた馬が中心で、近年は後方勢が壊滅的。' }
+      filterStrategy:{ title:'上がりでの狙い', tags:['前走32秒台','上がり上位','キレ重視'],
+        buyRules:['前走で32秒台の速い上がりを記録した馬','出走馬中で最速の脚を持つ馬'], killRules:['前走で目立つ上がりがない馬は割引'],
+        overseasRules:[], finalStrategy:['前走32秒台×先行が理想'],
+        summary:'阪神芝1600外は瞬発力勝負。前走で速い上がりを使えた馬を重視。出走馬中最速の1頭に加点。' }
     },
     shiraKyakuAnalysis: {
       title:'しらさぎS 脚質別',
-      subtitle:'過去10年。先行が複勝37%で最安定。差し・追込は19%。逃げは11%。※印は内枠なら逃げ可能性あり。',
+      subtitle:'過去10年(keibahint)。先行が複勝39.4%・3着内シェア43.3%で断然。中団・後方は実際に来る数で評価。逃げは複20%だが母数少でシェア最下位。',
       headerCards:[
-        { type:'ace',  label:'先行', mainValue:'複37%', subValue:'最安定・好位で流れに乗る' },
-        { type:'iron', label:'差し', mainValue:'複19%', subValue:'中団からは届く' },
-        { type:'block',label:'追込', mainValue:'複19%', subValue:'最後方一気は不可' },
-        { type:'kill', label:'逃げ', mainValue:'複11%', subValue:'単騎以外は目標にされる' }
+        { type:'ace',  label:'先行', mainValue:'複39.4%', subValue:'断然・配点10' },
+        { type:'iron', label:'中団', mainValue:'複17.8%', subValue:'シェア26.7%・配点6' },
+        { type:'block',label:'後方', mainValue:'複17.5%', subValue:'シェア23.3%・配点6' },
+        { type:'kill', label:'逃げ', mainValue:'複20%', subValue:'母数少・シェア最下位・配点3' }
       ],
       detailTable:[
-        { sire:'先行', record:'複勝37%・配点10★', label:'◎', color:'green', kongenMatch:function(h){ return ['エルトンバローズ','カズミクラーシュ','ショウナンアデイブ','シンフォーエバー','スマートワイス','スリールミニョン','ファンダム','ファーヴェント','ベラジオボンド'].indexOf(h.name)>=0; } },
-        { sire:'差し', record:'複勝19%・配点5', label:'○', color:'blue', kongenMatch:function(h){ return ['エコロアルバ','キープカルム','サイルーン','ファインライン','ブエナオンダ','ミニトランザット'].indexOf(h.name)>=0; } },
-        { sire:'追込', record:'複勝19%・配点5(最後方は不可)', label:'△', color:'iron', kongenMatch:function(h){ return ['スイープアワーズ','メイショウシンタケ'].indexOf(h.name)>=0; } },
-        { sire:'逃げ', record:'複勝11%・配点3', label:'△', color:'iron', kongenMatch:function(h){ return ['タガノエルピーダ','テリオスララ','メタルスピード'].indexOf(h.name)>=0; } }
+        { sire:'先行', record:'複39.4%(5-4-4-20)・配点10', label:'◎', color:'green', kongenMatch:function(h){ return ['エルトンバローズ','カズミクラーシュ','ショウナンアデイブ','シンフォーエバー','スマートワイス','スリールミニョン','ファンダム','ファーヴェント','ベラジオボンド'].indexOf(h.name)>=0; } },
+        { sire:'中団', record:'複17.8%・シェア26.7%・配点6', label:'○', color:'blue', kongenMatch:function(h){ return ['エコロアルバ','キープカルム','サイルーン','ファインライン','ブエナオンダ','ミニトランザット'].indexOf(h.name)>=0; } },
+        { sire:'後方', record:'複17.5%・シェア23.3%・配点6', label:'○', color:'blue', kongenMatch:function(h){ return ['スイープアワーズ','メイショウシンタケ'].indexOf(h.name)>=0; } },
+        { sire:'逃げ', record:'複20%だが母数少・配点3', label:'△', color:'iron', kongenMatch:function(h){ return ['タガノエルピーダ','テリオスララ','メタルスピード'].indexOf(h.name)>=0; } }
       ],
-      filterStrategy:{ title:'脚質での狙い',
-        tags:['先行が最安定','差し中団','後方一気は消し'],
-        buyRules:['先行馬を重視','好位～中団で脚を使える馬'],
-        killRules:['最後方一気は決まらない'],
-        overseasRules:[],
-        finalStrategy:['先行×前走7番手以内が理想形'],
-        summary:'先行が複勝37%で突出。差し・追込は中団から、最後方一気は不可。※3頭は内枠なら逃げ評価へ。' }
+      filterStrategy:{ title:'脚質での狙い', tags:['先行が断然','中団後方も可','逃げは絞る'],
+        buyRules:['先行馬を最重視','中団・後方も実際に来ているので評価'], killRules:['逃げは母数少で過信禁物'],
+        overseasRules:[], finalStrategy:['先行×前走32秒台が理想'],
+        summary:'先行が複39.4%で断然。中団後方も実際に3着内に来ており評価。逃げは見かけの複勝率より絞る。' }
     },
-
-    bloodAnalysis: {
+    shiraAgeAnalysis: {
+      title:'しらさぎS 年齢別',
+      subtitle:'過去10年(keibahint)。3〜5歳が中心。5歳35.3%・4歳31%・3歳50%(母数2)。6歳17.1%・7歳以上7.1%は割引。',
+      headerCards:[
+        { type:'ace',  label:'5歳', mainValue:'35.3%', subValue:'中心・配点10' },
+        { type:'iron', label:'4歳', mainValue:'31%', subValue:'中心・配点10' },
+        { type:'block',label:'3歳', mainValue:'50%', subValue:'母数薄だが高率・配点9' },
+        { type:'kill', label:'7歳〜', mainValue:'7.1%', subValue:'割引・配点1' }
+      ],
+      detailTable:[
+        { sire:'5歳', record:'複35.3%・配点10', label:'◎', color:'green', kongenMatch:function(h){ return h.age===5; } },
+        { sire:'4歳', record:'複31%・配点10', label:'◎', color:'green', kongenMatch:function(h){ return h.age===4; } },
+        { sire:'3歳', record:'複50%(母数2)・配点9', label:'○', color:'blue', kongenMatch:function(h){ return h.age===3; } },
+        { sire:'6歳', record:'複17.1%・配点5', label:'△', color:'iron', kongenMatch:function(h){ return h.age===6; } },
+        { sire:'7歳以上', record:'複7.1%・配点1', label:'×', color:'red', kongenMatch:function(h){ return h.age>=7; } }
+      ],
+      filterStrategy:{ title:'年齢での狙い', tags:['3-5歳中心','6歳割引','7歳以上消し'],
+        buyRules:['3〜5歳を重視'], killRules:['7歳以上は複7.1%'],
+        overseasRules:[], finalStrategy:['4-5歳が中心、3歳は斤量恩恵もあり侮れない'],
+        summary:'3〜5歳が恩恵。5歳4歳が中心、3歳も高率。6歳以下降は割引。' }
+    },
+    shiraWakuAnalysis: {
+      title:'しらさぎS 枠順別（枠確定後にハイライト）',
+      subtitle:'過去10年(keibahint)。7枠が複36.8%で最良。2枠30.8%・中枠も標準。3枠14.3%・8枠14.3%は低め。※枠順発表後に該当馬が点灯。',
+      headerCards:[
+        { type:'ace',  label:'7枠', mainValue:'複36.8%', subValue:'最良・配点5' },
+        { type:'iron', label:'2枠', mainValue:'複30.8%', subValue:'内で健闘・配点3' },
+        { type:'block',label:'4-6枠', mainValue:'複23-27%', subValue:'中枠標準・配点3' },
+        { type:'kill', label:'3・8枠', mainValue:'複14.3%', subValue:'低め・配点1' }
+      ],
+      detailTable:[
+        { sire:'7枠', record:'複36.8%・配点5', label:'◎', color:'green', kongenMatch:function(h){ return h.waku===7; } },
+        { sire:'2枠', record:'複30.8%・配点3', label:'○', color:'blue', kongenMatch:function(h){ return h.waku===2; } },
+        { sire:'4・5・6枠', record:'複23-27%・配点3', label:'△', color:'iron', kongenMatch:function(h){ return h.waku===4||h.waku===5||h.waku===6; } },
+        { sire:'1・3・8枠', record:'複14-15%・配点1', label:'×', color:'red', kongenMatch:function(h){ return h.waku===1||h.waku===3||h.waku===8; } }
+      ],
+      filterStrategy:{ title:'枠順での狙い', tags:['7枠最良','中枠標準','3・8枠割引'],
+        buyRules:['7枠を重視'], killRules:['3枠・8枠は複14%'],
+        overseasRules:[], finalStrategy:['7枠×先行×前走32秒台が理想'],
+        summary:'7枠が複36.8%で最良。枠順発表後に該当馬が点灯します。' }
+    },
+    shiraMareAnalysis: {
+      title:'しらさぎS 牝馬の恩恵（別定2kg減）',
+      subtitle:'過去10年(keibahint)。牝馬が複勝42.9%(4-3-2-12)で牡・セ19.6%の倍以上。別定戦の牝馬2kg減のアドバンテージが明確。',
+      headerCards:[
+        { type:'ace',  label:'牝馬', mainValue:'複42.9%', subValue:'2kg減の恩恵・配点5' },
+        { type:'kill', label:'牡・セン', mainValue:'複19.6%', subValue:'牝馬の半分以下・配点0' },
+        { type:'iron', label:'牝1着シェア', mainValue:'40%', subValue:'出走比以上に勝つ' },
+        { type:'block',label:'別定差', mainValue:'-2kg', subValue:'牡57.0/牝55.0' }
+      ],
+      detailTable:[
+        { sire:'牝馬', record:'複42.9%(4-3-2-12)・配点5★', label:'◎', color:'green', kongenMatch:function(h){ return (h.sex||'').indexOf('牝')>=0; } },
+        { sire:'牡・セン', record:'複19.6%(6-7-8-86)・配点0', label:'△', color:'iron', kongenMatch:function(h){ return (h.sex||'').indexOf('牝')<0; } }
+      ],
+      filterStrategy:{ title:'牝馬での狙い', tags:['牝馬は2kg減の恩恵','複勝率2倍'],
+        buyRules:['牝馬は斤量2kg減で有利・複42.9%'], killRules:[],
+        overseasRules:[], finalStrategy:['牝馬×先行×速い上がりは特に注目'],
+        summary:'別定戦で牝馬2kg減が効く。牝馬の複勝率は牡セの倍以上。社長が重視する斤量恩恵がここに表れる。' }
+    },
+    shiraKeshiAnalysis: {
+      title:'しらさぎS 消去データ（複勝率0%・危険馬）',
+      subtitle:'過去10年(keibahint)で複勝率0%の条件。該当馬はスコアで減点(1つ-4/2つ-8/3つ-10)。前走好走馬は救済(前走G2は6着以下のみ)。',
+      headerCards:[
+        { type:'kill', label:'前走2000m以上', mainValue:'0-0-0-8', subValue:'複0%・距離短縮大' },
+        { type:'kill', label:'前走5着', mainValue:'0-0-0-6', subValue:'複0%・特異点' },
+        { type:'kill', label:'前走G2着外', mainValue:'0-0-0-12', subValue:'複0%・6着以下のみ' },
+        { type:'iron', label:'救済', mainValue:'前走G2好走', subValue:'5着以内は消去せず' }
+      ],
+      detailTable:[
+        { sire:'前走2000m以上', record:'複0%(0-0-0-8)・減点', label:'×', color:'red', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r&&typeof r.distance==='number'&&r.distance>=2000; } },
+        { sire:'前走5着', record:'複0%(0-0-0-6)・減点', label:'×', color:'red', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r&&r.rank===5; } },
+        { sire:'前走G2かつ6着以下', record:'複0%・減点(好走馬は救済)', label:'×', color:'red', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r&&r.grade==='G2'&&typeof r.rank==='number'&&r.rank>=6; } }
+      ],
+      filterStrategy:{ title:'消去の考え方', tags:['複0%は減点','該当数で-4/-8/-10','前走好走は救済'],
+        buyRules:[], killRules:['前走2000m以上','前走5着','前走G2で6着以下に負けた馬'],
+        overseasRules:[], finalStrategy:['消去該当馬はスコアで自動減点・複数該当は大幅減'],
+        summary:'過去10年で3着内ゼロの条件に該当する馬を減点。ただし前走G2でも3-5着の好走馬は救済する。' }
+    },
+      bloodAnalysis: {
       title:'しらさぎS 血統傾向（阪神芝1600m外）',
       subtitle:'過去10年(米子S含む)。ディープインパクト直系とロードカナロアが好相性。2023年はディープ系が1-2-3着独占で3連単122万。',
       hideOthers:true,
@@ -11414,6 +11435,10 @@ function renderShiraAgeAnalysis(d){ return _renderSireCardMatchFn(d, '🎂', 'ko
 function renderShiraPosAnalysis(d){ return _renderSireCardMatchFn(d, '🏃', 'kongenMatch'); }
 function renderShiraKyakuAnalysis(d){ return _renderSireCardMatchFn(d, '🏇', 'kongenMatch'); }
 function renderShiraWakuAnalysis(d){ return _renderSireCardMatchFn(d, '🎯', 'kongenMatch'); }
+function renderShiraL3fAnalysis(d){ return _renderSireCardMatchFn(d, '⚡', 'kongenMatch'); }
+function renderShiraMareAnalysis(d){ return _renderSireCardMatchFn(d, '♀', 'kongenMatch'); }
+function renderShiraKeshiAnalysis(d){ return _renderSireCardMatchFn(d, '⚠', 'kongenMatch'); }
+
 
 function renderSprint1200Analysis(d) { return _renderSireCardMatchFn(d, '🏇', 'sprintMatch'); }
 
@@ -11781,9 +11806,11 @@ function renderPastData() {
   }
   if (data.shiraPopAnalysis)   html += renderShiraPopAnalysis(data.shiraPopAnalysis);
   if (data.shiraAgeAnalysis)   html += renderShiraAgeAnalysis(data.shiraAgeAnalysis);
-  if (data.shiraPosAnalysis)   html += renderShiraPosAnalysis(data.shiraPosAnalysis);
+  if (data.shiraL3fAnalysis)   html += renderShiraL3fAnalysis(data.shiraL3fAnalysis);
   if (data.shiraKyakuAnalysis) html += renderShiraKyakuAnalysis(data.shiraKyakuAnalysis);
   if (data.shiraWakuAnalysis)  html += renderShiraWakuAnalysis(data.shiraWakuAnalysis);
+  if (data.shiraMareAnalysis)  html += renderShiraMareAnalysis(data.shiraMareAnalysis);
+  if (data.shiraKeshiAnalysis) html += renderShiraKeshiAnalysis(data.shiraKeshiAnalysis);
   if (data.sexStableAnalysis) {
     html += renderSexStableAnalysis(data.sexStableAnalysis);
   }
