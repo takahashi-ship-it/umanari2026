@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260616-0160';
+  var CURRENT_VERSION = '20260616-0161';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -20103,19 +20103,19 @@ function computeScoreBreakdownFuchuV1(horse, raceName, _rawOnly) {
   }
   items.prevClass = { score:clsScore, max:15, label:'前走クラス', note:(grade?(grade+(grade==='G1'?(' '+prank+'着'):'')):((rh0&&rh0.raceName)?rh0.raceName:'不明')), group:'data' };
 
-  var kyakuScore=8, kyakuNote='中庸';
-  if (rh0 && typeof rh0.corner4==='number' && typeof rh0.atama==='number' && rh0.atama>0) {
-    var posRate = rh0.corner4 / rh0.atama;
-    if (rh0.corner4===1) { kyakuScore=5; kyakuNote='逃げ'; }
-    else if (posRate<=0.4) { kyakuScore=10; kyakuNote='先行'; }
-    else if (posRate<=0.7) { kyakuScore=8; kyakuNote='中団'; }
-    else { kyakuScore=2; kyakuNote='後方'; }
-  } else if (rh0 && typeof rh0.corner4==='number') {
-    if (rh0.corner4===1) { kyakuScore=5; kyakuNote='逃げ'; }
-    else if (rh0.corner4<=4) { kyakuScore=10; kyakuNote='先行'; }
-    else if (rh0.corner4<=9) { kyakuScore=8; kyakuNote='中団'; }
-    else { kyakuScore=2; kyakuNote='後方'; }
-  }
+  // [脚質] max10 東京1800。社長提供の正確な脚質対応表(先行10/差し8/追込5/逃げ5)
+  var FUCHU_KYAKU = {
+    'ヴァルキリーバース':'先行','ウイントワイライト':'追込','エストゥペンダ':'追込',
+    'キーパフォーマー':'差し','コガネノソラ':'差し','セキトバイースト':'先行',
+    'セントメモリーズ':'差し','タガノエルピーダ':'先行','テリオスララ':'逃げ',
+    'テレサ':'先行','ニシノティアモ':'先行','パラディレーヌ':'差し',
+    'ビップデイジー':'先行','ブラウンラチェット':'先行','ホールネス':'先行',
+    'マカナ':'差し','ミアネーロ':'追込','ユキワリザクラ':'差し','ルージュソリテール':'先行'
+  };
+  var FK_SCORE = {'先行':10,'差し':8,'追込':5,'逃げ':5};
+  var fkyaku = FUCHU_KYAKU[horse.name] || null;
+  var kyakuScore = fkyaku ? FK_SCORE[fkyaku] : 8;
+  var kyakuNote = fkyaku || '未設定';
   items.kyakushitsu = { score:kyakuScore, max:10, label:'🏃脚質', note:kyakuNote, group:'data' };
 
   var prevL3f = (rh0 && typeof rh0.last3f==='number') ? rh0.last3f : null;
