@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260616-0155';
+  var CURRENT_VERSION = '20260616-0156';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -19897,12 +19897,12 @@ function computeScoreBreakdownShirasagiV1(horse, raceName, _rawOnly) {
 
   var prevL3f = (rh0 && typeof rh0.last3f === 'number') ? rh0.last3f : null;
   var l3fScore;
-  if (prevL3f === null) l3fScore = 3;
-  else if (prevL3f < 33.0) l3fScore = 10;
-  else if (prevL3f < 34.0) l3fScore = 8;
-  else if (prevL3f < 34.5) l3fScore = 5;
-  else if (prevL3f < 35.0) l3fScore = 3;
-  else l3fScore = 1;
+  if (prevL3f === null) l3fScore = 2;
+  else if (prevL3f < 33.0) l3fScore = 10;       // 32秒台★突出
+  else if (prevL3f < 33.5) l3fScore = 5;        // 33秒台前半
+  else if (prevL3f < 34.0) l3fScore = 3;        // 33秒台後半
+  else if (prevL3f < 35.0) l3fScore = 2;        // 34秒台
+  else l3fScore = 1;                            // 35秒~
   var bonus = 0;
   try {
     var field = (HORSES_BY_RACE && HORSES_BY_RACE['しらさぎステークス']) ? HORSES_BY_RACE['しらさぎステークス'] : [];
@@ -19963,7 +19963,7 @@ function computeScoreBreakdownShirasagiV1(horse, raceName, _rawOnly) {
   if (rh0) {
     if (typeof rh0.distance === 'number' && rh0.distance >= 2000) kc++;
     if (rh0.rank === 5) kc++;
-    if (rh0.grade === 'G2') kc++;
+    if (rh0.grade === 'G2' && typeof rh0.rank === 'number' && rh0.rank >= 6) kc++;  // 前走G2かつ6着以下のみ(好走馬は救済)
   }
   var penalty = (kc >= 3) ? -10 : (kc === 2) ? -8 : (kc === 1) ? -4 : 0;
   if (penalty !== 0) items.keshi = { score: penalty, max:0, label:'⚠消去減点', note:kc+'条件該当', group:'data' };
