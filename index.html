@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260616-0158';
+  var CURRENT_VERSION = '20260616-0159';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7147,6 +7147,36 @@ const RACE_PAST_DATA = {
   },
   'しらさぎステークス': {
 
+    shiraDistAnalysis: {
+      title:'しらさぎS 距離適性（芝1600m実績）',
+      subtitle:'各馬の芝1600m通算実績の複勝率で評価(配点max10)。3走未満は上限7で母数薄を抑制。阪神芝1600m外は明確なマイル巧者が中心。',
+      headerCards:[
+        { type:'ace',  label:'複勝率100%', mainValue:'配点10', subValue:'マイル完璧(3走以上)' },
+        { type:'iron', label:'複勝率75%+', mainValue:'配点8', subValue:'マイル得意' },
+        { type:'block',label:'複勝率50%+', mainValue:'配点6', subValue:'標準以上' },
+        { type:'kill', label:'複勝率25%未満', mainValue:'配点2', subValue:'マイル不向き' }
+      ],
+      detailTable:[
+        { sire:'芝1600複勝率100%(3走+)', record:'マイル完璧・配点10', label:'◎', color:'green',
+          kongenMatch:function(h){ var w=0,f=0,n=0; (h.raceHistory||[]).forEach(function(r){var s=(r.surface||'')+(r.course||'');if((s.indexOf('芝')>=0||r.surface==='芝')&&r.distance===1600){n++;var rk=(typeof r.rank==='number')?r.rank:parseInt(r.rank);if(rk>=1&&rk<=3)f++;}}); return n>=3 && f/n>=1.0; } },
+        { sire:'芝1600複勝率75%以上', record:'マイル得意・配点8', label:'○', color:'blue',
+          kongenMatch:function(h){ var f=0,n=0; (h.raceHistory||[]).forEach(function(r){var s=(r.surface||'')+(r.course||'');if((s.indexOf('芝')>=0||r.surface==='芝')&&r.distance===1600){n++;var rk=(typeof r.rank==='number')?r.rank:parseInt(r.rank);if(rk>=1&&rk<=3)f++;}}); return n>0 && f/n>=0.75 && f/n<1.0; } },
+        { sire:'芝1600複勝率50〜74%', record:'標準以上・配点6', label:'△', color:'iron',
+          kongenMatch:function(h){ var f=0,n=0; (h.raceHistory||[]).forEach(function(r){var s=(r.surface||'')+(r.course||'');if((s.indexOf('芝')>=0||r.surface==='芝')&&r.distance===1600){n++;var rk=(typeof r.rank==='number')?r.rank:parseInt(r.rank);if(rk>=1&&rk<=3)f++;}}); return n>0 && f/n>=0.5 && f/n<0.75; } },
+        { sire:'芝1600複勝率25〜49%', record:'やや不向き・配点4', label:'△', color:'iron',
+          kongenMatch:function(h){ var f=0,n=0; (h.raceHistory||[]).forEach(function(r){var s=(r.surface||'')+(r.course||'');if((s.indexOf('芝')>=0||r.surface==='芝')&&r.distance===1600){n++;var rk=(typeof r.rank==='number')?r.rank:parseInt(r.rank);if(rk>=1&&rk<=3)f++;}}); return n>0 && f/n>=0.25 && f/n<0.5; } },
+        { sire:'芝1600複勝率25%未満', record:'マイル不向き・配点2', label:'×', color:'red',
+          kongenMatch:function(h){ var f=0,n=0; (h.raceHistory||[]).forEach(function(r){var s=(r.surface||'')+(r.course||'');if((s.indexOf('芝')>=0||r.surface==='芝')&&r.distance===1600){n++;var rk=(typeof r.rank==='number')?r.rank:parseInt(r.rank);if(rk>=1&&rk<=3)f++;}}); return n>0 && f/n<0.25; } }
+      ],
+      filterStrategy:{ title:'距離適性での狙い',
+        tags:['芝1600複勝率重視','3走以上で本評価','マイル巧者を上位に'],
+        buyRules:['芝1600で複勝率の高い馬(3走以上)','マイル完璧型を軸候補に'],
+        killRules:['芝1600で複勝率25%未満はマイル不向き'],
+        overseasRules:[],
+        finalStrategy:['芝1600複勝率100%×先行×速い上がりが理想形'],
+        summary:'阪神芝1600m外への距離適性。各馬の芝1600m通算複勝率で評価。3走未満は上限7で1-2走の見かけの高率を抑制。' }
+    },
+
     shiraPopAnalysis: {
       title:'しらさぎS 人気別（複勝率順・配点）',
       subtitle:'過去10年(keibahint)。1番人気複80%で堅実も勝ち切りは4勝のみで荒れる。3番人気は複10%の罠。5番人気は複30%で2番人気と同等。',
@@ -11438,6 +11468,8 @@ function renderShiraWakuAnalysis(d){ return _renderSireCardMatchFn(d, '🎯', 'k
 function renderShiraL3fAnalysis(d){ return _renderSireCardMatchFn(d, '⚡', 'kongenMatch'); }
 function renderShiraMareAnalysis(d){ return _renderSireCardMatchFn(d, '♀', 'kongenMatch'); }
 function renderShiraKeshiAnalysis(d){ return _renderSireCardMatchFn(d, '⚠', 'kongenMatch'); }
+function renderShiraDistAnalysis(d){ return _renderSireCardMatchFn(d, '🎯', 'kongenMatch'); }
+
 
 
 function renderSprint1200Analysis(d) { return _renderSireCardMatchFn(d, '🏇', 'sprintMatch'); }
@@ -11809,6 +11841,7 @@ function renderPastData() {
   if (data.shiraL3fAnalysis)   html += renderShiraL3fAnalysis(data.shiraL3fAnalysis);
   if (data.shiraKyakuAnalysis) html += renderShiraKyakuAnalysis(data.shiraKyakuAnalysis);
   if (data.shiraWakuAnalysis)  html += renderShiraWakuAnalysis(data.shiraWakuAnalysis);
+  if (data.shiraDistAnalysis)  html += renderShiraDistAnalysis(data.shiraDistAnalysis);
   if (data.shiraMareAnalysis)  html += renderShiraMareAnalysis(data.shiraMareAnalysis);
   if (data.shiraKeshiAnalysis) html += renderShiraKeshiAnalysis(data.shiraKeshiAnalysis);
   if (data.sexStableAnalysis) {
