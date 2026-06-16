@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260616-0157';
+  var CURRENT_VERSION = '20260616-0158';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -19970,6 +19970,39 @@ function computeScoreBreakdownShirasagiV1(horse, raceName, _rawOnly) {
   else dScore = 0;
   items.prevDist = { score: dScore, max:5, label:'前走距離', group:'data' };
 
+  // [距離適性] 芝1600m実績 max10 (複勝率ベース・3走未満は上限7)
+  var mileW=0, mileF=0, mileRuns=0;
+  rh.forEach(function(r){
+    var isShiba=((r.surface||'').indexOf('芝')>=0)||(r.surface==='芝');
+    if(isShiba && r.distance===1600){
+      mileRuns++;
+      var rk=(typeof r.rank==='number')?r.rank:parseInt(r.rank);
+      if(rk>=1 && rk<=3){ mileF++; if(rk===1) mileW++; }
+    }
+  });
+  var distScore;
+  if(mileRuns===0) distScore=0;
+  else {
+    var dr = mileF/mileRuns*100;
+    if(dr>=100) distScore=10; else if(dr>=75) distScore=8; else if(dr>=50) distScore=6; else if(dr>=25) distScore=4; else distScore=2;
+    if(mileRuns<3) distScore=Math.min(distScore,7);
+  }
+  items.distance = { score: distScore, max:10, label:'🎯距離適性(芝1600)', note:(mileW+'-'+(mileF-mileW)+'勝中'+mileRuns+'走'), group:'data' };
+
+  // [㊙️阪神マイル] 専用加点 (2勝+=+5 / 1勝or複勝2回+=+3 / 複勝1回=+1)
+  var hmW=0, hmF=0;
+  rh.forEach(function(r){
+    var isShiba=((r.surface||'').indexOf('芝')>=0)||(r.surface==='芝');
+    var place=(r.course||'')+(r.kaisai||'')+(r.raceName||'');
+    if(isShiba && r.distance===1600 && place.indexOf('阪神')>=0){
+      var rk=(typeof r.rank==='number')?r.rank:parseInt(r.rank);
+      if(rk>=1 && rk<=3){ hmF++; if(rk===1) hmW++; }
+    }
+  });
+  var himitsuScore = 0;
+  if(hmW>=2) himitsuScore=5; else if(hmW===1||hmF>=2) himitsuScore=3; else if(hmF>=1) himitsuScore=1;
+  if(himitsuScore>0) items.himitsuHanshinMile = { score: himitsuScore, max:5, label:'㊙️阪神マイル実績', note:hmW+'勝'+hmF+'複', group:'horse' };
+
   var sire = horse.sire || ''; var b5 = horse.blood5gen || [];
   var bloodScore;
   if (sire === 'ディープインパクト' || sire === 'キズナ' || sire === 'ディープブリランテ' || sire === 'ワールドエース' || b5.indexOf('ディープインパクト') >= 0) bloodScore = 10;
@@ -19995,9 +20028,9 @@ function computeScoreBreakdownShirasagiV1(horse, raceName, _rawOnly) {
   var penalty = (kc >= 3) ? -10 : (kc === 2) ? -8 : (kc === 1) ? -4 : 0;
   if (penalty !== 0) items.keshi = { score: penalty, max:0, label:'⚠消去減点', note:kc+'条件該当', group:'data' };
 
-  var totalScore = popScore + (l3fScore+bonus) + kyakuScore + ageScore + mareScore + dScore + bloodScore + wakuScore + penalty;
+  var totalScore = popScore + (l3fScore+bonus) + kyakuScore + ageScore + mareScore + dScore + distScore + bloodScore + wakuScore + himitsuScore + penalty;
   totalScore = Math.max(0, totalScore);
-  var M = 78;
+  var M = 88;  // 78 + 距離適性10 (㊙️は加点ボーナスでmax外)
   var pct = Math.max(0, Math.min(99, Math.round(totalScore / M * 100)));
   return { total: totalScore, max: M, pct: pct, items: items, penalty: penalty };
 }
