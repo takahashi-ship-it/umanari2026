@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260616-0162';
+  var CURRENT_VERSION = '20260616-0163';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -20119,7 +20119,7 @@ function computeScoreBreakdownFuchuV1(horse, raceName, _rawOnly) {
   var clsScore;
   if (grade==='G1') { clsScore = (prank<=5)?6 : (prank<=9)?3 : 0; }
   else if (grade==='G2') clsScore=8;
-  else if (grade==='G3') clsScore=6;
+  else if (grade==='G3') { clsScore = (prank<=3)?8 : (prank<=9)?5 : 3; }   // G3着順別(勝ち上がり評価)
   else {
     var prevName = (rh0 && rh0.raceName) ? rh0.raceName : '';
     if (/3勝クラス|1600万/.test(prevName)) clsScore=15;                 // 3勝格上挑戦本線
