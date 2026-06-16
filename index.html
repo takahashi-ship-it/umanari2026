@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260616-0161';
+  var CURRENT_VERSION = '20260616-0162';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7073,6 +7073,34 @@ function getActiveConditions() {
  * ===================================================== */
 const RACE_PAST_DATA = {
   '府中牝馬S': {
+    himitsuData4: {
+      title:'府中牝馬 4つの㊙️データ🐎',
+      subtitle:'非根幹巧者 × 非根幹血統 × 前走3着内 × 東京1800実績。いくつ当てはまるか——データで見る信頼度チェック',
+      conditions:[
+        '🏇 非根幹巧者：芝1400/1800/2200(非根幹距離)で複勝実績。開催地は問わない。',
+        '🩸 非根幹血統：非根幹で味のある血統(ステゴ系/ロベルト系/ハーツ系/ハービンジャー)＋キズナ/ロードカナロア/サトノダイヤ。',
+        '🔥 前走3着内：前走で好走した勢い・上がり馬。このレースは格上挑戦の勢いが命。',
+        '🗼 東京1800実績：本番コース(東京芝1800)で複勝2回以上。コースを知っている強み。'
+      ],
+      groups:[
+        { level:'㊙️㊙️㊙️㊙️', label:'4つ該当（文句なしの推奨馬）', color:'green',
+          horses:['ルージュソリテール(2人気/非根幹巧者/父ロードカナロア/前走阪神牝馬S3着/東京1800複2回)','コガネノソラ(5人気/非根幹6戦複6/父ゴールドシップ/前走福島牝馬S1着/東京1800複2回)','ユキワリザクラ(7人気/非根幹複勝率100%/前走府中S3勝2着/東京1800複4回=100%)'],
+          comment:'4つ全部に当てはまった3頭。データ的にはもう文句なしです。特にユキワリザクラは東京1800で4戦して全部馬券圏内(複勝率100%)。7番人気でこの内容は妙味たっぷり。コガネノソラも東京1800を2戦2勝、前走は重賞勝ちと勢いも本物。ここから素直に狙います🐎' },
+        { level:'㊙️㊙️㊙️', label:'3つ該当（あと一歩・十分買える）', color:'blue',
+          horses:['ニシノティアモ(3人気/非根幹巧者/前走VマイルG1・6着/東京1800で2勝の実績)','タガノエルピーダ(14人気/非根幹巧者/父キズナ/前走安土城S・L・2着)'],
+          comment:'惜しくも3つ。ニシノティアモは前走がG1で6着、勢い(前走3着内)だけ足りませんが、東京1800で2勝している実績は侮れません。タガノエルピーダは14番人気と人気薄ですが、前走L2着＋非根幹巧者。ヒモには面白い一頭かなと見ています👀' },
+        { level:'㊙️㊙️', label:'2つ該当（条件次第）', color:'bronze',
+          horses:['ヴァルキリーバース(1人気/非根幹血統/前走東風S・L・1着/だが東京1800・非根幹は未経験)','パラディレーヌ(4人気/非根幹巧者/非根幹血統/前走12着で勢いなし)','エストゥペンダ(6人気/非根幹巧者/前走弥彦S3勝1着/血統と東京1800が非該当)','ビップデイジー(10人気)','マカナ(13人気)','ミアネーロ(16人気)','ブラウンラチェット(17人気)','セントメモリーズ(19人気)'],
+          comment:'2つ該当。1番人気ヴァルキリーバースもここなんですよね。前走L勝ちの勢いと血統は◎ですが、芝1800も東京1800も非根幹距離も実績ゼロ＝当該距離が完全に未知数。能力は認めますが、府中牝馬のデータ的には「あと2つ足りない」というのが私の正直な見立てです🤔 エストゥペンダは前走3勝勝ち＋東京巧者で力はあり、ヒモまでなら。' },
+        { level:'㊙️', label:'1つ該当', color:'dark',
+          horses:['ウイントワイライト(8人気)','テレサ(9人気)','セキトバイースト(11人気)','テリオスララ(12人気)','ホールネス(15人気)'],
+          comment:'1つだけ。非根幹は走れますが、勢い・コース実績・血統で物足りず。基本は軸から外す組です。' },
+        { level:'―', label:'該当なし', color:'gray',
+          horses:['キーパフォーマー(18人気/非根幹0-0-0-4で距離不適のデータ)'],
+          comment:'4つとも当てはまらず。データ的には今回は見送りの組です。' }
+      ],
+      summary:'府中牝馬は「人気で買うと痛い目に遭う」大波乱のレース。実際、㊙️4該当の3頭のうち2頭(コガネ5人気・ユキワリ7人気)は人気薄です。1番人気ヴァルキリーが㊙️2つ止まりなのも、このレースらしい。私はまず㊙️4該当の3頭を本線に、人気薄の妙味を取りに行きます🐎'
+    },
     anaPoints: [
       '【新設1年目・3つの過去の寄せ集め注意】府中牝馬S(東京1800ハンデ)は2025年新設。傾向の基データは(a)旧マーメイドS=阪神/京都2000mハンデ牝馬(時期・ハンデ・牝馬は引継ぎだがコース別)(b)東京1800コース傾向/旧エプソムC=コースは一致だが混合・別定。見る角度で使うデータが違う＝過去傾向は「指針」。',
       '【荒れる】マーメイドS系は上位人気の信頼度が低く、4番人気が勝率35%・単回収264と妙味、5番人気以下が3着内の過半数、2桁人気3勝。しらさぎ(中波乱)より荒れ寄り。堅レース度は波乱側に出やすい。',
@@ -20170,7 +20198,25 @@ function computeScoreBreakdownFuchuV1(horse, raceName, _rawOnly) {
   else { var dr=dF/dN*100; if(dr>=100)distScore=10;else if(dr>=75)distScore=8;else if(dr>=50)distScore=6;else if(dr>=25)distScore=4;else distScore=2; if(dN<3)distScore=Math.min(distScore,7); }
   items.distance = { score:distScore, max:10, label:'🎯距離適性(芝1800-2000)', note:(dF+'/'+dN+'走複勝'), group:'horse' };
 
-  var totalScore = popScore + clsScore + kyakuScore + (l3fScore+bonus) + ageScore + kinScore + wakuScore + bloodScore + distScore;
+  // [㊙️金塊] 4条件(非根幹巧者×非根幹血統×前走3着内×東京1800複2回+)・該当数で加点
+  var _isShiba = function(r){var su=(r.surface||'')+(r.course||'');return (su.indexOf('芝')>=0||r.surface==='芝');};
+  var hkF=0;
+  rh.forEach(function(r){ if(_isShiba(r)&&[1400,1800,2200].indexOf(r.distance)>=0){var rk=(typeof r.rank==='number')?r.rank:99;if(rk>=1&&rk<=3)hkF++;} });
+  var mh1 = hkF>=1;
+  var _hsire=['ゴールドシップ','オルフェーヴル','ドリームジャーニー','ステイゴールド','エピファネイア','スクリーンヒーロー','モーリス','ハーツクライ','ジャスタウェイ','シュヴァルグラン','ドゥラメンテ','ハービンジャー','キズナ','ロードカナロア','サトノダイヤモンド'];
+  var _hms=['ハーツクライ','ステイゴールド','オルフェーヴル','ゴールドシップ','エピファネイア','シンボリクリスエス','ブライアンズタイム','キングカメハメハ','ディープインパクト'];
+  var mh2 = (_hsire.indexOf(horse.sire||'')>=0) || (_hms.indexOf(horse.motherSire||'')>=0);
+  var mh3 = (rh0 && typeof rh0.rank==='number' && rh0.rank<=3);
+  var t18=0;
+  rh.forEach(function(r){ var p=(r.course||'')+(r.kaisai||'')+(r.raceName||''); if(_isShiba(r)&&r.distance===1800&&p.indexOf('東京')>=0){var rk=(typeof r.rank==='number')?r.rank:99;if(rk>=1&&rk<=3)t18++;} });
+  var mh4 = t18>=2;
+  var mhCount = (mh1?1:0)+(mh2?1:0)+(mh3?1:0)+(mh4?1:0);
+  var himitsuBonus = (mhCount>=4)?5 : (mhCount===3)?3 : (mhCount===2)?1 : 0;
+  var himitsuRank = (mhCount>=4)?'金' : (mhCount===3)?'銀' : (mhCount===2)?'銅' : '';
+  var mhMarks = (mh1?'巧':'')+(mh2?'血':'')+(mh3?'勢':'')+(mh4?'東':'');
+  items.himitsu = { score:himitsuBonus, max:5, label:'㊙️金塊', note:'㊙️×'+mhCount+(himitsuRank?(' '+himitsuRank):'')+(mhMarks?(' ['+mhMarks+']'):''), group:'horse' };
+
+  var totalScore = popScore + clsScore + kyakuScore + (l3fScore+bonus) + ageScore + kinScore + wakuScore + bloodScore + distScore + himitsuBonus;
   totalScore = Math.max(0, totalScore);
   var M = 96;
   var pct = Math.max(0, Math.min(99, Math.round(totalScore / M * 100)));
