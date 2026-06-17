@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260616-0165';
+  var CURRENT_VERSION = '20260616-0166';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7073,6 +7073,85 @@ function getActiveConditions() {
  * ===================================================== */
 const RACE_PAST_DATA = {
   '府中牝馬S': {
+    fuchuClassAnalysis: {
+      title:'府中牝馬 前走クラスデータ（格上挑戦◎）',
+      subtitle:'このレース最大の特徴。3勝クラス・OP・Lからの格上挑戦が強く、前走G1組は0-0-0-9で全滅。昨年も1〜3着が全部格上挑戦だった。',
+      headerCards:[
+        { type:'ace',   label:'格上挑戦', mainValue:'3勝クラス', subValue:'複22%(5-4-2-39)' },
+        { type:'iron',  label:'好調', mainValue:'OP特別/L', subValue:'複29%(3-1-1-12)' },
+        { type:'block', label:'割引', mainValue:'前走G2', subValue:'複36%だが昨年4-5着' },
+        { type:'kill',  label:'全滅', mainValue:'前走G1', subValue:'0-0-0-9 複0%' }
+      ],
+      detailTable:[
+        { sire:'前走3勝クラス', record:'複22%・格上挑戦本線・配点15', label:'本線', color:'green', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r && !r.grade && /3勝クラス|1600万/.test(r.raceName||''); } },
+        { sire:'前走OP特別/L', record:'複29%・配点14', label:'本線', color:'green', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r && !r.grade && /\(L\)|（Ｌ）|リステッド|オープン|OP|ＯＰ/.test(r.raceName||''); } },
+        { sire:'前走2勝クラス', record:'複19%・格上挑戦・配点13', label:'押さえ', color:'blue', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r && !r.grade && /2勝クラス|1000万/.test(r.raceName||''); } },
+        { sire:'前走G2', record:'複36%だが昨年4-5着割引・配点8', label:'割引', color:'orange', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r && r.grade==='G2'; } },
+        { sire:'前走G3', record:'着順別(3着内8/4-9着5/10着~3)', label:'着順次第', color:'orange', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r && r.grade==='G3'; } },
+        { sire:'前走G1・5着以内', record:'善戦・配点6', label:'注意', color:'blue', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r && r.grade==='G1' && typeof r.rank==='number' && r.rank<=5; } },
+        { sire:'前走G1・6〜9着', record:'ニシノ型・配点3', label:'割引', color:'orange', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r && r.grade==='G1' && typeof r.rank==='number' && r.rank>=6 && r.rank<=9; } },
+        { sire:'前走G1・10着以下', record:'パラディ型・複0%・配点0', label:'消し', color:'red', kongenMatch:function(h){ var r=(h.raceHistory||[])[0]; return r && r.grade==='G1' && typeof r.rank==='number' && r.rank>=10; } }
+      ],
+      filterStrategy:{
+        title:'前走クラスでの狙い',
+        tags:['格上挑戦◎','前走G1全滅','勢い重視'],
+        buyRules:['3勝クラス・OP・Lを勝ち上がってきた格上挑戦馬が本線','昨年の1〜3着は全て格上挑戦(L/3勝/3勝)'],
+        killRules:['前走G1で大敗(10着以下)は消し','前走G2も昨年は4-5着で割引'],
+        overseasRules:[],
+        finalStrategy:['重賞で結果が出なかった実績馬より、条件戦を勢いよく勝ち上がってきた馬を狙う'],
+        summary:'府中牝馬は格上挑戦が命。前走3勝クラス・OP・Lの上がり馬を本線に、前走G1組(特に大敗)は割り引く。これが過去10年で最も明確な傾向。'
+      }
+    },
+    fuchuKyakuAnalysis: {
+      title:'府中牝馬 脚質データ（東京1800・前有利）',
+      subtitle:'東京芝1800は先行・好位が有利で後方は届きにくい(後方複9.2%)。逃げは粘れず。昨年も1〜3着は4角3〜8番手の好位だった。',
+      headerCards:[
+        { type:'ace',   label:'最有利', mainValue:'先行', subValue:'複33.6%(シェア最多)' },
+        { type:'iron',  label:'好走', mainValue:'差し(中団)', subValue:'複24.4%' },
+        { type:'block', label:'やや不利', mainValue:'追込', subValue:'複9.2%だがハンデ流れで一考' },
+        { type:'kill',  label:'粘れず', mainValue:'逃げ', subValue:'複35.2%だが昨年6着' }
+      ],
+      detailTable:[
+        { sire:'先行', record:'東京1800複33.6%・配点10', label:'本線', color:'green', kongenMatch:function(h){ return ['ヴァルキリーバース','セキトバイースト','タガノエルピーダ','テレサ','ニシノティアモ','ビップデイジー','ブラウンラチェット','ホールネス','ルージュソリテール'].indexOf(h.name)>=0; } },
+        { sire:'差し(中団)', record:'東京1800複24.4%・配点8', label:'押さえ', color:'blue', kongenMatch:function(h){ return ['キーパフォーマー','コガネノソラ','セントメモリーズ','パラディレーヌ','マカナ','ユキワリザクラ'].indexOf(h.name)>=0; } },
+        { sire:'追込', record:'東京1800複9.2%だがハンデ流れで一考・配点5', label:'一考', color:'orange', kongenMatch:function(h){ return ['ウイントワイライト','エストゥペンダ','ミアネーロ'].indexOf(h.name)>=0; } },
+        { sire:'逃げ', record:'複35.2%だが昨年逃げ馬は6着・配点5', label:'注意', color:'orange', kongenMatch:function(h){ return ['テリオスララ'].indexOf(h.name)>=0; } }
+      ],
+      filterStrategy:{
+        title:'脚質での狙い',
+        tags:['東京1800=前有利','後方は届きにくい','上がり性能と両立が鍵'],
+        buyRules:['先行・好位でレースを進められる馬が有利','昨年の1〜3着は全て4角好位(3〜8番手)'],
+        killRules:['後方一気は東京1800では届きにくい(昨年も最後方の上がり最速馬は7着)'],
+        overseasRules:[],
+        finalStrategy:['前で運べて、かつ速い上がりを使える馬が理想'],
+        summary:'東京1800は先行有利で後方は届きにくい。ただしハンデ戦で流れれば追込にもチャンス。位置取りと上がり性能の両立を見たい。'
+      }
+    },
+    fuchuAgeAnalysis: {
+      title:'府中牝馬 年齢データ',
+      subtitle:'4〜6歳がフラットに good。7歳以上は0%で消し。3歳の出走例はなし。ただし4歳の3番人気以内は0-0-1-11で過信禁物。',
+      headerCards:[
+        { type:'ace',   label:'中心', mainValue:'4歳', subValue:'複22.2%' },
+        { type:'iron',  label:'中心', mainValue:'5歳', subValue:'複19.4%' },
+        { type:'block', label:'互角', mainValue:'6歳', subValue:'複20.0%' },
+        { type:'kill',  label:'消し', mainValue:'7歳以上', subValue:'複0%(0-0-0-2)' }
+      ],
+      detailTable:[
+        { sire:'4歳', record:'複22.2%(5-3-4-42)・配点8 ※3番人気以内は0-0-1-11で過信禁物', label:'中心', color:'green', kongenMatch:function(h){ return h.age===4; } },
+        { sire:'5歳', record:'複19.4%(4-5-5-58)・配点8', label:'中心', color:'green', kongenMatch:function(h){ return h.age===5; } },
+        { sire:'6歳', record:'複20.0%(1-2-1-16)・配点7', label:'互角', color:'blue', kongenMatch:function(h){ return h.age===6; } },
+        { sire:'7歳以上', record:'複0%(0-0-0-2)・配点0', label:'消し', color:'red', kongenMatch:function(h){ return h.age>=7; } }
+      ],
+      filterStrategy:{
+        title:'年齢での狙い',
+        tags:['4-6歳フラット','7歳以上は消し','4歳人気馬の罠'],
+        buyRules:['4〜6歳は複勝率に大差なく、いずれも狙える'],
+        killRules:['7歳以上は過去10年で0-0-0-2と壊滅','4歳の3番人気以内は0-0-1-11で過信禁物(人気の4歳は危険)'],
+        overseasRules:[],
+        finalStrategy:['年齢では4〜6歳をフラットに評価、7歳以上を切る'],
+        summary:'4〜6歳がフラットに好走。7歳以上は消し。注意は「4歳の上位人気は来ない」という罠で、人気の4歳馬はむしろ危険。'
+      }
+    },
     fuchuPopAnalysis: {
       title:'府中牝馬 人気データ（大波乱型）',
       subtitle:'マーメイドS時代を含む過去10年の単勝人気別成績。1番人気でも複勝30%、中穴(3/5/6番)が複40%と上。典型的な波乱レース。',
@@ -11561,6 +11640,9 @@ function renderKongenAnalysis(d) { return _renderSireCardMatchFn(d, '🧬', 'kon
 function renderHanshinAnalysis(d) { return _renderSireCardMatchFn(d, '🏟', 'hanshinMatch'); }
 function renderShiraPopAnalysis(d){ return _renderSireCardMatchFn(d, '⭐', 'kongenMatch'); }
 function renderFuchuPopAnalysis(d){ return _renderSireCardMatchFn(d, '⭐', 'kongenMatch'); }
+function renderFuchuClassAnalysis(d){ return _renderSireCardMatchFn(d, '🔥', 'kongenMatch'); }
+function renderFuchuKyakuAnalysis(d){ return _renderSireCardMatchFn(d, '🏃', 'kongenMatch'); }
+function renderFuchuAgeAnalysis(d){ return _renderSireCardMatchFn(d, '🎂', 'kongenMatch'); }
 function renderShiraAgeAnalysis(d){ return _renderSireCardMatchFn(d, '🎂', 'kongenMatch'); }
 function renderShiraPosAnalysis(d){ return _renderSireCardMatchFn(d, '🏃', 'kongenMatch'); }
 function renderShiraKyakuAnalysis(d){ return _renderSireCardMatchFn(d, '🏇', 'kongenMatch'); }
@@ -11938,6 +12020,9 @@ function renderPastData() {
   }
   if (data.shiraPopAnalysis)   html += renderShiraPopAnalysis(data.shiraPopAnalysis);
   if (data.fuchuPopAnalysis) html += renderFuchuPopAnalysis(data.fuchuPopAnalysis);
+  if (data.fuchuClassAnalysis) html += renderFuchuClassAnalysis(data.fuchuClassAnalysis);
+  if (data.fuchuKyakuAnalysis) html += renderFuchuKyakuAnalysis(data.fuchuKyakuAnalysis);
+  if (data.fuchuAgeAnalysis) html += renderFuchuAgeAnalysis(data.fuchuAgeAnalysis);
   if (data.shiraAgeAnalysis)   html += renderShiraAgeAnalysis(data.shiraAgeAnalysis);
   if (data.shiraL3fAnalysis)   html += renderShiraL3fAnalysis(data.shiraL3fAnalysis);
   if (data.shiraKyakuAnalysis) html += renderShiraKyakuAnalysis(data.shiraKyakuAnalysis);
