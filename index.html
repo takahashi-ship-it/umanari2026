@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260616-0163';
+  var CURRENT_VERSION = '20260616-0164';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7073,6 +7073,46 @@ function getActiveConditions() {
  * ===================================================== */
 const RACE_PAST_DATA = {
   '府中牝馬S': {
+    bloodAnalysis: {
+      title:'府中牝馬 血統データ（東京芝1800m）',
+      subtitle:'東京芝1800mで複勝率が高い種牡馬（過去5年・全クラスのコースデータ）。今年の出走馬の父をハイライト。瞬発力と長い直線への適性を見る。',
+      hideOthers:true,
+      headerCards:[
+        { type:'ace',   label:'最上位', mainValue:'キズナ', subValue:'東京1800 複41.9%' },
+        { type:'iron',  label:'高水準', mainValue:'モーリス/ロードカナロア', subValue:'複38% / 複36%' },
+        { type:'block', label:'安定', mainValue:'ドゥラメンテ/キタサン', subValue:'複34-35%' },
+        { type:'kill',  label:'瞬発系', mainValue:'ハーツ/ディープ/エピファ', subValue:'複31-32%' }
+      ],
+      detailTable:[
+        { sire:'キズナ', record:'東京1800 複41.9%', label:'最上位', color:'green' },
+        { sire:'モーリス', record:'東京1800 複38.1%', label:'本線', color:'green' },
+        { sire:'ロードカナロア', record:'東京1800 複35.8%（昨年2着）', label:'本線', color:'green' },
+        { sire:'ドゥラメンテ', record:'東京1800 複34.6%', label:'本線', color:'green' },
+        { sire:'キタサンブラック', record:'東京1800 複34.2%', label:'本線', color:'green' },
+        { sire:'ハーツクライ', record:'東京1800 複32.3%', label:'好相性', color:'blue' },
+        { sire:'ディープインパクト', record:'東京1800 複31.6%', label:'好相性', color:'blue' },
+        { sire:'エピファネイア', record:'東京1800 複31.1%（ロベルト系）', label:'好相性', color:'blue' },
+        { sire:'サトノダイヤモンド', record:'ディープ系・非根幹で堅実', label:'押さえ', color:'orange' },
+        { sire:'ゴールドシップ', record:'非根幹巧者の父・東京1800は複15.8%と低め', label:'非根幹向き', color:'orange' }
+      ],
+      comparisonBars:[
+        { label:'キズナ', value:42, color:'green' },
+        { label:'モーリス', value:38, color:'green' },
+        { label:'ロードカナロア', value:36, color:'green' },
+        { label:'ドゥラメンテ', value:35, color:'blue' },
+        { label:'ハーツ/ディープ/エピファ', value:32, color:'blue' },
+        { label:'ゴールドシップ', value:16, color:'gray' }
+      ],
+      filterStrategy:{
+        title:'血統での狙い',
+        tags:['東京1800=瞬発力勝負','長い直線+坂','上がり性能直結'],
+        buyRules:['キズナ・モーリス・ロードカナロアは東京1800で複勝率上位','昨年もロードカナロア産駒が2着・キズナ産駒が掲示板'],
+        killRules:['東京1800で複勝率が低い血統は割引（ゴールドシップは非根幹巧者としては○だが東京コースでは低め）'],
+        overseasRules:[],
+        finalStrategy:['東京1800適性（FuchuV1血統項目）と非根幹適性（㊙️金塊）は別の角度。両方を見て判断する'],
+        summary:'東京1800は長い直線と坂の瞬発力勝負。キズナ・モーリス・ロードカナロア等のコース実績上位血統を本線に。非根幹血統（ゴールドシップ等）は㊙️金塊カードで別途評価。'
+      }
+    },
     himitsuData4: {
       title:'府中牝馬 4つの㊙️データ🐎',
       subtitle:'非根幹巧者 × 非根幹血統 × 前走3着内 × 東京1800実績。いくつ当てはまるか——データで見る信頼度チェック',
