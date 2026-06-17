@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260616-0164';
+  var CURRENT_VERSION = '20260616-0165';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7073,6 +7073,37 @@ function getActiveConditions() {
  * ===================================================== */
 const RACE_PAST_DATA = {
   '府中牝馬S': {
+    fuchuPopAnalysis: {
+      title:'府中牝馬 人気データ（大波乱型）',
+      subtitle:'マーメイドS時代を含む過去10年の単勝人気別成績。1番人気でも複勝30%、中穴(3/5/6番)が複40%と上。典型的な波乱レース。',
+      headerCards:[
+        { type:'kill',  label:'1番人気', mainValue:'複30%', subValue:'過信禁物(1-1-1-7)' },
+        { type:'ace',   label:'中穴本線', mainValue:'3/5/6番人気', subValue:'複40%' },
+        { type:'iron',  label:'上位〜中位', mainValue:'1/2/4/7番人気', subValue:'複30%' },
+        { type:'kill',  label:'壊滅', mainValue:'8番人気', subValue:'複0%(0-0-0-10)' }
+      ],
+      detailTable:[
+        { sire:'3番人気', record:'複40%(1-2-1-6)・配点18', label:'本線', color:'green', kongenMatch:function(h){ return h.popEstimate===3; } },
+        { sire:'5番人気', record:'複40%(1-1-2-6)・配点18', label:'本線', color:'green', kongenMatch:function(h){ return h.popEstimate===5; } },
+        { sire:'6番人気', record:'複40%(1-0-3-6)・配点18', label:'本線', color:'green', kongenMatch:function(h){ return h.popEstimate===6; } },
+        { sire:'1番人気', record:'複30%(1-1-1-7)・配点15', label:'割引', color:'blue', kongenMatch:function(h){ return h.popEstimate===1; } },
+        { sire:'2番人気', record:'複30%(0-2-1-7)・配点15', label:'押さえ', color:'blue', kongenMatch:function(h){ return h.popEstimate===2; } },
+        { sire:'4番人気', record:'複30%(1-1-1-7)・配点15', label:'押さえ', color:'blue', kongenMatch:function(h){ return h.popEstimate===4; } },
+        { sire:'7番人気', record:'複30%(2-1-0-7)・配点15', label:'押さえ', color:'blue', kongenMatch:function(h){ return h.popEstimate===7; } },
+        { sire:'9〜10番人気', record:'複10〜50%(東京では再現性低・母数割引)・配点8', label:'穴', color:'orange', kongenMatch:function(h){ return h.popEstimate===9||h.popEstimate===10; } },
+        { sire:'8番人気', record:'複0%(0-0-0-10)・配点2', label:'消し', color:'red', kongenMatch:function(h){ return h.popEstimate===8; } },
+        { sire:'11番人気〜', record:'ほぼ壊滅・配点2', label:'消し', color:'red', kongenMatch:function(h){ return h.popEstimate>=11; } }
+      ],
+      filterStrategy:{
+        title:'人気での狙い',
+        tags:['大波乱型','1番人気は飛ぶ','中穴本線','人気薄もヒモに'],
+        buyRules:['中穴(3/5/6番人気)が複40%で最も信頼できるゾーン','上位〜中位(1/2/4/7番)も複30%で普通に来る'],
+        killRules:['8番人気は複0%で壊滅','11番人気以下もほぼ来ない'],
+        overseasRules:[],
+        finalStrategy:['1番人気を軸に総流しは危険(複30%)','中穴を本線に、人気薄もヒモには残す'],
+        summary:'府中牝馬は1番人気でも複勝30%の大波乱レース。昨年も5番→3番→2番人気で決着し1番人気は8着。中穴(3/5/6番)を本線に、人気で買いすぎないのが鉄則。'
+      }
+    },
     bloodAnalysis: {
       title:'府中牝馬 血統データ（東京芝1800m）',
       subtitle:'東京芝1800mで複勝率が高い種牡馬（過去5年・全クラスのコースデータ）。今年の出走馬の父をハイライト。瞬発力と長い直線への適性を見る。',
@@ -11529,6 +11560,7 @@ function _renderSireCardMatchFn(d, icon, matchKeyName) {
 function renderKongenAnalysis(d) { return _renderSireCardMatchFn(d, '🧬', 'kongenMatch'); }
 function renderHanshinAnalysis(d) { return _renderSireCardMatchFn(d, '🏟', 'hanshinMatch'); }
 function renderShiraPopAnalysis(d){ return _renderSireCardMatchFn(d, '⭐', 'kongenMatch'); }
+function renderFuchuPopAnalysis(d){ return _renderSireCardMatchFn(d, '⭐', 'kongenMatch'); }
 function renderShiraAgeAnalysis(d){ return _renderSireCardMatchFn(d, '🎂', 'kongenMatch'); }
 function renderShiraPosAnalysis(d){ return _renderSireCardMatchFn(d, '🏃', 'kongenMatch'); }
 function renderShiraKyakuAnalysis(d){ return _renderSireCardMatchFn(d, '🏇', 'kongenMatch'); }
@@ -11905,6 +11937,7 @@ function renderPastData() {
     html += renderBloodAnalysis(data.bloodAnalysis);
   }
   if (data.shiraPopAnalysis)   html += renderShiraPopAnalysis(data.shiraPopAnalysis);
+  if (data.fuchuPopAnalysis) html += renderFuchuPopAnalysis(data.fuchuPopAnalysis);
   if (data.shiraAgeAnalysis)   html += renderShiraAgeAnalysis(data.shiraAgeAnalysis);
   if (data.shiraL3fAnalysis)   html += renderShiraL3fAnalysis(data.shiraL3fAnalysis);
   if (data.shiraKyakuAnalysis) html += renderShiraKyakuAnalysis(data.shiraKyakuAnalysis);
