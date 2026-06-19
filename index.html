@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260616-0172';
+  var CURRENT_VERSION = '20260616-0173';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -14133,17 +14133,21 @@ function renderHorses() {
     let rank = getMarkByRank(idx + 1);
     const wakuClass = h.waku ? `waku-${h.waku}` : 'waku-tbd';
     const wakuText = (h.waku != null) ? h.waku : '';
-    const prevRankNum = h.prev1r ?? h.prevRank;
+    // raceHistory[0] フォールバック（しらさぎ・府中は生データを raceHistory に格納）
+    const _rh0 = (h.raceHistory && h.raceHistory[0]) || {};
+    const prevRankNum = h.prev1r ?? h.prevRank ?? _rh0.rank;
     const prevRankText = (prevRankNum != null && prevRankNum > 0) ? `${prevRankNum}着` : '出走前';
-    const prevRaceText = h.prev1race || h.prevRace || '前走不明';
-    // 上がり3F 優先・SI フォールバック
-    const hasLastF = (h.prev1Last3F != null || h.prev1Last3FRank != null);
+    const prevRaceText = h.prev1race || h.prevRace || _rh0.raceName || '前走不明';
+    // 上がり3F 優先・SI フォールバック（prev1* → raceHistory[0] の順で拾う）
+    const _l3f  = (h.prev1Last3F != null) ? h.prev1Last3F : _rh0.last3f;
+    const _l3fR = (h.prev1Last3FRank != null) ? h.prev1Last3FRank : _rh0.last3fRank;
+    const hasLastF = (_l3f != null || _l3fR != null);
     const lastFText = hasLastF
-      ? '⚡ 上がり: ' + (h.prev1Last3F != null ? h.prev1Last3F.toFixed(1) + '秒' : '―') + (h.prev1Last3FRank ? '/' + h.prev1Last3FRank + '位' : '')
+      ? '⚡ 上がり: ' + (_l3f != null ? _l3f.toFixed(1) + '秒' : '―') + (_l3fR ? '/' + _l3fR + '位' : '')
       : (siAvailable ? `⚡ SI: ${siVal}` : '');
     const siLabelText = lastFText;
     const siBadgeTitle = hasLastF
-      ? `前走上がり3F（${h.prev1Last3F != null ? h.prev1Last3F + '秒' : '?'}・${h.prev1Last3FRank || '?'}位）`
+      ? `前走上がり3F（${_l3f != null ? _l3f + '秒' : '?'}・${_l3fR || '?'}位）`
       : (siAvailable ? `スピード指数（${speedIndexLabel(siVal)}）` : `上がり3F・SI 共に未集計`);
     const lastFCellScore = (bdItems.speed && bdItems.speed.score != null) ? bdItems.speed.score : (siAvailable ? score.speed : 0);
     const siDetailText = (hasLastF || siAvailable) ? `${lastFCellScore}/10` : `―/10`;
@@ -14158,8 +14162,8 @@ function renderHorses() {
     // 上がり3F or SIバッジ（前走上がり3F優先）
     const siBadge = hasLastF
       ? (function(){
-          const t = h.prev1Last3F;
-          const r = h.prev1Last3FRank;
+          const t = _l3f;
+          const r = _l3fR;
           const c = (t != null && t < 33.5) ? '#A32D2D' : (t != null && t < 34.0) ? '#1D9E75' : (t != null && t < 34.5) ? '#185FA5' : (t != null && t < 35.0) ? '#EF9F27' : '#888';
           return `<span style="background:${c};color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap;flex-shrink:0" title="前走上がり3F ${t!=null?t+'秒':'?'}・${r||'?'}位">⚡上${t!=null?t.toFixed(1):'?'}/${r||'?'}位</span>`;
         })()
