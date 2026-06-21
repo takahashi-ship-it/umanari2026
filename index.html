@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260621-0181';
+  var CURRENT_VERSION = '20260621-0182';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -22091,6 +22091,12 @@ var JIKU_TRACKING = [
   { race: '宝塚記念',           aiJiku: 'メイショウタバル', scoreJiku: 'メイショウタバル',
     result: '1着(軸◎的中)', aiHit: true, scoreHit: true, comboHit: true,
     note: '◎タバル1着(宝塚連覇・武豊)。○クロワ2着・▲ダノン3着で印◎○▲が1-2-3着完全的中。但し3連単6,040円で投資72,000円に対しトリガミ・収支-11,600円。突然の大雨で重馬場化しゴールドシップ産駒のタバルに展開向く。軸馬3着内的中は復活' },
+  { race: 'しらさぎステークス', aiJiku: 'エコロアルバ', scoreJiku: 'エコロアルバ',
+    result: '3着(軸◎3着内的中)', aiHit: true, scoreHit: true, comboHit: true,
+    note: 'スコア◎エコロアルバ3着で軸馬3着内的中。一次情報(朝日杯FS・重G1で4着/父モズアスコット=パワー型/3歳53kg斤量恩恵)で道悪軸に格上げした判断は複勝圏で正解。但し相手を「重前提・前×道悪巧者」7頭に絞り、1着エルトン(7人・先行)・2着キープ(6人・先行)を切ったため買い目は不的中(稍重で前残り)。' },
+  { race: '府中牝馬S', aiJiku: 'ヴァルキリーバース', scoreJiku: 'ヴァルキリーバース',
+    result: '着外(スコア軸)', aiHit: false, scoreHit: false, comboHit: false,
+    note: 'スコア1位の自動軸ヴァルキリーバース(1人)は着外でscoreHit:false。但し道悪を見て軸を手動でセキトバイースト(5人・昨年覇者・道悪実績)に変更→セキトバ1着で実推奨軸は的中。2着ウイント・3着ミアネーロは共に追込で、前残り重視で後方脚質を相手から切ったため買い目は不的中(3連単106万の大波乱)。' },
 ];
 
 function renderJikuTracking() {
