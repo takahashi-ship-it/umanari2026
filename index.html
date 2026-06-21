@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260621-0180';
+  var CURRENT_VERSION = '20260621-0181';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1592,7 +1592,7 @@
         padding:6px 16px;
       ">
         <span style="font-size:11px;color:#666;font-weight:500">2026年通算回収率</span>
-        <span id="header-kaishuritu" style="font-size:20px;font-weight:800;color:#0F6E56;letter-spacing:.02em">156%</span>
+        <span id="header-kaishuritu" style="font-size:20px;font-weight:800;color:#0F6E56;letter-spacing:.02em">148.6%</span>
         <span id="header-badge" style="font-size:10px;background:#0F6E56;color:#fff;
                      padding:2px 6px;border-radius:9px;font-weight:600">黒字</span>
       </div>
@@ -1605,11 +1605,11 @@
         font-size:11px;
         color:#888;
       ">
-        <span>投資 <strong id="header-invest" style="color:#333">484,600円</strong></span>
+        <span>投資 <strong id="header-invest" style="color:#333">509,800円</strong></span>
         <span style="color:#ccc">→</span>
         <span>払戻 <strong id="header-payout" style="color:#0F6E56">757,520円</strong></span>
         <span style="color:#ccc">|</span>
-        <span><strong id="header-rieki" style="color:#0F6E56">+272,920円</strong></span>
+        <span><strong id="header-rieki" style="color:#0F6E56">+247,720円</strong></span>
       </div>
     </div>
   </div>
@@ -1750,14 +1750,14 @@
             <div style="font-size:11px;color:#3B6D11">17レース（皐月賞・青葉賞・フローラS・マイラーズC・天皇賞春・京都新聞杯・エプソムC・NHKマイルC・ヴィクトリアマイル・平安S・オークス・葵S※・日本ダービー・目黒記念・安田記念・函館スプリントS・宝塚記念）</div>
           </div>
           <div style="text-align:right">
-            <div style="font-size:24px;font-weight:800;color:#0F6E56">+272,920円</div>
-            <div style="font-size:12px;color:#3B6D11">回収率 <strong>156%</strong> ✅ 黒字</div>
+            <div style="font-size:24px;font-weight:800;color:#0F6E56">+247,720円</div>
+            <div style="font-size:12px;color:#3B6D11">回収率 <strong>148.6%</strong> ✅ 黒字</div>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">
           <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
             <div style="font-size:10px;color:var(--text-mute)">総投資</div>
-            <div style="font-size:14px;font-weight:700;color:var(--text)">484,600円</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text)">509,800円</div>
           </div>
           <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
             <div style="font-size:10px;color:var(--text-mute)">総払戻</div>
@@ -1765,13 +1765,48 @@
           </div>
           <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
             <div style="font-size:10px;color:var(--text-mute)">的中率（予想含む）</div>
-            <div style="font-size:14px;font-weight:700;color:#185FA5">10/17</div>
+            <div style="font-size:14px;font-weight:700;color:#185FA5">10/19</div>
             <div style="font-size:9px;color:var(--text-mute)">※葵Sは予想的中・馬券購入なし</div>
           </div>
         </div>
       </div>
 
-      <!-- 宝塚記念（◎○▲完全1-2-3着的中だがトリガミ・収支マイナス） -->
+      
+        <!-- しらさぎステークス（結果サマリー・6/21） -->
+        <div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="font-weight:bold;font-size:1.05em;color:#fff;">しらさぎステークス(G3) <span style="color:#999;font-size:0.85em;">6/21 阪神・稍重</span></span>
+            <span style="background:#7a2a2a;color:#fff;padding:3px 10px;border-radius:6px;font-size:0.85em;">不的中</span>
+          </div>
+          <div style="color:#ccc;font-size:0.9em;line-height:1.7;">
+            <div>1着 ⑩エルトンバローズ(7人) / 2着 ⑦キープカルム(6人) / 3着 ⑪エコロアルバ(1人)</div>
+            <div style="margin-top:4px;">3連単 90,760円 ／ ◎エコロアルバ=<b style="color:#7fd17f;">3着(複勝圏)</b></div>
+            <div style="margin-top:6px;display:flex;gap:16px;">
+              <span>投資 <b>12,600円</b></span><span>払戻 <b style="color:#e77;">0円</b></span><span>収支 <b style="color:#e77;">-12,600円</b></span>
+            </div>
+            <div style="margin-top:8px;padding:8px;background:#00000033;border-radius:6px;font-size:0.88em;color:#bbb;">
+              💭 ◎エコロは一次情報(重G1・朝日杯FS4着/パワー型)で軸に格上げ→3着に好走で格上げ判断は正解。だが稍重に回復した馬場で1着エルトン・2着キープの先行勢が残り、相手7頭から漏れた。「重前提・前×道悪巧者」に寄せすぎ、地力ある先行馬を切ったのが反省。軸は当てたが相手で取りこぼし=春からの課題が再現。
+            </div>
+          </div>
+        </div>
+        <!-- 府中牝馬S（結果サマリー・6/21） -->
+        <div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="font-weight:bold;font-size:1.05em;color:#fff;">府中牝馬S(G3) <span style="color:#999;font-size:0.85em;">6/21 東京・稍重</span></span>
+            <span style="background:#7a2a2a;color:#fff;padding:3px 10px;border-radius:6px;font-size:0.85em;">不的中</span>
+          </div>
+          <div style="color:#ccc;font-size:0.9em;line-height:1.7;">
+            <div>1着 ⑦セキトバイースト(5人) / 2着 ②ウイントワイライト(9人) / 3着 ④ミアネーロ(14人)</div>
+            <div style="margin-top:4px;">3連単 1,066,160円(大波乱) ／ ◎セキトバイースト=<b style="color:#7fd17f;">1着的中</b></div>
+            <div style="margin-top:6px;display:flex;gap:16px;">
+              <span>投資 <b>12,600円</b></span><span>払戻 <b style="color:#e77;">0円</b></span><span>収支 <b style="color:#e77;">-12,600円</b></span>
+            </div>
+            <div style="margin-top:8px;padding:8px;background:#00000033;border-radius:6px;font-size:0.88em;color:#bbb;">
+              💭 ◎セキトバ1着は完璧(コガネ→セキトバへの軸変更が正解・道悪軸◎)。だが2着ウイント・3着ミアネーロは共に後方脚質。前残り重視で追込のエストゥ・パラディを相手から切った調整が完全に裏目=馬場は想定ほど前有利でなかった。軸的中でも相手の脚質を絞りすぎて大波乱を取り逃した。
+            </div>
+          </div>
+        </div>
+<!-- 宝塚記念（◎○▲完全1-2-3着的中だがトリガミ・収支マイナス） -->
       <div class="card" style="border:1.5px solid #639922">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
@@ -2635,10 +2670,6 @@
         <!-- 堅レース度バナー（買い目タブ最上部・買い目構成の目安） -->
         <div id="volatility-banner" style="margin-bottom:16px"></div>
 
-        <!-- ===== DOROBA-BLOCK START（今回限定・道悪ver買い目／レース後に削除可） ===== -->
-        <div id="doroba-kaimoku" style="margin-bottom:16px"></div>
-        <!-- ===== DOROBA-BLOCK END ===== -->
-
         <!-- 軸馬カード（強調デザイン・最初に表示） -->
         <div style="background:linear-gradient(135deg,#1a2744 0%,#2d4a8a 100%);border-radius:16px 16px 0 0;padding:14px 16px 10px;border:2px solid #4a7fd4;border-bottom:none">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
@@ -2707,7 +2738,7 @@
 
 <script>
 /* 終了レースのリスト（カレンダー初回レンダリング前に定義必須） */
-var FINISHED_RACES = ['天皇賞（春）', '京都新聞杯', 'エプソムC', 'NHKマイルC', '新潟大賞典', 'ヴィクトリアマイル', '平安ステークス', 'オークス', '葵ステークス', '日本ダービー', '目黒記念', '安田記念', '函館スプリントS', '宝塚記念'];
+var FINISHED_RACES = ['しらさぎステークス','府中牝馬S','天皇賞（春）', '京都新聞杯', 'エプソムC', 'NHKマイルC', '新潟大賞典', 'ヴィクトリアマイル', '平安ステークス', 'オークス', '葵ステークス', '日本ダービー', '目黒記念', '安田記念', '函館スプリントS', '宝塚記念'];
 
 /* =====================================================
  * 1) RACE CALENDAR
@@ -14508,6 +14539,9 @@ function renderCriteria() {
  *   - オッズ入力グリッドを再構築
  */
 var FINISHED_RACE_RESULTS = {
+  'しらさぎステークス': '✅ このレースは終了しました | 1着：10番エルトンバローズ(7人) 2着：7番キープカルム(6人) 3着：11番エコロアルバ(1人) | 3連単90,760円・馬場稍重',
+  '府中牝馬S': '✅ このレースは終了しました | 1着：7番セキトバイースト(5人) 2着：2番ウイントワイライト(9人) 3着：4番ミアネーロ(14人) | 3連単1,066,160円の大波乱',
+
   '天皇賞（春）': '✅ このレースは終了しました | 1着：7番クロワデュノール　2着：15番ヴェルテンベルク　3着：3番アドマイヤテラ | 3連単 7-15-3：70,630円 | 軸アドマイヤテラ3着✅的中',
   '京都新聞杯':   '✅ このレースは終了しました | 1着：5番コンジェスタス（軸馬）　2着：15番ベレシート　3着：6番ラディアントスター | 3連単 5→15→6：74,860円 🎉大的中！',
   'エプソムC':    '✅ このレースは終了しました | 1着：11番トロヴァトーレ　2着：16番ステレンボッシュ　3着：17番レガーロデルシエロ | 3連単：108,330円 | 軸サクラファレル着外❌',
@@ -16024,116 +16058,12 @@ function _wakuBox(w, size) {
   return '<span style="display:inline-flex;align-items:center;justify-content:center;width:'+sz+'px;height:'+sz+'px;border-radius:4px;background:var(--waku-'+w+'-bg);color:var(--waku-'+w+'-fg);font-size:11px;font-weight:700;border:1px solid var(--border)">'+w+'</span>';
 }
 
-/* ===== DOROBA-BLOCK START（今回限定・道悪ver買い目／レース後にこの関数ごと削除可） =====
-   稍重〜重の道悪を前提に、道悪実績馬で軸を立て直した臨時の買い目。
-   自動の軸馬カード（スコア由来）はそのまま残し、その手前に注意喚起として表示する。 */
-var DOROBA_KAIMOKU = {
-  'しらさぎステークス': {
-    buyType: 'jiku',
-    baba: '稍重〜重（道悪）想定',
-    note: '阪神芝1600・道悪。一次情報の見直しで軸をエコロアルバに変更。父モズアスコットのパワー型で、前々走・朝日杯FS(G1)を馬場重で4着＝格上相手に道悪で好走済み。3歳牝馬53kgの斤量恩恵も大きく、道悪のパワー勝負はむしろ歓迎。',
-    tensu: 'エコロ軸・3連単1頭軸マルチ 相手7頭＝126点（G3：各100円〜）',
-    jiku: { name:'エコロアルバ', pop:1, odds:3.1, reason:'父モズアスコット(パワー型・道悪巧者血統)。前々走・朝日杯FS(G1)を馬場重で4着＝レベルの違う相手に道悪で好走済み。今回3歳牝馬53kgの斤量恩恵が大きく、道悪のパワー勝負はむしろ歓迎' },
-    aite: [
-      { name:'サイルーン', pop:5, odds:9.4, reason:'先行・道悪4戦複75%・重で1勝。前で運べて重適性も最上位の相手筆頭' },
-      { name:'ファーヴェント', pop:4, odds:8.3, reason:'先行・道悪4戦複50%。人気上位で道悪も粘れる安定株' },
-      { name:'カズミクラーシュ', pop:9, odds:19.3, reason:'先行・前走錦S(3勝)勝ち・道悪複50%。前々の上がり馬' },
-      { name:'スマートワイス', pop:10, odds:24.3, reason:'重で2着(六甲アイランドS・4角2番手の前々)・今回川田将雅。重実績＋前々＋手厚い鞍上で妙味' },
-      { name:'タガノエルピーダ', pop:12, odds:38.3, reason:'逃げ〜前・㊙️金(阪神マイル実績)・道悪複33%。前残り直撃の妙味' },
-      { name:'ファインライン', pop:13, odds:39.4, reason:'先行・道悪6戦複67%・重2戦で1勝。サンプル最厚の道悪巧者・大穴の本線' },
-      { name:'メタルスピード', pop:15, odds:51.0, reason:'重8戦の経験随一(皐月賞4着・スプリングS3着・重で1勝)・前々(4角1〜2番手)。重なら一発の超人気薄' }
-    ],
-    caveat: [],
-    yume: 'エコロが頭まで来れば3連単で大きい。穴をさらに狙うならメタル(15人)・ファイン(13人)・タガノ(12人)の重実績人気薄を3着付けに厚く。'
-  },
-  '府中牝馬S': {
-    buyType: 'jiku',
-    baba: '稍重〜重（道悪）想定',
-    note: '東京芝1800・道悪。スコア◎ヴァルキリー(1人)は道悪0%・重未経験だが先行馬なので相手には押さえる。昨年覇者で重実績のセキトバを軸に1頭軸マルチ。',
-    tensu: 'セキトバ軸・3連単1頭軸マルチ 相手6頭＝90点（G3：各100円〜）',
-    jiku: { name:'セキトバイースト', pop:5, odds:11.4, reason:'昨年の府中牝馬S覇者・道悪4戦1-2-1-0=複勝100%・重で2着。好走4戦すべて4角1〜2番手の前々で今日の前残り傾向に完全合致' },
-    aite: [
-      { name:'コガネノソラ', pop:2, odds:6.1, reason:'道悪3戦3勝(クイーンS含む)・地力No.1。ただし重未経験＋差し脚質で頭は信頼しきれない＝相手筆頭' },
-      { name:'ヴァルキリーバース', pop:1, odds:3.0, reason:'スコア◎・先行。道悪0%・重未経験は不安だが1番人気の地力で相手には必須' },
-      { name:'ニシノティアモ', pop:3, odds:7.0, reason:'先行・道悪複33%だが東京1800で2勝。前で運べる人気上位' },
-      { name:'ルージュソリテール', pop:6, odds:12.0, reason:'先行・道悪○・㊙️金該当(父ロードカナロア・東京1800実績)' },
-      { name:'ホールネス', pop:10, odds:28.2, reason:'先行・重1戦含む道悪2戦複100%。前残り傾向に合う人気薄の伏兵' },
-      { name:'テリオスララ', pop:12, odds:34.0, reason:'唯一の逃げ馬。重の前残り馬場なら単騎逃げがそのまま残る一発の魅力。前残り直撃の超人気薄' }
-    ],
-    caveat: [],
-    yume: 'セキトバが頭まで来れば3連単で大きい。逆に1番人気ヴァルキリーが道悪で飛ぶ波乱なら、軸セキトバ＋穴のルージュ・ホールネス・テリオスを3着に絡めて万馬券を狙う。'
-  }
-};
-function renderDorobaKaimoku(raceName) {
-  var el = document.getElementById('doroba-kaimoku');
-  if (!el) return;
-  var d = DOROBA_KAIMOKU[raceName];
-  if (!d) { el.innerHTML = ''; return; }
-  var h = '';
-  h += '<div style="border:2px solid #6b4ea0;border-radius:14px;overflow:hidden;background:#1c1530">';
-  h += '<div style="background:linear-gradient(135deg,#3a2a5c 0%,#6b4ea0 100%);padding:12px 16px">';
-  h += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
-  h += '<span style="font-size:18px">🌧️</span>';
-  h += '<span style="font-size:15px;font-weight:900;color:#fff;letter-spacing:0.5px">道悪ver 買い目（今回限定）</span>';
-  h += '<span style="background:#FFD166;color:#3a2a5c;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px">' + d.baba + '</span>';
-  h += '</div>';
-  h += '<div style="font-size:11px;color:#d8cdef;line-height:1.5;margin-top:6px">' + d.note + '</div>';
-  h += '</div>';
-  h += '<div style="padding:14px 16px">';
-  // 買い目タイプ表示（点数）
-  if (d.tensu) {
-    h += '<div style="background:#2a2440;border-radius:8px;padding:8px 11px;margin-bottom:12px;font-size:11px;font-weight:700;color:#FFD166">🎫 ' + d.tensu + '</div>';
-  }
-  if (d.buyType === 'box') {
-    // BOX型（軸不在）
-    h += '<div style="font-size:11px;font-weight:800;color:#9ad0ff;margin-bottom:6px">🎯 BOX構成（軸不在・' + d.box.length + '頭）</div>';
-    d.box.forEach(function(a, i){
-      h += '<div style="background:#26203a;border-radius:8px;padding:8px 10px;margin-bottom:6px">';
-      h += '<div style="font-size:13px;font-weight:800;color:#fff">' + (i+1) + '. ' + a.name + ' <span style="font-size:11px;color:#9ab;font-weight:700">' + a.pop + '人気・' + a.odds + '倍</span></div>';
-      h += '<div style="font-size:10px;color:#bfd3e6;line-height:1.4;margin-top:2px">' + a.reason + '</div>';
-      h += '</div>';
-    });
-  } else {
-    // 軸型（1頭軸マルチ）
-    h += '<div style="margin-bottom:12px">';
-    h += '<div style="font-size:11px;font-weight:800;color:#FFD166;margin-bottom:4px">◎ 道悪の軸（1頭固定・マルチ）</div>';
-    h += '<div style="font-size:18px;font-weight:900;color:#fff">' + d.jiku.name + ' <span style="font-size:12px;color:#b9a9dd;font-weight:700">' + d.jiku.pop + '人気・' + d.jiku.odds + '倍</span></div>';
-    h += '<div style="font-size:11px;color:#cfc3ea;line-height:1.5;margin-top:2px">' + d.jiku.reason + '</div>';
-    h += '</div>';
-    h += '<div style="font-size:11px;font-weight:800;color:#9ad0ff;margin-bottom:6px">○ 相手（道悪実績順・' + d.aite.length + '頭）</div>';
-    d.aite.forEach(function(a, i){
-      h += '<div style="background:#26203a;border-radius:8px;padding:8px 10px;margin-bottom:6px">';
-      h += '<div style="font-size:13px;font-weight:800;color:#fff">' + (i+1) + '. ' + a.name + ' <span style="font-size:11px;color:#9ab;font-weight:700">' + a.pop + '人気・' + a.odds + '倍</span></div>';
-      h += '<div style="font-size:10px;color:#bfd3e6;line-height:1.4;margin-top:2px">' + a.reason + '</div>';
-      h += '</div>';
-    });
-  }
-  // 警戒（危険な人気馬／消し）— ある時だけ
-  if (d.caveat && d.caveat.length) {
-    h += '<div style="font-size:11px;font-weight:800;color:#ff9a9a;margin:10px 0 6px">⚠️ 道悪で危険な人気馬（消し）</div>';
-    d.caveat.forEach(function(c){
-      h += '<div style="background:#3a1f24;border-left:3px solid #c0392b;border-radius:0 6px 6px 0;padding:7px 10px;margin-bottom:6px">';
-      h += '<div style="font-size:12px;font-weight:800;color:#ffd2d2">' + c.name + ' <span style="font-size:10px;color:#e6a;font-weight:700">' + c.pop + '人気・' + c.odds + '倍</span> <span style="font-size:10px;color:#ff8a8a">' + c.label + '</span></div>';
-      h += '<div style="font-size:10px;color:#e8c5c5;line-height:1.4;margin-top:2px">' + c.note + '</div>';
-      h += '</div>';
-    });
-  }
-  // 夢馬券
-  h += '<div style="background:#2a2440;border:1px dashed #6b4ea0;border-radius:8px;padding:9px 11px;margin-top:8px">';
-  h += '<div style="font-size:11px;font-weight:800;color:#FFD166;margin-bottom:3px">💭 夢馬券（波乱トリガー）</div>';
-  h += '<div style="font-size:10px;color:#d8cdef;line-height:1.5">' + d.yume + '</div>';
-  h += '</div>';
-  h += '</div></div>';
-  el.innerHTML = h;
-}
-/* ===== DOROBA-BLOCK END ===== */
 function renderKaime() {
   if (!window.horses || !horses.length) return;
   var jikuEl = document.getElementById('jiku-card');
   if (!jikuEl) return;
 
   var raceName = window.currentRaceName || currentRace;
-  if (typeof renderDorobaKaimoku === 'function') renderDorobaKaimoku(raceName); // DOROBA-BLOCK
   var jiku = selectJiku(horses, raceName);
   // 相手リストは V2/V3/V4 スコア順（getAiteRanked）を優先。フォールバックで selectHimo（V系統スコア）
   var himoAll;
