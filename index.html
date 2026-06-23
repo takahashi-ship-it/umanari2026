@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0184';
+  var CURRENT_VERSION = '20260623-0185';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -20871,7 +20871,163 @@ function computeScoreBreakdownHakodateSprintV1(horse, raceName, _rawOnly) {
   return { total: total, max: max, pct: pct, items: items, penalty: 0 };
 }
 
+function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
+  var M = 52;
+  if(!horse) return {total:0,max:M,pct:0,items:{},penalty:0};
+  if(horse.isAvoided) return {total:0,max:M,pct:0,items:{},isAvoided:true,avoidReason:horse.avoidReason||''};
+  var rh = Array.isArray(horse.raceHistory)?horse.raceHistory:[];
+  var rh0 = rh[0]||null;
+  var items = {};
+  var pop = horse.popEstimate||99, popScore;
+  if(pop===2) popScore=20;
+  else if(pop>=7&&pop<=9) popScore=16;
+  else if(pop===1||pop===3||(pop>=4&&pop<=6)) popScore=15;
+  else popScore=2;
+  items.popularity={score:popScore,max:20,label:'人気別(複勝率順)',group:'data'};
+  var kin=horse.carriedWeight||0, kinScore;
+  if(kin>=54&&kin<=55) kinScore=6;
+  else if(kin===53) kinScore=4;
+  else if(kin===56) kinScore=2;
+  else if(kin>=57) kinScore=-3;
+  else kinScore=-5;
+  items.weight={score:kinScore,max:6,label:'斤量',group:'data'};
+  var c4=(rh0&&typeof rh0.corner4==='number')?rh0.corner4:null, runScore=0;
+  if(c4!==null){ if(c4<=5) runScore=5; else if(c4>=10) runScore=-3; else runScore=0; }
+  items.running={score:runScore,max:5,label:'脚質(前走4角)',group:'data'};
+  var prevScore=0;
+  if(rh0){
+    var rn=rh0.raceName||'', g=rh0.grade||'', prk=(typeof rh0.rank==='number')?rh0.rank:null;
+    if(rn.indexOf('1勝クラス')!==-1 && prk===1) prevScore=5;
+    else if(rn.indexOf('プリンシパル')!==-1) prevScore=4;
+    else if(rn.indexOf('白百合')!==-1) prevScore=4;
+    else if(rn.indexOf('(L)')!==-1||rn.indexOf('(OP)')!==-1) prevScore=3;
+    else if(g==='G1') prevScore=2;
+    else prevScore=0;
+  }
+  items.prevClass={score:prevScore,max:5,label:'前走クラス',group:'data'};
+  var waku=(typeof horse.waku==='number')?horse.waku:null, wakuScore=0;
+  if(waku!==null){
+    if(waku===1) wakuScore=8;
+    else if(waku===5) wakuScore=4;
+    else if(waku===3||waku===7) wakuScore=2;
+    else if(waku===4) wakuScore=1;
+    else if(waku===6) wakuScore=-3;
+    else wakuScore=0;
+  }
+  items.waku={score:wakuScore,max:8,label:'枠順',group:'data'};
+  var intervalScore=0;
+  if(rh0&&rh0.date){
+    var pd=new Date(String(rh0.date).replace(/-/g,'/'));
+    var rd=new Date('2026/06/28');
+    var naka=Math.floor((rd-pd)/86400000/7)-1;
+    intervalScore=(naka>=8)?-2:2;
+  }
+  items.interval={score:intervalScore,max:2,label:'間隔',group:'data'};
+  items.lastfRank={score:0,max:3,label:'前走上がり順位(保留)',group:'data'};
+  var sexScore=(horse.sex==='牝')?-3:0;
+  items.sex={score:sexScore,max:0,label:'性別',group:'data'};
+  var bloodScore=0;
+  items.blood={score:bloodScore,max:3,label:'血統(保留)',group:'horse'};
+  var total=popScore+kinScore+runScore+prevScore+wakuScore+intervalScore+sexScore+bloodScore;
+  total=Math.max(0,total);
+  var pct=Math.max(0,Math.min(99,Math.round(total/M*100)));
+  return {total:total,max:M,pct:pct,items:items,penalty:0};
+}
+function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
+  var M = 70;
+  if(!horse) return {total:0,max:M,pct:0,items:{},penalty:0};
+  if(horse.isAvoided) return {total:0,max:M,pct:0,items:{},isAvoided:true,avoidReason:horse.avoidReason||''};
+  var rh=Array.isArray(horse.raceHistory)?horse.raceHistory:[];
+  var rh0=rh[0]||null;
+  var items={};
+  var pop=horse.popEstimate||99, popScore;
+  if(pop===3) popScore=20;
+  else if(pop===1) popScore=15;
+  else if(pop===2||(pop>=4&&pop<=6)) popScore=10;
+  else if(pop>=7&&pop<=9) popScore=8;
+  else popScore=7;
+  items.popularity={score:popScore,max:20,label:'人気別(複勝率順)',group:'data'};
+  var age=horse.age||0, ageScore;
+  if(age===4) ageScore=6;
+  else if(age===6) ageScore=5;
+  else if(age===7) ageScore=0;
+  else if(age===5) ageScore=-1;
+  else if(age>=8) ageScore=-8;
+  else ageScore=0;
+  items.age={score:ageScore,max:6,label:'年齢',group:'data'};
+  var kin=horse.carriedWeight||0, kinScore;
+  if(kin===56) kinScore=5;
+  else if(kin===55||kin===57) kinScore=3;
+  else if(kin===54) kinScore=2;
+  else if(kin===57.5) kinScore=0;
+  else if(kin>=58) kinScore=-8;
+  else kinScore=0;
+  items.weight={score:kinScore,max:5,label:'斤量',group:'data'};
+  var c4=(rh0&&typeof rh0.corner4==='number')?rh0.corner4:null, runScore=0;
+  if(c4!==null){ if(c4<=3) runScore=6; else if(c4<=5) runScore=4; else if(c4>=10) runScore=-4; else runScore=0; }
+  items.running={score:runScore,max:6,label:'脚質(前走4角)',group:'data'};
+  var prevScore=0;
+  if(rh0){
+    var rn=rh0.raceName||'', g=rh0.grade||'', prk=(typeof rh0.rank==='number')?rh0.rank:null;
+    if(g==='G2') prevScore=6;
+    else if(g==='G1'||g==='G3') prevScore=4;
+    else if(rn.indexOf('3勝クラス')!==-1 && prk===1) prevScore=3;
+    else if(rn.indexOf('(L)')!==-1||rn.indexOf('(OP)')!==-1) prevScore=-2;
+    else prevScore=0;
+  }
+  items.prevClass={score:prevScore,max:6,label:'前走クラス',group:'data'};
+  var distScore=0;
+  if(rh0&&typeof rh0.distance==='number'){
+    if(rh0.distance>2000) distScore=5; else if(rh0.distance<2000) distScore=-4; else distScore=0;
+  }
+  items.distance={score:distScore,max:5,label:'距離(短縮/延長)',group:'data'};
+  var wcScore=0;
+  if(rh0&&typeof rh0.carriedWeight==='number'){
+    var prevk=rh0.carriedWeight, prk2=(typeof rh0.rank==='number')?rh0.rank:null;
+    if(kin<prevk) wcScore=(prk2!==null&&prk2>=5)?6:4;
+    else if(kin>prevk) wcScore=0;
+    else wcScore=-1;
+  }
+  items.weightChange={score:wcScore,max:6,label:'前走斤量増減',group:'data'};
+  var venueScore=0;
+  if(rh0){
+    var cs=rh0.course||'';
+    if(cs==='東京'||cs==='中山'||cs==='阪神'||cs==='京都') venueScore+=3;
+    if(typeof rh0.distance==='number'&&rh0.distance<=1600) venueScore-=3;
+  }
+  items.prevVenue={score:venueScore,max:3,label:'前走条件',group:'data'};
+  var apt=0;
+  for(var i=0;i<rh.length;i++){
+    var r=rh[i]; var rk=(typeof r.rank==='number')?r.rank:null;
+    if((r.course==='函館'||r.course==='札幌')&&rk!==null&&rk<=5){apt=4;break;}
+    if((r.course==='中山'||r.course==='函館'||r.course==='札幌'||r.course==='福島'||r.course==='小倉')&&(r.grade==='G1'||r.grade==='G2'||r.grade==='G3')&&rk!==null&&rk<=3){apt=4;break;}
+  }
+  items.aptitude={score:apt,max:4,label:'洋芝/小回り適性',group:'horse'};
+  var waku=(typeof horse.waku==='number')?horse.waku:null, wakuScore=0;
+  if(waku!==null){
+    if(waku===4) wakuScore=5;
+    else if(waku===3||waku===5) wakuScore=3;
+    else if(waku===2) wakuScore=2;
+    else if(waku===7) wakuScore=1;
+    else if(waku===6) wakuScore=-3;
+    else if(waku===8) wakuScore=-2;
+    else wakuScore=0;
+  }
+  items.waku={score:wakuScore,max:5,label:'枠順',group:'data'};
+  var shozoku=0;
+  if(horse.stable&&String(horse.stable).indexOf('栗東')===0&&pop>=8) shozoku=1;
+  items.shozoku={score:shozoku,max:1,label:'所属(栗東穴)',group:'data'};
+  var bloodScore=0;
+  items.blood={score:bloodScore,max:3,label:'血統(保留)',group:'horse'};
+  var total=popScore+ageScore+kinScore+runScore+prevScore+distScore+wcScore+venueScore+apt+wakuScore+shozoku+bloodScore;
+  total=Math.max(0,total);
+  var pct=Math.max(0,Math.min(99,Math.round(total/M*100)));
+  return {total:total,max:M,pct:pct,items:items,penalty:0};
+}
+
 function computeScoreBreakdown(horse, raceName) {
+  if (raceName === 'ラジオNIKKEI賞') return computeScoreBreakdownRajioV1(horse, raceName);
+  if (raceName === '函館記念') return computeScoreBreakdownHakodateV1(horse, raceName);
   // ★回避馬は強制的に0%
   if (horse && horse.isAvoided) {
     return {
