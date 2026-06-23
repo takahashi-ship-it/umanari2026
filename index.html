@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0189';
+  var CURRENT_VERSION = '20260623-0190';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -21038,8 +21038,10 @@ function computeScoreBreakdownHakodateSprintV1(horse, raceName, _rawOnly) {
   return { total: total, max: max, pct: pct, items: items, penalty: 0 };
 }
 
+function _umaAptTally(rh,pred){var n=0,t=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(!pred(r))continue;n++;if(typeof r.rank==='number'&&r.rank<=3)t++;}return {n:n,fk:n?(t/n*100):0};}
+function _umaJuusho(rh){var w=false,p=false;for(var i=0;i<rh.length;i++){var r=rh[i];if((r.grade==='G1'||r.grade==='G2'||r.grade==='G3')&&typeof r.rank==='number'){if(r.rank===1)w=true;else if(r.rank<=3)p=true;}}return w?3:(p?2:0);}
 function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
-  var M = 52;
+  var M = 59;
   if(!horse) return {total:0,max:M,pct:0,items:{},penalty:0};
   if(horse.isAvoided) return {total:0,max:M,pct:0,items:{},isAvoided:true,avoidReason:horse.avoidReason||''};
   var rh = Array.isArray(horse.raceHistory)?horse.raceHistory:[];
@@ -21099,13 +21101,18 @@ function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
   else if(_sl==='Halo系') bloodScore=1;
   else bloodScore=0;
   items.blood={score:bloodScore,max:3,label:'血統(欧州パワー/キンカメ系)',group:'horse'};
-  var total=popScore+kinScore+runScore+prevScore+wakuScore+intervalScore+sexScore+bloodScore;
+  var _da=_umaAptTally(rh,function(r){return r.surface==='芝'&&typeof r.distance==='number'&&r.distance>=1700&&r.distance<=2000;});
+  var distAptScore=(_da.n>=4&&_da.fk>=50)?4:((_da.n>=4&&_da.fk>=30)?2:0);
+  items.distAptitude={score:distAptScore,max:4,label:'距離適性(芝1700-2000)',group:'horse'};
+  var juushoScore=_umaJuusho(rh);
+  items.juushoRecord={score:juushoScore,max:3,label:'重賞好走歴',group:'horse'};
+  var total=popScore+kinScore+runScore+prevScore+wakuScore+intervalScore+sexScore+bloodScore+distAptScore+juushoScore;
   total=Math.max(0,total);
   var pct=Math.max(0,Math.min(99,Math.round(total/M*100)));
   return {total:total,max:M,pct:pct,items:items,penalty:0};
 }
 function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
-  var M = 70;
+  var M = 77;
   if(!horse) return {total:0,max:M,pct:0,items:{},penalty:0};
   if(horse.isAvoided) return {total:0,max:M,pct:0,items:{},isAvoided:true,avoidReason:horse.avoidReason||''};
   var rh=Array.isArray(horse.raceHistory)?horse.raceHistory:[];
@@ -21167,13 +21174,14 @@ function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
     if(typeof rh0.distance==='number'&&rh0.distance<=1600) venueScore-=3;
   }
   items.prevVenue={score:venueScore,max:3,label:'前走条件',group:'data'};
-  var apt=0;
-  for(var i=0;i<rh.length;i++){
-    var r=rh[i]; var rk=(typeof r.rank==='number')?r.rank:null;
-    if((r.course==='函館'||r.course==='札幌')&&rk!==null&&rk<=5){apt=4;break;}
-    if((r.course==='中山'||r.course==='函館'||r.course==='札幌'||r.course==='福島'||r.course==='小倉')&&(r.grade==='G1'||r.grade==='G2'||r.grade==='G3')&&rk!==null&&rk<=3){apt=4;break;}
-  }
-  items.aptitude={score:apt,max:4,label:'洋芝/小回り適性',group:'horse'};
+  var _da=_umaAptTally(rh,function(r){return r.surface==='芝'&&typeof r.distance==='number'&&r.distance>=1800&&r.distance<=2200;});
+  var distAptScore=(_da.n>=5&&_da.fk>=55)?4:((_da.n>=5&&_da.fk>=40)?2:0);
+  items.distAptitude={score:distAptScore,max:4,label:'距離適性(芝1800-2200)',group:'horse'};
+  var _ca=_umaAptTally(rh,function(r){return r.course==='函館'||r.course==='札幌';});
+  var crsScore=(_ca.n>=4&&_ca.fk>=50)?4:((_ca.n>=4&&_ca.fk>=30)?2:0);
+  items.courseAptitude={score:crsScore,max:4,label:'コース適性(洋芝・通算)',group:'horse'};
+  var juushoScore=_umaJuusho(rh);
+  items.juushoRecord={score:juushoScore,max:3,label:'重賞好走歴',group:'horse'};
   var waku=(typeof horse.waku==='number')?horse.waku:null, wakuScore=0;
   if(waku!==null){
     if(waku===4) wakuScore=5;
@@ -21194,7 +21202,7 @@ function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
   else if(_deep.indexOf(_sn)!==-1) bloodScore=-2;
   else bloodScore=0;
   items.blood={score:bloodScore,max:3,label:'血統(洋芝持続力/ディープ系−)',group:'horse'};
-  var total=popScore+ageScore+kinScore+runScore+prevScore+distScore+wcScore+venueScore+apt+wakuScore+shozoku+bloodScore;
+  var total=popScore+ageScore+kinScore+runScore+prevScore+distScore+wcScore+venueScore+wakuScore+shozoku+bloodScore+distAptScore+crsScore+juushoScore;
   total=Math.max(0,total);
   var pct=Math.max(0,Math.min(99,Math.round(total/M*100)));
   return {total:total,max:M,pct:pct,items:items,penalty:0};
