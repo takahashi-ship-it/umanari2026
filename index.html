@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0186';
+  var CURRENT_VERSION = '20260623-0187';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1669,6 +1669,7 @@
     <nav class="tabs" id="contentTabs">
       <button class="tab active" data-target="tab-shutsuba">出馬表</button>
       <button class="tab"        data-target="tab-odds">📊 オッズ</button>
+        <button class="tab" data-target="tab-result">🏆 過去10年結果</button>
       <button class="tab"        data-target="tab-data">過去10年</button>
       <button class="tab"        data-target="tab-horses">登録馬・信頼度</button>
       <button class="tab"        data-target="tab-kaime">買い目</button>
@@ -1703,7 +1704,8 @@
     </div>
 
     <!-- ② TAB: 過去10年（JSで動的描画） -->
-    <div class="panel" id="tab-data">
+    <div class="panel" id="tab-result"><div id="pastResultRoot"></div></div>
+  <div class="panel" id="tab-data">
       <div id="pastDataRoot"></div>
     </div>
 
@@ -3035,6 +3037,7 @@ document.querySelectorAll('#contentTabs .tab').forEach(t => {
     if (t.dataset.target === 'tab-data' && typeof renderPastData === 'function') {
       renderPastData();
     }
+      if (t.dataset.target === 'tab-result' && typeof renderPastResults === 'function') renderPastResults();
     if (t.dataset.target === 'tab-maigo' && typeof window.renderMaigoTab === 'function') {
       var _rn = (window.currentRaceName || (typeof currentRace !== 'undefined' ? currentRace : ''));
       window.renderMaigoTab(_rn);
@@ -11992,6 +11995,59 @@ function renderTokyoFormAnalysis(d) {
   }
   html += '</div>';
   return html;
+}
+
+var RACE_RESULTS_DATA = {
+  'ラジオNIKKEI賞': [
+    {year:2025,baba:'良',san:'55,480円',res:[{r:1,name:'エキサイトバイオ',pop:4},{r:2,name:'センツブラッド',pop:2},{r:3,name:'インパクトシー',pop:8}]},
+    {year:2024,baba:'良',san:'45,740円',res:[{r:1,name:'オフトレイル',pop:6},{r:2,name:'シリウスコルト',pop:4},{r:3,name:'ヤマニンアドホック',pop:5}]},
+    {year:2023,baba:'良',san:'50,060円',res:[{r:1,name:'エルトンバローズ',pop:3},{r:2,name:'シルトホルン',pop:4},{r:3,name:'レーベンスティール',pop:1}]},
+    {year:2022,baba:'良',san:'59,280円',res:[{r:1,name:'フェーングロッテン',pop:3},{r:2,name:'ショウナンマグマ',pop:8},{r:3,name:'サトノヘリオス',pop:2}]},
+    {year:2021,baba:'稍重',san:'316,180円',res:[{r:1,name:'ヴァイスメテオール',pop:4},{r:2,name:'ワールドリバイバル',pop:11},{r:3,name:'ノースブリッジ',pop:7}]},
+    {year:2020,baba:'稍重',san:'173,020円',res:[{r:1,name:'バビット',pop:8},{r:2,name:'パンサラッサ',pop:7},{r:3,name:'ディープキング',pop:5}]},
+    {year:2019,baba:'不良',san:'142,140円',res:[{r:1,name:'ブレイキングドーン',pop:3},{r:2,name:'マイネルサーパス',pop:9},{r:3,name:'ゴータイミング',pop:6}]},
+    {year:2018,baba:'良',san:'21,500円',res:[{r:1,name:'メイショウテッコン',pop:2},{r:2,name:'フィエールマン',pop:1},{r:3,name:'キボウノダイチ',pop:9}]},
+    {year:2017,baba:'良',san:'156,510円',res:[{r:1,name:'セダブリランテス',pop:2},{r:2,name:'ウインガナドル',pop:8},{r:3,name:'ロードリベラル',pop:9}]},
+    {year:2016,baba:'良',san:'67,460円',res:[{r:1,name:'ゼーヴィント',pop:1},{r:2,name:'ダイワドレッサー',pop:9},{r:3,name:'アーバンキッド',pop:5}]}
+  ],
+  '函館記念': [
+    {year:2025,baba:'良',san:'697,990円',res:[{r:1,name:'ヴェローチェエラ',pop:10},{r:2,name:'ハヤテノフクノスケ',pop:6},{r:3,name:'マイネルメモリー',pop:14}]},
+    {year:2024,baba:'良',san:'579,230円',res:[{r:1,name:'ホウオウビスケッツ',pop:3},{r:2,name:'グランディア',pop:4},{r:3,name:'アウスヴァール',pop:14}]},
+    {year:2023,baba:'稍重',san:'21,330円',res:[{r:1,name:'ローシャムパーク',pop:1},{r:2,name:'ルビーカサブランカ',pop:4},{r:3,name:'ブローザホーン',pop:2}]},
+    {year:2022,baba:'重',san:'76,970円',res:[{r:1,name:'ハヤヤッコ',pop:7},{r:2,name:'マイネルウィルトス',pop:1},{r:3,name:'スカーフェイス',pop:4}]},
+    {year:2021,baba:'良',san:'201,770円',res:[{r:1,name:'トーセンスーリヤ',pop:2},{r:2,name:'アイスバブル',pop:14},{r:3,name:'バイオスパーク',pop:12}]},
+    {year:2020,baba:'良',san:'3,432,870円',res:[{r:1,name:'アドマイヤジャスタ',pop:15},{r:2,name:'ドゥオーモ',pop:13},{r:3,name:'バイオスパーク',pop:3}]},
+    {year:2019,baba:'良',san:'52,140円',res:[{r:1,name:'マイスタイル',pop:1},{r:2,name:'マイネルファンロン',pop:9},{r:3,name:'ステイフーリッシュ',pop:3}]},
+    {year:2018,baba:'良',san:'571,480円',res:[{r:1,name:'エアアンセム',pop:5},{r:2,name:'サクラアンプルール',pop:7},{r:3,name:'エテルナミノル',pop:13}]},
+    {year:2017,baba:'重',san:'915,320円',res:[{r:1,name:'ルミナスウォリアー',pop:5},{r:2,name:'タマモベストプレイ',pop:14},{r:3,name:'ヤマカツライデン',pop:7}]},
+    {year:2016,baba:'稍重',san:'233,010円',res:[{r:1,name:'マイネルミラノ',pop:3},{r:2,name:'ケイティープライド',pop:13},{r:3,name:'ツクバアズマオー',pop:9}]}
+  ]
+};
+
+function renderPastResults(){
+  var c=document.getElementById('pastResultRoot'); if(!c) return;
+  var raceName=window.currentRaceName||currentRace;
+  var rows=(typeof RACE_RESULTS_DATA!=='undefined' && RACE_RESULTS_DATA[raceName])?RACE_RESULTS_DATA[raceName]:null;
+  if(!rows){ c.innerHTML='<div class="section"><p style="color:#888">過去10年結果データは準備中です。</p></div>'; return; }
+  var html='<div class="section"><h3>🏆 過去10年結果（1〜3着・3連単）</h3>';
+  html+='<p style="font-size:12px;color:#888;margin:4px 0 10px">'+raceName+'／配当は3連単（確定払戻）。人気は当日確定人気。</p>';
+  html+='<div style="overflow-x:auto"><table class="result-table" style="width:100%;border-collapse:collapse;font-size:13px">';
+  html+='<thead><tr style="background:#f3f4f6"><th style="padding:6px 8px;text-align:left">年</th><th style="text-align:left">1着</th><th style="text-align:left">2着</th><th style="text-align:left">3着</th><th style="text-align:right">3連単</th></tr></thead><tbody>';
+  for(var i=0;i<rows.length;i++){
+    var y=rows[i]; var cells='';
+    for(var k=0;k<3;k++){ var h=y.res[k]; cells+='<td style="padding:6px 8px;vertical-align:top">'+h.name+'<br><span style="font-size:11px;color:#666">'+h.pop+'人</span></td>'; }
+    var big=(y.san.replace(/[^0-9]/g,'')*1>=1000000);
+    html+='<tr style="border-bottom:1px solid #eee">';
+    html+='<td style="padding:6px 8px;white-space:nowrap;font-weight:600">'+y.year+'<br><span style="font-size:11px;color:#888">'+y.baba+'</span></td>';
+    html+=cells;
+    html+='<td style="padding:6px 8px;text-align:right;white-space:nowrap;font-weight:700;color:'+(big?'#d6336c':'#222')+'">'+y.san+(big?' 🔥':'')+'</td>';
+    html+='</tr>';
+  }
+  html+='</tbody></table></div>';
+  var anaCount=0,total=0; for(var j=0;j<rows.length;j++){ for(var m=0;m<3;m++){ total++; if(rows[j].res[m].pop>=10) anaCount++; } }
+  html+='<p style="font-size:12px;color:#666;margin-top:10px">📌 馬券内30頭中 '+anaCount+'頭が10番人気以下（波乱度の目安）。🔥＝3連単100万円超。</p>';
+  html+='</div>';
+  c.innerHTML=html;
 }
 
 function renderPastData() {
