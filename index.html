@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0190';
+  var CURRENT_VERSION = '20260623-0191';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -21040,8 +21040,9 @@ function computeScoreBreakdownHakodateSprintV1(horse, raceName, _rawOnly) {
 
 function _umaAptTally(rh,pred){var n=0,t=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(!pred(r))continue;n++;if(typeof r.rank==='number'&&r.rank<=3)t++;}return {n:n,fk:n?(t/n*100):0};}
 function _umaJuusho(rh){var w=false,p=false;for(var i=0;i<rh.length;i++){var r=rh[i];if((r.grade==='G1'||r.grade==='G2'||r.grade==='G3')&&typeof r.rank==='number'){if(r.rank===1)w=true;else if(r.rank<=3)p=true;}}return w?3:(p?2:0);}
+function _umaKyaku(rh){var c={nige:0,senko:0,sashi:0,oikomi:0},u=0;for(var i=0;i<rh.length&&i<6;i++){var r=rh[i];var c4=(typeof r.corner4==='number')?r.corner4:null;var n=(typeof r.atama==='number')?r.atama:null;if(c4===null||n===null||n<=1)continue;u++;if(c4===1){c.nige++;}else{var rel=(c4-1)/(n-1);if(rel<=0.33)c.senko++;else if(rel<=0.66)c.sashi++;else c.oikomi++;}}if(!u)return '不明';var b='nige',bv=c.nige;if(c.senko>bv){b='senko';bv=c.senko;}if(c.sashi>bv){b='sashi';bv=c.sashi;}if(c.oikomi>bv){b='oikomi';bv=c.oikomi;}return b;}
 function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
-  var M = 59;
+  var M = 63;
   if(!horse) return {total:0,max:M,pct:0,items:{},penalty:0};
   if(horse.isAvoided) return {total:0,max:M,pct:0,items:{},isAvoided:true,avoidReason:horse.avoidReason||''};
   var rh = Array.isArray(horse.raceHistory)?horse.raceHistory:[];
@@ -21060,9 +21061,9 @@ function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
   else if(kin>=57) kinScore=-3;
   else kinScore=-5;
   items.weight={score:kinScore,max:6,label:'斤量',group:'data'};
-  var c4=(rh0&&typeof rh0.corner4==='number')?rh0.corner4:null, runScore=0;
-  if(c4!==null){ if(c4<=5) runScore=5; else if(c4>=10) runScore=-3; else runScore=0; }
-  items.running={score:runScore,max:5,label:'脚質(前走4角)',group:'data'};
+  var _kq=_umaKyaku(rh), runScore=0;
+  if(_kq==='nige'||_kq==='senko') runScore=5; else if(_kq==='oikomi') runScore=-3; else runScore=0;
+  items.running={score:runScore,max:5,label:'脚質(通算・相対)',group:'data'};
   var prevScore=0;
   if(rh0){
     var rn=rh0.raceName||'', g=rh0.grade||'', prk=(typeof rh0.rank==='number')?rh0.rank:null;
@@ -21106,13 +21107,17 @@ function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
   items.distAptitude={score:distAptScore,max:4,label:'距離適性(芝1700-2000)',group:'horse'};
   var juushoScore=_umaJuusho(rh);
   items.juushoRecord={score:juushoScore,max:3,label:'重賞好走歴',group:'horse'};
-  var total=popScore+kinScore+runScore+prevScore+wakuScore+intervalScore+sexScore+bloodScore+distAptScore+juushoScore;
+  var areScore=0; var _mae=(_kq==='nige'||_kq==='senko');
+  if(kin>0&&kin<=53&&_mae&&pop>=7&&pop<=9) areScore+=4;
+  if(pop===1&&(_kq==='sashi'||_kq==='oikomi')) areScore-=4;
+  items.areIndex={score:areScore,max:4,label:'荒れ指数(軽ハンデ穴/1番人気危険)',group:'data'};
+  var total=popScore+kinScore+runScore+prevScore+wakuScore+intervalScore+sexScore+bloodScore+distAptScore+juushoScore+areScore;
   total=Math.max(0,total);
   var pct=Math.max(0,Math.min(99,Math.round(total/M*100)));
   return {total:total,max:M,pct:pct,items:items,penalty:0};
 }
 function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
-  var M = 77;
+  var M = 83;
   if(!horse) return {total:0,max:M,pct:0,items:{},penalty:0};
   if(horse.isAvoided) return {total:0,max:M,pct:0,items:{},isAvoided:true,avoidReason:horse.avoidReason||''};
   var rh=Array.isArray(horse.raceHistory)?horse.raceHistory:[];
@@ -21141,9 +21146,9 @@ function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
   else if(kin>=58) kinScore=-8;
   else kinScore=0;
   items.weight={score:kinScore,max:5,label:'斤量',group:'data'};
-  var c4=(rh0&&typeof rh0.corner4==='number')?rh0.corner4:null, runScore=0;
-  if(c4!==null){ if(c4<=3) runScore=6; else if(c4<=5) runScore=4; else if(c4>=10) runScore=-4; else runScore=0; }
-  items.running={score:runScore,max:6,label:'脚質(前走4角)',group:'data'};
+  var _kq=_umaKyaku(rh), runScore=0;
+  if(_kq==='nige') runScore=6; else if(_kq==='senko') runScore=4; else if(_kq==='oikomi') runScore=-4; else runScore=0;
+  items.running={score:runScore,max:6,label:'脚質(通算・相対)',group:'data'};
   var prevScore=0;
   if(rh0){
     var rn=rh0.raceName||'', g=rh0.grade||'', prk=(typeof rh0.rank==='number')?rh0.rank:null;
@@ -21202,7 +21207,14 @@ function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
   else if(_deep.indexOf(_sn)!==-1) bloodScore=-2;
   else bloodScore=0;
   items.blood={score:bloodScore,max:3,label:'血統(洋芝持続力/ディープ系−)',group:'horse'};
-  var total=popScore+ageScore+kinScore+runScore+prevScore+distScore+wcScore+venueScore+wakuScore+shozoku+bloodScore+distAptScore+crsScore+juushoScore;
+  var areScore=0; var _mae=(_kq==='nige'||_kq==='senko');
+  var _pvk=(rh0&&typeof rh0.carriedWeight==='number')?rh0.carriedWeight:null;
+  var _prk=(rh0&&typeof rh0.rank==='number')?rh0.rank:null;
+  var _gen=(_pvk!==null&&kin<_pvk), _tai=(_prk!==null&&_prk>=5), _ni=(pop>=7);
+  if(_gen&&_tai&&_mae&&_ni) areScore=6; else if(_gen&&_tai&&_mae) areScore=4; else if(_gen&&_tai) areScore=2;
+  if(pop===1&&(_kq==='sashi'||_kq==='oikomi')) areScore-=4;
+  items.areIndex={score:areScore,max:6,label:'荒れ指数(穴プロファイル/1番人気危険)',group:'data'};
+  var total=popScore+ageScore+kinScore+runScore+prevScore+distScore+wcScore+venueScore+wakuScore+shozoku+bloodScore+distAptScore+crsScore+juushoScore+areScore;
   total=Math.max(0,total);
   var pct=Math.max(0,Math.min(99,Math.round(total/M*100)));
   return {total:total,max:M,pct:pct,items:items,penalty:0};
