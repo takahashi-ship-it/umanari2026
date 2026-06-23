@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0191';
+  var CURRENT_VERSION = '20260623-0192';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -21041,6 +21041,7 @@ function computeScoreBreakdownHakodateSprintV1(horse, raceName, _rawOnly) {
 function _umaAptTally(rh,pred){var n=0,t=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(!pred(r))continue;n++;if(typeof r.rank==='number'&&r.rank<=3)t++;}return {n:n,fk:n?(t/n*100):0};}
 function _umaJuusho(rh){var w=false,p=false;for(var i=0;i<rh.length;i++){var r=rh[i];if((r.grade==='G1'||r.grade==='G2'||r.grade==='G3')&&typeof r.rank==='number'){if(r.rank===1)w=true;else if(r.rank<=3)p=true;}}return w?3:(p?2:0);}
 function _umaKyaku(rh){var c={nige:0,senko:0,sashi:0,oikomi:0},u=0;for(var i=0;i<rh.length&&i<6;i++){var r=rh[i];var c4=(typeof r.corner4==='number')?r.corner4:null;var n=(typeof r.atama==='number')?r.atama:null;if(c4===null||n===null||n<=1)continue;u++;if(c4===1){c.nige++;}else{var rel=(c4-1)/(n-1);if(rel<=0.33)c.senko++;else if(rel<=0.66)c.sashi++;else c.oikomi++;}}if(!u)return '不明';var b='nige',bv=c.nige;if(c.senko>bv){b='senko';bv=c.senko;}if(c.sashi>bv){b='sashi';bv=c.sashi;}if(c.oikomi>bv){b='oikomi';bv=c.oikomi;}return b;}
+function _umaAgari(rh){var best=null;for(var i=0;i<rh.length&&i<5;i++){var v=parseFloat(rh[i].last3f);if(!isNaN(v)){if(best===null||v<best)best=v;}}return best;}
 function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
   var M = 63;
   if(!horse) return {total:0,max:M,pct:0,items:{},penalty:0};
@@ -21093,7 +21094,8 @@ function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
     intervalScore=(naka>=8)?-2:2;
   }
   items.interval={score:intervalScore,max:2,label:'間隔',group:'data'};
-  items.lastfRank={score:0,max:3,label:'前走上がり順位(保留)',group:'data'};
+  var _ag=_umaAgari(rh); var agScore=(_ag!==null)?((_ag<=33.2)?3:((_ag<=33.6)?2:((_ag<=34.0)?1:0))):0;
+  items.agariRank={score:agScore,max:3,label:'上がり3F(通算最速)',group:'data'};
   var sexScore=(horse.sex==='牝')?-3:0;
   items.sex={score:sexScore,max:0,label:'性別',group:'data'};
   var bloodScore=0; var _sl=horse.sireLine||'';
@@ -21104,6 +21106,7 @@ function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
   items.blood={score:bloodScore,max:3,label:'血統(欧州パワー/キンカメ系)',group:'horse'};
   var _da=_umaAptTally(rh,function(r){return r.surface==='芝'&&typeof r.distance==='number'&&r.distance>=1700&&r.distance<=2000;});
   var distAptScore=(_da.n>=4&&_da.fk>=50)?4:((_da.n>=4&&_da.fk>=30)?2:0);
+  if(rh[0]&&rh[0].surface&&rh[0].surface!=='芝'&&distAptScore>2)distAptScore=2;
   items.distAptitude={score:distAptScore,max:4,label:'距離適性(芝1700-2000)',group:'horse'};
   var juushoScore=_umaJuusho(rh);
   items.juushoRecord={score:juushoScore,max:3,label:'重賞好走歴',group:'horse'};
@@ -21111,7 +21114,7 @@ function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
   if(kin>0&&kin<=53&&_mae&&pop>=7&&pop<=9) areScore+=4;
   if(pop===1&&(_kq==='sashi'||_kq==='oikomi')) areScore-=4;
   items.areIndex={score:areScore,max:4,label:'荒れ指数(軽ハンデ穴/1番人気危険)',group:'data'};
-  var total=popScore+kinScore+runScore+prevScore+wakuScore+intervalScore+sexScore+bloodScore+distAptScore+juushoScore+areScore;
+  var total=popScore+kinScore+runScore+prevScore+wakuScore+intervalScore+sexScore+bloodScore+distAptScore+juushoScore+areScore+agScore;
   total=Math.max(0,total);
   var pct=Math.max(0,Math.min(99,Math.round(total/M*100)));
   return {total:total,max:M,pct:pct,items:items,penalty:0};
@@ -21181,6 +21184,7 @@ function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
   items.prevVenue={score:venueScore,max:3,label:'前走条件',group:'data'};
   var _da=_umaAptTally(rh,function(r){return r.surface==='芝'&&typeof r.distance==='number'&&r.distance>=1800&&r.distance<=2200;});
   var distAptScore=(_da.n>=5&&_da.fk>=55)?4:((_da.n>=5&&_da.fk>=40)?2:0);
+  if(rh[0]&&rh[0].surface&&rh[0].surface!=='芝'&&distAptScore>2)distAptScore=2;
   items.distAptitude={score:distAptScore,max:4,label:'距離適性(芝1800-2200)',group:'horse'};
   var _ca=_umaAptTally(rh,function(r){return r.course==='函館'||r.course==='札幌';});
   var crsScore=(_ca.n>=4&&_ca.fk>=50)?4:((_ca.n>=4&&_ca.fk>=30)?2:0);
