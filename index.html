@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0188';
+  var CURRENT_VERSION = '20260623-0189';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7135,6 +7135,107 @@ function getActiveConditions() {
  *     html : { type:"html",  title?, html:"..." }
  * ===================================================== */
 const RACE_PAST_DATA = {
+  'ラジオNIKKEI賞': {
+    summary:'3歳唯一のハンデ重賞。福島小回り・開幕週で前残り、波乱含み(3連単2万円割れなし)。前で運べて適正斤量(54-55中心)の先行馬が本線。人気は2〜9番がフラット、大穴は不発。',
+    popularity:[
+      {label:'2番人気',record:'複40%(2-1-1-6)',fukusho:'40.0%',hot:true,matchFn:(h)=>h.popEstimate===2},
+      {label:'7〜9番人気',record:'複33.3%(1-5-4-20)',fukusho:'33.3%',matchFn:(h)=>h.popEstimate>=7&&h.popEstimate<=9},
+      {label:'1・3・4-6番人気',record:'複30%',fukusho:'30.0%',matchFn:(h)=>h.popEstimate===1||h.popEstimate===3||(h.popEstimate>=4&&h.popEstimate<=6)},
+      {label:'10番人気以下',record:'複2.0%(0-1-0-49)',fukusho:'2.0%',danger:true,comment:'大穴は不発',matchFn:(h)=>h.popEstimate>=10}
+    ],
+    waku:[
+      {label:'1枠',record:'複57.1%(4-2-2-6)',fukusho:'57.1%',hot:true,comment:'最強枠',matchFn:(h)=>h.waku===1},
+      {label:'5枠',record:'複30%',fukusho:'30.0%',matchFn:(h)=>h.waku===5},
+      {label:'3・7枠',record:'複20%',fukusho:'20.0%',matchFn:(h)=>h.waku===3||h.waku===7},
+      {label:'6枠',record:'複5%(0-1-0-19)',fukusho:'5.0%',danger:true,matchFn:(h)=>h.waku===6}
+    ],
+    pace:[
+      {label:'先行(前走4角2-5番手)',record:'3着内15/30・本線',fukusho:'50.0%',hot:true,matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&typeof r.corner4==='number'&&r.corner4>=2&&r.corner4<=5;}},
+      {label:'逃げ(前走4角1番手)',record:'複数好走',matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&r.corner4===1;}},
+      {label:'後方(前走4角10番手〜)',record:'1-2着は稀・3着のみ',danger:true,matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&typeof r.corner4==='number'&&r.corner4>=10;}}
+    ],
+    hande:[
+      {label:'54-55kg',record:'7勝・複コア',hot:true,matchFn:(h)=>h.carriedWeight>=54&&h.carriedWeight<=55},
+      {label:'53kg',record:'2勝・侮れず',matchFn:(h)=>h.carriedWeight===53},
+      {label:'57kg以上',record:'0-0-0-7',fukusho:'0.0%',danger:true,matchFn:(h)=>h.carriedWeight>=57},
+      {label:'52kg以下',record:'0-0-1-19',danger:true,matchFn:(h)=>h.carriedWeight<=52}
+    ],
+    prevRace:[
+      {label:'前走1勝クラス勝ち',record:'好走多数',hot:true,matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&(r.raceName||'').indexOf('1勝クラス')!==-1&&r.rank===1;}},
+      {label:'プリンシパル/白百合S',record:'各3勝',matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&((r.raceName||'').indexOf('プリンシパル')!==-1||(r.raceName||'').indexOf('白百合')!==-1);}},
+      {label:'前走G1組',record:'0-4-2-17・複26%',comment:'勝ちは無いが穴で',matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&r.grade==='G1';}}
+    ],
+    anaConditions:[
+      {label:'牝馬',type:'minus',detail:'過去10年優勝例なし'},
+      {label:'中8週以上',type:'minus',detail:'0-3-4-49・勝ち切れず'},
+      {label:'前走0.7秒差以上負け',type:'minus',detail:'過去10年勝ち無し'}
+    ],
+    anaPoints:[
+      '🏇 前残り・内枠有利の小回り開幕週。前走4角5番手以内が本線。',
+      '⚖ 適正斤量は54-55kg。57kg以上は0-0-0-7、52kg以下も0-0-1-19で割引。',
+      '🎫 前走1勝クラス勝ち・プリンシパル/白百合S組が買い。前走G1組は人気薄で一発。',
+      '🩸 血統は欧州パワー/キンカメ系をやや上位評価(各馬の信頼度スコアに反映済)。',
+      '⚠ 牝馬は優勝例なし、中8週以上の間隔空きと前走大敗は割引。'
+    ]
+  },
+  '函館記念': {
+    summary:'サマー2000開幕戦の波乱型ハンデ。全面洋芝・直線約262m最短・3-4角下りで前有利。10万馬券7回。前で運べる4歳前後+洋芝持続力が本線、ディープ系の切れ味は割引。',
+    popularity:[
+      {label:'3番人気',record:'複40%(2-0-2-6)',fukusho:'40.0%',hot:true,matchFn:(h)=>h.popEstimate===3},
+      {label:'1番人気',record:'複30%(2-1-0-7)',fukusho:'30.0%',matchFn:(h)=>h.popEstimate===1},
+      {label:'2・4-6番人気',record:'複20%',fukusho:'20.0%',matchFn:(h)=>h.popEstimate===2||(h.popEstimate>=4&&h.popEstimate<=6)},
+      {label:'7〜9番人気',record:'複16.7%',fukusho:'16.7%',matchFn:(h)=>h.popEstimate>=7&&h.popEstimate<=9},
+      {label:'10番人気以下',record:'複14.9%(2-4-4-57)',fukusho:'14.9%',comment:'波乱の主役',matchFn:(h)=>h.popEstimate>=10}
+    ],
+    waku:[
+      {label:'4枠',record:'複30%(2-2-2-14)',fukusho:'30.0%',hot:true,comment:'最強枠',matchFn:(h)=>h.waku===4},
+      {label:'3・5枠',record:'複25%',fukusho:'25.0%',matchFn:(h)=>h.waku===3||h.waku===5},
+      {label:'2枠',record:'複21%',fukusho:'21.1%',matchFn:(h)=>h.waku===2},
+      {label:'6枠',record:'複10%',fukusho:'10.0%',danger:true,matchFn:(h)=>h.waku===6},
+      {label:'8枠',record:'0-0-3・3着のみ',fukusho:'15.0%',comment:'連対ゼロ',matchFn:(h)=>h.waku===8}
+    ],
+    pace:[
+      {label:'前走4角2番手以内',record:'複45.5%(6-1-3-12)',fukusho:'45.5%',hot:true,matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&typeof r.corner4==='number'&&r.corner4<=2;}},
+      {label:'後方(前走4角10番手〜)',record:'複8.2%(0-2-3-56)',fukusho:'8.2%',danger:true,matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&typeof r.corner4==='number'&&r.corner4>=10;}}
+    ],
+    age:[
+      {label:'4歳',record:'複26.7%(4-2-2-22)',fukusho:'26.7%',hot:true,matchFn:(h)=>h.age===4},
+      {label:'6歳',record:'複23.4%',fukusho:'23.4%',matchFn:(h)=>h.age===6},
+      {label:'7歳',record:'複18.2%・連下',fukusho:'18.2%',matchFn:(h)=>h.age===7},
+      {label:'5歳',record:'複15.2%',fukusho:'15.2%',matchFn:(h)=>h.age===5},
+      {label:'8歳以上',record:'0-0-0-11',fukusho:'0.0%',danger:true,matchFn:(h)=>h.age>=8}
+    ],
+    hande:[
+      {label:'56kg',record:'最多5勝',hot:true,matchFn:(h)=>h.carriedWeight===56},
+      {label:'55・57kg',record:'好走域',matchFn:(h)=>h.carriedWeight===55||h.carriedWeight===57},
+      {label:'58kg以上',record:'0-0-0-10',fukusho:'0.0%',danger:true,matchFn:(h)=>h.carriedWeight>=58}
+    ],
+    prevRace:[
+      {label:'前走G2',record:'複35.7%',fukusho:'35.7%',hot:true,matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&r.grade==='G2';}},
+      {label:'前走重賞組',record:'複24.7%・回収164/165%',fukusho:'24.7%',matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&(r.grade==='G1'||r.grade==='G2'||r.grade==='G3');}},
+      {label:'前走3勝クラス1着',record:'複33.3%(1-0-1-4)',fukusho:'33.3%',matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&(r.raceName||'').indexOf('3勝クラス')!==-1&&r.rank===1;}},
+      {label:'前走重賞以外',record:'複13.9%(4-4-3-68)',fukusho:'13.9%',danger:true,matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&!(r.grade==='G1'||r.grade==='G2'||r.grade==='G3');}}
+    ],
+    prevDistance:[
+      {label:'距離短縮',record:'複32.1%(2-5-2-19)',fukusho:'32.1%',hot:true,matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&typeof r.distance==='number'&&r.distance>2000;}},
+      {label:'同距離',record:'複17.6%',fukusho:'17.6%',matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&r.distance===2000;}},
+      {label:'距離延長',record:'複15.4%(5-5-2-66)',fukusho:'15.4%',danger:true,matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&typeof r.distance==='number'&&r.distance<2000;}}
+    ],
+    anaConditions:[
+      {label:'今回斤量減',type:'plus',detail:'複39.3%・特に前走5着以下×減'},
+      {label:'前走中央開催',type:'plus',detail:'複27.5%(東京/中山/阪神/京都)'},
+      {label:'前走1600m以下',type:'minus',detail:'0-0-0-6'}
+    ],
+    anaPoints:[
+      '🏇 全面洋芝・直線約262m最短・3-4角下りで前有利。前走4角5番手以内が本線、後方一気は届かない。',
+      '🎂 4歳(複26.7%)・6歳が中心。8歳以上は0-0-0-11で消し、7歳は連下まで。',
+      '⚖ 56kgが最多勝、58kg以上は0-0-0-10。今回斤量減は複39.3%で買い。',
+      '🎫 前走重賞組(複24.7%)・特に前走G2が強い。距離短縮◎/延長は割引。',
+      '🩸 血統は洋芝持続力(ハービンジャー/キンカメ/ステゴ系)を上位、ディープ系切れ味は割引(信頼度スコアに反映済)。',
+      '💰 人気薄を狙うなら栗東所属。10万馬券7回の波乱型。'
+    ]
+  },
+
   '府中牝馬S': {
     fuchuClassAnalysis: {
       title:'府中牝馬 前走クラスデータ（格上挑戦◎）',
