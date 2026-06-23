@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0193';
+  var CURRENT_VERSION = '20260623-0194';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -16786,14 +16786,14 @@ function _hasFatalUnfitness(horse, raceName) {
   var hist = Array.isArray(horse.raceHistory) ? horse.raceHistory : [];
   // 芝1400-1800m の出走経験を集計
   var turfMileExp = hist.filter(function(r){
-    return r && r.surface === '芝' && typeof r.distance === 'number' && r.distance >= 1400 && r.distance <= 1800;
+    return r && r.surface === '芝' && typeof r.distance === 'number' && r.distance >= ((RACE_META[raceName]||{}).distance||1600)-200 && r.distance <= ((RACE_META[raceName]||{}).distance||1800)+200;
   });
-  if (turfMileExp.length === 0) return { unfit: true, reason: '芝1400〜1800m未経験' };
+  if (turfMileExp.length === 0) return { unfit: true, reason: '芝'+(((RACE_META[raceName]||{}).distance||1600)-200)+'〜'+(((RACE_META[raceName]||{}).distance||1800)+200)+'m未経験' };
   // 前走非芝で、直近3走に芝マイル経験がない場合は適性疑わしい
   var prev = hist[0];
   if (prev && prev.surface && prev.surface !== '芝') {
     var recentTurfMile = hist.slice(0, 3).some(function(r){
-      return r.surface === '芝' && typeof r.distance === 'number' && r.distance >= 1400 && r.distance <= 1800;
+      return r.surface === '芝' && typeof r.distance === 'number' && r.distance >= ((RACE_META[raceName]||{}).distance||1600)-200 && r.distance <= ((RACE_META[raceName]||{}).distance||1800)+200;
     });
     if (!recentTurfMile) return { unfit: true, reason: '直近3走で芝マイル経験なし＋前走' + prev.surface };
   }
@@ -16804,7 +16804,7 @@ function _hasFatalUnfitness(horse, raceName) {
   // 海外組で前走上がりが異常値（40秒級＝ダート計測等）かつ芝マイルでの好走歴なし
   if (horse.prevIsOverseas && typeof horse.prevLast3f === 'number' && horse.prevLast3f >= 35.0) {
     var turfMileGood = hist.some(function(r){
-      return r.surface === '芝' && typeof r.distance === 'number' && r.distance >= 1400 && r.distance <= 1800 && r.rank && r.rank <= 3;
+      return r.surface === '芝' && typeof r.distance === 'number' && r.distance >= ((RACE_META[raceName]||{}).distance||1600)-200 && r.distance <= ((RACE_META[raceName]||{}).distance||1800)+200 && r.rank && r.rank <= 3;
     });
     if (!turfMileGood) return { unfit: true, reason: '海外組かつ芝マイル好走歴なし' };
   }
@@ -16923,7 +16923,7 @@ function _getHorseNegatives(horse, raceName) {
   }
   // 前走ダート
   if (prevHist && prevHist.surface === 'ダ') {
-    n.push({ icon:'⚠️', text:'前走ダート（芝1600m未経験・0-0-0-0）' });
+    var _md=(RACE_META[raceName]||{}).distance||''; n.push({ icon:'⚠️', text:'前走ダート（芝'+_md+'m未経験）' });
   }
   return n;
 }
@@ -21042,8 +21042,9 @@ function _umaAptTally(rh,pred){var n=0,t=0;for(var i=0;i<rh.length;i++){var r=rh
 function _umaJuusho(rh){var w=false,p=false;for(var i=0;i<rh.length;i++){var r=rh[i];if((r.grade==='G1'||r.grade==='G2'||r.grade==='G3')&&typeof r.rank==='number'){if(r.rank===1)w=true;else if(r.rank<=3)p=true;}}return w?3:(p?2:0);}
 function _umaKyaku(rh){var c={nige:0,senko:0,sashi:0,oikomi:0},u=0;for(var i=0;i<rh.length&&i<6;i++){var r=rh[i];var c4=(typeof r.corner4==='number')?r.corner4:null;var n=(typeof r.atama==='number')?r.atama:null;if(c4===null||n===null||n<=1)continue;u++;if(c4===1){c.nige++;}else{var rel=(c4-1)/(n-1);if(rel<=0.33)c.senko++;else if(rel<=0.66)c.sashi++;else c.oikomi++;}}if(!u)return '不明';var b='nige',bv=c.nige;if(c.senko>bv){b='senko';bv=c.senko;}if(c.sashi>bv){b='sashi';bv=c.sashi;}if(c.oikomi>bv){b='oikomi';bv=c.oikomi;}return b;}
 function _umaAgari(rh){var best=null;for(var i=0;i<rh.length&&i<5;i++){var v=parseFloat(rh[i].last3f);if(!isNaN(v)){if(best===null||v<best)best=v;}}return best;}
+function _umaMigi(rh){var LEFT={'東京':1,'中京':1,'新潟':1};var t=0,n=0,lw=0,ln=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(r.surface!=='芝')continue;var c=r.course||'';if(!c)continue;var left=LEFT[c]===1;var rk=(typeof r.rank==='number')?r.rank:null;if(left){ln++;if(rk!==null&&rk<=3)lw++;}else{n++;if(rk!==null&&rk<=3)t++;}}return {n:n,fk:n?(t/n*100):null,ln:ln,lf:ln?(lw/ln*100):null};}
 function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
-  var M = 66;
+  var M = 69;
   if(!horse) return {total:0,max:M,pct:0,items:{},penalty:0};
   if(horse.isAvoided) return {total:0,max:M,pct:0,items:{},isAvoided:true,avoidReason:horse.avoidReason||''};
   var rh = Array.isArray(horse.raceHistory)?horse.raceHistory:[];
@@ -21117,13 +21118,15 @@ function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
   var _pf=(rh[0]&&typeof rh[0].rank==='number')?rh[0].rank:null;
   var prevFinScore=(_pf===1)?3:((_pf===2)?2:0);
   items.prevFinish={score:prevFinScore,max:3,label:'前走着順(連対)',group:'data'};
-  var total=popScore+kinScore+runScore+prevScore+wakuScore+intervalScore+sexScore+bloodScore+distAptScore+juushoScore+areScore+agScore+prevFinScore;
+  var _mg=_umaMigi(rh); var migiScore=(_mg.n>=3&&_mg.fk!==null&&_mg.fk>=60)?3:((_mg.n>=3&&_mg.fk!==null&&_mg.fk>=40)?1:0);
+  items.migiApt={score:migiScore,max:3,label:'右回り適性',group:'horse'};
+  var total=popScore+kinScore+runScore+prevScore+wakuScore+intervalScore+sexScore+bloodScore+distAptScore+juushoScore+areScore+agScore+prevFinScore+migiScore;
   total=Math.max(0,total);
   var pct=Math.max(0,Math.min(99,Math.round(total/M*100)));
   return {total:total,max:M,pct:pct,items:items,penalty:0};
 }
 function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
-  var M = 83;
+  var M = 85;
   if(!horse) return {total:0,max:M,pct:0,items:{},penalty:0};
   if(horse.isAvoided) return {total:0,max:M,pct:0,items:{},isAvoided:true,avoidReason:horse.avoidReason||''};
   var rh=Array.isArray(horse.raceHistory)?horse.raceHistory:[];
@@ -21224,7 +21227,9 @@ function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
   if(_gen&&_tai&&_mae&&_ni) areScore=6; else if(_gen&&_tai&&_mae) areScore=4; else if(_gen&&_tai) areScore=2;
   if(pop===1&&(_kq==='sashi'||_kq==='oikomi')) areScore-=4;
   items.areIndex={score:areScore,max:6,label:'荒れ指数(穴プロファイル/1番人気危険)',group:'data'};
-  var total=popScore+ageScore+kinScore+runScore+prevScore+distScore+wcScore+venueScore+wakuScore+shozoku+bloodScore+distAptScore+crsScore+juushoScore+areScore;
+  var _mg=_umaMigi(rh); var migiScore=(_mg.n>=3&&_mg.fk!==null&&_mg.fk>=60&&_mg.lf!==null&&_mg.lf<=30)?2:0;
+  items.migiApt={score:migiScore,max:2,label:'右回り巧者(左凡走×右好走)',group:'horse'};
+  var total=popScore+ageScore+kinScore+runScore+prevScore+distScore+wcScore+venueScore+wakuScore+shozoku+bloodScore+distAptScore+crsScore+juushoScore+areScore+migiScore;
   total=Math.max(0,total);
   var pct=Math.max(0,Math.min(99,Math.round(total/M*100)));
   return {total:total,max:M,pct:pct,items:items,penalty:0};
