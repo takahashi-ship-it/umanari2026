@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0195';
+  var CURRENT_VERSION = '20260623-0196';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -10982,50 +10982,65 @@ const RACE_PAST_DATA = {
 };
 
 function renderPastSection(title, icon, items, horses) {
+  /* PAST_SECTION_RICH_V2 */
   if (!items || items.length === 0) return '';
-  var html = '<div class="section" style="margin-bottom:16px">';
-  html += '<h3 style="display:flex;align-items:center;gap:6px">' + icon + ' ' + title + '</h3>';
-  items.forEach(function(item) {
-    var matched = [];
-    if (item.matchFn && horses && horses.length) {
-      matched = horses.filter(function(h){
-        try { return item.matchFn(h); } catch(e) { return false; }
-      });
-    }
-    var isHot    = item.hot    === true;
-    var isDanger = item.danger === true;
-    var bgColor     = isDanger ? 'rgba(198,40,40,0.08)' : isHot ? 'rgba(15,110,86,0.08)' : 'var(--bg-soft)';
-    var borderColor = isDanger ? '#C62828' : isHot ? '#0F6E56' : 'var(--border)';
-    var labelColor  = isDanger ? '#C62828' : isHot ? '#0F6E56' : 'var(--text)';
-    var badgeBg     = isDanger ? '#C62828' : isHot ? '#0F6E56' : '#555';
-    html += '<div style="background:' + bgColor + ';border-left:3px solid ' + borderColor
-          + ';border-radius:8px;padding:8px 12px;margin-bottom:6px">';
-    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;gap:8px">';
-    html += '<span style="font-size:11px;font-weight:700;color:' + labelColor + '">' + item.label + '</span>';
-    if (item.record) html += '<span style="font-size:10px;color:var(--text-mute);text-align:right">' + item.record + '</span>';
-    html += '</div>';
-    if (item.fukusho) {
-      var pct = parseFloat(item.fukusho);
-      if (!isNaN(pct)) {
-        html += '<div style="height:4px;background:var(--border);border-radius:2px;margin-bottom:4px">'
-              + '<div style="width:' + Math.min(pct,100) + '%;height:100%;background:' + borderColor
-              + ';border-radius:2px"></div></div>';
-        html += '<div style="font-size:9px;color:var(--text-mute);margin-bottom:3px">複勝率 ' + item.fukusho + '</div>';
+  var GRN='#0F6E56', RED='#C62828';
+  var hotArr=[], dngArr=[];
+  for (var i=0;i<items.length;i++){ if(items[i] && items[i].hot===true) hotArr.push(items[i]); if(items[i] && items[i].danger===true) dngArr.push(items[i]); }
+  function fk(it){ return it && it.fukusho ? (' '+it.fukusho) : ''; }
+  var heading=null;
+  for (var h=0;h<items.length;h++){ if(items[h] && items[h].heading){ heading=items[h].heading; break; } }
+  if(!heading){
+    var hp=[]; if(hotArr.length) hp.push(hotArr[0].label+fk(hotArr[0])+'が好走'); if(dngArr.length) hp.push(dngArr[0].label+fk(dngArr[0])+'は危険');
+    heading = hp.length? ('結論：'+hp.join('、')) : '';
+  }
+  var buyTxt=null, killTxt=null;
+  for (var b=0;b<items.length;b++){ if(items[b] && items[b].buy) buyTxt=items[b].buy; if(items[b] && items[b].kill) killTxt=items[b].kill; }
+  if(buyTxt===null && hotArr.length){ buyTxt = hotArr.map(function(x){return x.label;}).join('・'); }
+  if(killTxt===null && dngArr.length){ killTxt = dngArr.map(function(x){return x.label;}).join('・'); }
+
+  var html='<div class="section" style="margin-bottom:18px">';
+  html+='<h3 style="display:flex;align-items:center;gap:6px;margin-bottom:4px">'+icon+' '+title+'</h3>';
+  if(heading){ html+='<p style="font-size:12px;color:var(--text-sub);margin:0 0 10px;line-height:1.6">'+heading+'</p>'; }
+
+  for (var k=0;k<items.length;k++){
+    var item=items[k]; if(!item) continue;
+    var isD=item.danger===true, isH=item.hot===true;
+    var accent = isD?RED : (isH?GRN : 'var(--border)');
+    var bg = isD?'rgba(198,40,40,0.06)' : (isH?'rgba(15,110,86,0.06)' : 'var(--bg-soft)');
+    var labelCol = isD?RED : (isH?GRN : 'var(--text)');
+    var icoTag = isD?'⚠️ ' : (isH?'🔥 ':'');
+    html+='<div style="background:'+bg+';border:0.5px solid var(--border);border-left:3px solid '+accent+';border-radius:8px;padding:9px 12px;margin-bottom:7px">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">';
+    html+='<span style="font-size:13px;font-weight:700;color:'+labelCol+';white-space:nowrap">'+icoTag+(item.label||'')+'</span>';
+    if(item.record){ html+='<span style="font-size:11px;color:var(--text-mute);text-align:right">'+item.record+'</span>'; }
+    html+='</div>';
+    if(item.fukusho){ var pct=parseFloat(item.fukusho); if(!isNaN(pct)){ var w=Math.min(pct,100);
+      html+='<div style="margin-top:6px;height:6px;background:var(--bg-soft);border:0.5px solid var(--border);border-radius:3px;overflow:hidden">';
+      html+='<div style="width:'+w+'%;height:100%;background:'+(isD?RED:(isH?GRN:'var(--text-mute)'))+'"></div></div>';
+      html+='<div style="font-size:10px;color:var(--text-mute);margin-top:2px">複勝率 '+item.fukusho+'</div>'; } }
+    if(item.comment){ html+='<div style="font-size:11px;color:var(--text-sub);margin-top:5px;line-height:1.5">'+item.comment+'</div>'; }
+    if(item.matchFn && horses && horses.length){
+      var matched=[]; for(var m=0;m<horses.length;m++){ try{ if(item.matchFn(horses[m])) matched.push(horses[m].name); }catch(e){} }
+      if(matched.length){
+        var chipBg = isD?'rgba(198,40,40,0.12)':(isH?'rgba(15,110,86,0.12)':'var(--bg-soft)');
+        var chipCol = isD?RED:(isH?GRN:'#555');
+        html+='<div style="margin-top:7px;display:flex;flex-wrap:wrap;align-items:center;gap:5px">';
+        html+='<span style="font-size:10px;color:var(--text-mute)">今年</span>';
+        for(var c=0;c<matched.length;c++){ html+='<span style="display:inline-block;background:'+chipBg+';color:'+chipCol+';font-size:11px;font-weight:500;padding:2px 8px;border-radius:10px;white-space:nowrap">'+matched[c]+'</span>'; }
+        html+='</div>';
       }
     }
-    if (item.comment) {
-      html += '<div style="font-size:10px;color:var(--text-sub);margin-bottom:4px;line-height:1.5">' + item.comment + '</div>';
-    }
-    if (matched.length > 0) {
-      html += '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px"><span style="font-size:9px;color:var(--text-mute)">今年：</span>';
-      matched.forEach(function(h){
-        html += '<span style="background:' + badgeBg + ';color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px">' + h.name + '</span>';
-      });
-      html += '</div>';
-    }
-    html += '</div>';
-  });
-  html += '</div>';
+    html+='</div>';
+  }
+
+  if(buyTxt || killTxt){
+    html+='<div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:10px">';
+    if(buyTxt){ html+='<div style="flex:1 1 140px;background:rgba(15,110,86,0.08);border-radius:8px;padding:7px 10px"><div style="font-size:10px;color:'+GRN+';font-weight:700;margin-bottom:2px">✅ 買い</div><div style="font-size:11px;color:'+GRN+';line-height:1.5">'+buyTxt+'</div></div>'; }
+    if(killTxt){ html+='<div style="flex:1 1 140px;background:rgba(198,40,40,0.08);border-radius:8px;padding:7px 10px"><div style="font-size:10px;color:'+RED+';font-weight:700;margin-bottom:2px">❌ 消し</div><div style="font-size:11px;color:'+RED+';line-height:1.5">'+killTxt+'</div></div>'; }
+    html+='</div>';
+  }
+  html+='</div>';
   return html;
 }
 
