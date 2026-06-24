@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0197';
+  var CURRENT_VERSION = '20260623-0198';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -12233,8 +12233,8 @@ function renderPastData() {
         html += '<div class="section"><p style="font-size:12px;line-height:1.7;color:var(--text-sub)">' + data.summary + '</p></div>';
       }
       // コース特性（最優先表示）
-      if (data.courseInfo)  html += renderTetsubanJirai(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
-      html += renderPastSection('コース特性・買いたいタイプ', '🏟', data.courseInfo, horsesNew);
+      html += renderTetsubanJirai(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
+      if (data.courseInfo) html += renderPastSection('コース特性・買いたいタイプ', '🏟', data.courseInfo, horsesNew);
       // 必須4項目（順序固定）
       html += renderPastSection('人気別成績',   '📊', data.popularity, horsesNew);
       html += renderPastSection('枠順別成績',   '🔢', data.waku,       horsesNew);
