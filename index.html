@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0201';
+  var CURRENT_VERSION = '20260623-0202';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -21221,7 +21221,7 @@ function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
   return {total:total,max:M,pct:pct,items:items,penalty:0};
 }
 function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
-  var M = 88;
+  var M = 90;
   if(!horse) return {total:0,max:M,pct:0,items:{},penalty:0};
   if(horse.isAvoided) return {total:0,max:M,pct:0,items:{},isAvoided:true,avoidReason:horse.avoidReason||''};
   var rh=Array.isArray(horse.raceHistory)?horse.raceHistory:[];
@@ -21251,7 +21251,7 @@ function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
   else kinScore=0;
   items.weight={score:kinScore,max:5,label:'斤量',group:'data'};
   var _kq=_umaKyaku(rh), runScore=0;
-  if(_kq==='nige') runScore=6; else if(_kq==='senko') runScore=4; else if(_kq==='oikomi') runScore=-4; else runScore=0;
+  if(_kq==='nige') runScore=6; else if(_kq==='senko') runScore=5; else if(_kq==='oikomi') runScore=-4; else runScore=2;
   items.running={score:runScore,max:6,label:'脚質(通算・相対)',group:'data'};
   var prevScore=0;
   if(rh0){
@@ -21311,10 +21311,11 @@ function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
   items.shozoku={score:shozoku,max:1,label:'所属(栗東穴/美浦人気薄−)',group:'data'};
   var bloodScore=0; var _sl=horse.sireLine||'', _sn=horse.sire||'';
   var _deep=['ディープインパクト','キズナ','リアルスティール','ワールドエース','サトノダイヤモンド','ミッキーアイル','シャケトラ','フィエールマン'];
-  if(_sl==='Danzig系'||_sl==="Sadler's Wells系"||_sl==='Mr. Prospector系') bloodScore=3;
-  else if(_deep.indexOf(_sn)!==-1) bloodScore=-2;
-  else bloodScore=0;
+  if(_sl==='Danzig系'||_sl==="Sadler's Wells系"||_sl==='Mr. Prospector系') bloodScore=3; else if(_sn==='キタサンブラック') bloodScore=2; else if(_deep.indexOf(_sn)!==-1) bloodScore=-2; else bloodScore=0;
   items.blood={score:bloodScore,max:3,label:'血統(洋芝持続力/ディープ系−)',group:'horse'};
+  var _jk=(horse.jockey||''); var jockeyScore=0; var jockeyTokui=['武豊','横山武','横山武史','北村友','北村友一'];
+  for(var _ji=0;_ji<jockeyTokui.length;_ji++){ if(_jk.indexOf(jockeyTokui[_ji])!==-1){ jockeyScore=2; break; } }
+  items.jockey={score:jockeyScore,max:2,label:'騎手(函館コース率上位)',group:'data'};
   var areScore=0; var _mae=(_kq==='nige'||_kq==='senko');
   var _pvk=(rh0&&typeof rh0.carriedWeight==='number')?rh0.carriedWeight:null;
   var _prk=(rh0&&typeof rh0.rank==='number')?rh0.rank:null;
@@ -21326,7 +21327,7 @@ function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
   items.migiApt={score:migiScore,max:2,label:'右回り巧者(左凡走×右好走)',group:'horse'};
   var tenkaiScore=_umaTenkai(rh);
   items.tenkaiApt={score:tenkaiScore,max:3,label:'4角展開適性(捲り・好位)',group:'data'};
-  var total=popScore+ageScore+kinScore+runScore+prevScore+distScore+wcScore+venueScore+wakuScore+shozoku+bloodScore+distAptScore+crsScore+juushoScore+areScore+migiScore+tenkaiScore;
+  var total=popScore+ageScore+kinScore+runScore+prevScore+distScore+wcScore+venueScore+wakuScore+shozoku+bloodScore+distAptScore+crsScore+juushoScore+areScore+migiScore+tenkaiScore+jockeyScore;
   total=Math.max(0,total);
   var pct=Math.max(0,Math.min(99,Math.round(total/M*100)));
   return {total:total,max:M,pct:pct,items:items,penalty:0};
