@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0199';
+  var CURRENT_VERSION = '20260623-0200';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7190,6 +7190,16 @@ const RACE_PAST_DATA = {
     ]
   },
   '函館記念': {
+    blood:[
+      {label:'ハービンジャー系(Danzig)', record:'洋芝持続力◎', hot:true, comment:'タフな洋芝で買い。父ハービンジャー直仔。', matchFn:(h)=>(h.sireLine||'')==='Danzig系'},
+      {label:'キンカメ系(Mr.Prospector)', record:'洋芝パワー◎', hot:true, comment:'函館洋芝のパワー適性。', matchFn:(h)=>(h.sireLine||'')==='Mr. Prospector系'},
+      {label:'欧州型(Sadler\'s Wells)', record:'洋芝持続力◎', hot:true, comment:'重い洋芝でこそ。', matchFn:(h)=>(h.sireLine||'')==="Sadler's Wells系"},
+      {label:'ディープ系(キズナ等)', record:'洋芝で割引', danger:true, comment:'切れ味型は洋芝で重賞勝ちが薄い。', matchFn:(h)=>{var s=h.sire||'';return ['ディープインパクト','キズナ','リアルスティール','ワールドエース','サトノダイヤモンド'].indexOf(s)!==-1;}}
+    ],
+    migiAptitude:[
+      {label:'右回り巧者(複60%↑)', record:'通算右回りで安定', fukusho:'60.0%', hot:true, comment:'左回りより右回りで明確に走るタイプ。函館替わり◎。', matchFn:(h)=>{var rh=h.raceHistory||[];var n=0,t=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(r.surface!=='芝')continue;var c=r.course||'';if(c==='東京'||c==='中京'||c==='新潟'||!c)continue;n++;if(typeof r.rank==='number'&&r.rank<=3)t++;}return n>=3&&(t/n*100)>=60;}},
+      {label:'右回り標準(複40-60%)', record:'右回りで安定圏', fukusho:'45.0%', matchFn:(h)=>{var rh=h.raceHistory||[];var n=0,t=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(r.surface!=='芝')continue;var c=r.course||'';if(c==='東京'||c==='中京'||c==='新潟'||!c)continue;n++;if(typeof r.rank==='number'&&r.rank<=3)t++;}var f=n?(t/n*100):0;return n>=3&&f>=40&&f<60;}}
+    ],
     tetsuban:[
       {label:'4枠', record:'複30%(2-2-2-14)・最強枠', matchFn:(h)=>h.waku===4},
       {label:'8番(馬番)', record:'複50%(2-1-2-5)', matchFn:(h)=>h.umaban===8}
@@ -12259,6 +12269,7 @@ function renderPastData() {
       if (data.shozo)    html += renderPastSection('所属別成績',     '🏠', data.shozo,   horsesNew);
       if (data.hande)    html += renderPastSection('斤量別成績',     '⚖️', data.hande,   horsesNew);
       if (data.prevDistance) html += renderPastSection('前走距離別成績', '📐', data.prevDistance, horsesNew);
+      if (data.migiAptitude) html += renderPastSection('右回り適性（通算）', '🔄', data.migiAptitude, horsesNew);
       // pastResults（過去N年の1〜3着・3連単配当の年表）
       if (Array.isArray(data.pastResults) && data.pastResults.length) {
         html += '<div class="section"><h3>📅 過去' + data.pastResults.length + '年 1〜3着一覧</h3>';
