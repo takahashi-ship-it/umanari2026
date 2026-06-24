@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0208';
+  var CURRENT_VERSION = '20260623-0209';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7136,6 +7136,11 @@ function getActiveConditions() {
  * ===================================================== */
 const RACE_PAST_DATA = {
   'ラジオNIKKEI賞': {
+    migiAptitude:[
+      {label:'右回り巧者(複60%↑)', record:'福島=右回り。通算で安定', fukusho:'60.0%', hot:true, comment:'右回り芝の通算複勝率60%以上。福島替わりで信頼度大。コロナドブリッジは複80%で当該条件向き。', matchFn:(h)=>{var m=(function(h){var rh=h.raceHistory||[];var n=0,t=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(r.surface!=='芝')continue;var c=r.course||'';if(!c||c==='東京'||c==='中京'||c==='新潟')continue;n++;if(typeof r.rank==='number'&&r.rank<=3)t++;}return {n:n,fk:n?(t/n*100):null};})(h);return m.n>=3&&m.fk!==null&&m.fk>=60;}},
+      {label:'🔻右回り苦手(複20%以下)', record:'左回り型・福島は割引', danger:true, comment:'右回り通算で複20%以下。福島(右回り)では明確なマイナス。ガリレアは右回り複0%/左回り複50%の完全な左回り型。', matchFn:(h)=>{var m=(function(h){var rh=h.raceHistory||[];var n=0,t=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(r.surface!=='芝')continue;var c=r.course||'';if(!c||c==='東京'||c==='中京'||c==='新潟')continue;n++;if(typeof r.rank==='number'&&r.rank<=3)t++;}return {n:n,fk:n?(t/n*100):null};})(h);return m.n>=3&&m.fk!==null&&m.fk<=20;}},
+      {label:'右回り未経験(評価保留)', record:'右回りn<3・±0評価', comment:'右回り(福島含む)の出走が3走未満で適性判断保留。リッツパーティー・クカイリモクは東京中心で右回り未知数。', matchFn:(h)=>{var m=(function(h){var rh=h.raceHistory||[];var n=0,t=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(r.surface!=='芝')continue;var c=r.course||'';if(!c||c==='東京'||c==='中京'||c==='新潟')continue;n++;if(typeof r.rank==='number'&&r.rank<=3)t++;}return {n:n,fk:n?(t/n*100):null};})(h);return m.n<3;}}
+    ],
     blood:[
       {label:'ミスプロ系(父or母父)', record:'直近2年1-2着独占・過去5年33%', fukusho:'33.0%', hot:true, comment:'福島1800のパワー要求に合致。25年・24年は1-2着をミスプロ系が独占。', matchFn:(h)=>{var sl=h.sireLine||'',sn=h.sire||'',ms=h.motherSire||'';return sl.indexOf('Mr. Prospector')!==-1||['レイデオロ','ルーラーシップ','サートゥルナーリア','ベンバトル','ロードカナロア','ミッキーロケット','キングカメハメハ'].indexOf(sn)!==-1||['キングカメハメハ','ロードカナロア','クロフネ'].indexOf(ms)!==-1;}},
       {label:'欧州血統(Nureyev/Sadler\'s Wells系)', record:'複26.3%/複回収126%', fukusho:'26.3%', hot:true, comment:'前半引き締まるラップで欧州的底力が活きる。一次明示馬。', matchFn:(h)=>['バドリナート','キンググローリー'].indexOf(h.name)!==-1},
