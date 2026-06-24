@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0200';
+  var CURRENT_VERSION = '20260623-0201';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7199,7 +7199,8 @@ const RACE_PAST_DATA = {
     migiAptitude:[
       {label:'右回り巧者(複60%↑)', record:'通算右回りで安定', fukusho:'60.0%', hot:true, comment:'左回りより右回りで明確に走るタイプ。函館替わり◎。', matchFn:(h)=>{var rh=h.raceHistory||[];var n=0,t=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(r.surface!=='芝')continue;var c=r.course||'';if(c==='東京'||c==='中京'||c==='新潟'||!c)continue;n++;if(typeof r.rank==='number'&&r.rank<=3)t++;}return n>=3&&(t/n*100)>=60;}},
       {label:'右回り標準(複40-60%)', record:'右回りで安定圏', fukusho:'45.0%', matchFn:(h)=>{var rh=h.raceHistory||[];var n=0,t=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(r.surface!=='芝')continue;var c=r.course||'';if(c==='東京'||c==='中京'||c==='新潟'||!c)continue;n++;if(typeof r.rank==='number'&&r.rank<=3)t++;}var f=n?(t/n*100):0;return n>=3&&f>=40&&f<60;}}
-    ],
+    ,
+      {label:'🔻右回り苦手(複20%以下)', record:'左回り型・函館は割引', danger:true, comment:'右回り通算で複20%以下。荒れ指数の穴評価も無効化。', matchFn:(h)=>{var rh=h.raceHistory||[];var n=0,t=0;for(var k=0;k<rh.length;k++){var r=rh[k];if(r.surface!=='芝')continue;var c=r.course||'';if(c==='東京'||c==='中京'||c==='新潟'||!c)continue;n++;if(typeof r.rank==='number'&&r.rank<=3)t++;}return n>=3&&(t/n*100)<=20;}}],
     tetsuban:[
       {label:'4枠', record:'複30%(2-2-2-14)・最強枠', matchFn:(h)=>h.waku===4},
       {label:'8番(馬番)', record:'複50%(2-1-2-5)', matchFn:(h)=>h.umaban===8}
@@ -21210,7 +21211,7 @@ function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
   var _pf=(rh[0]&&typeof rh[0].rank==='number')?rh[0].rank:null;
   var prevFinScore=(_pf===1)?3:((_pf===2)?2:0);
   items.prevFinish={score:prevFinScore,max:3,label:'前走着順(連対)',group:'data'};
-  var _mg=_umaMigi(rh); var migiScore=(_mg.n>=3&&_mg.fk!==null&&_mg.fk>=60)?3:((_mg.n>=3&&_mg.fk!==null&&_mg.fk>=40)?1:0);
+  var _mg=_umaMigi(rh); var migiScore=(_mg.n>=3&&_mg.fk!==null&&_mg.fk>=60)?3:((_mg.n>=3&&_mg.fk!==null&&_mg.fk>=40)?1:((_mg.n>=3&&_mg.fk!==null&&_mg.fk<=20)?-3:0));
   items.migiApt={score:migiScore,max:3,label:'右回り適性',group:'horse'};
   var tenkaiScore=_umaTenkai(rh);
   items.tenkaiApt={score:tenkaiScore,max:3,label:'4角展開適性(捲り・好位)',group:'data'};
@@ -21318,10 +21319,10 @@ function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
   var _pvk=(rh0&&typeof rh0.carriedWeight==='number')?rh0.carriedWeight:null;
   var _prk=(rh0&&typeof rh0.rank==='number')?rh0.rank:null;
   var _gen=(_pvk!==null&&kin<_pvk), _tai=(_prk!==null&&_prk>=5), _ni=(pop>=7);
-  if(_gen&&_tai&&_mae&&_ni) areScore=6; else if(_gen&&_tai&&_mae) areScore=4; else if(_gen&&_tai) areScore=2;
+  var _migiBad=(function(){var _m=_umaMigi(rh);return (_m.n>=3&&_m.fk!==null&&_m.fk<=20);})(); if(!_migiBad){ if(_gen&&_tai&&_mae&&_ni) areScore=6; else if(_gen&&_tai&&_mae) areScore=4; else if(_gen&&_tai) areScore=2; }
   if(pop===1&&(_kq==='sashi'||_kq==='oikomi')) areScore-=4;
   items.areIndex={score:areScore,max:6,label:'荒れ指数(穴プロファイル/1番人気危険)',group:'data'};
-  var _mg=_umaMigi(rh); var migiScore=(_mg.n>=3&&_mg.fk!==null&&_mg.fk>=60&&_mg.lf!==null&&_mg.lf<=30)?2:0;
+  var _mg=_umaMigi(rh); var migiScore=(_mg.n>=3&&_mg.fk!==null&&_mg.fk>=60&&_mg.lf!==null&&_mg.lf<=30)?2:((_mg.n>=3&&_mg.fk!==null&&_mg.fk<=20)?-3:0);
   items.migiApt={score:migiScore,max:2,label:'右回り巧者(左凡走×右好走)',group:'horse'};
   var tenkaiScore=_umaTenkai(rh);
   items.tenkaiApt={score:tenkaiScore,max:3,label:'4角展開適性(捲り・好位)',group:'data'};
