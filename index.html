@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0198';
+  var CURRENT_VERSION = '20260623-0199';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -11005,6 +11005,15 @@ const RACE_PAST_DATA = {
 
 function renderTetsubanJirai(race, horses){
   /* TETSUBAN_JIRAI_V1 */
+  if(typeof document!=='undefined' && !document.getElementById('umanari-glow-style')){
+    var _st=document.createElement('style'); _st.id='umanari-glow-style';
+    _st.textContent='@keyframes umGlowRed{0%,100%{box-shadow:0 0 3px rgba(198,40,40,0.35),0 0 0 rgba(198,40,40,0)}50%{box-shadow:0 0 8px rgba(198,40,40,0.75),0 0 2px rgba(198,40,40,0.4)}}'
+      +'@keyframes umGlowGold{0%,100%{box-shadow:0 0 3px rgba(201,151,0,0.4),0 0 0 rgba(201,151,0,0)}50%{box-shadow:0 0 9px rgba(201,151,0,0.85),0 0 3px rgba(201,151,0,0.5)}}'
+      +'.um-chip-red{animation:umGlowRed 2.2s ease-in-out infinite;border:0.5px solid rgba(198,40,40,0.55)}'
+      +'.um-chip-gold{animation:umGlowGold 2.4s ease-in-out infinite;border:0.5px solid rgba(201,151,0,0.6)}'
+      +'@media (prefers-reduced-motion: reduce){.um-chip-red,.um-chip-gold{animation:none}}';
+    document.head.appendChild(_st);
+  }
   var d = (typeof RACE_PAST_DATA!=='undefined' && RACE_PAST_DATA[race]) ? RACE_PAST_DATA[race] : null;
   if(!d) return '';
   var tb = d.tetsuban||[], jr = d.jirai||[];
@@ -11014,21 +11023,21 @@ function renderTetsubanJirai(race, horses){
     var mt=[]; for(var i=0;i<horses.length;i++){ try{ if(arr_item.matchFn(horses[i])) mt.push(horses[i].name); }catch(e){} }
     if(!mt.length) return '<div style="font-size:10px;color:var(--text-mute);margin-top:4px">該当馬なし（枠順確定後に反映）</div>';
     var s='<div style="margin-top:5px;display:flex;flex-wrap:wrap;gap:5px">';
-    for(var k=0;k<mt.length;k++){ s+='<span style="display:inline-block;background:'+arr_item._cbg+';color:'+arr_item._cc+';font-size:11px;font-weight:500;padding:2px 8px;border-radius:10px;white-space:nowrap">'+mt[k]+'</span>'; }
+    for(var k=0;k<mt.length;k++){ s+='<span class="'+(arr_item._glow||'')+'" style="display:inline-block;background:'+arr_item._cbg+';color:'+arr_item._cc+';font-size:11px;font-weight:500;padding:2px 9px;border-radius:10px;white-space:nowrap">'+(arr_item._ico?arr_item._ico+' ':'')+mt[k]+'</span>'; }
     return s+'</div>';
   }
   var html='<div class="section" style="margin-bottom:18px">';
   if(tb.length){
     html+='<div style="background:linear-gradient(0deg,rgba(212,160,23,0.10),rgba(212,160,23,0.10));border:1px solid #C99700;border-radius:10px;padding:10px 12px;margin-bottom:10px">';
     html+='<div style="font-size:13px;font-weight:700;color:#9A7400;margin-bottom:7px">💯 鉄板データ（複勝率50%以上）</div>';
-    for(var t=0;t<tb.length;t++){ var it=tb[t]; it._cbg='rgba(212,160,23,0.15)'; it._cc='#7A5C00';
+    for(var t=0;t<tb.length;t++){ var it=tb[t]; it._cbg='rgba(212,160,23,0.15)'; it._cc='#7A5C00'; it._glow='um-chip-gold'; it._ico='🎯';
       html+='<div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:12px;font-weight:700;color:#7A5C00;white-space:nowrap">🎯 '+it.label+'</span><span style="font-size:11px;color:var(--text-mute);text-align:right">'+(it.record||'')+'</span></div>'+chips(it)+'</div>'; }
     html+='</div>';
   }
   if(jr.length){
     html+='<div style="background:rgba(198,40,40,0.06);border:1px solid #C62828;border-radius:10px;padding:10px 12px">';
     html+='<div style="font-size:13px;font-weight:700;color:#C62828;margin-bottom:7px">💣 地雷データ（複勝率0%）</div>';
-    for(var j=0;j<jr.length;j++){ var jt=jr[j]; jt._cbg='rgba(198,40,40,0.12)'; jt._cc='#C62828';
+    for(var j=0;j<jr.length;j++){ var jt=jr[j]; jt._cbg='rgba(198,40,40,0.12)'; jt._cc='#C62828'; jt._glow='um-chip-red'; jt._ico='💣';
       html+='<div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:12px;font-weight:700;color:#C62828;white-space:nowrap">💣 '+jt.label+'</span><span style="font-size:11px;color:var(--text-mute);text-align:right">'+(jt.record||'')+'</span></div>'+chips(jt)+'</div>'; }
     html+='</div>';
   }
