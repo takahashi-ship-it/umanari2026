@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0202';
+  var CURRENT_VERSION = '20260623-0203';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7228,8 +7228,9 @@ const RACE_PAST_DATA = {
       {label:'8枠',record:'0-0-3・3着のみ',fukusho:'15.0%',comment:'連対ゼロ',matchFn:(h)=>h.waku===8}
     ],
     pace:[
-      {label:'前走4角2番手以内',record:'複45.5%(6-1-3-12)',fukusho:'45.5%',hot:true,matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&typeof r.corner4==='number'&&r.corner4<=2;}},
-      {label:'後方(前走4角10番手〜)',record:'複8.2%(0-2-3-56)',fukusho:'8.2%',danger:true,matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&typeof r.corner4==='number'&&r.corner4>=10;}}
+      {label:'先行・好位(4角7番手以内)', record:'複31.3%帯・勝ち馬は7番手以内が全員', fukusho:'31.3%', hot:true, comment:'逃げ・先行の複勝率が高く、勝ち馬10頭は全員4角7番手以内（うち4番手以内8頭）。前で運べる機動力が必須。', matchFn:(h)=>{var k=(function(h){var rh=h.raceHistory||[];var c={n:0,s:0,sa:0,o:0},u=0;for(var i=0;i<rh.length&&i<6;i++){var r=rh[i];var c4=(typeof r.corner4==='number')?r.corner4:null;var at=(typeof r.atama==='number')?r.atama:null;if(c4===null||at===null||at<=1)continue;u++;if(c4===1){c.n++;}else{var rel=(c4-1)/(at-1);if(rel<=0.33)c.s++;else if(rel<=0.66)c.sa++;else c.o++;}}if(!u)return '不明';var b='nige',bv=c.n;if(c.s>bv){b='senko';bv=c.s;}if(c.sa>bv){b='sashi';bv=c.sa;}if(c.o>bv){b='oikomi';bv=c.o;}return b;})(h);return k==='nige'||k==='senko';}},
+      {label:'差し(中団)', record:'複18.0%', fukusho:'18.0%', comment:'差しでも自ら4角7番手以内に押し上げる機動力があれば。', matchFn:(h)=>{var k=(function(h){var rh=h.raceHistory||[];var c={n:0,s:0,sa:0,o:0},u=0;for(var i=0;i<rh.length&&i<6;i++){var r=rh[i];var c4=(typeof r.corner4==='number')?r.corner4:null;var at=(typeof r.atama==='number')?r.atama:null;if(c4===null||at===null||at<=1)continue;u++;if(c4===1){c.n++;}else{var rel=(c4-1)/(at-1);if(rel<=0.33)c.s++;else if(rel<=0.66)c.sa++;else c.o++;}}if(!u)return '不明';var b='nige',bv=c.n;if(c.s>bv){b='senko';bv=c.s;}if(c.sa>bv){b='sashi';bv=c.sa;}if(c.o>bv){b='oikomi';bv=c.o;}return b;})(h);return k==='sashi';}},
+      {label:'後方一辺倒(追込)', record:'複8.2%(0-2-3-56)', fukusho:'8.2%', danger:true, comment:'後方のままでは届かない。函館の直線は短い。', matchFn:(h)=>{var k=(function(h){var rh=h.raceHistory||[];var c={n:0,s:0,sa:0,o:0},u=0;for(var i=0;i<rh.length&&i<6;i++){var r=rh[i];var c4=(typeof r.corner4==='number')?r.corner4:null;var at=(typeof r.atama==='number')?r.atama:null;if(c4===null||at===null||at<=1)continue;u++;if(c4===1){c.n++;}else{var rel=(c4-1)/(at-1);if(rel<=0.33)c.s++;else if(rel<=0.66)c.sa++;else c.o++;}}if(!u)return '不明';var b='nige',bv=c.n;if(c.s>bv){b='senko';bv=c.s;}if(c.sa>bv){b='sashi';bv=c.sa;}if(c.o>bv){b='oikomi';bv=c.o;}return b;})(h);return k==='oikomi';}}
     ],
     age:[
       {label:'4歳',record:'複26.7%(4-2-2-22)',fukusho:'26.7%',hot:true,matchFn:(h)=>h.age===4},
