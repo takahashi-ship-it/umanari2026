@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0203';
+  var CURRENT_VERSION = '20260623-0204';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -11015,6 +11015,58 @@ const RACE_PAST_DATA = {
   },
 };
 
+function renderKinkaGolden(race, horses){
+  /* KINKA_GOLDEN_V1 */
+  if(race!=='函館記念') return '';
+  if(!horses||!horses.length) return '';
+  var conds=[
+    {key:'脚質', icon:'🏇', desc:'4角7番手以内(逃げ・先行)', fn:function(h){var k=(function(h){var rh=h.raceHistory||[];var c={n:0,s:0,sa:0,o:0},u=0;for(var i=0;i<rh.length&&i<6;i++){var r=rh[i];var c4=(typeof r.corner4==='number')?r.corner4:null;var at=(typeof r.atama==='number')?r.atama:null;if(c4===null||at===null||at<=1)continue;u++;if(c4===1){c.n++;}else{var rel=(c4-1)/(at-1);if(rel<=0.33)c.s++;else if(rel<=0.66)c.sa++;else c.o++;}}if(!u)return '不明';var b='nige',bv=c.n;if(c.s>bv){b='senko';bv=c.s;}if(c.sa>bv){b='sashi';bv=c.sa;}if(c.o>bv){b='oikomi';bv=c.o;}return b;})(h);return k==='nige'||k==='senko';}},
+    {key:'血統', icon:'🧬', desc:'キタサン/欧州パワー系(洋芝◎)', fn:function(h){return (function(h){var sl=h.sireLine||'',sn=h.sire||'';if(sl==='Danzig系'||sl==="Sadler's Wells系"||sl==='Mr. Prospector系')return true;if(sn==='キタサンブラック')return true;return false;})(h);}},
+    {key:'右回り', icon:'🔄', desc:'右回り巧者(複60%↑)', fn:function(h){return (function(h){var rh=h.raceHistory||[];var n=0,t=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(r.surface!=='芝')continue;var c=r.course||'';if(!c||c==='東京'||c==='中京'||c==='新潟')continue;n++;if(typeof r.rank==='number'&&r.rank<=3)t++;}return n>=3&&(t/n*100)>=60;})(h);}},
+    {key:'斤量', icon:'⚖️', desc:'55〜57kg(最良帯)', fn:function(h){return (function(h){var k=h.carriedWeight;return typeof k==='number'&&k>=55&&k<=57;})(h);}}
+  ];
+  var scored=[];
+  for(var i=0;i<horses.length;i++){ var h=horses[i]; var cnt=0; var flags=[];
+    for(var c=0;c<conds.length;c++){ var ok=false; try{ok=conds[c].fn(h);}catch(e){} flags.push(ok); if(ok)cnt++; }
+    scored.push({name:h.name,cnt:cnt,flags:flags});
+  }
+  scored.sort(function(a,b){return b.cnt-a.cnt;});
+  if(typeof document!=='undefined' && !document.getElementById('umanari-glow-style')){
+    var _st=document.createElement('style'); _st.id='umanari-glow-style';
+    _st.textContent='@keyframes umGlowGold{0%,100%{box-shadow:0 0 3px rgba(201,151,0,0.4)}50%{box-shadow:0 0 9px rgba(201,151,0,0.85)}}.um-chip-gold{animation:umGlowGold 2.4s ease-in-out infinite;border:0.5px solid rgba(201,151,0,0.6)}@media (prefers-reduced-motion:reduce){.um-chip-gold{animation:none}}';
+    document.head.appendChild(_st);
+  }
+  function mark(n){ var s=''; for(var i=0;i<4;i++){ s+= i<n?'㊙️':'・'; } return s; }
+  var html='<div class="section" style="margin-bottom:18px">';
+  html+='<div style="background:linear-gradient(135deg,rgba(201,151,0,0.12),rgba(201,151,0,0.04));border:1px solid #C99700;border-radius:12px;padding:14px 14px 12px">';
+  html+='<div style="font-size:16px;font-weight:700;color:#9A7400;display:flex;align-items:center;gap:6px;margin-bottom:2px">㊙️ 金塊データ｜勝ち馬の黄金パターン</div>';
+  html+='<div style="font-size:11px;color:var(--text-sub);margin-bottom:12px">過去10年の勝ち馬が満たす4条件。該当数が多いほど勝ち馬の型に近い。</div>';
+  var top=scored.filter(function(x){return x.cnt>=3;});
+  if(top.length){
+    html+='<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">';
+    for(var t=0;t<top.length;t++){ var it=top[t]; var isFull=it.cnt===4;
+      html+='<div class="'+(isFull?'um-chip-gold':'')+'" style="display:flex;justify-content:space-between;align-items:center;background:'+(isFull?'rgba(201,151,0,0.18)':'rgba(201,151,0,0.08)')+';border-radius:10px;padding:7px 12px">';
+      html+='<span style="font-size:13px;font-weight:700;color:#7A5C00;white-space:nowrap">'+(isFull?'👑 ':'')+it.name+'</span>';
+      html+='<span style="font-size:14px;letter-spacing:1px">'+mark(it.cnt)+' <span style="font-size:11px;color:var(--text-mute)">'+it.cnt+'/4</span></span>';
+      html+='</div>';
+    }
+    html+='</div>';
+  }
+  html+='<div style="display:flex;flex-direction:column;gap:7px">';
+  for(var c2=0;c2<conds.length;c2++){ var cd=conds[c2];
+    var ms=[]; for(var m=0;m<horses.length;m++){ var ok=false; try{ok=cd.fn(horses[m]);}catch(e){} if(ok)ms.push(horses[m].name); }
+    html+='<div style="background:var(--bg-soft);border:0.5px solid var(--border);border-left:3px solid #C99700;border-radius:8px;padding:8px 11px">';
+    html+='<div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><span style="font-size:12px;font-weight:700;color:var(--text);white-space:nowrap">'+cd.icon+' '+cd.key+'</span><span style="font-size:10px;color:var(--text-mute);text-align:right">'+cd.desc+'</span></div>';
+    if(ms.length){ html+='<div style="margin-top:5px;display:flex;flex-wrap:wrap;gap:5px">';
+      for(var x=0;x<ms.length;x++){ html+='<span style="display:inline-block;background:rgba(201,151,0,0.12);color:#7A5C00;font-size:11px;font-weight:500;padding:2px 8px;border-radius:10px;white-space:nowrap">'+ms[x]+'</span>'; }
+      html+='</div>'; }
+    else { html+='<div style="font-size:10px;color:var(--text-mute);margin-top:4px">該当馬なし</div>'; }
+    html+='</div>';
+  }
+  html+='</div></div></div>';
+  return html;
+}
+
 function renderTetsubanJirai(race, horses){
   /* TETSUBAN_JIRAI_V1 */
   if(typeof document!=='undefined' && !document.getElementById('umanari-glow-style')){
@@ -12254,6 +12306,7 @@ function renderPastData() {
         html += '<div class="section"><p style="font-size:12px;line-height:1.7;color:var(--text-sub)">' + data.summary + '</p></div>';
       }
       // コース特性（最優先表示）
+      html += renderKinkaGolden(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
       html += renderTetsubanJirai(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
       if (data.courseInfo) html += renderPastSection('コース特性・買いたいタイプ', '🏟', data.courseInfo, horsesNew);
       // 必須4項目（順序固定）
