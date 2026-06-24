@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0196';
+  var CURRENT_VERSION = '20260623-0197';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7136,6 +7136,17 @@ function getActiveConditions() {
  * ===================================================== */
 const RACE_PAST_DATA = {
   'ラジオNIKKEI賞': {
+    tetsuban:[
+      {label:'1番(馬番)', record:'複60%(3-1-2-4)', matchFn:(h)=>h.umaban===1},
+      {label:'1枠', record:'複57.1%(4-2-2-6)・黄金枠', matchFn:(h)=>h.waku===1}
+    ],
+    jirai:[
+      {label:'57kg以上', record:'0-0-0-6(複0%)', matchFn:(h)=>h.carriedWeight>=57},
+      {label:'牝馬', record:'0-1-0-18(複5.3%)', matchFn:(h)=>h.sex==='牝'},
+      {label:'10番人気以下', record:'複ほぼ0%', matchFn:(h)=>h.popEstimate>=10},
+      {label:'キャリア10戦以上', record:'0-0-0-7(複0%)', matchFn:(h)=>(h.raceHistory||[]).length>=10},
+      {label:'8番・9番・12番(馬番)', record:'各0-0-0(複0%)', matchFn:(h)=>h.umaban===8||h.umaban===9||h.umaban===12}
+    ],
     summary:'3歳唯一のハンデ重賞。福島小回り・開幕週で前残り、波乱含み(3連単2万円割れなし)。前で運べて適正斤量(54-55中心)の先行馬が本線。人気は2〜9番がフラット、大穴は不発。',
     popularity:[
       {label:'2番人気',record:'複40%(2-1-1-6)',fukusho:'40.0%',hot:true,matchFn:(h)=>h.popEstimate===2},
@@ -7179,6 +7190,17 @@ const RACE_PAST_DATA = {
     ]
   },
   '函館記念': {
+    tetsuban:[
+      {label:'4枠', record:'複30%(2-2-2-14)・最強枠', matchFn:(h)=>h.waku===4},
+      {label:'8番(馬番)', record:'複50%(2-1-2-5)', matchFn:(h)=>h.umaban===8}
+    ],
+    jirai:[
+      {label:'58kg以上', record:'0-0-0-10(複0%)', matchFn:(h)=>h.carriedWeight>=58},
+      {label:'8歳以上', record:'0-0-0-11(複0%)', matchFn:(h)=>h.age>=8},
+      {label:'美浦×10番人気以下', record:'0-0-0-31(複0%)', matchFn:(h)=>{var st=(h.stable||'');return (st.indexOf('美')!==-1)&&h.popEstimate>=10;}},
+      {label:'前走1600m以下', record:'0-0-0-6(複0%)', matchFn:(h)=>{var r=(h.raceHistory||[])[0];return r&&typeof r.distance==='number'&&r.distance<=1600;}},
+      {label:'11番・13番・16番', record:'各0-0-0(複0%)', matchFn:(h)=>h.umaban===11||h.umaban===13||h.umaban===16}
+    ],
     summary:'サマー2000開幕戦の波乱型ハンデ。全面洋芝・直線約262m最短・3-4角下りで前有利。10万馬券7回。前で運べる4歳前後+洋芝持続力が本線、ディープ系の切れ味は割引。',
     popularity:[
       {label:'3番人気',record:'複40%(2-0-2-6)',fukusho:'40.0%',hot:true,matchFn:(h)=>h.popEstimate===3},
@@ -10981,6 +11003,39 @@ const RACE_PAST_DATA = {
   },
 };
 
+function renderTetsubanJirai(race, horses){
+  /* TETSUBAN_JIRAI_V1 */
+  var d = (typeof RACE_PAST_DATA!=='undefined' && RACE_PAST_DATA[race]) ? RACE_PAST_DATA[race] : null;
+  if(!d) return '';
+  var tb = d.tetsuban||[], jr = d.jirai||[];
+  if(!tb.length && !jr.length) return '';
+  function chips(arr_item){
+    if(!arr_item.matchFn || !horses) return '';
+    var mt=[]; for(var i=0;i<horses.length;i++){ try{ if(arr_item.matchFn(horses[i])) mt.push(horses[i].name); }catch(e){} }
+    if(!mt.length) return '<div style="font-size:10px;color:var(--text-mute);margin-top:4px">該当馬なし（枠順確定後に反映）</div>';
+    var s='<div style="margin-top:5px;display:flex;flex-wrap:wrap;gap:5px">';
+    for(var k=0;k<mt.length;k++){ s+='<span style="display:inline-block;background:'+arr_item._cbg+';color:'+arr_item._cc+';font-size:11px;font-weight:500;padding:2px 8px;border-radius:10px;white-space:nowrap">'+mt[k]+'</span>'; }
+    return s+'</div>';
+  }
+  var html='<div class="section" style="margin-bottom:18px">';
+  if(tb.length){
+    html+='<div style="background:linear-gradient(0deg,rgba(212,160,23,0.10),rgba(212,160,23,0.10));border:1px solid #C99700;border-radius:10px;padding:10px 12px;margin-bottom:10px">';
+    html+='<div style="font-size:13px;font-weight:700;color:#9A7400;margin-bottom:7px">💯 鉄板データ（複勝率50%以上）</div>';
+    for(var t=0;t<tb.length;t++){ var it=tb[t]; it._cbg='rgba(212,160,23,0.15)'; it._cc='#7A5C00';
+      html+='<div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:12px;font-weight:700;color:#7A5C00;white-space:nowrap">🎯 '+it.label+'</span><span style="font-size:11px;color:var(--text-mute);text-align:right">'+(it.record||'')+'</span></div>'+chips(it)+'</div>'; }
+    html+='</div>';
+  }
+  if(jr.length){
+    html+='<div style="background:rgba(198,40,40,0.06);border:1px solid #C62828;border-radius:10px;padding:10px 12px">';
+    html+='<div style="font-size:13px;font-weight:700;color:#C62828;margin-bottom:7px">💣 地雷データ（複勝率0%）</div>';
+    for(var j=0;j<jr.length;j++){ var jt=jr[j]; jt._cbg='rgba(198,40,40,0.12)'; jt._cc='#C62828';
+      html+='<div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:12px;font-weight:700;color:#C62828;white-space:nowrap">💣 '+jt.label+'</span><span style="font-size:11px;color:var(--text-mute);text-align:right">'+(jt.record||'')+'</span></div>'+chips(jt)+'</div>'; }
+    html+='</div>';
+  }
+  html+='</div>';
+  return html;
+}
+
 function renderPastSection(title, icon, items, horses) {
   /* PAST_SECTION_RICH_V2 */
   if (!items || items.length === 0) return '';
@@ -12178,7 +12233,8 @@ function renderPastData() {
         html += '<div class="section"><p style="font-size:12px;line-height:1.7;color:var(--text-sub)">' + data.summary + '</p></div>';
       }
       // コース特性（最優先表示）
-      if (data.courseInfo)  html += renderPastSection('コース特性・買いたいタイプ', '🏟', data.courseInfo, horsesNew);
+      if (data.courseInfo)  html += renderTetsubanJirai(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
+      html += renderPastSection('コース特性・買いたいタイプ', '🏟', data.courseInfo, horsesNew);
       // 必須4項目（順序固定）
       html += renderPastSection('人気別成績',   '📊', data.popularity, horsesNew);
       html += renderPastSection('枠順別成績',   '🔢', data.waku,       horsesNew);
