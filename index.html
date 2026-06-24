@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0209';
+  var CURRENT_VERSION = '20260623-0210';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -11135,7 +11135,7 @@ function renderTetsubanJirai(race, horses){
       +'@keyframes umGlowGold{0%,100%{box-shadow:0 0 3px rgba(201,151,0,0.4),0 0 0 rgba(201,151,0,0)}50%{box-shadow:0 0 9px rgba(201,151,0,0.85),0 0 3px rgba(201,151,0,0.5)}}'
       +'.um-chip-red{animation:umGlowRed 2.2s ease-in-out infinite;border:0.5px solid rgba(198,40,40,0.55)}'
       +'.um-chip-gold{animation:umGlowGold 2.4s ease-in-out infinite;border:0.5px solid rgba(201,151,0,0.6)}'
-      +'@media (prefers-reduced-motion: reduce){.um-chip-red,.um-chip-gold{animation:none}}';
+      +'.um-chip-green{animation:umGlowGreen 2.3s ease-in-out infinite;border:0.5px solid rgba(29,158,117,0.6)}'+'@keyframes umGlowGreen{0%,100%{box-shadow:0 0 3px rgba(29,158,117,0.4)}50%{box-shadow:0 0 9px rgba(29,158,117,0.85)}}'+'@media (prefers-reduced-motion: reduce){.um-chip-red,.um-chip-gold,.um-chip-green{animation:none}}';
     document.head.appendChild(_st);
   }
   var d = (typeof RACE_PAST_DATA!=='undefined' && RACE_PAST_DATA[race]) ? RACE_PAST_DATA[race] : null;
@@ -11166,6 +11166,31 @@ function renderTetsubanJirai(race, horses){
     html+='</div>';
   }
   html+='</div>';
+  
+  /* CLEAN_ZONE_V1: 地雷ゼロ馬を抽出して緑カード表示 */
+  if(jr.length && horses && horses.length){
+    var cleanHorses=[];
+    for(var ci=0;ci<horses.length;ci++){ var hh=horses[ci]; var dirty=false;
+      for(var cj=0;cj<jr.length;cj++){ if(jr[cj].matchFn){ try{ if(jr[cj].matchFn(hh)){dirty=true;break;} }catch(e){} } }
+      if(!dirty) cleanHorses.push(hh);
+    }
+    if(cleanHorses.length){
+      html+='<div style="background:#04342C;border:1.5px solid #1D9E75;border-radius:14px;padding:14px 14px 13px;margin-top:10px">';
+      html+='<div style="font-size:16px;font-weight:700;color:#5DCAA5;margin-bottom:3px">💎 地雷ゼロ・クリーンゾーン</div>';
+      html+='<div style="font-size:11px;color:#9FE1CB;margin-bottom:12px;line-height:1.6">過去10年の地雷条件を1つも踏んでいない'+cleanHorses.length+'頭。買いの中心はここ。</div>';
+      html+='<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">';
+      for(var ck=0;ck<cleanHorses.length;ck++){ var ch=cleanHorses[ck];
+        var sub=[]; if(ch.popEstimate)sub.push(ch.popEstimate+'人気'); if(ch.carriedWeight)sub.push(ch.carriedWeight+'kg');
+        html+='<div class="um-chip-green" style="background:rgba(29,158,117,0.18);border-radius:10px;padding:9px 10px">';
+        html+='<div style="font-size:13px;font-weight:500;color:#E1F5EE;white-space:nowrap">💎 '+ch.name+'</div>';
+        html+='<div style="font-size:10px;color:#5DCAA5;margin-top:2px">'+sub.join(' / ')+'</div>';
+        html+='</div>';
+      }
+      html+='</div>';
+      html+='<div style="margin-top:11px;font-size:10px;color:#9FE1CB;line-height:1.6;border-top:0.5px solid rgba(29,158,117,0.4);padding-top:8px">⚠️ 確定オッズで人気が変われば該当が入れ替わり、悪い馬番を引いた馬は枠順確定後に脱落する場合があります。</div>';
+      html+='</div>';
+    }
+  }
   return html;
 }
 
