@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0204';
+  var CURRENT_VERSION = '20260623-0205';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7190,6 +7190,33 @@ const RACE_PAST_DATA = {
     ]
   },
   '函館記念': {
+    himitsuData4:{/* HAKODATE_HIMITSU_V1 */
+      title:"函館記念 4つの㊙️データ🐎",
+      subtitle:"4角7番手以内 × 洋芝適性血統 × 右回り巧者 × 斤量55〜57kg。過去10年の勝ち馬が満たす黄金パターン。いくつ当てはまるか――データで見る信頼度チェック",
+      conditions:[
+        "🏇 4角7番手以内：勝ち馬10頭は全員4角7番手以内（うち4番手以内8頭）。逃げ・先行で前へ動ける機動力が必須。",
+        "🧬 洋芝適性血統：キタサンブラック(複43.8%帯)・欧州パワー系(ハービンジャー/キンカメ/Sadler's Wells)。タフな洋芝でこそ。",
+        "🔄 右回り巧者：右回り芝の通算複勝率60%以上。左回り専用型は函館替わりで割引。",
+        "⚖️ 斤量55〜57kg：勝ち馬の最良斤量帯。58kg以上は過去10年複勝率0%の壁。"
+      ],
+      groups:[
+        { level:"㊙️㊙️㊙️㊙️", label:"4つ該当（文句なしの黄金パターン）", color:"green",
+          horses:[
+            "フィーリウス(7人気/先行/父キタサンブラック/右回り複78%/56kg最良帯/スピカS→連勝中)",
+            "エコロディノス(2人気/逃げ/父キタサンブラック/右回り複75%/57kg/前走大阪杯GI)"
+          ],
+          comment:"4条件すべてに当てはまった2頭。勝ち馬の型に最もきれいに収まる。フィーリウスは父キタサンブラック×母父ロードカナロアでスタミナとスピードの両輪、56kg最良帯。エコロディノスは逃げ脚質で右回り実績も十分。この2頭は素直に狙いたい🐎" },
+        { level:"㊙️㊙️㊙️", label:"3つ該当（上位候補）", color:"silver",
+          horses:[
+            "ジュタ(4人気/先行/父ドゥラメンテ/56kg/上昇4歳・エプソムC組)",
+            "イガッチ(6人気/先行/父リアルスティール/右回り複60%/55kg)",
+            "ファウストラーゼン(10人気/逃げ/右回り複50%/56kg/単騎逃げ可能)",
+            "バルナバ(12人気/先行/父ハービンジャー/55kg)"
+          ],
+          comment:"3条件該当。ジュタは上昇中の4歳で先行力、イガッチは右回り巧者、ファウストラーゼンは単騎逃げの可能性。バルナバはハービンジャー産駒の洋芝適性。穴で面白い一団。" }
+      ],
+      summary:"函館記念は『4角で前にいる馬が圧倒的に強い』レース。人気より脚質・血統・斤量で総合判断。1番人気マジックサンズは後方脚質・58kg・右回り苦手で黄金パターン非該当――データ上は危険な人気馬。"
+    },
     blood:[
       {label:'ハービンジャー系(Danzig)', record:'洋芝持続力◎', hot:true, comment:'タフな洋芝で買い。父ハービンジャー直仔。', matchFn:(h)=>(h.sireLine||'')==='Danzig系'},
       {label:'キンカメ系(Mr.Prospector)', record:'洋芝パワー◎', hot:true, comment:'函館洋芝のパワー適性。', matchFn:(h)=>(h.sireLine||'')==='Mr. Prospector系'},
@@ -12306,7 +12333,7 @@ function renderPastData() {
         html += '<div class="section"><p style="font-size:12px;line-height:1.7;color:var(--text-sub)">' + data.summary + '</p></div>';
       }
       // コース特性（最優先表示）
-      html += renderKinkaGolden(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
+      if (data.himitsuData4 && typeof renderHimitsuData4==='function') html += renderHimitsuData4(data.himitsuData4);
       html += renderTetsubanJirai(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
       if (data.courseInfo) html += renderPastSection('コース特性・買いたいタイプ', '🏟', data.courseInfo, horsesNew);
       // 必須4項目（順序固定）
