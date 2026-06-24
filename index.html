@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0206';
+  var CURRENT_VERSION = '20260623-0207';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7136,6 +7136,12 @@ function getActiveConditions() {
  * ===================================================== */
 const RACE_PAST_DATA = {
   'ラジオNIKKEI賞': {
+    blood:[
+      {label:'ミスプロ系(父or母父)', record:'直近2年1-2着独占・過去5年33%', fukusho:'33.0%', hot:true, comment:'福島1800のパワー要求に合致。25年・24年は1-2着をミスプロ系が独占。', matchFn:(h)=>{var sl=h.sireLine||'',sn=h.sire||'',ms=h.motherSire||'';return sl.indexOf('Mr. Prospector')!==-1||['レイデオロ','ルーラーシップ','サートゥルナーリア','ベンバトル','ロードカナロア','ミッキーロケット','キングカメハメハ'].indexOf(sn)!==-1||['キングカメハメハ','ロードカナロア','クロフネ'].indexOf(ms)!==-1;}},
+      {label:'欧州血統(Nureyev/Sadler\'s Wells系)', record:'複26.3%/複回収126%', fukusho:'26.3%', hot:true, comment:'前半引き締まるラップで欧州的底力が活きる。一次明示馬。', matchFn:(h)=>['バドリナート','キンググローリー'].indexOf(h.name)!==-1},
+      {label:'福島巧者グレーターロンドン', record:'福島芝1800勝率30%', fukusho:'50.0%', hot:true, comment:'当該コース舞台巧者の筆頭。', matchFn:(h)=>(h.sire||'')==='グレーターロンドン'},
+      {label:'ミッキーロケット個体(軸警戒)', record:'福島芝1800 11戦0勝・掲示板3年前1回', danger:true, comment:'ミスプロ系として系統は買えるが、父個体の福島実績は壊滅。軸は避けたい。', matchFn:(h)=>(h.sire||'')==='ミッキーロケット'}
+    ],
     tetsuban:[
       {label:'1番(馬番)', record:'複60%(3-1-2-4)', matchFn:(h)=>h.umaban===1},
       {label:'1枠', record:'複57.1%(4-2-2-6)・黄金枠', matchFn:(h)=>h.waku===1}
@@ -21295,11 +21301,17 @@ function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
   items.agariRank={score:agScore,max:3,label:'上がり3F(通算最速)',group:'data'};
   var sexScore=(horse.sex==='牝')?-3:0;
   items.sex={score:sexScore,max:0,label:'性別',group:'data'};
-  var bloodScore=0; var _sl=horse.sireLine||'';
-  if(_sl==="Sadler's Wells系"||_sl==='Danzig系') bloodScore=3;
-  else if(_sl==='Mr. Prospector系') bloodScore=2;
-  else if(_sl==='Halo系') bloodScore=1;
-  else bloodScore=0;
+  var bloodScore=0;
+  var _rsl=horse.sireLine||'', _rsn=horse.sire||'', _rms=horse.motherSire||'';
+  var misuproRadio=['Mr. Prospector系'];
+  var _isMisS = _rsl.indexOf('Mr. Prospector')!==-1 || ['レイデオロ','ルーラーシップ','サートゥルナーリア','ベンバトル','ロードカナロア','ミッキーロケット','マクフィ','キングカメハメハ'].indexOf(_rsn)!==-1;
+  var _isMisMS = ['キングカメハメハ','Kingmambo','ロードカナロア','クロフネ'].indexOf(_rms)!==-1;
+  var _euroRadio = ['バドリナート','キンググローリー'].indexOf(horse.name)!==-1;
+  var _grero = _rsn==='グレーターロンドン';
+  if(_isMisS||_isMisMS) bloodScore+=2;
+  if(_euroRadio) bloodScore+=2;
+  if(_grero) bloodScore+=2;
+  if(bloodScore>3) bloodScore=3;
   items.blood={score:bloodScore,max:3,label:'血統(欧州パワー/キンカメ系)',group:'horse'};
   var _da=_umaAptTally(rh,function(r){return r.surface==='芝'&&typeof r.distance==='number'&&r.distance>=1700&&r.distance<=2000;});
   var distAptScore=(_da.n>=4&&_da.fk>=50)?4:((_da.n>=4&&_da.fk>=30)?2:0);
