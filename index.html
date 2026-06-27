@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0215';
+  var CURRENT_VERSION = '20260623-0216';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -11128,6 +11128,30 @@ function renderKinkaGolden(race, horses){
 }
 
 
+
+function renderPrevGradeTrend(race, horses){
+  if(race.indexOf('ラジオNIKKEI')===-1) return '';
+  var g1=[],g2=[],win1=[],g3=[];
+  for(var i=0;i<horses.length;i++){var h=horses[i];if(h.isAvoided)continue;
+    var g=_prevGrade(h);
+    if(g==='G1') g1.push(h.name);
+    else if(g==='G2') g2.push(h.name);
+    else if(g==='G3') g3.push(h.name);
+    else if(g==='1WIN'&&_prevWin(h)) win1.push(h.name);
+  }
+  function chips(arr,bg,bd,tx){var s='<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:4px">';
+    for(var j=0;j<arr.length;j++)s+='<span style="background:'+bg+';border:0.5px solid '+bd+';border-radius:8px;padding:3px 9px;font-size:11px;color:'+tx+';white-space:nowrap">'+arr[j]+'</span>';
+    if(!arr.length)s+='<span style="font-size:11px;color:#888">該当なし</span>';return s+'</div>';}
+  var html='<div style="background:#2A1F33;border:1.5px solid #8B6FA5;border-radius:14px;padding:14px;margin-top:10px">';
+  html+='<div style="font-size:15px;font-weight:700;color:#C8A8E8;margin-bottom:4px">📋 前走グレード傾向（過去20年）</div>';
+  html+='<div style="font-size:11px;color:#D8C8EC;margin-bottom:12px;line-height:1.7">3歳ハンデ重賞。<b>前走1勝クラス勝ち=勝ち馬の中心</b>。<b>G1組は3着内には来るが勝ち馬ゼロ(2-3着付け)</b>。G2組は勝率最高11.8%で妙味。<b>G3組は過去20年3着内ゼロ</b>。</div>';
+  html+='<div style="margin-bottom:9px"><div style="font-size:12px;font-weight:700;color:#6FCF97">🏆 前走1勝クラス勝ち（勝ち馬パターン）</div>'+chips(win1,'rgba(111,207,151,0.18)','#6FCF97','#D6F5E3')+'</div>';
+  html+='<div style="margin-bottom:9px"><div style="font-size:12px;font-weight:700;color:#7EC8E8">⭐ 前走G2組（勝率最高11.8%）</div>'+chips(g2,'rgba(126,200,232,0.18)','#7EC8E8','#D3ECF5')+'</div>';
+  html+='<div style="margin-bottom:9px"><div style="font-size:12px;font-weight:700;color:#E8C87C">🥈 前走G1組（勝ち馬ゼロ・2-3着付け）</div>'+chips(g1,'rgba(232,200,124,0.18)','#E8C87C','#F5EDD3')+'</div>';
+  html+='<div><div style="font-size:12px;font-weight:700;color:#E88C8C">⚠️ 前走G3組（過去20年3着内ゼロ・消し）</div>'+chips(g3,'rgba(232,140,140,0.18)','#E88C8C','#F5D3D3')+'</div>';
+  html+='</div>';
+  return html; /* PREV_GRADE_V1 */
+}
 function renderDoakuTrend(race, horses){
   var meta=(typeof RACE_META!=='undefined'&&RACE_META[race])?RACE_META[race]:{};
   if(!meta.babaWet) return '';
@@ -12431,6 +12455,7 @@ function renderPastData() {
       if (data.himitsuData4 && typeof renderHimitsuData4==='function') html += renderHimitsuData4(data.himitsuData4);
       html += renderTetsubanJirai(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
       html += renderDoakuTrend(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
+      html += renderPrevGradeTrend(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
       if (data.courseInfo) html += renderPastSection('コース特性・買いたいタイプ', '🏟', data.courseInfo, horsesNew);
       // 必須4項目（順序固定）
       html += renderPastSection('人気別成績',   '📊', data.popularity, horsesNew);
@@ -21313,6 +21338,15 @@ function _umaKyaku(rh){var c={nige:0,senko:0,sashi:0,oikomi:0},u=0;for(var i=0;i
 function _umaAgari(rh){var best=null;for(var i=0;i<rh.length&&i<5;i++){var v=parseFloat(rh[i].last3f);if(!isNaN(v)){if(best===null||v<best)best=v;}}return best;}
 function _migiSlope(mg){if(!mg||mg.n<3||mg.fk===null)return 0;var f=mg.fk;if(f>=80)return 3;if(f>=60)return 2;if(f>=21)return 0;if(f>=11)return -2;if(f>=1)return -3;return -4;}
 function _umaMigi(rh){var LEFT={'東京':1,'中京':1,'新潟':1};var t=0,n=0,lw=0,ln=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(r.surface!=='芝')continue;var c=r.course||'';if(!c)continue;var left=LEFT[c]===1;var rk=(typeof r.rank==='number')?r.rank:null;if(left){ln++;if(rk!==null&&rk<=3)lw++;}else{n++;if(rk!==null&&rk<=3)t++;}}return {n:n,fk:n?(t/n*100):null,ln:ln,lf:ln?(lw/ln*100):null};}
+
+function _prevGrade(h){var rh=h.raceHistory||[];if(!rh.length)return null;var rn=rh[0].raceName||'';
+  if(rn.indexOf('GII)')!==-1||rn.indexOf('青葉賞')!==-1||rn.indexOf('ニュージーランド')!==-1||rn.indexOf('京都新聞杯')!==-1||rn.indexOf('スプリングS')!==-1||rn.indexOf('毎日杯')!==-1)return 'G2';
+  if(rn.indexOf('GIII)')!==-1||rn.indexOf('ユニコーン')!==-1)return 'G3';
+  if(rn.indexOf('GI)')!==-1||rn.indexOf('皐月賞')!==-1||rn.indexOf('東京優駿')!==-1||rn.indexOf('ダービー')!==-1||rn.indexOf('NHKマイル')!==-1||rn.indexOf('ホープフル')!==-1||rn.indexOf('朝日杯')!==-1||rn.indexOf('オークス')!==-1)return 'G1';
+  if(rn.indexOf('(L)')!==-1||rn.indexOf('プリンシパル')!==-1||rn.indexOf('白百合')!==-1||rn.indexOf('橘')!==-1)return 'OPL';
+  if(rn.indexOf('1勝')!==-1||rn.indexOf('未勝利')!==-1||rn.indexOf('新馬')!==-1||rn.indexOf('ゆりかもめ')!==-1||rn.indexOf('あずさ')!==-1)return '1WIN';
+  return 'OTHER';}
+function _prevWin(h){var rh=h.raceHistory||[];return rh.length&&rh[0].rank===1;}
 function _doakuKyaku(h){var rh=h.raceHistory||[];var ps=[];for(var i=0;i<rh.length&&i<6;i++){var c4=rh[i].corner4,at=rh[i].atama;if(typeof c4==='number'&&at){ps.push(c4/at);}}if(!ps.length)return null;var s=0;for(var j=0;j<ps.length;j++)s+=ps[j];var a=s/ps.length;return a<=0.35?'前残り':(a>=0.65?'後方一気':'中団');}
 function _umaBaba(rh){var p=0,n=0;for(var i=0;i<rh.length;i++){var b=rh[i].baba||'';if(b.indexOf('稍')!==-1||b.indexOf('重')!==-1||b.indexOf('不良')!==-1){n++;var rk=rh[i].rank;if(typeof rk==='number'&&rk<=3)p++;}}if(n===0)return 0;var fk=p/n*100;if(fk>=100&&n>=2)return 8;if(fk>=100&&n===1)return 3;if(fk>=60&&n>=3)return 6;if(fk>=60&&n===2)return 4;if(fk>=40&&n>=2)return 2;if(fk===0&&n>=3)return -4;return 0;}
 function _umaTenkai(rh){var mk=0,yo=0,cnt=0;for(var i=0;i<rh.length&&i<6;i++){var r=rh[i];var ps=(r.passing||'').split('-').map(function(x){return parseInt(x,10);}).filter(function(x){return !isNaN(x);});var c4=(typeof r.corner4==='number')?r.corner4:null;var at=(typeof r.atama==='number')?r.atama:null;if(!ps.length||c4===null||at===null||at<=1)continue;cnt++;var c3=ps.length>=2?ps[ps.length-2]:ps[ps.length-1];if(c3-c4>=2)mk++;if(c4<=5)yo++;}if(cnt<4)return 0;var pr=mk/cnt*100,yr=yo/cnt*100;if(yr>=60&&pr>=33)return 3;if(yr>=60)return 2;if(pr>=33)return 1;return 0;}
