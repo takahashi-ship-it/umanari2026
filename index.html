@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0212';
+  var CURRENT_VERSION = '20260623-0213';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -6057,12 +6057,12 @@ window.HORSES_BY_RACE = HORSES_BY_RACE;
  * 3.05) RACE METADATA (タイトル・コース等)
  * ===================================================== */
 const RACE_META = {
-  'ラジオNIKKEI賞': { gradeLine:"G3 / 第75回", title:"ラジオNIKKEI賞", date:"2026-06-28 (日)",
+  'ラジオNIKKEI賞': { babaWet:true, gradeLine:"G3 / 第75回", title:"ラジオNIKKEI賞", date:"2026-06-28 (日)",
     venue:"福島競馬場", surface:"芝1800m", age:"3歳", distance:1800, direction:"right", isFinished:false,
     pageTitle:"JRA重賞予想 2026 | ラジオNIKKEI賞",
     notice:"⚠ 枠順・確定オッズ確定前の暫定登録。枠スコア・血統は確定後に反映。",
     babaPrediction:{ status:"良馬場想定", icon:"☀️ ", color:"#1D9E75", comment:"福島芝1800m・小回り/開幕週で前残り" } },
-  '函館記念': { gradeLine:"G3 / 第62回", title:"函館記念", date:"2026-06-28 (日)",
+  '函館記念': { babaWet:true, gradeLine:"G3 / 第62回", title:"函館記念", date:"2026-06-28 (日)",
     venue:"函館競馬場", surface:"芝2000m", age:"3歳上", distance:2000, direction:"right", isFinished:false,
     pageTitle:"JRA重賞予想 2026 | 函館記念",
     notice:"⚠ 枠順・確定オッズ確定前の暫定登録。枠スコア・血統は確定後に反映。",
@@ -21275,9 +21275,10 @@ function _umaKyaku(rh){var c={nige:0,senko:0,sashi:0,oikomi:0},u=0;for(var i=0;i
 function _umaAgari(rh){var best=null;for(var i=0;i<rh.length&&i<5;i++){var v=parseFloat(rh[i].last3f);if(!isNaN(v)){if(best===null||v<best)best=v;}}return best;}
 function _migiSlope(mg){if(!mg||mg.n<3||mg.fk===null)return 0;var f=mg.fk;if(f>=80)return 3;if(f>=60)return 2;if(f>=21)return 0;if(f>=11)return -2;if(f>=1)return -3;return -4;}
 function _umaMigi(rh){var LEFT={'東京':1,'中京':1,'新潟':1};var t=0,n=0,lw=0,ln=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(r.surface!=='芝')continue;var c=r.course||'';if(!c)continue;var left=LEFT[c]===1;var rk=(typeof r.rank==='number')?r.rank:null;if(left){ln++;if(rk!==null&&rk<=3)lw++;}else{n++;if(rk!==null&&rk<=3)t++;}}return {n:n,fk:n?(t/n*100):null,ln:ln,lf:ln?(lw/ln*100):null};}
+function _umaBaba(rh){var p=0,n=0;for(var i=0;i<rh.length;i++){var b=rh[i].baba||'';if(b.indexOf('稍')!==-1||b.indexOf('重')!==-1||b.indexOf('不良')!==-1){n++;var rk=rh[i].rank;if(typeof rk==='number'&&rk<=3)p++;}}if(n===0)return 0;var fk=p/n*100;if(fk>=100&&n>=2)return 8;if(fk>=100&&n===1)return 3;if(fk>=60&&n>=3)return 6;if(fk>=60&&n===2)return 4;if(fk>=40&&n>=2)return 2;if(fk===0&&n>=3)return -4;return 0;}
 function _umaTenkai(rh){var mk=0,yo=0,cnt=0;for(var i=0;i<rh.length&&i<6;i++){var r=rh[i];var ps=(r.passing||'').split('-').map(function(x){return parseInt(x,10);}).filter(function(x){return !isNaN(x);});var c4=(typeof r.corner4==='number')?r.corner4:null;var at=(typeof r.atama==='number')?r.atama:null;if(!ps.length||c4===null||at===null||at<=1)continue;cnt++;var c3=ps.length>=2?ps[ps.length-2]:ps[ps.length-1];if(c3-c4>=2)mk++;if(c4<=5)yo++;}if(cnt<4)return 0;var pr=mk/cnt*100,yr=yo/cnt*100;if(yr>=60&&pr>=33)return 3;if(yr>=60)return 2;if(pr>=33)return 1;return 0;}
 function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
-  var M = 72;
+  var M = 80;
   if(!horse) return {total:0,max:M,pct:0,items:{},penalty:0};
   if(horse.isAvoided) return {total:0,max:M,pct:0,items:{},isAvoided:true,avoidReason:horse.avoidReason||''};
   var rh = Array.isArray(horse.raceHistory)?horse.raceHistory:[];
@@ -21360,14 +21361,14 @@ function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
   var _mg=_umaMigi(rh); var migiScore=_migiSlope(_mg);
   items.migiApt={score:migiScore,max:3,label:'右回り適性',group:'horse'};
   var tenkaiScore=_umaTenkai(rh);
-  items.tenkaiApt={score:tenkaiScore,max:3,label:'4角展開適性(捲り・好位)',group:'data'};
-  var total=popScore+kinScore+runScore+prevScore+wakuScore+intervalScore+sexScore+bloodScore+distAptScore+juushoScore+areScore+agScore+prevFinScore+migiScore+tenkaiScore;
+  var _rmeta=(typeof RACE_META!=='undefined'&&RACE_META[raceName])?RACE_META[raceName]:{};var babaScore=(_rmeta.babaWet)?_umaBaba(rh):0;items.tenkaiApt={score:tenkaiScore,max:3,label:'4角展開適性(捲り・好位)',group:'data'};
+  var total=popScore+kinScore+runScore+prevScore+wakuScore+intervalScore+sexScore+bloodScore+distAptScore+juushoScore+areScore+agScore+prevFinScore+migiScore+tenkaiScore+babaScore; items.babaApt={score:babaScore,max:8,label:'道悪適性(当日道悪)',group:'data'};
   total=Math.max(0,total);
   var pct=Math.max(0,Math.min(99,Math.round(total/M*100)));
   return {total:total,max:M,pct:pct,items:items,penalty:0};
 }
 function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
-  var M = 90;
+  var M = 98;
   if(!horse) return {total:0,max:M,pct:0,items:{},penalty:0};
   if(horse.isAvoided) return {total:0,max:M,pct:0,items:{},isAvoided:true,avoidReason:horse.avoidReason||''};
   var rh=Array.isArray(horse.raceHistory)?horse.raceHistory:[];
@@ -21472,8 +21473,8 @@ function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
   var _mg=_umaMigi(rh); var migiScore=_migiSlope(_mg);
   items.migiApt={score:migiScore,max:2,label:'右回り巧者(左凡走×右好走)',group:'horse'};
   var tenkaiScore=_umaTenkai(rh);
-  items.tenkaiApt={score:tenkaiScore,max:3,label:'4角展開適性(捲り・好位)',group:'data'};
-  var total=popScore+ageScore+kinScore+runScore+prevScore+distScore+wcScore+venueScore+wakuScore+shozoku+bloodScore+distAptScore+crsScore+juushoScore+areScore+migiScore+tenkaiScore+jockeyScore;
+  var _hmeta=(typeof RACE_META!=='undefined'&&RACE_META[raceName])?RACE_META[raceName]:{};var babaScore=(_hmeta.babaWet)?_umaBaba(rh):0;items.tenkaiApt={score:tenkaiScore,max:3,label:'4角展開適性(捲り・好位)',group:'data'};
+  var total=popScore+ageScore+kinScore+runScore+prevScore+distScore+wcScore+venueScore+wakuScore+shozoku+bloodScore+distAptScore+crsScore+juushoScore+areScore+migiScore+tenkaiScore+jockeyScore+babaScore; items.babaApt={score:babaScore,max:8,label:'道悪適性(当日道悪)',group:'data'};
   total=Math.max(0,total);
   var pct=Math.max(0,Math.min(99,Math.round(total/M*100)));
   return {total:total,max:M,pct:pct,items:items,penalty:0};
