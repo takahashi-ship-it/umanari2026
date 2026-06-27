@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0213';
+  var CURRENT_VERSION = '20260623-0214';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -11127,6 +11127,43 @@ function renderKinkaGolden(race, horses){
   return html;
 }
 
+
+function renderDoakuTrend(race, horses){
+  var meta=(typeof RACE_META!=='undefined'&&RACE_META[race])?RACE_META[race]:{};
+  if(!meta.babaWet) return '';
+  var isHak=(race.indexOf('函館')!==-1);
+  var trendTitle, trendDesc;
+  if(isHak){
+    trendTitle='🌧️ 道悪傾向（過去10年・稍重以上4年）';
+    trendDesc='函館の道悪は<b>「前残り」と「後方一気」の二極</b>。中団が手薄になりやすい。2着3着に超人気薄(14人気/13人気)が突入し、斤量57kg級が好走。';
+  } else {
+    trendTitle='🌧️ 道悪傾向（過去10年・稍重以上3年）';
+    trendDesc='福島1800の道悪は<b>「前残り優勢」</b>。直線が短く前で運べる馬が強い。人気薄の逃げ先行が残る(5〜9番人気で4角3番手以内が1-5-2-6)。';
+  }
+  var senzan=[], kouhou=[];
+  for(var i=0;i<horses.length;i++){ var h=horses[i]; if(h.isAvoided) continue;
+    var k=_doakuKyaku(h);
+    if(k==='前残り') senzan.push(h.name);
+    else if(k==='後方一気') kouhou.push(h.name);
+  }
+  var html='<div style="background:#1A2332;border:1.5px solid #4A6FA5;border-radius:14px;padding:14px;margin-top:10px">';
+  html+='<div style="font-size:15px;font-weight:700;color:#8FB8E8;margin-bottom:4px">'+trendTitle+'</div>';
+  html+='<div style="font-size:11px;color:#B8D0EC;margin-bottom:12px;line-height:1.7">'+trendDesc+'</div>';
+  html+='<div style="margin-bottom:10px">';
+  html+='<div style="font-size:12px;font-weight:700;color:#6FCF97;margin-bottom:5px">🏃 前残り型（'+senzan.length+'頭）</div>';
+  html+='<div style="display:flex;flex-wrap:wrap;gap:5px">';
+  for(var s=0;s<senzan.length;s++){ html+='<span style="background:rgba(111,207,151,0.18);border:0.5px solid #6FCF97;border-radius:8px;padding:3px 9px;font-size:11px;color:#D6F5E3;white-space:nowrap">🏃 '+senzan[s]+'</span>'; }
+  if(!senzan.length) html+='<span style="font-size:11px;color:#7088A0">該当なし</span>';
+  html+='</div></div>';
+  html+='<div>';
+  html+='<div style="font-size:12px;font-weight:700;color:#E8A87C;margin-bottom:5px">⚡ 後方一気型（'+kouhou.length+'頭）'+(isHak?'<span style="font-size:10px;color:#B8D0EC">…道悪函館は2-3着に突入</span>':'')+'</div>';
+  html+='<div style="display:flex;flex-wrap:wrap;gap:5px">';
+  for(var k2=0;k2<kouhou.length;k2++){ html+='<span style="background:rgba(232,168,124,0.18);border:0.5px solid #E8A87C;border-radius:8px;padding:3px 9px;font-size:11px;color:#F5E1D3;white-space:nowrap">⚡ '+kouhou[k2]+'</span>'; }
+  if(!kouhou.length) html+='<span style="font-size:11px;color:#7088A0">該当なし</span>';
+  html+='</div></div>';
+  html+='</div>';
+  return html; /* DOAKU_TREND_V1 */
+}
 function renderTetsubanJirai(race, horses){
   /* TETSUBAN_JIRAI_V1 */
   if(typeof document!=='undefined' && !document.getElementById('umanari-glow-style')){
@@ -12393,6 +12430,7 @@ function renderPastData() {
       // コース特性（最優先表示）
       if (data.himitsuData4 && typeof renderHimitsuData4==='function') html += renderHimitsuData4(data.himitsuData4);
       html += renderTetsubanJirai(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
+      html += renderDoakuTrend(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
       if (data.courseInfo) html += renderPastSection('コース特性・買いたいタイプ', '🏟', data.courseInfo, horsesNew);
       // 必須4項目（順序固定）
       html += renderPastSection('人気別成績',   '📊', data.popularity, horsesNew);
@@ -21275,6 +21313,7 @@ function _umaKyaku(rh){var c={nige:0,senko:0,sashi:0,oikomi:0},u=0;for(var i=0;i
 function _umaAgari(rh){var best=null;for(var i=0;i<rh.length&&i<5;i++){var v=parseFloat(rh[i].last3f);if(!isNaN(v)){if(best===null||v<best)best=v;}}return best;}
 function _migiSlope(mg){if(!mg||mg.n<3||mg.fk===null)return 0;var f=mg.fk;if(f>=80)return 3;if(f>=60)return 2;if(f>=21)return 0;if(f>=11)return -2;if(f>=1)return -3;return -4;}
 function _umaMigi(rh){var LEFT={'東京':1,'中京':1,'新潟':1};var t=0,n=0,lw=0,ln=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(r.surface!=='芝')continue;var c=r.course||'';if(!c)continue;var left=LEFT[c]===1;var rk=(typeof r.rank==='number')?r.rank:null;if(left){ln++;if(rk!==null&&rk<=3)lw++;}else{n++;if(rk!==null&&rk<=3)t++;}}return {n:n,fk:n?(t/n*100):null,ln:ln,lf:ln?(lw/ln*100):null};}
+function _doakuKyaku(h){var rh=h.raceHistory||[];var ps=[];for(var i=0;i<rh.length&&i<6;i++){var c4=rh[i].corner4,at=rh[i].atama;if(typeof c4==='number'&&at){ps.push(c4/at);}}if(!ps.length)return null;var s=0;for(var j=0;j<ps.length;j++)s+=ps[j];var a=s/ps.length;return a<=0.35?'前残り':(a>=0.65?'後方一気':'中団');}
 function _umaBaba(rh){var p=0,n=0;for(var i=0;i<rh.length;i++){var b=rh[i].baba||'';if(b.indexOf('稍')!==-1||b.indexOf('重')!==-1||b.indexOf('不良')!==-1){n++;var rk=rh[i].rank;if(typeof rk==='number'&&rk<=3)p++;}}if(n===0)return 0;var fk=p/n*100;if(fk>=100&&n>=2)return 8;if(fk>=100&&n===1)return 3;if(fk>=60&&n>=3)return 6;if(fk>=60&&n===2)return 4;if(fk>=40&&n>=2)return 2;if(fk===0&&n>=3)return -4;return 0;}
 function _umaTenkai(rh){var mk=0,yo=0,cnt=0;for(var i=0;i<rh.length&&i<6;i++){var r=rh[i];var ps=(r.passing||'').split('-').map(function(x){return parseInt(x,10);}).filter(function(x){return !isNaN(x);});var c4=(typeof r.corner4==='number')?r.corner4:null;var at=(typeof r.atama==='number')?r.atama:null;if(!ps.length||c4===null||at===null||at<=1)continue;cnt++;var c3=ps.length>=2?ps[ps.length-2]:ps[ps.length-1];if(c3-c4>=2)mk++;if(c4<=5)yo++;}if(cnt<4)return 0;var pr=mk/cnt*100,yr=yo/cnt*100;if(yr>=60&&pr>=33)return 3;if(yr>=60)return 2;if(pr>=33)return 1;return 0;}
 function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
