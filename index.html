@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260705-0340';
+  var CURRENT_VERSION = '20260705-0341';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13120,6 +13120,28 @@ function renderTokyoFormAnalysis(d) {
 }
 
 var RACE_RESULTS_DATA = {
+  '北九州記念': [
+    {year:2025, baba:'良', san:'67,370円', res:[
+      {r:1,name:'ヤマニンアルリフラ',pop:1},{r:2,name:'ヨシノイースター',pop:5},{r:3,name:'アブキールベイ',pop:7} ]},
+    {year:2024, baba:'稍重', san:'798,750円', res:[
+      {r:1,name:'ピューロマジック',pop:3},{r:2,name:'ヨシノイースター',pop:9},{r:3,name:'モズメイメイ',pop:16} ]},
+    {year:2023, baba:'良', san:'99,380円', res:[
+      {r:1,name:'ジャスパークローネ',pop:5},{r:2,name:'ママコチャ',pop:1},{r:3,name:'ストーンリッジ',pop:9} ]},
+    {year:2022, baba:'良', san:'493,580円', res:[
+      {r:1,name:'ボンボヤージ',pop:16},{r:2,name:'タイセイビジョン',pop:3},{r:3,name:'ナムラクレア',pop:1} ]},
+    {year:2021, baba:'稍重', san:'51,840円', res:[
+      {r:1,name:'ヨカヨカ',pop:5},{r:2,name:'ファストフォース',pop:4},{r:3,name:'モズスーパーフレア',pop:2} ]},
+    {year:2020, baba:'稍重', san:'93,990円', res:[
+      {r:1,name:'レッドアンシェル',pop:8},{r:2,name:'モズスーパーフレア',pop:1},{r:3,name:'アウィルアウェイ',pop:10} ]},
+    {year:2019, baba:'良', san:'117,900円', res:[
+      {r:1,name:'ダイメイプリンセス',pop:8},{r:2,name:'ディアンドル',pop:3},{r:3,name:'アンヴァル',pop:5} ]},
+    {year:2018, baba:'良', san:'71,170円', res:[
+      {r:1,name:'アレスバローズ',pop:6},{r:2,name:'ダイメイプリンセス',pop:4},{r:3,name:'ラブカンプー',pop:7} ]},
+    {year:2017, baba:'良', san:'1,078,270円', res:[
+      {r:1,name:'ダイアナヘイロー',pop:3},{r:2,name:'ナリタスターワン',pop:14},{r:3,name:'ラインスピリット',pop:15} ]},
+    {year:2016, baba:'良', san:'34,850円', res:[
+      {r:1,name:'バクシンテイオー',pop:8},{r:2,name:'ベルカント',pop:1},{r:3,name:'オウノミチ',pop:3} ]}
+  ],
   'ラジオNIKKEI賞': [
     {year:2025,baba:'良',san:'55,480円',res:[{r:1,name:'エキサイトバイオ',pop:4},{r:2,name:'センツブラッド',pop:2},{r:3,name:'インパクトシー',pop:8}]},
     {year:2024,baba:'良',san:'45,740円',res:[{r:1,name:'オフトレイル',pop:6},{r:2,name:'シリウスコルト',pop:4},{r:3,name:'ヤマニンアドホック',pop:5}]},
