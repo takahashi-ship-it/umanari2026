@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260628-0301';
+  var CURRENT_VERSION = '20260629-0310';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -21368,6 +21368,165 @@ function computeScoreBreakdownHakodateSprintV1(horse, raceName, _rawOnly) {
   return { total: total, max: max, pct: pct, items: items, penalty: 0 };
 }
 
+function _getKitakyushuScoreStats() {
+  if (typeof window !== 'undefined' && window._kitakyushuScoreStatsCache) return window._kitakyushuScoreStatsCache;
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['北九州記念'] || []) : [];
+  var scores = [];
+  horses.forEach(function(h){
+    if (!h || h.isAvoided) return;
+    var bd = computeScoreBreakdownKitakyushuV1(h, '北九州記念', true); // _rawOnly=true で再帰回避
+    if (bd && typeof bd.total === 'number') scores.push(bd.total);
+  });
+  if (!scores.length) return null;
+  scores.sort(function(a, b){ return a - b; });
+  var maxScore = scores[scores.length - 1];
+  var medScore = scores.length % 2 === 1
+    ? scores[(scores.length - 1) / 2]
+    : (scores[scores.length / 2 - 1] + scores[scores.length / 2]) / 2;
+  var stats = { maxScore: maxScore, medScore: medScore };
+  if (typeof window !== 'undefined') window._kitakyushuScoreStatsCache = stats;
+  return stats;
+}
+
+function computeScoreBreakdownKitakyushuV1(horse, raceName, _rawOnly) {
+  if (!horse) return { total: 0, max: 119, pct: 0, items: {}, penalty: 0 };
+  if (horse.isAvoided) return { total: 0, max: 119, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
+  var h = horse;
+  var items = {};
+
+  // 脚質（max22）逃げ/先行22・自在20・差し10・追込3
+  var ky = h.kyakushitsu || h.style || h.runStyle || '';
+  var kyScore = (ky.indexOf('逃げ') >= 0 || ky.indexOf('先行') >= 0) ? 22
+              : (ky.indexOf('自在') >= 0) ? 20
+              : (ky.indexOf('差し') >= 0) ? 10
+              : (ky.indexOf('追込') >= 0) ? 3 : 10;
+  items.kyakushitsu = { score: kyScore, max: 22, label: '🏃脚質', group:'data' };
+
+  // 函館巧者（max8）＝函館コース実績"専用"（実成績ベース・函館芝1200の複勝率で算出）
+  // ※op複勝率の救済は1200距離適性項目に任せ、ここでは純粋に函館コース成績だけを見る＝二重解消
+  // ※函館芝1200のみカウント（函館ダ1000等は芝1200適性の根拠でないため除外）。サンプル薄(1戦)は満点にしない
+  var hak = h.hakodateAptitude || '';
+  var _hr = Array.isArray(h.raceHistory) ? h.raceHistory : [];
+  var _h12 = _hr.filter(function(r){ return r && r.course === '函館' && r.surface === '芝' && r.distance === 1200; });
+  var _hn = _h12.length;
+  var _hf = _h12.filter(function(r){ return typeof r.rank === 'number' && r.rank <= 3; }).length;
+  var _hpct = _hn > 0 ? (_hf / _hn * 100) : 0;
+  var _hbest = _h12.reduce(function(m, r){ var rk = (typeof r.rank === 'number') ? r.rank : 99; return rk < m ? rk : m; }, 99);
+  var hakScore, hakNote = '';
+  if (_hn >= 3 && _hpct >= 66)      { hakScore = 8; hakNote = '函館芝1200【複勝' + Math.round(_hpct) + '%】' + _hn + '戦の実績◎'; }
+  else if (_hn >= 3 && _hpct >= 40) { hakScore = 6; hakNote = '函館芝1200【複勝' + Math.round(_hpct) + '%】' + _hn + '戦'; }
+  else if (_hn >= 2 && _hpct >= 50) { hakScore = 6; hakNote = '函館芝1200【複勝' + Math.round(_hpct) + '%】' + _hn + '戦（連対歴）'; }
+  else if (_hn >= 1 && _hpct > 0)   { hakScore = 4; hakNote = '函館芝1200複勝歴ありだがサンプル薄(' + _hn + '戦)で中位'; }
+  else if (_hn >= 1 && _hbest <= 5) { hakScore = 4; hakNote = '函館芝1200複勝0%だがベスト' + _hbest + '着（掲示板〜あと一歩＝中間評価）'; }
+  else if (_hn >= 1)                { hakScore = 2; hakNote = '函館芝1200で' + _hn + '戦複勝0%・ベスト' + _hbest + '着（明確な凡走）'; }
+  else                              { hakScore = 3; hakNote = '函館芝1200未経験＝中立（未経験≠不適性）'; }
+  items.hakodate = { score: hakScore, max: 8, label: '🏟函館巧者', note: hakNote, group:'horse' };
+
+  // 1200距離適性（max8）sprint1200の実数ベース
+  var sp = h.sprint1200 || {};
+  var opS = (typeof sp.opStarts === 'number') ? sp.opStarts : 0;
+  var opF = (typeof sp.opFuku === 'number') ? sp.opFuku : 0;
+  var distScore, distNote;
+  if (opS === 0) { distScore = 2; distNote = '全クラス巧者だが重賞格未証明'; }
+  else if (opS <= 2 && opF === 0) { distScore = 1; distNote = '1200重賞実績ほぼ無し'; }
+  else if (opF >= 60) { distScore = 8; distNote = 'オープン以上で複勝率60%以上'; }
+  else if (opF >= 40) { distScore = 6; distNote = 'オープン以上で複勝率40%台'; }
+  else if (opF >= 1)  { distScore = 4; distNote = 'オープン以上で複勝率1〜39%'; }
+  else                { distScore = 3; distNote = 'オープン経験あるが複勝0%'; }
+  items.sprint = { score: distScore, max: 8, label: '⚡1200距離適性', note: distNote, group:'horse' };
+
+  // リピーター（max4）当レース最高着順 1-3着→4 / 4-5→2 / その他数値→1 / null→0
+  var rep = h.repeaterRecord;
+  var repScore = (rep == null) ? 0 : (rep <= 3 ? 4 : rep <= 5 ? 2 : 1);
+  items.repeater = { score: repScore, max: 4, label: '🔁当レース実績', group:'horse' };
+
+  // 前走クラス＋着順（max16）＝金塊データで精緻化
+  //  金塊②高松宮ペナルティ(案A・着順依存)：掲示板級(5着内)は勝ち切れないが来る→-2に緩和／6着以下の凡走は-4
+  //  金塊①マイルG1組(高松宮以外のG1)で前走5着内＝複勝46%の鉄板→+3ボーナス(今年該当0だが汎用ロジック)
+  var pc = h.prevClass || '';
+  var classBase = pc === 'G1' ? 12 : pc === 'G2' ? 10 : pc === 'G3' ? 9 : pc === 'L' ? 7 : pc === 'OP' ? 7 : pc === '3勝' ? 5 : 0;
+  var pr = (typeof h.prevRank === 'number') ? h.prevRank : 99;
+  var rankAdj = pr <= 3 ? 4 : pr <= 5 ? 2 : pr <= 9 ? 0 : -2;
+  var takaPen = h.isTakamatsu ? (pr <= 5 ? 2 : 4) : 0;
+  var isMileG1 = (pc === 'G1' && !h.isTakamatsu);
+  var mileG1Bonus = (isMileG1 && pr <= 5) ? 3 : 0;
+  var prevScore = Math.max(0, Math.min(16, classBase + rankAdj - takaPen + mileG1Bonus));
+  var prevNote = '';
+  if (h.isTakamatsu) prevNote = (pr <= 5) ? '高松宮組だが掲示板級-2（勝ち切れないが来る）' : '高松宮組-4（人気の割に大敗）';
+  else if (mileG1Bonus) prevNote = '前走マイルG1組+3（複勝46%の鉄板）';
+  items.prevRace = { score: prevScore, max: 16, label: '📋前走格', note: prevNote, group:'data' };
+
+  // 血統（max14）◎14/○9/△4
+  var bt = h.bloodType || '';
+  var btScore = bt === '◎' ? 14 : bt === '○' ? 9 : bt === '△' ? 4 : 0;
+  items.blood = { score: btScore, max: 14, label: '🩸血統', group:'horse' };
+
+  // 人気別(複勝率順)（max12・北九州記念V1確定仕様A）過去20年複勝率順：1番45.0%(最良)/3番35.0%/2・5番30.0%/4番25.0%/6-9番20.0%(中穴)/10番以下6.9%
+  var pop = h.popEstimate || 99, popScore;
+  if(pop===1) popScore=12;
+  else if(pop===3) popScore=11;
+  else if(pop===2||pop===5) popScore=10;
+  else if(pop===4) popScore=8;
+  else if(pop>=6&&pop<=9) popScore=7;
+  else popScore=3;
+  items.popularity = { score: popScore, max: 12, label: '人気別(複勝率順)', group:'data' };
+
+  // 年齢（max8）3-4→8 / 5→6 / 6→4 / 7→3 / 8+→1
+  var age = h.age || 0;
+  var ageScore = age <= 4 ? 8 : age === 5 ? 6 : age === 6 ? 4 : age === 7 ? 3 : 1;
+  items.age = { score: ageScore, max: 8, label: '🎂年齢', group:'data' };
+
+  // 斤量（max5）<=55→5 / 56→4 / 57→3 / 58+→2
+  var cw = h.carriedWeight || 0;
+  var cwScore = cw <= 55 ? 5 : cw <= 56 ? 4 : cw <= 57 ? 3 : 2;
+  items.weight = { score: cwScore, max: 5, label: '🎚️斤量', group:'horse' };
+
+  // 騎手（max5）当レース勝ち鞍ありの騎手→5 / 未定→2 / その他→3
+  var jk = h.jockey || '';
+  var aceJ = ['浜中','武豊','池添','横山武史','北村友一','戸崎圭太','藤岡佑介'];
+  var jScore = (jk === '未定' || jk === '') ? 2 : (aceJ.some(function(n){ return jk.indexOf(n) >= 0; }) ? 5 : 3);
+  items.jockey = { score: jScore, max: 5, label: '🧑‍🦱騎手', group:'env' };
+
+  // 枠（配点なし）
+  items.waku = { score: 0, max: 0, label: '🎯枠順', note: '配点なし', group:'data' };
+
+  // 調教（max10）うましる評価 S=10/A=9/B=7/C=5/D=3/E(測定不能)=5(中立)/未設定=7(暫定中立)
+  var tg = h.training || '';
+  var trainingScore = (tg === 'S') ? 10 : (tg === 'A') ? 9 : (tg === 'B') ? 7 : (tg === 'C') ? 5 : (tg === 'D') ? 3 : (tg === 'E') ? 5 : 7;
+  var trainingNote = (tg === 'S') ? 'S:今年最高クラスの仕上がり' : (tg === 'A') ? 'A:好仕上がり' : (tg === 'B') ? 'B:標準' : (tg === 'C') ? 'C:本調子手前' : (tg === 'D') ? 'D:物足りない' : (tg === 'E') ? 'E:測定不能(中立)' : '評価前(暫定中立)';
+  items.training = { score: trainingScore, max: 10, label: '🐎調教(うましる)', note: trainingNote, group:'env' };
+
+  // 【記事金塊】前走ちょうど3着の上積み（max3・既存rankAdj+4は1-3着共通・上積みは3着限定で二重でない）
+  var prevThirdScore = (h.prevRank === 3) ? 3 : 0;
+  items.prevThird = { score: prevThirdScore, max: 3, label: '🔥前走3着', note: (prevThirdScore ? '前走3着は函館SS過去【4-0-1-4】複勝55.6%で1着2着より好成績(+3)' : ''), group:'data' };
+
+  // 【記事金塊④】牝馬×前走4角3番手以内（max4・新軸：牝馬の勝ち馬は全て前走4角3番手以内＝前で運べる牝馬は買い）
+  var mareFrontScore = (h.sex === '牝' && h.prevCorner4 && h.prevCorner4 <= 3) ? 4 : 0;
+  items.mareFront = { score: mareFrontScore, max: 4, label: '♀前で運べる牝馬', note: (mareFrontScore ? '牝馬の勝ち馬は全て前走4角3番手以内(函館SS鉄板データ・前で運べる牝馬は買い)(+4)' : ''), group:'horse' };
+
+  var total = 0, max = 0;
+  Object.keys(items).forEach(function(k){ var it = items[k]; if (it && typeof it.score === 'number') { total += it.score; max += (it.max || 0); } });
+  total = Math.max(0, total);
+
+  // pct は宝塚・安田と同じ79%アンカーのシグモイド（floor8/ceil79・center=medScore・k=4/(max-med)）
+  var pct;
+  if (_rawOnly) {
+    pct = 0;
+  } else {
+    var stats = _getKitakyushuScoreStats();
+    if (stats && stats.maxScore > stats.medScore) {
+      var floorPct = 8, ceilPct = 79, range = ceilPct - floorPct;
+      var k2 = 4.0 / Math.max(1, stats.maxScore - stats.medScore);
+      var raw = 1 / (1 + Math.exp(-k2 * (total - stats.medScore)));
+      pct = Math.round(floorPct + range * raw);
+    } else {
+      pct = (max > 0) ? Math.max(0, Math.min(99, Math.round(total / max * 100))) : 0;
+    }
+  }
+
+  return { total: total, max: max, pct: pct, items: items, penalty: 0 };
+}
+
 function _umaAptTally(rh,pred){var n=0,t=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(!pred(r))continue;n++;if(typeof r.rank==='number'&&r.rank<=3)t++;}return {n:n,fk:n?(t/n*100):0};}
 function _umaJuusho(rh){var w=false,p=false;for(var i=0;i<rh.length;i++){var r=rh[i];if((r.grade==='G1'||r.grade==='G2'||r.grade==='G3')&&typeof r.rank==='number'){if(r.rank===1)w=true;else if(r.rank<=3)p=true;}}return w?3:(p?2:0);}
 function _umaKyaku(rh){var c={nige:0,senko:0,sashi:0,oikomi:0},u=0;for(var i=0;i<rh.length&&i<6;i++){var r=rh[i];var c4=(typeof r.corner4==='number')?r.corner4:null;var n=(typeof r.atama==='number')?r.atama:null;if(c4===null||n===null||n<=1)continue;u++;if(c4===1){c.nige++;}else{var rel=(c4-1)/(n-1);if(rel<=0.33)c.senko++;else if(rel<=0.66)c.sashi++;else c.oikomi++;}}if(!u)return '不明';var b='nige',bv=c.nige;if(c.senko>bv){b='senko';bv=c.senko;}if(c.sashi>bv){b='sashi';bv=c.sashi;}if(c.oikomi>bv){b='oikomi';bv=c.oikomi;}return b;}
@@ -21592,6 +21751,7 @@ function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
 function computeScoreBreakdown(horse, raceName) {
   if (raceName === 'ラジオNIKKEI賞') return computeScoreBreakdownRajioV1(horse, raceName);
   if (raceName === '函館記念') return computeScoreBreakdownHakodateV1(horse, raceName);
+  if (raceName === '北九州記念') return computeScoreBreakdownKitakyushuV1(horse, raceName);
   // ★回避馬は強制的に0%
   if (horse && horse.isAvoided) {
     return {
