@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260705-0360';
+  var CURRENT_VERSION = '20260705-0370';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -22238,6 +22238,20 @@ function computeScoreBreakdownKitakyushuV1(horse, raceName, _rawOnly) {
   // 【記事金塊】前走ちょうど3着の上積み（max3・既存rankAdj+4は1-3着共通・上積みは3着限定で二重でない）
   var prevThirdScore = (h.prevRank === 3) ? 3 : 0;
   items.prevThird = { score: prevThirdScore, max: 3, label: '🔥前走3着', note: (prevThirdScore ? '前走3着は函館SS過去【4-0-1-4】複勝55.6%で1着2着より好成績(+3)' : ''), group:'data' };
+  // 【前走距離適性】（max4・北九州記念データ準拠）raceHistory[0]の前走surface/distanceを参照
+  //  データ: 前走芝1200必須(複勝19.8%中心)/芝1400以上は10年でママコチャ1頭(複勝5%)/前走ダート・障害は0-0-0-5(複勝0%)
+  var pr0 = (Array.isArray(h.raceHistory) && h.raceHistory[0]) ? h.raceHistory[0] : null;
+  var prevDistScore, prevDistNote;
+  if (!pr0) { prevDistScore = 0; prevDistNote = '前走不明'; }
+  else {
+    var ps = pr0.surface, pd = pr0.distance;
+    if (ps === '芝' && pd === 1200) { prevDistScore = 4; prevDistNote = '前走芝1200(王道・複勝19.8%)'; }
+    else if (ps === '芝' && pd === 1000) { prevDistScore = 2; prevDistNote = '前走芝1000(アイビス組・複勝18.8%)'; }
+    else if (ps === '芝' && pd >= 1400) { prevDistScore = -4; prevDistNote = '前走芝1400以上(複勝5%・原則消し)'; }
+    else if (ps === 'ダ' || ps === '障') { prevDistScore = -6; prevDistNote = '前走ダート/障害(複勝0%・完全消し)'; }
+    else { prevDistScore = 0; prevDistNote = '前走条件不明'; }
+  }
+  items.prevDist = { score: prevDistScore, max: 4, label: '📏前走距離適性', note: prevDistNote, group:'data' };
 
   // 【記事金塊④】牝馬×前走4角3番手以内（max4・新軸：牝馬の勝ち馬は全て前走4角3番手以内＝前で運べる牝馬は買い）
   var mareFrontScore = (h.sex === '牝' && h.prevCorner4 && h.prevCorner4 <= 3) ? 4 : 0;
