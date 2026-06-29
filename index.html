@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260705-0330';
+  var CURRENT_VERSION = '20260705-0340';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7806,6 +7806,67 @@ function getActiveConditions() {
  *     html : { type:"html",  title?, html:"..." }
  * ===================================================== */
 const RACE_PAST_DATA = {
+  '北九州記念': {
+  himitsuData4: {
+    title: '㊙️ 北九州記念の金塊',
+    subtitle: '小倉芝1200・3歳上ハンデG3｜過去10年(2016-2025)',
+    conditions: [
+      '前走1着馬が断然【5-7-3-22】複勝率40.5%・直近3年すべて前走1着馬が勝利',
+      '前走芝1200m組が中心【9-6-8-93】｜芝1400m以上は10年でママコチャ1頭のみ',
+      '1番人気が2009-2024で16連敗した激荒れ重賞｜3着内30頭中13頭が6番人気以下',
+      '6～9番人気の中穴が単勝回収率190%｜2桁人気の3着内が7頭'
+    ]
+  },
+  blood: [
+    { label:'ロードカナロア系', record:'小倉芝1200 複勝26.3%', hot:true, comment:'コース最多勝・2022年覇者ボンボヤージ', matchFn:(h)=>((h.sire||'').indexOf('ロードカナロア')>=0||(h.motherSire||'').indexOf('ロードカナロア')>=0) },
+    { label:'ビッグアーサー系', record:'小倉芝1200 複勝27.4%', hot:true, comment:'コース適性上位のスプリント血統', matchFn:(h)=>((h.sire||'').indexOf('ビッグアーサー')>=0) },
+    { label:'サクラバクシンオー系', record:'当舞台の永遠の定番', hot:true, comment:'直系・母父含めスプリント鉄板', matchFn:(h)=>((h.sire||'').indexOf('サクラバクシンオー')>=0||(h.motherSire||'').indexOf('サクラバクシンオー')>=0) },
+    { label:'ファインニードル/アジアEX系', record:'近年小倉1200で台頭', hot:true, comment:'2024年ピューロマジック(アジアEX)', matchFn:(h)=>((h.sire||'').indexOf('ファインニードル')>=0||(h.sire||'').indexOf('アジアエクスプレス')>=0) }
+  ],
+  summary: '小倉芝1200・3歳上ハンデG3。1番人気16連敗の激荒れ重賞で、馬連1000円未満が過去10年ゼロ。最重要は前走着順——前走1着馬が複勝率40.5%で断然、直近3年は全て前走1着馬が勝利。前走は芝1200m必須(1400m以上はほぼ消し)。6～9番人気の中穴が単回190%と妙味の中心で、上位人気から下位人気まで手広く流す作戦が有効。脚質は逃げ・先行が有利だが差しの回収率も優秀(259%)。枠の内外有利不利はほぼ無し。斤量は軽ハンデ51-53kg・前走から斤量増の馬が好走。7歳以下重視、8歳以上は割引。',
+  popularity: [
+    { label:'1番人気', record:'複50%(1-3-1-5)', fukusho:'50.0%', comment:'2009-24で16連敗・勝ち切れず連下注意', matchFn:(h)=>h.popEstimate===1 },
+    { label:'3番人気', record:'複50%(2-2-1-5)', fukusho:'50.0%', hot:true, comment:'勝率20%でむしろ1番人気より信頼', matchFn:(h)=>h.popEstimate===3 },
+    { label:'5番人気', record:'複40%(2-1-1-6)', fukusho:'40.0%', hot:true, comment:'単回176%の妙味', matchFn:(h)=>h.popEstimate===5 },
+    { label:'6～9番人気', record:'複20%(9勝・単回190%)', fukusho:'20.0%', hot:true, comment:'中穴の独壇場・回収率の稼ぎどころ', matchFn:(h)=>h.popEstimate>=6&&h.popEstimate<=9 },
+    { label:'10番人気以下', record:'複6.9%(3-3-5-149)', fukusho:'6.9%', comment:'2桁人気の3着内7頭・前走勝ち馬とのタイム差0.7秒以内は警戒', matchFn:(h)=>h.popEstimate>=10 }
+  ],
+  waku: [
+    { label:'5～8枠(外)', record:'外枠優勢', fukusho:'5枠25%/6枠40%', hot:true, comment:'5枠から外が勝ち馬の中心・4枠は勝ち馬ゼロ', matchFn:(h)=>h.waku>=5 },
+    { label:'1～4枠(内)', record:'内枠も複勝率は遜色なし', fukusho:'内外差小', comment:'枠の有利不利はほぼ考慮不要', matchFn:(h)=>h.waku>=1&&h.waku<=4 }
+  ],
+  pace: [
+    { label:'逃げ・先行', record:'逃げ複40%・先行複26%', fukusho:'前有利', hot:true, comment:'時期前倒しで前残り傾向が強化', matchFn:(h)=>(h.kyakushitsu||'').indexOf('逃')>=0||(h.kyakushitsu||'').indexOf('先')>=0 },
+    { label:'差し', record:'単回259%・複回127%', fukusho:'差し妙味', hot:true, comment:'逃げ先行×差しの決着が主流', matchFn:(h)=>(h.kyakushitsu||'').indexOf('差')>=0 }
+  ],
+  age: [
+    { label:'3～4歳', record:'複勝率26%超', fukusho:'26.9%', hot:true, comment:'過去10年の勝ち馬の中心世代', matchFn:(h)=>h.age<=4 },
+    { label:'8歳以上', record:'複0%(0-0-0-6)', fukusho:'0%', danger:true, comment:'8歳以上は3着内ゼロ', matchFn:(h)=>h.age>=8 }
+  ],
+  hande: [
+    { label:'軽ハンデ51-53kg', record:'51kg複27%・53kg複17%', fukusho:'軽量優勢', hot:true, comment:'2024ピューロ53/2022ボンボ51', matchFn:(h)=>h.carriedWeight!=null&&h.carriedWeight<=53 },
+    { label:'57kg', record:'複66.7%(2-2-0-2)', fukusho:'66.7%', comment:'頭数少だが実績馬の好走例', matchFn:(h)=>h.carriedWeight===57 }
+  ],
+  prevRace: [
+    { label:'前走1着', record:'複40.5%(5-7-3-22)', fukusho:'40.5%', hot:true, comment:'断然・直近3年すべて前走1着馬が勝利', matchFn:(h)=>h.prevRank===1 },
+    { label:'前走3着', record:'複30.8%(2-1-1-9)', fukusho:'30.8%', hot:true, comment:'前走2着(複16.7%)より3着が良い逆転データ', matchFn:(h)=>h.prevRank===3 },
+    { label:'前走G3', record:'1着シェア60%(6-5-5-62)', fukusho:'20.5%', comment:'前走G3組が勝ち馬の主流(CBC賞・葵S等)', matchFn:(h)=>h.prevClass==='G3' }
+  ],
+  prevDistance: [
+    { label:'前走芝1200m', record:'複19.8%(9-6-8-93)', fukusho:'90%が該当', hot:true, comment:'勝ち馬の9割が前走芝1200', matchFn:(h)=>h.raceHistory&&h.raceHistory[0]&&h.raceHistory[0].surface==='芝'&&h.raceHistory[0].distance===1200 },
+    { label:'前走芝1400m以上', record:'複5%(0-1-0-19)', fukusho:'5.0%', danger:true, comment:'10年でママコチャ1頭のみ・原則消し', matchFn:(h)=>h.raceHistory&&h.raceHistory[0]&&h.raceHistory[0].surface==='芝'&&h.raceHistory[0].distance>=1400 }
+  ],
+  anaConditions: [
+    '6番人気以下でも前走勝ち馬とのタイム差0.7秒以内なら警戒(ボンボヤージ16番人気・ヨシノ9番人気2着)',
+    'サクラバクシンオー/デインヒル/Storm Catの血を持つ人気薄は穴で注意',
+    '前走上がり2-3位の牝馬は複勝率が高い'
+  ],
+  anaPoints: [
+    '1番人気は複勝圏まで・軸は前走1着馬から',
+    '中穴6-9番人気を手広く・前走1200mタイム差0.7秒以内を基準に',
+    '逃げ先行の前残り＋差し1頭の決着パターン'
+  ]
+},
   'ラジオNIKKEI賞': {
     migiAptitude:[
       {label:'右回り巧者(複60%↑)', record:'福島=右回り。通算で安定', fukusho:'60.0%', hot:true, comment:'右回り芝の通算複勝率60%以上。福島替わりで信頼度大。コロナドブリッジは複80%で当該条件向き。', matchFn:(h)=>{var m=(function(h){var rh=h.raceHistory||[];var n=0,t=0;for(var i=0;i<rh.length;i++){var r=rh[i];if(r.surface!=='芝')continue;var c=r.course||'';if(!c||c==='東京'||c==='中京'||c==='新潟')continue;n++;if(typeof r.rank==='number'&&r.rank<=3)t++;}return {n:n,fk:n?(t/n*100):null};})(h);return m.n>=3&&m.fk!==null&&m.fk>=60;}},
