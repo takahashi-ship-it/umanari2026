@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260629-0310';
+  var CURRENT_VERSION = '20260629-0320';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2942,6 +2942,14 @@ function getDefaultDisplayMonth() {
   if (supportedUpcoming.length > 0) {
     return parseInt(supportedUpcoming[0].date.split('-')[1], 10);
   }
+  // フォールバック(汎用): 今日以降で最も近い登録レース(RACES全体・SUPPORTED不問)の開催月
+  var nextRace = RACES
+    .filter(function(r){ return new Date(r.date) >= today; })
+    .sort(function(a,b){ return new Date(a.date) - new Date(b.date); });
+  if (nextRace.length > 0) {
+    return parseInt(nextRace[0].date.split('-')[1], 10);
+  }
+  // それでも該当なし(全レース過去)なら今日の月
   return today.getMonth() + 1;
 }
 let currentMonth = getDefaultDisplayMonth();
