@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260623-0221';
+  var CURRENT_VERSION = '20260628-0301';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1592,7 +1592,7 @@
         padding:6px 16px;
       ">
         <span style="font-size:11px;color:#666;font-weight:500">2026年通算回収率</span>
-        <span id="header-kaishuritu" style="font-size:20px;font-weight:800;color:#0F6E56;letter-spacing:.02em">148.6%</span>
+        <span id="header-kaishuritu" style="font-size:20px;font-weight:800;color:#0F6E56;letter-spacing:.02em">141.9%</span>
         <span id="header-badge" style="font-size:10px;background:#0F6E56;color:#fff;
                      padding:2px 6px;border-radius:9px;font-weight:600">黒字</span>
       </div>
@@ -1605,11 +1605,11 @@
         font-size:11px;
         color:#888;
       ">
-        <span>投資 <strong id="header-invest" style="color:#333">509,800円</strong></span>
+        <span>投資 <strong id="header-invest" style="color:#333">533,800円</strong></span>
         <span style="color:#ccc">→</span>
         <span>払戻 <strong id="header-payout" style="color:#0F6E56">757,520円</strong></span>
         <span style="color:#ccc">|</span>
-        <span><strong id="header-rieki" style="color:#0F6E56">+247,720円</strong></span>
+        <span><strong id="header-rieki" style="color:#0F6E56">+223,720円</strong></span>
       </div>
     </div>
   </div>
@@ -1749,17 +1749,17 @@
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
           <div>
             <div style="font-size:13px;font-weight:500;color:#085041;margin-bottom:2px">2026年 通算収支</div>
-            <div style="font-size:11px;color:#3B6D11">17レース（皐月賞・青葉賞・フローラS・マイラーズC・天皇賞春・京都新聞杯・エプソムC・NHKマイルC・ヴィクトリアマイル・平安S・オークス・葵S※・日本ダービー・目黒記念・安田記念・函館スプリントS・宝塚記念）</div>
+            <div style="font-size:11px;color:#3B6D11">21レース（皐月賞・青葉賞・フローラS・マイラーズC・天皇賞春・京都新聞杯・エプソムC・NHKマイルC・ヴィクトリアマイル・平安S・オークス・葵S※・日本ダービー・目黒記念・安田記念・函館スプリントS・宝塚記念・しらさぎS・府中牝馬S・函館記念・ラジオNIKKEI賞）</div>
           </div>
           <div style="text-align:right">
-            <div style="font-size:24px;font-weight:800;color:#0F6E56">+247,720円</div>
-            <div style="font-size:12px;color:#3B6D11">回収率 <strong>148.6%</strong> ✅ 黒字</div>
+            <div style="font-size:24px;font-weight:800;color:#0F6E56">+223,720円</div>
+            <div style="font-size:12px;color:#3B6D11">回収率 <strong>141.9%</strong> ✅ 黒字</div>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">
           <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
             <div style="font-size:10px;color:var(--text-mute)">総投資</div>
-            <div style="font-size:14px;font-weight:700;color:var(--text)">509,800円</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text)">533,800円</div>
           </div>
           <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
             <div style="font-size:10px;color:var(--text-mute)">総払戻</div>
@@ -1767,13 +1767,47 @@
           </div>
           <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
             <div style="font-size:10px;color:var(--text-mute)">的中率（予想含む）</div>
-            <div style="font-size:14px;font-weight:700;color:#185FA5">10/19</div>
+            <div style="font-size:14px;font-weight:700;color:#185FA5">10/21</div>
             <div style="font-size:9px;color:var(--text-mute)">※葵Sは予想的中・馬券購入なし</div>
           </div>
         </div>
       </div>
 
       
+        <!-- 函館記念（結果サマリー・6/28） -->
+        <div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="font-weight:bold;font-size:1.05em;color:#fff;">函館記念(G3) <span style="color:#999;font-size:0.85em;">6/28 函館・芝2000m</span></span>
+            <span style="background:#7a2a2a;color:#fff;padding:3px 10px;border-radius:6px;font-size:0.85em;">不的中</span>
+          </div>
+          <div style="color:#ccc;font-size:0.9em;line-height:1.7;">
+            <div>1着 ②ファウストラーゼン(7人) / 2着 ⑩ケリフレッドアスク(9人) / 3着 ③ピースワンデュック(10人)</div>
+            <div style="margin-top:4px;">3連単 326,840円(大波乱) ／ ◎エコロディノス=<b style="color:#e77;">9着</b></div>
+            <div style="margin-top:6px;display:flex;gap:16px;">
+              <span>投資 <b>12,000円</b></span><span>払戻 <b style="color:#e77;">0円</b></span><span>収支 <b style="color:#e77;">-12,000円</b></span>
+            </div>
+            <div style="margin-top:8px;padding:8px;background:#00000033;border-radius:6px;font-size:0.88em;color:#bbb;">
+              💭 ◎エコロディノスが9着に大敗。7-9-10番人気での3連単326,840円という人気薄決着を3連単6頭BOXで取れず。荒れ指数で「右回り苦手」として割り引いた3着ピースワンデュックが巻き返した点、人気薄の地力上位を軸の不振でまとめて取り逃した点が反省。軸の信頼度が低いハンデ重賞でBOX6頭は範囲不足。
+            </div>
+          </div>
+        </div>
+        <!-- ラジオNIKKEI賞（結果サマリー・6/28） -->
+        <div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="font-weight:bold;font-size:1.05em;color:#fff;">ラジオNIKKEI賞(G3) <span style="color:#999;font-size:0.85em;">6/28 福島・芝1800m</span></span>
+            <span style="background:#7a2a2a;color:#fff;padding:3px 10px;border-radius:6px;font-size:0.85em;">不的中</span>
+          </div>
+          <div style="color:#ccc;font-size:0.9em;line-height:1.7;">
+            <div>1着 ⑬サノノグレーター(4人) / 2着 ⑧ディールメーカー(8人) / 3着 ⑤リッツパーティー(1人)</div>
+            <div style="margin-top:4px;">3連単 52,690円 ／ ◎クカイリモク=<b style="color:#e77;">9着</b></div>
+            <div style="margin-top:6px;display:flex;gap:16px;">
+              <span>投資 <b>12,000円</b></span><span>払戻 <b style="color:#e77;">0円</b></span><span>収支 <b style="color:#e77;">-12,000円</b></span>
+            </div>
+            <div style="margin-top:8px;padding:8px;background:#00000033;border-radius:6px;font-size:0.88em;color:#bbb;">
+              💭 ◎クカイリモクが9着。1着サノノグレーター(前走皐月賞G1組・父グレイルロンサム系のパワー血統)を軸に推せなかったのが致命傷。3歳ハンデ戦では「前走クラスG1組」の格を最重視すべきだった。3着リッツパーティーは1番人気で軸候補だったが、ここを切ったのも痛恨。前走グレード上位を軽視した配点を見直す。
+            </div>
+          </div>
+        </div>
         <!-- しらさぎステークス（結果サマリー・6/21） -->
         <div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -2740,7 +2774,7 @@
 
 <script>
 /* 終了レースのリスト（カレンダー初回レンダリング前に定義必須） */
-var FINISHED_RACES = ['しらさぎステークス','府中牝馬S','天皇賞（春）', '京都新聞杯', 'エプソムC', 'NHKマイルC', '新潟大賞典', 'ヴィクトリアマイル', '平安ステークス', 'オークス', '葵ステークス', '日本ダービー', '目黒記念', '安田記念', '函館スプリントS', '宝塚記念'];
+var FINISHED_RACES = ['函館記念','ラジオNIKKEI賞','しらさぎステークス','府中牝馬S','天皇賞（春）', '京都新聞杯', 'エプソムC', 'NHKマイルC', '新潟大賞典', 'ヴィクトリアマイル', '平安ステークス', 'オークス', '葵ステークス', '日本ダービー', '目黒記念', '安田記念', '函館スプリントS', '宝塚記念'];
 
 /* =====================================================
  * 1) RACE CALENDAR
@@ -15043,6 +15077,8 @@ function renderCriteria() {
 var FINISHED_RACE_RESULTS = {
   'しらさぎステークス': '✅ このレースは終了しました | 1着：10番エルトンバローズ(7人) 2着：7番キープカルム(6人) 3着：11番エコロアルバ(1人) | 3連単90,760円・馬場稍重',
   '府中牝馬S': '✅ このレースは終了しました | 1着：7番セキトバイースト(5人) 2着：2番ウイントワイライト(9人) 3着：4番ミアネーロ(14人) | 3連単1,066,160円の大波乱',
+  '函館記念': '✅ このレースは終了しました | 1着：2番ファウストラーゼン(7人) 2着：10番ケリフレッドアスク(9人) 3着：3番ピースワンデュック(10人) | 3連単2-10-3 326,840円・単勝1,400円・馬連2-10 12,080円',
+  'ラジオNIKKEI賞': '✅ このレースは終了しました | 1着：13番サノノグレーター(4人) 2着：8番ディールメーカー(8人) 3着：5番リッツパーティー(1人) | 3連単13-8-5 52,690円・単勝540円・馬連8-13 4,550円',
 
   '天皇賞（春）': '✅ このレースは終了しました | 1着：7番クロワデュノール　2着：15番ヴェルテンベルク　3着：3番アドマイヤテラ | 3連単 7-15-3：70,630円 | 軸アドマイヤテラ3着✅的中',
   '京都新聞杯':   '✅ このレースは終了しました | 1着：5番コンジェスタス（軸馬）　2着：15番ベレシート　3着：6番ラディアントスター | 3連単 5→15→6：74,860円 🎉大的中！',
@@ -22822,6 +22858,12 @@ var JIKU_TRACKING = [
   { race: '府中牝馬S', aiJiku: 'ヴァルキリーバース', scoreJiku: 'ヴァルキリーバース',
     result: '着外(スコア軸)', aiHit: false, scoreHit: false, comboHit: false,
     note: 'スコア1位の自動軸ヴァルキリーバース(1人)は着外でscoreHit:false。但し道悪を見て軸を手動でセキトバイースト(5人・昨年覇者・道悪実績)に変更→セキトバ1着で実推奨軸は的中。2着ウイント・3着ミアネーロは共に追込で、前残り重視で後方脚質を相手から切ったため買い目は不的中(3連単106万の大波乱)。' },
+  { race: '函館記念', aiJiku: 'エコロディノス', scoreJiku: 'エコロディノス',
+    result: '9着', aiHit: false, scoreHit: false, comboHit: false,
+    note: 'スコア軸◎エコロディノスは9着に大敗しscoreHit:false。1着ファウストラーゼン(7人)・2着ケリフレッドアスク(9人)・3着ピースワンデュック(10人)の人気薄3頭決着(3連単326,840円)。荒れ指数で右回り苦手として割り引いたピースが3着に巻き返し。軸不振で人気薄上位を取り逃す。' },
+  { race: 'ラジオNIKKEI賞', aiJiku: 'クカイリモク', scoreJiku: 'クカイリモク',
+    result: '9着', aiHit: false, scoreHit: false, comboHit: false,
+    note: 'スコア軸◎クカイリモクは9着でscoreHit:false。1着サノノグレーター(4人・前走皐月賞G1組・グレイルロンサム系)・2着ディールメーカー(8人・前走NZT G2)・3着リッツパーティー(1人)。3歳ハンデ戦で前走クラスG1組の格を軸に取れなかったのが反省点。3連単52,690円。' },
 ];
 
 function renderJikuTracking() {
