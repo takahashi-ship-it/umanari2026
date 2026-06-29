@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260705-0341';
+  var CURRENT_VERSION = '20260705-0350';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -22142,18 +22142,34 @@ function computeScoreBreakdownKitakyushuV1(horse, raceName, _rawOnly) {
   else                              { hakScore = 3; hakNote = '小倉芝1200未経験＝中立（未経験≠不適性）'; }
   items.hakodate = { score: hakScore, max: 8, label: '🏟小倉巧者', note: hakNote, group:'horse' };
 
-  // 1200距離適性（max8）sprint1200の実数ベース
-  var sp = h.sprint1200 || {};
-  var opS = (typeof sp.opStarts === 'number') ? sp.opStarts : 0;
-  var opF = (typeof sp.opFuku === 'number') ? sp.opFuku : 0;
-  var distScore, distNote;
-  if (opS === 0) { distScore = 2; distNote = '全クラス巧者だが重賞格未証明'; }
-  else if (opS <= 2 && opF === 0) { distScore = 1; distNote = '1200重賞実績ほぼ無し'; }
-  else if (opF >= 60) { distScore = 8; distNote = 'オープン以上で複勝率60%以上'; }
-  else if (opF >= 40) { distScore = 6; distNote = 'オープン以上で複勝率40%台'; }
-  else if (opF >= 1)  { distScore = 4; distNote = 'オープン以上で複勝率1〜39%'; }
-  else                { distScore = 3; distNote = 'オープン経験あるが複勝0%'; }
-  items.sprint = { score: distScore, max: 8, label: '⚡1200距離適性', note: distNote, group:'horse' };
+  // 1200総合適性（max10）raceHistoryから芝1200走を直接集計・3層階層加点(二重計上なし)
+  // ①芝1200全体ベース(max5・サンプル数で信頼度補正) ②右回り芝1200(max3) ③小倉芝1200(max2・当該コース)
+  var _RIGHT12 = ['札幌','函館','福島','中山','京都','阪神','小倉'];
+  var _rh12 = Array.isArray(h.raceHistory) ? h.raceHistory : [];
+  var _t12 = _rh12.filter(function(r){ return r && r.surface === '芝' && r.distance === 1200; });
+  var _t12f = _t12.filter(function(r){ return typeof r.rank === 'number' && r.rank <= 3; });
+  var _r12 = _t12.filter(function(r){ return _RIGHT12.indexOf(r.course) >= 0; });
+  var _r12f = _r12.filter(function(r){ return typeof r.rank === 'number' && r.rank <= 3; });
+  var _k12 = _t12.filter(function(r){ return r.course === '小倉'; });
+  var _k12f = _k12.filter(function(r){ return typeof r.rank === 'number' && r.rank <= 3; });
+  var _tn = _t12.length, _tp = _tn ? (_t12f.length / _tn * 100) : 0;
+  var _rn = _r12.length, _rp = _rn ? (_r12f.length / _rn * 100) : 0;
+  var _kn = _k12.length, _kp = _kn ? (_k12f.length / _kn * 100) : 0;
+  var distScore = 0;
+  // ①芝1200全体(max5)
+  if (_tn >= 3)      { distScore += (_tp >= 70) ? 5 : (_tp >= 50) ? 4 : (_tp >= 30) ? 2 : 1; }
+  else if (_tn >= 1) { distScore += (_tp >= 50) ? 3 : 1; }
+  // ②右回り芝1200(max3)
+  if (_rn >= 3 && _rp >= 60)      distScore += 3;
+  else if (_rn >= 2 && _rp >= 50) distScore += 2;
+  else if (_rn >= 1 && _rp > 0)   distScore += 1;
+  // ③小倉芝1200(max2)
+  if (_kn >= 2 && _kp >= 50)      distScore += 2;
+  else if (_kn >= 1 && _kp > 0)   distScore += 1;
+  distScore = Math.min(distScore, 10);
+  var distNote = (_tn === 0) ? '芝1200未経験＝中立(0点)'
+    : ('芝1200【複勝' + Math.round(_tp) + '%】' + _tn + '走 / 右回り' + Math.round(_rp) + '%(' + _rn + '走) / 小倉' + Math.round(_kp) + '%(' + _kn + '走)');
+  items.sprint = { score: distScore, max: 10, label: '🐎1200総合適性', note: distNote, group:'horse' };
 
   // リピーター（max4）当レース最高着順 1-3着→4 / 4-5→2 / その他数値→1 / null→0
   var rep = h.repeaterRecord;
