@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260705-0350';
+  var CURRENT_VERSION = '20260705-0360';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -22115,11 +22115,14 @@ function computeScoreBreakdownKitakyushuV1(horse, raceName, _rawOnly) {
   var items = {};
 
   // 脚質（max22）逃げ/先行22・自在20・差し10・追込3
+  // 脚質（max22）北九州記念データ準拠: 先行22(複26%最安定・軸)/逃げ18(複20%粘れず凡走も)/自在20/差し18(★勝ち最多10・単回259%・複回127%の妙味)/追込6(複8%だが単勝一発)/不明12
+  // ※先行を逃げより先に評価(先行22・逃げ18で配点が異なるため順序重要)
   var ky = h.kyakushitsu || h.style || h.runStyle || '';
-  var kyScore = (ky.indexOf('逃げ') >= 0 || ky.indexOf('先行') >= 0) ? 22
+  var kyScore = (ky.indexOf('先行') >= 0) ? 22
+              : (ky.indexOf('逃げ') >= 0) ? 18
               : (ky.indexOf('自在') >= 0) ? 20
-              : (ky.indexOf('差し') >= 0) ? 10
-              : (ky.indexOf('追込') >= 0) ? 3 : 10;
+              : (ky.indexOf('差し') >= 0) ? 18
+              : (ky.indexOf('追込') >= 0) ? 6 : 12;
   items.kyakushitsu = { score: kyScore, max: 22, label: '🏃脚質', group:'data' };
 
   // 小倉巧者（max8）＝小倉コース実績"専用"（実成績ベース・小倉芝1200の複勝率で算出）
