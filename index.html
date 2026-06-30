@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260705-0390';
+  var CURRENT_VERSION = '20260705-0400';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -22271,6 +22271,26 @@ function computeScoreBreakdownKitakyushuV1(horse, raceName, _rawOnly) {
   var mareFrontScore = (h.sex === '牝' && h.prevCorner4 && h.prevCorner4 <= 3) ? 4 : 0;
   items.mareFront = { score: mareFrontScore, max: 4, label: '♀前で運べる牝馬', note: (mareFrontScore ? '牝馬の勝ち馬は全て前走4角3番手以内(函館SS鉄板データ・前で運べる牝馬は買い)(+4)' : ''), group:'horse' };
 
+  // 【コース巧者ボーナス】（max4・外部データ・回収率系のため控えめ）小倉芝1200の騎手・厩舎相性
+  var jk = h.jockey || '';
+  var st = h.stable || '';
+  var courseBonus = 0, cbNote = [];
+  if (jk.indexOf('松山') >= 0) { courseBonus += 2; cbNote.push('松山(小倉芝1200複42.5%)'); }
+  if (st.indexOf('斉藤崇') >= 0) { courseBonus += 2; cbNote.push('斉藤崇厩舎(特注145%)'); }
+  courseBonus = Math.min(courseBonus, 4);
+  items.courseAptitude = { score: courseBonus, max: 4, label: '🎯コース巧者(騎手厩舎)', note: cbNote.length ? cbNote.join('・') : 'コース特注相性なし', group:'data' };
+  // 【4歳×継続騎乗】（max2・外部データ・回収率278%だが回収率系のため控えめ）
+  var age4keizoku = 0, akNote = '';
+  var pjk = (h.raceHistory && h.raceHistory[0]) ? (h.raceHistory[0].jockey || '') : '';
+  var curjk = h.jockey || '';
+  if (h.age === 4 && curjk && pjk && (curjk.indexOf(pjk) >= 0 || pjk.indexOf(curjk) >= 0)) {
+    age4keizoku = 2; akNote = '4歳×継続騎乗(黄金条件・複回278%)';
+  } else if (h.age === 4) {
+    age4keizoku = 0; akNote = '4歳だが乗替/騎手未定';
+  } else {
+    age4keizoku = 0; akNote = '—';
+  }
+  items.age4keizoku = { score: age4keizoku, max: 2, label: '⭐4歳継続騎乗', note: akNote, group:'data' };
   var total = 0, max = 0;
   Object.keys(items).forEach(function(k){ var it = items[k]; if (it && typeof it.score === 'number') { total += it.score; max += (it.max || 0); } });
   total = Math.max(0, total);
