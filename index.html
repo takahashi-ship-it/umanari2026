@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260705-0380';
+  var CURRENT_VERSION = '20260705-0390';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -22215,10 +22215,24 @@ function computeScoreBreakdownKitakyushuV1(horse, raceName, _rawOnly) {
   var ageScore = age <= 4 ? 8 : age === 5 ? 6 : age === 6 ? 4 : age === 7 ? 3 : 1;
   items.age = { score: ageScore, max: 8, label: '🎂年齢', group:'data' };
 
-  // 斤量（max5）<=55→5 / 56→4 / 57→3 / 58+→2
+  // 斤量（max5）北九州記念データ準拠: 軽ハンデ妙味(51-53kg複勝27%)を素直に評価・57kg複勝66%は4頭で信頼薄のため非加点
+  // <=53→5(軽ハンデ妙味) / 53.5-55→4 / 55.5-56.5→3 / 57-57.5→2(重い) / 58+→1(最重量)
   var cw = h.carriedWeight || 0;
-  var cwScore = cw <= 55 ? 5 : cw <= 56 ? 4 : cw <= 57 ? 3 : 2;
+  var cwScore = (cw <= 53) ? 5 : (cw <= 55) ? 4 : (cw <= 56.5) ? 3 : (cw <= 57.5) ? 2 : 1;
   items.weight = { score: cwScore, max: 5, label: '🎚️斤量', group:'horse' };
+  // 【前走斤量増減】（max3・北九州記念データ準拠）前走斤量からの増減: 増は好走(複勝42%)・減は割引
+  var pw = (h.raceHistory && h.raceHistory[0] && typeof h.raceHistory[0].carriedWeight==='number')
+           ? h.raceHistory[0].carriedWeight : null;
+  var nw = h.carriedWeight;
+  var incScore, incNote;
+  if (pw===null || nw===null) { incScore=1; incNote='前走斤量不明'; }
+  else {
+    var _wd = nw - pw;
+    if (_wd >= 0.5)  { incScore=3; incNote='前走から増'+_wd.toFixed(1)+'kg(複勝42%好走)'; }
+    else if (_wd===0){ incScore=1; incNote='前走から増減なし'; }
+    else             { incScore=0; incNote='前走から減'+_wd.toFixed(1)+'kg'; }
+  }
+  items.weightInc = { score:incScore, max:3, label:'⚖前走斤量増減', note:incNote, group:'data' };
 
   // 騎手（max5）当レース勝ち鞍ありの騎手→5 / 未定→2 / その他→3
   var jk = h.jockey || '';
