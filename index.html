@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260705-0420';
+  var CURRENT_VERSION = '20260705-0430';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -3125,6 +3125,7 @@ const HORSES_BY_RACE = {
       kokuraAptitude: '',
       repeaterRecord: null,
       isTakamatsu: false,
+      wetAptitude: 4,
       raceHistory: [
         {date:'2026/05/16', course:'京都', raceName:'鞍馬S(OP)', grade:'', atama:16, umaban:12, odds:1.8, pop:1, rank:1, jockey:'松山弘平', carriedWeight:57.0, surface:'芝', distance:1200, baba:'良', time:'1:06.4', passing:'2-2', corner4:2, last3f:33.3, r:null},
         {date:'2026/02/28', course:'中山', raceName:'オーシャンS(GIII)', grade:'G3', atama:16, umaban:15, odds:8.7, pop:4, rank:6, jockey:'松山弘平', carriedWeight:57.0, surface:'芝', distance:1200, baba:'良', time:'1:07.3', passing:'4-4', corner4:4, last3f:34.6, r:null},
@@ -3166,6 +3167,7 @@ const HORSES_BY_RACE = {
       kokuraAptitude: '',
       repeaterRecord: null,
       isTakamatsu: false,
+      wetAptitude: 7,
       raceHistory: [
         {date:'2026/05/30', course:'京都', raceName:'葵S(GIII)', grade:'G3', atama:16, umaban:2, odds:8.7, pop:5, rank:1, jockey:'北村友一', carriedWeight:55.0, surface:'芝', distance:1200, baba:'良', time:'1:07.6', passing:'3-4', corner4:4, last3f:33.6, r:null},
         {date:'2026/04/11', course:'阪神', raceName:'3歳1勝クラス', grade:'', atama:15, umaban:14, odds:3.2, pop:1, rank:1, jockey:'岩田望来', carriedWeight:55.0, surface:'芝', distance:1200, baba:'稍', time:'1:08.4', passing:'6-7', corner4:7, last3f:33.6, r:null},
@@ -3204,6 +3206,7 @@ const HORSES_BY_RACE = {
       kokuraAptitude: '',
       repeaterRecord: 1,
       isTakamatsu: false,
+      wetAptitude: 6,
       raceHistory: [
         {date:'2026/04/15', course:'大井', raceName:'東京スプリント競走(JpnIII)', grade:'G3', atama:14, umaban:11, odds:17.8, pop:6, rank:3, jockey:'團野大成', carriedWeight:56.0, surface:'ダ', distance:1200, baba:'良', time:'1:11.4', passing:'7-5', corner4:5, last3f:36.3, r:null},
         {date:'2026/03/29', course:'中京', raceName:'高松宮記念(GI)', grade:'G1', atama:18, umaban:5, odds:40.2, pop:12, rank:14, jockey:'団野大成', carriedWeight:58.0, surface:'芝', distance:1200, baba:'良', time:'1:07.7', passing:'16-16', corner4:16, last3f:33.2, r:null},
@@ -3254,6 +3257,7 @@ const HORSES_BY_RACE = {
       kokuraAptitude: '',
       repeaterRecord: null,
       isTakamatsu: false,
+      wetAptitude: 8,
       raceHistory: [
         {date:'2026/05/16', course:'京都', raceName:'鞍馬S(OP)', grade:'', atama:16, umaban:6, odds:9.2, pop:3, rank:2, jockey:'鮫島克駿', carriedWeight:57.0, surface:'芝', distance:1200, baba:'良', time:'1:06.6', passing:'6-5', corner4:5, last3f:32.7, r:null},
         {date:'2026/01/11', course:'京都', raceName:'淀短距離S(L)', grade:'', atama:16, umaban:6, odds:4.9, pop:3, rank:2, jockey:'ハマーハ', carriedWeight:57.0, surface:'芝', distance:1200, baba:'良', time:'1:08.9', passing:'8-8', corner4:8, last3f:33.6, r:null},
@@ -3306,6 +3310,7 @@ const HORSES_BY_RACE = {
       kokuraAptitude: '',
       repeaterRecord: 2,
       isTakamatsu: false,
+      wetAptitude: 5,
       raceHistory: [
         {date:'2026/05/31', course:'京都', raceName:'安土城S(L)', grade:'', atama:17, umaban:12, odds:6.2, pop:3, rank:4, jockey:'田辺裕信', carriedWeight:58.0, surface:'芝', distance:1400, baba:'良', time:'1:20.1', passing:'6-6', corner4:6, last3f:32.7, r:null},
         {date:'2026/03/29', course:'中京', raceName:'高松宮記念(GI)', grade:'G1', atama:18, umaban:7, odds:88.0, pop:16, rank:12, jockey:'田辺裕信', carriedWeight:58.0, surface:'芝', distance:1200, baba:'良', time:'1:07.4', passing:'4-4', corner4:4, last3f:33.9, r:null},
@@ -3373,6 +3378,7 @@ const HORSES_BY_RACE = {
       kokuraAptitude: '',
       repeaterRecord: null,
       isTakamatsu: false,
+      wetAptitude: 7,
       raceHistory: [
         {date:'2026/04/26', course:'福島', raceName:'モルガナイトS(OP)', grade:'', atama:16, umaban:6, odds:6.4, pop:3, rank:1, jockey:'吉田隼人', carriedWeight:54.0, surface:'芝', distance:1200, baba:'良', time:'1:07.5', passing:'2-2', corner4:2, last3f:33.7, r:null},
         {date:'2026/03/29', course:'中山', raceName:'船橋S(3勝クラス)', grade:'', atama:15, umaban:10, odds:11.8, pop:7, rank:1, jockey:'石橋脩', carriedWeight:56.0, surface:'芝', distance:1200, baba:'良', time:'1:07.8', passing:'1-1', corner4:1, last3f:34.1, r:null},
@@ -3417,6 +3423,7 @@ const HORSES_BY_RACE = {
       kokuraAptitude: '',
       repeaterRecord: 3,
       isTakamatsu: false,
+      wetAptitude: 3,
       raceHistory: [
         {date:'2026/05/16', course:'京都', raceName:'鞍馬S(OP)', grade:'', atama:16, umaban:14, odds:11.9, pop:4, rank:12, jockey:'川田将雅', carriedWeight:56.0, surface:'芝', distance:1200, baba:'良', time:'1:07.4', passing:'12-12', corner4:12, last3f:32.8, r:null},
         {date:'2026/03/22', course:'中京', raceName:'愛知杯(GIII)', grade:'G3', atama:18, umaban:13, odds:39.5, pop:14, rank:13, jockey:'小崎綾也', carriedWeight:56.0, surface:'芝', distance:1400, baba:'良', time:'1:20.2', passing:'12-12', corner4:12, last3f:33.7, r:null},
@@ -3461,6 +3468,7 @@ const HORSES_BY_RACE = {
       kokuraAptitude: '',
       repeaterRecord: null,
       isTakamatsu: false,
+      wetAptitude: 7,
       raceHistory: [
         {date:'2025/10/12', course:'京都', raceName:'円山特別(2勝クラス)', grade:'', atama:14, umaban:11, odds:2.2, pop:1, rank:1, jockey:'団野大成', carriedWeight:55.0, surface:'ダ', distance:1200, baba:'良', time:'1:10.1', passing:'1-1', corner4:1, last3f:35.8, r:null},
         {date:'2025/08/30', course:'中京', raceName:'清洲特別(2勝クラス)', grade:'', atama:16, umaban:13, odds:2.8, pop:1, rank:2, jockey:'団野大成', carriedWeight:54.0, surface:'ダ', distance:1200, baba:'良', time:'1:11.0', passing:'2-2', corner4:2, last3f:36.8, r:null},
@@ -3502,6 +3510,7 @@ const HORSES_BY_RACE = {
       kokuraAptitude: '',
       repeaterRecord: null,
       isTakamatsu: false,
+      wetAptitude: 2,
       raceHistory: [
         {date:'2026/05/10', course:'新潟', raceName:'谷川岳S(L)', grade:'', atama:14, umaban:7, odds:15.0, pop:7, rank:1, jockey:'石川裕紀', carriedWeight:55.0, surface:'芝', distance:1400, baba:'良', time:'1:21.1', passing:'4-3', corner4:3, last3f:34.9, r:null},
         {date:'2026/03/15', course:'中山', raceName:'東風S(L)', grade:'', atama:16, umaban:2, odds:36.7, pop:9, rank:6, jockey:'石川裕紀', carriedWeight:55.0, surface:'芝', distance:1600, baba:'良', time:'1:32.5', passing:'7-6-6', corner4:6, last3f:34.2, r:null},
@@ -3544,6 +3553,7 @@ const HORSES_BY_RACE = {
       kokuraAptitude: '',
       repeaterRecord: null,
       isTakamatsu: false,
+      wetAptitude: 0,
       raceHistory: [
         {date:'2026/05/10', course:'新潟', raceName:'4歳以上1勝クラス', grade:'', atama:13, umaban:7, odds:4.9, pop:2, rank:1, jockey:'舟山瑠泉', carriedWeight:54.0, surface:'芝', distance:1200, baba:'良', time:'1:09.7', passing:'1-1', corner4:1, last3f:34.6, r:null},
         {date:'2026/04/19', course:'福島', raceName:'須賀川特別(1勝クラス)', grade:'', atama:16, umaban:8, odds:8.2, pop:3, rank:4, jockey:'斎藤新', carriedWeight:56.0, surface:'芝', distance:1200, baba:'良', time:'1:08.1', passing:'1-1', corner4:1, last3f:34.5, r:null},
@@ -3595,6 +3605,7 @@ const HORSES_BY_RACE = {
       kokuraAptitude: '',
       repeaterRecord: null,
       isTakamatsu: false,
+      wetAptitude: 3,
       raceHistory: [
         {date:'2026/04/26', course:'東京', raceName:'オアシスS(L)', grade:'', atama:15, umaban:8, odds:51.2, pop:11, rank:15, jockey:'松岡正海', carriedWeight:54.0, surface:'ダ', distance:1600, baba:'稍', time:'1:38.9', passing:'1-1', corner4:1, last3f:37.4, r:null},
         {date:'2026/03/14', course:'阪神', raceName:'コーラルS(L)', grade:'', atama:13, umaban:9, odds:51.6, pop:11, rank:11, jockey:'国分優作', carriedWeight:57.0, surface:'ダ', distance:1400, baba:'良', time:'1:23.9', passing:'2-2', corner4:2, last3f:37.5, r:null},
@@ -3640,6 +3651,7 @@ const HORSES_BY_RACE = {
       kokuraAptitude: '',
       repeaterRecord: null,
       isTakamatsu: false,
+      wetAptitude: 2,
       raceHistory: [
         {date:'2026/05/16', course:'京都', raceName:'鞍馬S(OP)', grade:'', atama:16, umaban:11, odds:69.0, pop:10, rank:13, jockey:'国分優作', carriedWeight:55.0, surface:'芝', distance:1200, baba:'良', time:'1:07.5', passing:'9-9', corner4:9, last3f:33.1, r:null},
         {date:'2026/04/26', course:'福島', raceName:'モルガナイトS(OP)', grade:'', atama:16, umaban:8, odds:7.7, pop:5, rank:12, jockey:'西塚洸二', carriedWeight:54.0, surface:'芝', distance:1200, baba:'良', time:'1:08.2', passing:'2-2', corner4:2, last3f:34.4, r:null},
@@ -3689,6 +3701,7 @@ const HORSES_BY_RACE = {
       kokuraAptitude: '',
       repeaterRecord: 18,
       isTakamatsu: false,
+      wetAptitude: 9,
       raceHistory: [
         {date:'2026/05/16', course:'京都', raceName:'鞍馬S(OP)', grade:'', atama:16, umaban:7, odds:139.4, pop:15, rank:6, jockey:'角田大和', carriedWeight:59.0, surface:'芝', distance:1200, baba:'良', time:'1:07.0', passing:'3-3', corner4:3, last3f:33.6, r:null},
         {date:'2026/02/28', course:'中山', raceName:'オーシャンS(GIII)', grade:'G3', atama:16, umaban:12, odds:423.3, pop:16, rank:14, jockey:'大野拓弥', carriedWeight:57.0, surface:'芝', distance:1200, baba:'良', time:'1:07.7', passing:'12-12', corner4:12, last3f:34.3, r:null},
@@ -22304,6 +22317,13 @@ function computeScoreBreakdownKitakyushuV1(horse, raceName, _rawOnly) {
   var ky2 = h.kyakushitsu || '';
   var lightLead = ((ky2.indexOf('逃げ') >= 0 || ky2.indexOf('先行') >= 0) && h.carriedWeight != null && h.carriedWeight <= 54) ? 2 : 0;
   items.lightLead = { score: lightLead, max: 2, label: '🔥軽ハンデ先行', note: (lightLead ? '軽ハンデ×前で運べる(止まらない)' : '—'), group:'data' };
+  // 【道悪適性】（max10・babaWet連動）RACE_META.babaWet===true(当日道悪)の時のみ加算。良馬場時は項目自体を出さず総max不変。
+  // 値は各馬 h.wetAptitude(血統+全レース道悪実績+脚質で算出済み)。良⇔道悪は当日の馬場発表でbabaWetを切替えるだけ。
+  var _kmeta = (typeof RACE_META !== 'undefined' && RACE_META[raceName]) ? RACE_META[raceName] : {};
+  if (_kmeta.babaWet === true) {
+    var wetS = (typeof h.wetAptitude === 'number') ? h.wetAptitude : 0;
+    items.wet = { score: wetS, max: 10, label: '☔道悪適性', note: '道悪(血統+道悪実績+脚質)', group: 'baba' };
+  }
   var total = 0, max = 0;
   Object.keys(items).forEach(function(k){ var it = items[k]; if (it && typeof it.score === 'number') { total += it.score; max += (it.max || 0); } });
   total = Math.max(0, total);
