@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260705-0400';
+  var CURRENT_VERSION = '20260705-0410';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -22115,13 +22115,13 @@ function computeScoreBreakdownKitakyushuV1(horse, raceName, _rawOnly) {
   var items = {};
 
   // 脚質（max22）逃げ/先行22・自在20・差し10・追込3
-  // 脚質（max22）北九州記念データ準拠: 先行22(複26%最安定・軸)/逃げ18(複20%粘れず凡走も)/自在20/差し18(★勝ち最多10・単回259%・複回127%の妙味)/追込6(複8%だが単勝一発)/不明12
-  // ※先行を逃げより先に評価(先行22・逃げ18で配点が異なるため順序重要)
+  // 脚質（max22）複勝率データ準拠(改訂): 先行22(複26%最安定)/逃げ20(逃げ複75%※好走時を反映し上げ)/自在20/差し16(やや下げ)/追込6(複8%)/不明12
+  // ※先行を逃げより先に評価(配点が異なるため順序重要)
   var ky = h.kyakushitsu || h.style || h.runStyle || '';
   var kyScore = (ky.indexOf('先行') >= 0) ? 22
-              : (ky.indexOf('逃げ') >= 0) ? 18
+              : (ky.indexOf('逃げ') >= 0) ? 20
               : (ky.indexOf('自在') >= 0) ? 20
-              : (ky.indexOf('差し') >= 0) ? 18
+              : (ky.indexOf('差し') >= 0) ? 16
               : (ky.indexOf('追込') >= 0) ? 6 : 12;
   items.kyakushitsu = { score: kyScore, max: 22, label: '🏃脚質', group:'data' };
 
@@ -22291,6 +22291,13 @@ function computeScoreBreakdownKitakyushuV1(horse, raceName, _rawOnly) {
     age4keizoku = 0; akNote = '—';
   }
   items.age4keizoku = { score: age4keizoku, max: 2, label: '⭐4歳継続騎乗', note: akNote, group:'data' };
+  // 【牝馬加点】（max2）過去10年牝馬好走多数(ピューロ/ヨカヨカ/ダイメイ連覇等)・斤量2kg減の恩恵
+  var mareScore = (h.sex === '牝') ? 2 : 0;
+  items.mare = { score: mareScore, max: 2, label: '♀牝馬', note: (h.sex === '牝' ? '牝馬(過去10年好走多数)' : '—'), group:'data' };
+  // 【軽ハンデ×先行の複合】（max2）mayuyu「斤量の軽い逃げ馬は止まらない」= 逃げ先行かつ54kg以下
+  var ky2 = h.kyakushitsu || '';
+  var lightLead = ((ky2.indexOf('逃げ') >= 0 || ky2.indexOf('先行') >= 0) && h.carriedWeight != null && h.carriedWeight <= 54) ? 2 : 0;
+  items.lightLead = { score: lightLead, max: 2, label: '🔥軽ハンデ先行', note: (lightLead ? '軽ハンデ×前で運べる(止まらない)' : '—'), group:'data' };
   var total = 0, max = 0;
   Object.keys(items).forEach(function(k){ var it = items[k]; if (it && typeof it.score === 'number') { total += it.score; max += (it.max || 0); } });
   total = Math.max(0, total);
