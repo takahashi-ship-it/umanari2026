@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260705-0410';
+  var CURRENT_VERSION = '20260705-0420';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -15405,8 +15405,14 @@ function renderHorses() {
     e._pct = Math.max(0, Math.min(99, _bd.pct));
     e._bd = _bd;
   });
-  // pct 降順ソート（同点時：人気が高い方が上位＝popEstimate昇順、次に馬番昇順）
-  enriched.sort((a, b) => (b._pct - a._pct)
+  // 印採番用ソート（同点時：人気が高い方が上位＝popEstimate昇順、次に馬番昇順）
+  // ※北九州記念(KitakyushuV1)は「印はスコア通り」ルールに合わせ生スコア(total)厳密降順で採番。
+  //   pctは0-99上限に圧縮され同点が出やすく、total微差(例:サウンドt98>デアt97)が印○▲に反映されないため。
+  //   他レース(函館/ラジオ等・確定済み)は従来のpct降順を維持し印を変えない。
+  enriched.sort((a, b) => (
+    (currentRace === '北九州記念')
+      ? (((b._bd && b._bd.total || 0) - (a._bd && a._bd.total || 0)) || (b._pct - a._pct))
+      : (b._pct - a._pct))
     || ((a.h.popEstimate || 99) - (b.h.popEstimate || 99))
     || ((a.h.umaban || 99) - (b.h.umaban || 99)));
 
