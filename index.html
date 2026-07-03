@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260705-0450';
+  var CURRENT_VERSION = '20260705-0460';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -3119,7 +3119,7 @@ const HORSES_BY_RACE = {
       prevRank: 1,
       prevRace: '鞍馬S(OP)',
       bloodType: '◎',
-      training: '',
+      training: 3,
       prevCorner4: 2,
       sprint1200: {all:'4/6', allFuku:66.7, op:'1/2', opFuku:50.0, opStarts:2},
       kokuraAptitude: '',
@@ -3161,7 +3161,7 @@ const HORSES_BY_RACE = {
       prevRank: 1,
       prevRace: '葵S(GIII)',
       bloodType: '◎',
-      training: '',
+      training: 2,
       prevCorner4: 4,
       sprint1200: {all:'2/2', allFuku:100.0, op:'1/1', opFuku:100.0, opStarts:1},
       kokuraAptitude: '',
@@ -3200,7 +3200,7 @@ const HORSES_BY_RACE = {
       prevRank: 3,
       prevRace: '東京スプリント競走(JpnIII)',
       bloodType: '◎',
-      training: '',
+      training: 1,
       prevCorner4: 5,
       sprint1200: {all:'3/7', allFuku:42.9, op:'2/6', opFuku:33.3, opStarts:6},
       kokuraAptitude: '',
@@ -3251,7 +3251,7 @@ const HORSES_BY_RACE = {
       prevRank: 2,
       prevRace: '鞍馬S(OP)',
       bloodType: '○',
-      training: '',
+      training: 1,
       prevCorner4: 5,
       sprint1200: {all:'9/12', allFuku:75.0, op:'2/2', opFuku:100.0, opStarts:2},
       kokuraAptitude: '',
@@ -3304,7 +3304,7 @@ const HORSES_BY_RACE = {
       prevRank: 4,
       prevRace: '安土城S(L)',
       bloodType: '△',
-      training: '',
+      training: 1,
       prevCorner4: 6,
       sprint1200: {all:'12/23', allFuku:52.2, op:'6/16', opFuku:37.5, opStarts:16},
       kokuraAptitude: '',
@@ -3372,7 +3372,7 @@ const HORSES_BY_RACE = {
       prevRank: 1,
       prevRace: 'モルガナイトS(OP)',
       bloodType: '◎',
-      training: '',
+      training: 1,
       prevCorner4: 2,
       sprint1200: {all:'4/5', allFuku:80.0, op:'1/1', opFuku:100.0, opStarts:1},
       kokuraAptitude: '',
@@ -3417,7 +3417,7 @@ const HORSES_BY_RACE = {
       prevRank: 12,
       prevRace: '鞍馬S(OP)',
       bloodType: '◎',
-      training: '',
+      training: 1,
       prevCorner4: 12,
       sprint1200: {all:'5/11', allFuku:45.5, op:'2/8', opFuku:25.0, opStarts:8},
       kokuraAptitude: '',
@@ -3462,7 +3462,7 @@ const HORSES_BY_RACE = {
       prevRank: 1,
       prevRace: '円山特別(2勝クラス)',
       bloodType: '○',
-      training: '',
+      training: 1,
       prevCorner4: 1,
       sprint1200: {all:'1/2', allFuku:50.0, op:'1/1', opFuku:100.0, opStarts:1},
       kokuraAptitude: '',
@@ -3504,7 +3504,7 @@ const HORSES_BY_RACE = {
       prevRank: 1,
       prevRace: '谷川岳S(L)',
       bloodType: '◎',
-      training: '',
+      training: 1,
       prevCorner4: 3,
       sprint1200: {all:'0/0', allFuku:0, op:'0/0', opFuku:0, opStarts:0},
       kokuraAptitude: '',
@@ -3547,7 +3547,7 @@ const HORSES_BY_RACE = {
       prevRank: 1,
       prevRace: '4歳以上1勝クラス',
       bloodType: '△',
-      training: '',
+      training: 1,
       prevCorner4: 1,
       sprint1200: {all:'5/9', allFuku:55.6, op:'0/0', opFuku:0, opStarts:0},
       kokuraAptitude: '',
@@ -3599,7 +3599,7 @@ const HORSES_BY_RACE = {
       prevRank: 15,
       prevRace: 'オアシスS(L)',
       bloodType: '△',
-      training: '',
+      training: 0,
       prevCorner4: 1,
       sprint1200: {all:'2/5', allFuku:40.0, op:'0/1', opFuku:0.0, opStarts:1},
       kokuraAptitude: '',
@@ -3645,7 +3645,7 @@ const HORSES_BY_RACE = {
       prevRank: 13,
       prevRace: '鞍馬S(OP)',
       bloodType: '◎',
-      training: '',
+      training: 2,
       prevCorner4: 9,
       sprint1200: {all:'5/11', allFuku:45.5, op:'0/2', opFuku:0.0, opStarts:2},
       kokuraAptitude: '',
@@ -3695,7 +3695,7 @@ const HORSES_BY_RACE = {
       prevRank: 6,
       prevRace: '鞍馬S(OP)',
       bloodType: '△',
-      training: '',
+      training: 0,
       prevCorner4: 3,
       sprint1200: {all:'5/17', allFuku:29.4, op:'2/12', opFuku:16.7, opStarts:12},
       kokuraAptitude: '',
@@ -22266,10 +22266,10 @@ function computeScoreBreakdownKitakyushuV1(horse, raceName, _rawOnly) {
   items.waku = { score: wakuScore, max: 2, label: '⛩枠順', note: (wk >= 5 ? '外枠(テン速さ・わずか有利)' : '内枠(互角)'), group:'data' };
 
   // 調教（max10）うましる評価 S=10/A=9/B=7/C=5/D=3/E(測定不能)=5(中立)/未設定=7(暫定中立)
-  var tg = h.training || '';
-  var trainingScore = (tg === 'S') ? 10 : (tg === 'A') ? 9 : (tg === 'B') ? 7 : (tg === 'C') ? 5 : (tg === 'D') ? 3 : (tg === 'E') ? 5 : 7;
-  var trainingNote = (tg === 'S') ? 'S:今年最高クラスの仕上がり' : (tg === 'A') ? 'A:好仕上がり' : (tg === 'B') ? 'B:標準' : (tg === 'C') ? 'C:本調子手前' : (tg === 'D') ? 'D:物足りない' : (tg === 'E') ? 'E:測定不能(中立)' : '評価前(暫定中立)';
-  items.training = { score: trainingScore, max: 10, label: '🐎調教(うましる)', note: trainingNote, group:'env' };
+  // 追い切り（max3）実際の追い切り評価(デイリー/ウマニティ/鉄矢 複数ソース統合): S+3/A+2/B+1/C0。良馬場・道悪共通(馬場非依存)。
+  var tScore = (typeof h.training === 'number') ? h.training : 0;
+  var trainingNote = (tScore >= 3) ? 'S:圧巻(複数ソース全一致)' : (tScore === 2) ? 'A:高評価' : (tScore === 1) ? 'B:標準〜好気配' : 'C:強調材料なし';
+  items.training = { score: tScore, max: 3, label: '🔨追い切り', note: trainingNote, group:'horse' };
 
   // 【記事金塊】前走ちょうど3着の上積み（max3・既存rankAdj+4は1-3着共通・上積みは3着限定で二重でない）
   var prevThirdScore = (h.prevRank === 3) ? 3 : 0;
