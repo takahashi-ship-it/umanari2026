@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260705-0440';
+  var CURRENT_VERSION = '20260705-0450';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -22260,10 +22260,10 @@ function computeScoreBreakdownKitakyushuV1(horse, raceName, _rawOnly) {
   items.jockey = { score: jScore, max: 5, label: '🧑‍🦱騎手', group:'env' };
 
   // 枠（配点なし）
-  // 枠（max2・控えめ）外部2ソースで内外評価が割れる(別ソース:1-3枠は過去2年3着内ゼロ / roman:内外ほぼ互角)ため決定的に扱わず、外枠わずか有利のみ
-  var _wkn = (typeof h.waku === 'number') ? h.waku : null;
-  var wakuScore = (_wkn === null) ? 0 : (_wkn >= 5) ? 2 : (_wkn === 4) ? 1 : 0;
-  items.waku = { score: wakuScore, max: 2, label: '🎯枠順(外枠わずか有利)', note: (_wkn === null ? '枠未定' : (_wkn >= 5 ? '外枠(5-8枠)+2' : _wkn === 4 ? '4枠+1' : '内枠(1-3枠)±0')), group:'data' };
+  // 枠（max2・控えめ）10年data「内外ほぼ互角(内16.4%/外18.2%)」を尊重。2年サンプルの「1-3枠3着内ゼロ」は鵜呑みにせず内枠を減点しない。外枠わずか有利のみ。
+  var wk = h.waku || 0;
+  var wakuScore = (wk >= 5) ? 2 : 0;
+  items.waku = { score: wakuScore, max: 2, label: '⛩枠順', note: (wk >= 5 ? '外枠(テン速さ・わずか有利)' : '内枠(互角)'), group:'data' };
 
   // 調教（max10）うましる評価 S=10/A=9/B=7/C=5/D=3/E(測定不能)=5(中立)/未設定=7(暫定中立)
   var tg = h.training || '';
