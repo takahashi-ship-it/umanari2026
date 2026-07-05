@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260705-0480';
+  var CURRENT_VERSION = '20260705-0481';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -22128,8 +22128,8 @@ function _getKitakyushuScoreStats() {
 }
 
 function computeScoreBreakdownKitakyushuV1(horse, raceName, _rawOnly) {
-  if (!horse) return { total: 0, max: 119, pct: 0, items: {}, penalty: 0 };
-  if (horse.isAvoided) return { total: 0, max: 119, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
+  if (!horse) return { total: 0, max: 138, pct: 0, items: {}, penalty: 0 };
+  if (horse.isAvoided) return { total: 0, max: 138, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
   var h = horse;
   var items = {};
 
@@ -22229,16 +22229,18 @@ function computeScoreBreakdownKitakyushuV1(horse, raceName, _rawOnly) {
   else popScore=3;
   items.popularity = { score: popScore, max: 12, label: '人気別(複勝率順)', group:'data' };
 
-  // 年齢（max8）3-4→8 / 5→6 / 6→4 / 7→3 / 8+→1
+  // 年齢（max8）【壁2: 高齢の壁】7歳以上=複勝率10.3%を減点で反映。4-5→+8 / 6→+4 / 7→-2 / 8+→-4
   var age = h.age || 0;
-  var ageScore = age <= 4 ? 8 : age === 5 ? 6 : age === 6 ? 4 : age === 7 ? 3 : 1;
-  items.age = { score: ageScore, max: 8, label: '🎂年齢', group:'data' };
+  var ageScore = age <= 5 ? 8 : age === 6 ? 4 : age === 7 ? -2 : -4;
+  var ageNote = (age >= 8) ? age + '歳=高齢の壁(複勝10.3%)で-4' : (age === 7) ? '7歳=高齢の壁(複勝10.3%)で-2' : (age <= 5 ? age + '歳(4-5歳中心)' : age + '歳');
+  items.age = { score: ageScore, max: 8, label: '🎂年齢', note: ageNote, group:'data' };
 
-  // 斤量（max5）北九州記念データ準拠: 軽ハンデ妙味(51-53kg複勝27%)を素直に評価・57kg複勝66%は4頭で信頼薄のため非加点
-  // <=53→5(軽ハンデ妙味) / 53.5-55→4 / 55.5-56.5→3 / 57-57.5→2(重い) / 58+→1(最重量)
+  // 斤量（max10）【壁1: 0勝の壁】北九州記念データ準拠: 57.5kg以上=過去0勝(0-1-0-9)を明確な減点で反映。軽ハンデ妙味(51-53kg複勝27%)を強く評価
+  // ≤51→+10 / 52-53→+8 / 54-55→+6 / 56→+4 / 57→+2 / 57.5以上→-3(勝てない重ハンデ)
   var cw = h.carriedWeight || 0;
-  var cwScore = (cw <= 53) ? 5 : (cw <= 55) ? 4 : (cw <= 56.5) ? 3 : (cw <= 57.5) ? 2 : 1;
-  items.weight = { score: cwScore, max: 5, label: '🎚️斤量', group:'horse' };
+  var cwScore = (cw <= 51) ? 10 : (cw <= 53) ? 8 : (cw <= 55) ? 6 : (cw <= 56) ? 4 : (cw <= 57) ? 2 : -3;
+  var cwNote = (cw >= 57.5) ? '斤量' + cw + 'kg=過去0勝の壁(0-1-0-9)で-3' : (cw <= 51 ? '軽ハンデ' + cw + 'kg(妙味・複勝27%)' : '斤量' + cw + 'kg');
+  items.weight = { score: cwScore, max: 10, label: '🎚️斤量', note: cwNote, group:'horse' };
   // 【前走斤量増減】（max3・北九州記念データ準拠）前走斤量からの増減: 増は好走(複勝42%)・減は割引
   var pw = (h.raceHistory && h.raceHistory[0] && typeof h.raceHistory[0].carriedWeight==='number')
            ? h.raceHistory[0].carriedWeight : null;
