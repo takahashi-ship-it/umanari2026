@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260706-0487';
+  var CURRENT_VERSION = '20260706-0488';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1670,7 +1670,7 @@
       <button class="tab active" data-target="tab-shutsuba">出馬表</button>
       <button class="tab"        data-target="tab-odds">📊 オッズ</button>
         <button class="tab" data-target="tab-result">🏆 過去10年結果</button>
-      <button class="tab"        data-target="tab-data">過去10年</button>
+      <button class="tab"        data-target="tab-data">過去データ</button>
       <button class="tab"        data-target="tab-horses">登録馬・信頼度</button>
       <button class="tab"        data-target="tab-kaime">買い目</button>
       <button class="tab"        data-target="tab-maigo">🐎 迷走馬診断</button>
@@ -7897,6 +7897,62 @@ const RACE_PAST_DATA = {
         second:{name:'ダコール',            pop:5,  prevRace:'新潟大賞典',          prevCourse:'新潟芝2000', prevClass:'G3',  prevPop:5,  prevRank:4,  last3fRank:2},
         third: {name:'オリオンザジャパン',  pop:11, prevRace:'アハルテケS',         prevCourse:'東京ダ1600', prevClass:'OP',  prevPop:8,  prevRank:4,  last3fRank:1} },
     ],
+    // 傾向集計（過去10年確定値）。「過去データ」タブで renderTrendTables() が表形式描画。
+    // 複勝率は rec(a-b-c-d) から自動算出。他レースは trends 未定義＝描画されない(無傷)。
+    trends: {
+      tables: [
+        { title:'脚質別', col1:'脚質', rows:[
+            { label:'逃げ',       rec:'1-1-0-8' },
+            { label:'先行',       rec:'6-4-2-25', highlight:true },
+            { label:'中団',       rec:'3-5-8-41' },
+            { label:'追込(後方)', rec:'0-0-0-45' },
+          ], note:'先行が6勝でダントツ。追込は複勝率0%' },
+        { title:'斤量別', col1:'斤量', rows:[
+            { label:'53kg以下',  rec:'0-1-3-19' },
+            { label:'54kg',      rec:'2-1-2-18' },
+            { label:'55kg',      rec:'0-3-3-21' },
+            { label:'56-56.5kg', rec:'1-0-1-25' },
+            { label:'57-57.5kg', rec:'7-4-1-28', highlight:true },
+            { label:'58kg以上',  rec:'0-1-0-9' },
+          ], note:'57-57.5kgが7勝(勝率17.5%)で主役。53kg以下は勝ち無し' },
+        { title:'人気別', col1:'人気', rows:[
+            { label:'1番人気',      rec:'1-3-0-6' },
+            { label:'2番人気',      rec:'4-1-1-4', highlight:true },
+            { label:'3番人気',      rec:'3-0-0-7' },
+            { label:'4-5番人気',    rec:'0-3-0-17' },
+            { label:'6-9番人気',    rec:'1-3-4-32' },
+            { label:'10番人気以下', rec:'1-0-5-54' },
+          ], note:'2〜3番人気で7勝。3着は毎年6番人気以下が絡む' },
+        { title:'年齢別', col1:'年齢', rows:[
+            { label:'4歳',     rec:'3-1-2-18' },
+            { label:'5歳',     rec:'5-5-3-33', highlight:true },
+            { label:'6歳',     rec:'1-3-5-37' },
+            { label:'7歳以上', rec:'1-1-0-32' },
+          ], note:'5歳中心。6歳は3着に食い込む。7歳以上は割引' },
+        { title:'枠順別', col1:'枠', rows:[
+            { label:'1枠', rec:'0-1-1-14' },
+            { label:'2枠', rec:'3-2-0-13', highlight:true },
+            { label:'3枠', rec:'1-1-1-15' },
+            { label:'4枠', rec:'2-0-2-14' },
+            { label:'5枠', rec:'0-1-1-18' },
+            { label:'6枠', rec:'2-1-4-13' },
+            { label:'7枠', rec:'0-1-0-19' },
+            { label:'8枠', rec:'2-3-1-14' },
+          ], note:'2枠3勝・内〜中枠有利。7枠は鬼門' },
+        { title:'前走クラス別', col1:'前走クラス', rows:[
+            { label:'3勝',   rec:'1-0-2-11' },
+            { label:'OP非L', rec:'1-2-2-8' },
+            { label:'OP(L)', rec:'1-1-1-17' },
+            { label:'G3',    rec:'4-6-3-55', highlight:true },
+            { label:'G2',    rec:'2-0-0-19' },
+            { label:'G1',    rec:'1-1-1-7' },
+          ], note:'G3経由が本線。条件戦からの好走は稀' },
+        { title:'前走人気・着順（注目）', col1:'前走', rows:[
+            { label:'前走2番人気', rec:'4-2-1-3', highlight:true },
+            { label:'前走同級2着', rec:'3-3-1-7' },
+          ], note:'前走2番人気は複勝率70.0%、前走同級2着は連対率42.9%。前走で人気になり好走した馬が本番でも来る' },
+      ],
+    },
   },
   '北九州記念': {
   himitsuData4: {
@@ -13260,11 +13316,80 @@ var RACE_RESULTS_DATA = {
   ]
 };
 
+// 傾向集計テーブル描画（RACE_PAST_DATA[race].trends。trends 未定義レースは呼ばれても ''＝無傷）
+// 各行 rec="a-b-c-d" から複勝率を自動算出。列＝項目/着別度数/複勝率。
+function renderTrendTables(trends){
+  if(!trends || !Array.isArray(trends.tables) || !trends.tables.length) return '';
+  var html='';
+  trends.tables.forEach(function(t){
+    html+='<div class="section"><h3>📊 '+t.title+'</h3>';
+    html+='<div class="table-wrap"><table class="data-table">';
+    html+='<thead><tr><th>'+(t.col1||'項目')+'</th><th>着別度数</th><th>複勝率</th></tr></thead><tbody>';
+    (t.rows||[]).forEach(function(r){
+      var fk='-';
+      if(typeof r.rec==='string'){
+        var p=r.rec.split('-').map(function(x){return parseInt(x,10);});
+        if(p.length===4 && p.every(function(n){return !isNaN(n);})){
+          var tot=p[0]+p[1]+p[2]+p[3];
+          fk = tot>0 ? (((p[0]+p[1]+p[2])/tot*100).toFixed(1)+'%') : '-';
+        }
+      }
+      var hl = r.highlight ? ' style="background:rgba(212,160,23,0.10)"' : '';
+      html+='<tr'+hl+'>'
+          + '<td style="font-weight:600">'+r.label+'</td>'
+          + '<td style="white-space:nowrap">'+(r.rec||'-')+'</td>'
+          + '<td style="font-weight:700;color:var(--navy)">'+fk+'</td></tr>';
+    });
+    html+='</tbody></table></div>';
+    if(t.note) html+='<p style="font-size:11px;color:var(--text-mute);margin-top:4px">📌 '+t.note+'</p>';
+    html+='</div>';
+  });
+  return html;
+}
+
+// pastResults(1〜3着＋前走/上がりサブテキスト)を「過去10年結果」タブ用に描画（RACE_RESULTS_DATA 未登録レースのフォールバック）
+function renderPastResultsFromPastResults(pastResults){
+  if(!Array.isArray(pastResults) || !pastResults.length) return '';
+  var fm=function(h){
+    if(!h) return '-';
+    var s=h.name+(h.pop?'<br><span style="font-size:11px;color:#666">'+h.pop+'人</span>':'');
+    if(h.prevRace){
+      var sub='前走:'+h.prevRace+(h.prevClass||'');
+      if(h.prevPop!=null && h.prevRank!=null) sub+='・'+h.prevPop+'人気'+h.prevRank+'着';
+      if(h.last3fRank!=null) sub+='／上がり'+h.last3fRank+'位';
+      s+='<br><span style="font-size:10px;color:#999;line-height:1.4">'+sub+'</span>';
+    }
+    return s;
+  };
+  var html='<div class="section"><h3>🏆 過去'+pastResults.length+'年 1〜3着</h3>';
+  html+='<p style="font-size:12px;color:#888;margin:4px 0 10px">各馬の下段は前走成績と当年の上がり3F順位。※3連単配当データは準備中。</p>';
+  html+='<div style="overflow-x:auto"><table class="result-table" style="width:100%;border-collapse:collapse;font-size:13px">';
+  html+='<thead><tr style="background:#f3f4f6"><th style="padding:6px 8px;text-align:left">年</th><th style="text-align:left">1着</th><th style="text-align:left">2着</th><th style="text-align:left">3着</th></tr></thead><tbody>';
+  pastResults.forEach(function(r){
+    html+='<tr style="border-bottom:1px solid #eee">';
+    html+='<td style="padding:6px 8px;white-space:nowrap;font-weight:600">'+r.year+'</td>';
+    html+='<td style="padding:6px 8px;vertical-align:top">'+fm(r.first)+'</td>';
+    html+='<td style="padding:6px 8px;vertical-align:top">'+fm(r.second)+'</td>';
+    html+='<td style="padding:6px 8px;vertical-align:top">'+fm(r.third)+'</td>';
+    html+='</tr>';
+  });
+  html+='</tbody></table></div></div>';
+  return html;
+}
+
 function renderPastResults(){
   var c=document.getElementById('pastResultRoot'); if(!c) return;
   var raceName=window.currentRaceName||currentRace;
   var rows=(typeof RACE_RESULTS_DATA!=='undefined' && RACE_RESULTS_DATA[raceName])?RACE_RESULTS_DATA[raceName]:null;
-  if(!rows){ c.innerHTML='<div class="section"><p style="color:#888">過去10年結果データは準備中です。</p></div>'; return; }
+  if(!rows){
+    // RACE_RESULTS_DATA 未登録でも、trends を持つレース(=七夕賞)は pastResults を結果タブに描画
+    var pd=(typeof RACE_PAST_DATA!=='undefined' && RACE_PAST_DATA[raceName])?RACE_PAST_DATA[raceName]:null;
+    if(pd && pd.trends && Array.isArray(pd.pastResults) && pd.pastResults.length){
+      c.innerHTML=renderPastResultsFromPastResults(pd.pastResults);
+      return;
+    }
+    c.innerHTML='<div class="section"><p style="color:#888">過去10年結果データは準備中です。</p></div>'; return;
+  }
   var html='<div class="section"><h3>🏆 過去10年結果（1〜3着・3連単）</h3>';
   html+='<p style="font-size:12px;color:#888;margin:4px 0 10px">'+raceName+'／配当は3連単（確定払戻）。人気は当日確定人気。</p>';
   html+='<div style="overflow-x:auto"><table class="result-table" style="width:100%;border-collapse:collapse;font-size:13px">';
@@ -13297,6 +13422,8 @@ function renderPastData() {
       if (data.summary) {
         html += '<div class="section"><p style="font-size:12px;line-height:1.7;color:var(--text-sub)">' + data.summary + '</p></div>';
       }
+      // 傾向集計テーブル（trends を持つレースのみ。1〜3着一覧は「過去10年結果」タブ側に表示）
+      if (data.trends && typeof renderTrendTables==='function') html += renderTrendTables(data.trends);
       // コース特性（最優先表示）
       if (data.himitsuData4 && typeof renderHimitsuData4==='function') html += renderHimitsuData4(data.himitsuData4);
       html += renderTetsubanJirai(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
@@ -13320,7 +13447,7 @@ function renderPastData() {
       if (data.prevDistance) html += renderPastSection('前走距離別成績', '📐', data.prevDistance, horsesNew);
       if (data.migiAptitude) html += renderPastSection('右回り適性（通算）', '🔄', data.migiAptitude, horsesNew);
       // pastResults（過去N年の1〜3着・3連単配当の年表）
-      if (Array.isArray(data.pastResults) && data.pastResults.length) {
+      if (Array.isArray(data.pastResults) && data.pastResults.length && !data.trends) {
         html += '<div class="section"><h3>📅 過去' + data.pastResults.length + '年 1〜3着一覧</h3>';
         html += '<div class="table-wrap"><table class="data-table">';
         var hasVenue = data.pastResults.some(function(r){ return r.venue; });
