@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260706-0486';
+  var CURRENT_VERSION = '20260706-0487';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13326,7 +13326,18 @@ function renderPastData() {
         var hasVenue = data.pastResults.some(function(r){ return r.venue; });
         html += '<thead><tr><th>年</th>' + (hasVenue ? '<th>開催</th>' : '') + '<th>1着</th><th>2着</th><th>3着</th><th>3連単</th></tr></thead><tbody>';
         data.pastResults.forEach(function(r) {
-          var fm = function(h){ return h ? (h.name + (h.pop ? '<span style="font-size:10px;color:var(--text-mute);margin-left:4px">(' + h.pop + '人)</span>' : '')) : '-'; };
+          var fm = function(h){
+            if (!h) return '-';
+            var s = h.name + (h.pop ? '<span style="font-size:10px;color:var(--text-mute);margin-left:4px">(' + h.pop + '人)</span>' : '');
+            // 前走情報・上がり3F順位（該当フィールドがある年のみ追記。無い他レースは従来表示のまま）
+            if (h.prevRace) {
+              var sub = '前走:' + h.prevRace + (h.prevClass || '');
+              if (h.prevPop != null && h.prevRank != null) sub += '・' + h.prevPop + '人気' + h.prevRank + '着';
+              if (h.last3fRank != null) sub += '／上がり' + h.last3fRank + '位';
+              s += '<br><span style="font-size:10px;color:var(--text-mute);line-height:1.5">' + sub + '</span>';
+            }
+            return s;
+          };
           var dan = (r.sanrentan || 0).toLocaleString() + '円';
           var danColor = r.sanrentan >= 100000 ? '#A32D2D' : r.sanrentan >= 30000 ? '#EF9F27' : 'var(--text)';
           html += '<tr>';
@@ -13478,7 +13489,18 @@ function renderPastData() {
     html += '<div class="table-wrap"><table class="data-table">';
     html += '<thead><tr><th>年</th><th>1着</th><th>2着</th><th>3着</th><th>3連単</th></tr></thead><tbody>';
     data.pastResults.forEach(function(r) {
-      var fm = function(h){ return h ? (h.name + (h.pop ? '<span style="font-size:10px;color:var(--text-mute);margin-left:4px">(' + h.pop + '人)</span>' : '')) : '-'; };
+      var fm = function(h){
+        if (!h) return '-';
+        var s = h.name + (h.pop ? '<span style="font-size:10px;color:var(--text-mute);margin-left:4px">(' + h.pop + '人)</span>' : '');
+        // 前走情報・上がり3F順位（該当フィールドがある年のみ追記。無い他レースは従来表示のまま）
+        if (h.prevRace) {
+          var sub = '前走:' + h.prevRace + (h.prevClass || '');
+          if (h.prevPop != null && h.prevRank != null) sub += '・' + h.prevPop + '人気' + h.prevRank + '着';
+          if (h.last3fRank != null) sub += '／上がり' + h.last3fRank + '位';
+          s += '<br><span style="font-size:10px;color:var(--text-mute);line-height:1.5">' + sub + '</span>';
+        }
+        return s;
+      };
       var dan = (r.sanrentan || 0).toLocaleString() + '円';
       var danColor = r.sanrentan >= 100000 ? '#A32D2D' : r.sanrentan >= 30000 ? '#EF9F27' : 'var(--text)';
       html += '<tr>';
