@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260706-0484';
+  var CURRENT_VERSION = '20260706-0485';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7852,6 +7852,21 @@ function getActiveConditions() {
  *     html : { type:"html",  title?, html:"..." }
  * ===================================================== */
 const RACE_PAST_DATA = {
+  '七夕賞': {
+    // 過去10年 1〜3着（生データ由来・name/pop のみ既存スキーマに一致。odds/sanrentan は未取得のため省略）
+    pastResults: [
+      { year:2025, first:{name:'コスモフリーゲン',    pop:2},  second:{name:'ドゥラドーレス',   pop:1},  third:{name:'オニャンコポン',     pop:11} },
+      { year:2024, first:{name:'レッドラディエンス',  pop:2},  second:{name:'キングズパレス',   pop:1},  third:{name:'ノッキングポイント', pop:8}  },
+      { year:2023, first:{name:'セイウンハーデス',    pop:2},  second:{name:'ククナ',           pop:9},  third:{name:'ホウオウエミーズ',   pop:13} },
+      { year:2022, first:{name:'エヒト',              pop:6},  second:{name:'ヒートオンビート', pop:1},  third:{name:'アンティシペイト',   pop:2}  },
+      { year:2021, first:{name:'トーラスジェミニ',    pop:2},  second:{name:'ロザムール',       pop:7},  third:{name:'ショウナンバルディ', pop:9}  },
+      { year:2020, first:{name:'クレッシェンドラヴ',  pop:3},  second:{name:'ブラヴァス',       pop:7},  third:{name:'ヴァンケドミンゴ',   pop:6}  },
+      { year:2019, first:{name:'ミッキースワロー',    pop:3},  second:{name:'クレッシェンドラヴ',pop:2}, third:{name:'ロードヴァンドール', pop:12} },
+      { year:2018, first:{name:'メドウラーク',        pop:11}, second:{name:'マイネルサージュ', pop:4},  third:{name:'パワーポケット',     pop:12} },
+      { year:2017, first:{name:'ゼーヴィント',        pop:1},  second:{name:'マイネルフロスト', pop:5},  third:{name:'ソールインパクト',   pop:7}  },
+      { year:2016, first:{name:'アルバートドック',    pop:3},  second:{name:'ダコール',         pop:5},  third:{name:'オリオンザジャパン', pop:11} },
+    ],
+  },
   '北九州記念': {
   himitsuData4: {
     title: '㊙️ 北九州記念の金塊',
