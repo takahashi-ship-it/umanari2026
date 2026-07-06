@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260706-0485';
+  var CURRENT_VERSION = '20260706-0486';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7853,18 +7853,49 @@ function getActiveConditions() {
  * ===================================================== */
 const RACE_PAST_DATA = {
   '七夕賞': {
-    // 過去10年 1〜3着（生データ由来・name/pop のみ既存スキーマに一致。odds/sanrentan は未取得のため省略）
+    // 過去10年 1〜3着（生データ由来）。既存スキーマ(name/pop)に加え、前走情報(prevRace/prevCourse/prevClass/prevPop/prevRank)と
+    // 当年七夕賞での上がり3F順位(last3fRank)を追記。命名は既存ロスターのprev*系に準拠。odds/sanrentan は未取得のため省略。
     pastResults: [
-      { year:2025, first:{name:'コスモフリーゲン',    pop:2},  second:{name:'ドゥラドーレス',   pop:1},  third:{name:'オニャンコポン',     pop:11} },
-      { year:2024, first:{name:'レッドラディエンス',  pop:2},  second:{name:'キングズパレス',   pop:1},  third:{name:'ノッキングポイント', pop:8}  },
-      { year:2023, first:{name:'セイウンハーデス',    pop:2},  second:{name:'ククナ',           pop:9},  third:{name:'ホウオウエミーズ',   pop:13} },
-      { year:2022, first:{name:'エヒト',              pop:6},  second:{name:'ヒートオンビート', pop:1},  third:{name:'アンティシペイト',   pop:2}  },
-      { year:2021, first:{name:'トーラスジェミニ',    pop:2},  second:{name:'ロザムール',       pop:7},  third:{name:'ショウナンバルディ', pop:9}  },
-      { year:2020, first:{name:'クレッシェンドラヴ',  pop:3},  second:{name:'ブラヴァス',       pop:7},  third:{name:'ヴァンケドミンゴ',   pop:6}  },
-      { year:2019, first:{name:'ミッキースワロー',    pop:3},  second:{name:'クレッシェンドラヴ',pop:2}, third:{name:'ロードヴァンドール', pop:12} },
-      { year:2018, first:{name:'メドウラーク',        pop:11}, second:{name:'マイネルサージュ', pop:4},  third:{name:'パワーポケット',     pop:12} },
-      { year:2017, first:{name:'ゼーヴィント',        pop:1},  second:{name:'マイネルフロスト', pop:5},  third:{name:'ソールインパクト',   pop:7}  },
-      { year:2016, first:{name:'アルバートドック',    pop:3},  second:{name:'ダコール',         pop:5},  third:{name:'オリオンザジャパン', pop:11} },
+      { year:2025,
+        first: {name:'コスモフリーゲン',    pop:2,  prevRace:'サンシャインS',       prevCourse:'中山芝2200', prevClass:'3勝', prevPop:2,  prevRank:1,  last3fRank:4},
+        second:{name:'ドゥラドーレス',      pop:1,  prevRace:'エプソムC',           prevCourse:'東京芝1800', prevClass:'G3',  prevPop:1,  prevRank:2,  last3fRank:1},
+        third: {name:'オニャンコポン',      pop:12, prevRace:'ジューンS',           prevCourse:'東京芝1800', prevClass:'OP',  prevPop:10, prevRank:10, last3fRank:3} },
+      { year:2024,
+        first: {name:'レッドラディエンス',  pop:2,  prevRace:'メトロポリタンS',     prevCourse:'東京芝2400', prevClass:'L',   prevPop:2,  prevRank:2,  last3fRank:1},
+        second:{name:'キングズパレス',      pop:1,  prevRace:'新潟大賞典',          prevCourse:'新潟芝2000', prevClass:'G3',  prevPop:3,  prevRank:2,  last3fRank:1},
+        third: {name:'ノッキングポイント',  pop:8,  prevRace:'新潟大賞典',          prevCourse:'新潟芝2000', prevClass:'G3',  prevPop:12, prevRank:10, last3fRank:7} },
+      { year:2023,
+        first: {name:'セイウンハーデス',    pop:2,  prevRace:'新潟大賞典',          prevCourse:'新潟芝2000', prevClass:'G3',  prevPop:2,  prevRank:2,  last3fRank:3},
+        second:{name:'ククナ',              pop:9,  prevRace:'大阪ーハンブルクC',   prevCourse:'阪神芝2600', prevClass:'OP',  prevPop:1,  prevRank:6,  last3fRank:3},
+        third: {name:'ホウオウエミーズ',    pop:13, prevRace:'マーメイドS',         prevCourse:'阪神芝2000', prevClass:'G3',  prevPop:10, prevRank:3,  last3fRank:1} },
+      { year:2022,
+        first: {name:'エヒト',              pop:6,  prevRace:'京都記念',            prevCourse:'阪神芝2200', prevClass:'G2',  prevPop:11, prevRank:7,  last3fRank:2},
+        second:{name:'ヒートオンビート',    pop:1,  prevRace:'天皇賞春',            prevCourse:'阪神芝3200', prevClass:'G1',  prevPop:5,  prevRank:4,  last3fRank:1},
+        third: {name:'アンティシペイト',    pop:2,  prevRace:'福島民報杯',          prevCourse:'福島芝2000', prevClass:'L',   prevPop:5,  prevRank:1,  last3fRank:3} },
+      { year:2021,
+        first: {name:'トーラスジェミニ',    pop:2,  prevRace:'安田記念',            prevCourse:'東京芝1600', prevClass:'G1',  prevPop:13, prevRank:5,  last3fRank:5},
+        second:{name:'ロザムール',          pop:7,  prevRace:'福島牝馬S',           prevCourse:'新潟芝1800', prevClass:'G3',  prevPop:5,  prevRank:13, last3fRank:8},
+        third: {name:'ショウナンバルディ',  pop:9,  prevRace:'鳴尾記念',            prevCourse:'中京芝2000', prevClass:'G3',  prevPop:9,  prevRank:2,  last3fRank:4} },
+      { year:2020,
+        first: {name:'クレッシェンドラヴ',  pop:3,  prevRace:'中山金杯',            prevCourse:'中山芝2000', prevClass:'G3',  prevPop:1,  prevRank:7,  last3fRank:1},
+        second:{name:'ブラヴァス',          pop:7,  prevRace:'新潟大賞典',          prevCourse:'新潟芝2000', prevClass:'G3',  prevPop:2,  prevRank:4,  last3fRank:5},
+        third: {name:'ヴァンケドミンゴ',    pop:6,  prevRace:'エールS',             prevCourse:'福島芝2000', prevClass:'3勝', prevPop:2,  prevRank:1,  last3fRank:4} },
+      { year:2019,
+        first: {name:'ミッキースワロー',    pop:3,  prevRace:'エプソムC',           prevCourse:'東京芝1800', prevClass:'G3',  prevPop:2,  prevRank:10, last3fRank:2},
+        second:{name:'クレッシェンドラヴ',  pop:2,  prevRace:'福島民報杯',          prevCourse:'福島芝2000', prevClass:'L',   prevPop:2,  prevRank:2,  last3fRank:1},
+        third: {name:'ロードヴァンドール',  pop:12, prevRace:'天皇賞春',            prevCourse:'京都芝3200', prevClass:'G1',  prevPop:7,  prevRank:12, last3fRank:8} },
+      { year:2018,
+        first: {name:'メドウラーク',        pop:11, prevRace:'米子S',               prevCourse:'阪神芝1600', prevClass:'OP',  prevPop:8,  prevRank:11, last3fRank:2},
+        second:{name:'マイネルサージュ',    pop:4,  prevRace:'福島民報杯',          prevCourse:'福島芝2000', prevClass:'OP',  prevPop:5,  prevRank:1,  last3fRank:1},
+        third: {name:'パワーポケット',      pop:12, prevRace:'夏至S',               prevCourse:'東京ダ1600', prevClass:'1600万', prevPop:8, prevRank:8, last3fRank:4} },
+      { year:2017,
+        first: {name:'ゼーヴィント',        pop:1,  prevRace:'AJCC',                prevCourse:'中山芝2200', prevClass:'G2',  prevPop:1,  prevRank:2,  last3fRank:2},
+        second:{name:'マイネルフロスト',    pop:5,  prevRace:'鳴尾記念',            prevCourse:'阪神芝2000', prevClass:'G3',  prevPop:7,  prevRank:3,  last3fRank:8},
+        third: {name:'ソールインパクト',    pop:7,  prevRace:'芦ノ湖特別',          prevCourse:'東京芝2400', prevClass:'1000万', prevPop:1, prevRank:1, last3fRank:3} },
+      { year:2016,
+        first: {name:'アルバートドック',    pop:3,  prevRace:'エプソムC',           prevCourse:'東京芝1800', prevClass:'G3',  prevPop:5,  prevRank:7,  last3fRank:3},
+        second:{name:'ダコール',            pop:5,  prevRace:'新潟大賞典',          prevCourse:'新潟芝2000', prevClass:'G3',  prevPop:5,  prevRank:4,  last3fRank:2},
+        third: {name:'オリオンザジャパン',  pop:11, prevRace:'アハルテケS',         prevCourse:'東京ダ1600', prevClass:'OP',  prevPop:8,  prevRank:4,  last3fRank:1} },
     ],
   },
   '北九州記念': {
