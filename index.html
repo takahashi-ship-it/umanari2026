@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260710-0541';
+  var CURRENT_VERSION = '20260710-0560';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -6696,7 +6696,11 @@ const HORSES_BY_RACE = {
     "prevClass": "G2",
     "prevRank": 11,
     "prevPop": 13,
-    "fukushima2000": "place"
+    "fukushima2000": "place",
+    "prevDist": 2500,
+    "prevTrack": "関東",
+    "father": "ハーツクライ",
+    "bloodType": "その他"
   },
   {
     "name": "コントラポスト",
@@ -6714,7 +6718,11 @@ const HORSES_BY_RACE = {
     "prevClass": "OP",
     "prevRank": 5,
     "prevPop": 8,
-    "fukushima2000": "none"
+    "fukushima2000": "none",
+    "prevDist": 1800,
+    "prevTrack": "関東",
+    "father": "ルーラーシップ",
+    "bloodType": "キングマンボ系"
   },
   {
     "name": "ショウナンマグマ",
@@ -6732,7 +6740,11 @@ const HORSES_BY_RACE = {
     "prevClass": "L",
     "prevRank": 12,
     "prevPop": 12,
-    "fukushima2000": "minor"
+    "fukushima2000": "minor",
+    "prevDist": 1800,
+    "prevTrack": "関西",
+    "father": "ザファクター",
+    "bloodType": "その他"
   },
   {
     "name": "カラマティアノス",
@@ -6750,7 +6762,11 @@ const HORSES_BY_RACE = {
     "prevClass": "G3",
     "prevRank": 6,
     "prevPop": 3,
-    "fukushima2000": "none"
+    "fukushima2000": "none",
+    "prevDist": 1800,
+    "prevTrack": "関東",
+    "father": "レイデオロ",
+    "bloodType": "キングマンボ系"
   },
   {
     "name": "オーロラエックス",
@@ -6768,7 +6784,11 @@ const HORSES_BY_RACE = {
     "prevClass": "L",
     "prevRank": 6,
     "prevPop": 5,
-    "fukushima2000": "none"
+    "fukushima2000": "none",
+    "prevDist": 1800,
+    "prevTrack": "関西",
+    "father": "サトノダイヤモンド",
+    "bloodType": "ディープ系"
   },
   {
     "name": "マイネルモーント",
@@ -6786,7 +6806,11 @@ const HORSES_BY_RACE = {
     "prevClass": "G3",
     "prevRank": 12,
     "prevPop": 14,
-    "fukushima2000": "minor"
+    "fukushima2000": "minor",
+    "prevDist": 1800,
+    "prevTrack": "関東",
+    "father": "ゴールドシップ",
+    "bloodType": "その他"
   },
   {
     "name": "メリオーレム",
@@ -6804,7 +6828,11 @@ const HORSES_BY_RACE = {
     "prevClass": "OP",
     "prevRank": 10,
     "prevPop": 9,
-    "fukushima2000": "none"
+    "fukushima2000": "none",
+    "prevDist": 1800,
+    "prevTrack": "関東",
+    "father": "シュヴァルグラン",
+    "bloodType": "その他"
   },
   {
     "name": "クリスマスパレード",
@@ -6822,7 +6850,11 @@ const HORSES_BY_RACE = {
     "prevClass": "G2",
     "prevRank": 15,
     "prevPop": 9,
-    "fukushima2000": "none"
+    "fukushima2000": "none",
+    "prevDist": 2500,
+    "prevTrack": "関東",
+    "father": "キタサンブラック",
+    "bloodType": "その他"
   },
   {
     "name": "オニャンコポン",
@@ -6840,7 +6872,11 @@ const HORSES_BY_RACE = {
     "prevClass": "G3",
     "prevRank": 12,
     "prevPop": 15,
-    "fukushima2000": "place"
+    "fukushima2000": "place",
+    "prevDist": 2000,
+    "prevTrack": "その他",
+    "father": "エイシンフラッシュ",
+    "bloodType": "キングマンボ系"
   },
   {
     "name": "センツブラッド",
@@ -6858,7 +6894,11 @@ const HORSES_BY_RACE = {
     "prevClass": "G3",
     "prevRank": 10,
     "prevPop": 13,
-    "fukushima2000": "none"
+    "fukushima2000": "none",
+    "prevDist": 1800,
+    "prevTrack": "関東",
+    "father": "ルーラーシップ",
+    "bloodType": "キングマンボ系"
   },
   {
     "name": "アスクナイスショー",
@@ -6876,7 +6916,11 @@ const HORSES_BY_RACE = {
     "prevClass": "G2",
     "prevRank": 10,
     "prevPop": 6,
-    "fukushima2000": "win"
+    "fukushima2000": "win",
+    "prevDist": 2500,
+    "prevTrack": "関東",
+    "father": "シルバーステート",
+    "bloodType": "ディープ系"
   },
   {
     "name": "リカンカブール",
@@ -6894,7 +6938,11 @@ const HORSES_BY_RACE = {
     "prevClass": "G3",
     "prevRank": 6,
     "prevPop": 9,
-    "fukushima2000": "none"
+    "fukushima2000": "none",
+    "prevDist": 1800,
+    "prevTrack": "関西",
+    "father": "シルバーステート",
+    "bloodType": "ディープ系"
   },
   {
     "name": "バトルボーン",
@@ -6912,7 +6960,11 @@ const HORSES_BY_RACE = {
     "prevClass": "L",
     "prevRank": 3,
     "prevPop": 2,
-    "fukushima2000": "minor"
+    "fukushima2000": "minor",
+    "prevDist": 2400,
+    "prevTrack": "関東",
+    "father": "シルバーステート",
+    "bloodType": "ディープ系"
   },
   {
     "name": "オールナット",
@@ -6930,7 +6982,11 @@ const HORSES_BY_RACE = {
     "prevClass": "G2",
     "prevRank": 13,
     "prevPop": 7,
-    "fukushima2000": "none"
+    "fukushima2000": "none",
+    "prevDist": 2400,
+    "prevTrack": "関西",
+    "father": "サトノダイヤモンド",
+    "bloodType": "ディープ系"
   },
   {
     "name": "ヤマニンブークリエ",
@@ -6948,7 +7004,11 @@ const HORSES_BY_RACE = {
     "prevClass": "G3",
     "prevRank": 5,
     "prevPop": 6,
-    "fukushima2000": "none"
+    "fukushima2000": "none",
+    "prevDist": 2000,
+    "prevTrack": "関東",
+    "father": "キタサンブラック",
+    "bloodType": "その他"
   },
   {
     "name": "サヴォーナ",
@@ -6966,7 +7026,11 @@ const HORSES_BY_RACE = {
     "prevClass": "L",
     "prevRank": 1,
     "prevPop": 5,
-    "fukushima2000": "win"
+    "fukushima2000": "win",
+    "prevDist": 2000,
+    "prevTrack": "関東",
+    "father": "キズナ",
+    "bloodType": "ディープ系"
   }
 ],
 
@@ -22990,6 +23054,149 @@ function computeScoreBreakdownTanabataV1(horse, raceName, _rawOnly) {
   return { total: total, max: max, pct: pct, items: items, penalty: 0 };
 }
 
+// ===== 七夕賞 専用スコア V2（computeScoreBreakdownTanabataV2）=====
+// V1に血統(キングマンボ系)・前走距離(2500m壁)・性別・前走場を追加。斤量は非単調(55>56)・脚質は複勝率順。13項目Σmax98。
+function _getTanabataV2ScoreStats() {
+  if (typeof window !== 'undefined' && window._tanabataV2ScoreStatsCache) return window._tanabataV2ScoreStatsCache;
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['七夕賞'] || []) : [];
+  var scores = [];
+  horses.forEach(function(h){
+    if (!h || h.isAvoided) return;
+    var bd = computeScoreBreakdownTanabataV2(h, '七夕賞', true); // _rawOnly=true で再帰回避
+    if (bd && typeof bd.total === 'number') scores.push(bd.total);
+  });
+  if (!scores.length) return null;
+  scores.sort(function(a, b){ return a - b; });
+  var maxScore = scores[scores.length - 1];
+  var medScore = scores.length % 2 === 1
+    ? scores[(scores.length - 1) / 2]
+    : (scores[scores.length / 2 - 1] + scores[scores.length / 2]) / 2;
+  var stats = { maxScore: maxScore, medScore: medScore };
+  if (typeof window !== 'undefined') window._tanabataV2ScoreStatsCache = stats;
+  return stats;
+}
+
+function computeScoreBreakdownTanabataV2(horse, raceName, _rawOnly) {
+  if (!horse) return { total: 0, max: 98, pct: 0, items: {}, penalty: 0 };
+  if (horse.isAvoided) return { total: 0, max: 98, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
+  var h = horse;
+  var items = {};
+
+  // ① 斤量（horse・max14）57-57.5→14/55・54→10/53.5以下→8/58以上→4/56-56.5→3。※非単調(55>56)
+  var cw = (typeof h.carriedWeight === 'number') ? h.carriedWeight : 0;
+  var cwScore;
+  if (cw >= 57 && cw <= 57.5)      cwScore = 14;
+  else if (cw >= 58)               cwScore = 4;
+  else if (cw >= 56 && cw <= 56.5) cwScore = 3;
+  else if (cw >= 54 && cw <= 55.5) cwScore = 10;
+  else                             cwScore = 8; // 53.5kg以下
+  var cwNote = (cw >= 57 && cw <= 57.5) ? '57-57.5kgが主役(過去10年7勝)' : (cw >= 56 && cw <= 56.5) ? '56kg帯は谷(54-55kgの方が上位)' : '';
+  items.weight = { score: cwScore, max: 14, label: '🎚️斤量', note: cwNote, group:'horse' };
+
+  // ② 脚質（horse・max13）複勝率順: 逃げ13/差し11/先行10/追込3
+  var ky = h.kyakushitsu || h.style || h.runStyle || '';
+  var kyScore = (ky.indexOf('逃げ') >= 0) ? 13
+              : (ky.indexOf('差し') >= 0) ? 11
+              : (ky.indexOf('自在') >= 0) ? 11
+              : (ky.indexOf('先行') >= 0) ? 10
+              : (ky.indexOf('追込') >= 0) ? 3 : 10;
+  var kyNote = (ky.indexOf('追込') >= 0) ? '追込は過去10年0-0-0-45＝複勝率0%' : '';
+  items.kyakushitsu = { score: kyScore, max: 13, label: '🏃脚質', note: kyNote, group:'horse' };
+
+  // ③ 血統（data・max12）キングマンボ系12/その他5/ディープ系0
+  var bt = h.bloodType || '';
+  var btScore = (bt === 'キングマンボ系') ? 12 : (bt === 'ディープ系') ? 0 : 5;
+  var btNote = '福島芝2000m重賞でキングマンボ系複勝率33.3% vs ディープ系6.3%(2020~)';
+  items.blood = { score: btScore, max: 12, label: '🩸血統', note: btNote, group:'data' };
+
+  // ④ 福島2000適性（data・max12）win12/place8/minor4/none0
+  var fk = h.fukushima2000 || 'none';
+  var fkScore = fk === 'win' ? 12 : fk === 'place' ? 8 : fk === 'minor' ? 4 : 0;
+  var fkNote = fk === 'win' ? '福島芝2000で勝ち鞍あり◎' : fk === 'place' ? '福島芝2000で複勝歴あり' : fk === 'minor' ? '福島芝2000は出走歴のみ(着外中心)' : '福島芝2000実績なし＝中立';
+  items.fukushima = { score: fkScore, max: 12, label: '🏟福島2000適性', note: fkNote, group:'data' };
+
+  // ⑤ 前走距離（data・max10）2000→10/1800→6/2400・2200→5/1600→4/3200→2/2500→-8(壁)
+  var pd = (typeof h.prevDist === 'number') ? h.prevDist : 0;
+  var pdScore = (pd === 2000) ? 10 : (pd === 1800) ? 6 : (pd === 2400) ? 5 : (pd === 2200) ? 5 : (pd === 1600) ? 4 : (pd === 3200) ? 2 : (pd === 2500) ? -8 : 0;
+  var pdNote = (pd === 2500) ? '前走2500m=過去10年0-0-0-14の壁。軸不適・相手まで' : (pd === 2000) ? '前走2000m(同距離)◎' : '';
+  items.prevDist = { score: pdScore, max: 10, label: '📏前走距離', note: pdNote, group:'data' };
+
+  // ⑥ 人気（env・max8）2番8/1・3番7/4-5番4/6-9番2/10番以下1。※単調(2番spike以外は下位が上位を上回らない)
+  var pop = h.popEstimate || 99;
+  var popScore = (pop === 2) ? 8 : (pop === 1 || pop === 3) ? 7 : (pop >= 4 && pop <= 5) ? 4 : (pop >= 6 && pop <= 9) ? 2 : 1;
+  var popNote = (pop === 2) ? '2番人気(過去10年複60%で最良)' : (pop === 1 || pop === 3) ? (pop + '番人気(上位人気)') : (pop + '番人気');
+  if (pop <= 3) popNote += ' / 地力上位・過度な軽視を回避';
+  if (pop >= 6 && ky.indexOf('追込') < 0 && (fk !== 'none' || bt === 'キングマンボ系')) popNote += ' / 3着穴含み(6番人気以下でも前進可)';
+  items.popularity = { score: popScore, max: 8, label: '👥人気', note: popNote, group:'env' };
+
+  // ⑦ 年齢（horse・max7）5歳7/4歳・6歳5/7歳以上-2
+  var age = h.age || 0;
+  var ageScore = (age === 5) ? 7 : (age === 4 || age === 6) ? 5 : (age >= 7) ? -2 : 0;
+  var ageNote = (age >= 7) ? '7歳以上は割引(過去10年複5.9%)' : (age === 5) ? '5歳が中心世代' : '';
+  items.age = { score: ageScore, max: 7, label: '🎂年齢', note: ageNote, group:'horse' };
+
+  // ⑧ 前走クラス（data・max5）G3→5/G1・G2→4/L・OP→3/条件→0
+  var pc = h.prevClass || '';
+  var pcScore = (pc === 'G3') ? 5 : (pc === 'G1' || pc === 'G2') ? 4 : (pc === 'L' || pc === 'OP') ? 3 : 0;
+  var pcNote = (pc === 'G3') ? 'G3経由が本線' : (pc === 'G1' || pc === 'G2') ? '重賞(G1/G2)組' : (pc === 'L' || pc === 'OP') ? 'OP/L組' : '条件戦組(過去10年好走稀)';
+  items.prevClass = { score: pcScore, max: 5, label: '📋前走クラス', note: pcNote, group:'data' };
+
+  // ⑨ 前走人気着順（data・max5）前走1-2番人気→5 / 前走2着以内かつ5番人気内→3（両該当は5）
+  var ppop = (typeof h.prevPop === 'number') ? h.prevPop : null;
+  var prank = (typeof h.prevRank === 'number') ? h.prevRank : null;
+  var pfScore, pfNote;
+  if (ppop !== null && ppop <= 2)                                     { pfScore = 5; pfNote = '前走' + ppop + '番人気(過去10年複70%の鉄板)'; }
+  else if (prank !== null && prank <= 2 && ppop !== null && ppop <= 5) { pfScore = 3; pfNote = '前走2着以内×5番人気内(前走好走)'; }
+  else                                                               { pfScore = 0; pfNote = '前走人気着順の該当なし'; }
+  items.prevPopRank = { score: pfScore, max: 5, label: '🔥前走人気着順', note: pfNote, group:'data' };
+
+  // ⑩ 性別（horse・max4）牡・セ→4 / 牝→0
+  var sexScore = (h.sex && h.sex.indexOf('牝') >= 0) ? 0 : 4;
+  var sexNote = (sexScore === 0) ? '牝馬は過去10年不振で割引' : '';
+  items.sex = { score: sexScore, max: 4, label: '♀性別', note: sexNote, group:'horse' };
+
+  // ⑪ 前走場（env・max3）関東→3 / その他→2 / 関西→1
+  var pt = h.prevTrack || '';
+  var ptScore = (pt === '関東') ? 3 : (pt === '関西') ? 1 : 2;
+  items.prevTrack = { score: ptScore, max: 3, label: '🗾前走場', note: (pt ? '前走' + pt : ''), group:'env' };
+
+  // ⑫ 騎手（env・max3）名手3/標準2/他1
+  var jk = h.jockey || '';
+  var aceJ = ['戸崎圭','横山典','Ｍデムーロ','岩田康'];
+  var stdJ = ['田辺','池添','三浦','坂井','西村淳'];
+  var jScore = aceJ.some(function(n){ return jk.indexOf(n) >= 0; }) ? 3
+             : stdJ.some(function(n){ return jk.indexOf(n) >= 0; }) ? 2 : 1;
+  items.jockey = { score: jScore, max: 3, label: '🧑‍🦱騎手', note: (jScore === 3 ? '名手' : jScore === 2 ? '標準' : ''), group:'env' };
+
+  // ⑬ 枠（env・max2）2・6・8枠→2 / その他→1 / 7枠→-1
+  var wk = h.waku || 0;
+  var wkScore = (wk === 2 || wk === 6 || wk === 8) ? 2 : (wk === 7) ? -1 : 1;
+  var wkNote = (wk === 7) ? '7枠は鬼門(過去10年複5%)' : (wk === 2) ? '2枠は過去10年3勝の好枠' : '';
+  items.waku = { score: wkScore, max: 2, label: '⛩枠順', note: wkNote, group:'env' };
+
+  var total = 0, max = 0;
+  Object.keys(items).forEach(function(k){ var it = items[k]; if (it && typeof it.score === 'number') { total += it.score; max += (it.max || 0); } });
+  total = Math.max(0, total);
+
+  // pct は北九州/宝塚/安田/V1と同じ79%アンカーのシグモイド（floor8/ceil79・center=medScore・k=4/(max-med)）
+  var pct;
+  if (_rawOnly) {
+    pct = 0;
+  } else {
+    var stats = _getTanabataV2ScoreStats();
+    if (stats && stats.maxScore > stats.medScore) {
+      var floorPct = 8, ceilPct = 79, range = ceilPct - floorPct;
+      var k2 = 4.0 / Math.max(1, stats.maxScore - stats.medScore);
+      var raw = 1 / (1 + Math.exp(-k2 * (total - stats.medScore)));
+      pct = Math.round(floorPct + range * raw);
+    } else {
+      pct = (max > 0) ? Math.max(0, Math.min(99, Math.round(total / max * 100))) : 0;
+    }
+  }
+
+  return { total: total, max: max, pct: pct, items: items, penalty: 0 };
+}
+
 function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
   var M = 75;
   if(!horse) return {total:0,max:M,pct:0,items:{},penalty:0};
@@ -23197,7 +23404,7 @@ function computeScoreBreakdown(horse, raceName) {
   if (raceName === 'ラジオNIKKEI賞') return computeScoreBreakdownRajioV1(horse, raceName);
   if (raceName === '函館記念') return computeScoreBreakdownHakodateV1(horse, raceName);
   if (raceName === '北九州記念') return computeScoreBreakdownKitakyushuV1(horse, raceName);
-  if (raceName === '七夕賞') return computeScoreBreakdownTanabataV1(horse, raceName);
+  if (raceName === '七夕賞') return computeScoreBreakdownTanabataV2(horse, raceName);
   // ★回避馬は強制的に0%
   if (horse && horse.isAvoided) {
     return {
