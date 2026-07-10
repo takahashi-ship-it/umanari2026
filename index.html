@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260710-0533';
+  var CURRENT_VERSION = '20260710-0541';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -22864,6 +22864,132 @@ function _prevWin(h){var rh=h.raceHistory||[];return rh.length&&rh[0].rank===1;}
 function _doakuKyaku(h){var rh=h.raceHistory||[];var ps=[];for(var i=0;i<rh.length&&i<6;i++){var c4=rh[i].corner4,at=rh[i].atama;if(typeof c4==='number'&&at){ps.push(c4/at);}}if(!ps.length)return null;var s=0;for(var j=0;j<ps.length;j++)s+=ps[j];var a=s/ps.length;return a<=0.35?'前残り':(a>=0.65?'後方一気':'中団');}
 function _umaBaba(rh){var p=0,n=0;for(var i=0;i<rh.length;i++){var b=rh[i].baba||'';if(b.indexOf('稍')!==-1||b.indexOf('重')!==-1||b.indexOf('不良')!==-1){n++;var rk=rh[i].rank;if(typeof rk==='number'&&rk<=3)p++;}}if(n===0)return 0;var fk=p/n*100;if(fk>=100&&n>=2)return 8;if(fk>=100&&n===1)return 3;if(fk>=60&&n>=3)return 6;if(fk>=60&&n===2)return 4;if(fk>=40&&n>=2)return 2;if(fk===0&&n>=3)return -4;return 0;}
 function _umaTenkai(rh){var mk=0,yo=0,cnt=0;for(var i=0;i<rh.length&&i<6;i++){var r=rh[i];var ps=(r.passing||'').split('-').map(function(x){return parseInt(x,10);}).filter(function(x){return !isNaN(x);});var c4=(typeof r.corner4==='number')?r.corner4:null;var at=(typeof r.atama==='number')?r.atama:null;if(!ps.length||c4===null||at===null||at<=1)continue;cnt++;var c3=ps.length>=2?ps[ps.length-2]:ps[ps.length-1];if(c3-c4>=2)mk++;if(c4<=5)yo++;}if(cnt<4)return 0;var pr=mk/cnt*100,yr=yo/cnt*100;if(yr>=60&&pr>=33)return 3;if(yr>=60)return 2;if(pr>=33)return 1;return 0;}
+// ===== 七夕賞 専用スコア V1（computeScoreBreakdownTanabataV1）=====
+// 福島芝2000m・ハンデG3。過去10年傾向(脚質/斤量/人気/年齢/枠/前走クラス/前走人気着順)＋福島2000適性で9項目Σmax71。
+function _getTanabataScoreStats() {
+  if (typeof window !== 'undefined' && window._tanabataScoreStatsCache) return window._tanabataScoreStatsCache;
+  var horses = (typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['七夕賞'] || []) : [];
+  var scores = [];
+  horses.forEach(function(h){
+    if (!h || h.isAvoided) return;
+    var bd = computeScoreBreakdownTanabataV1(h, '七夕賞', true); // _rawOnly=true で再帰回避
+    if (bd && typeof bd.total === 'number') scores.push(bd.total);
+  });
+  if (!scores.length) return null;
+  scores.sort(function(a, b){ return a - b; });
+  var maxScore = scores[scores.length - 1];
+  var medScore = scores.length % 2 === 1
+    ? scores[(scores.length - 1) / 2]
+    : (scores[scores.length / 2 - 1] + scores[scores.length / 2]) / 2;
+  var stats = { maxScore: maxScore, medScore: medScore };
+  if (typeof window !== 'undefined') window._tanabataScoreStatsCache = stats;
+  return stats;
+}
+
+function computeScoreBreakdownTanabataV1(horse, raceName, _rawOnly) {
+  if (!horse) return { total: 0, max: 71, pct: 0, items: {}, penalty: 0 };
+  if (horse.isAvoided) return { total: 0, max: 71, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
+  var h = horse;
+  var items = {};
+
+  // ① 脚質（horse・max14）先行14/逃げ9/自在9/差し6/追込0。過去10年: 先行6勝(複32%)・追込0-0-0-45(複0%)
+  var ky = h.kyakushitsu || h.style || h.runStyle || '';
+  var kyScore = (ky.indexOf('先行') >= 0) ? 14
+              : (ky.indexOf('逃げ') >= 0) ? 9
+              : (ky.indexOf('自在') >= 0) ? 9
+              : (ky.indexOf('差し') >= 0) ? 6
+              : (ky.indexOf('追込') >= 0) ? 0 : 6;
+  var kyNote = (ky.indexOf('追込') >= 0) ? '追込は過去10年0-0-0-45＝複勝率0%'
+             : (ky.indexOf('先行') >= 0) ? '先行が最安定(過去10年6勝・複32%)' : '';
+  items.kyakushitsu = { score: kyScore, max: 14, label: '🏃脚質', note: kyNote, group:'horse' };
+
+  // ② 斤量（horse・max12）57-57.5→12/58→9/56-56.5→8/55-55.5→5/54-54.5→3/53.5以下→0。57-57.5kgが過去10年7勝(複30%)。※56>55の単調維持
+  var cw = (typeof h.carriedWeight === 'number') ? h.carriedWeight : 0;
+  var cwScore;
+  if (cw >= 57 && cw <= 57.5)      cwScore = 12;
+  else if (cw >= 58)               cwScore = 9;
+  else if (cw >= 56 && cw <= 56.5) cwScore = 8;
+  else if (cw >= 55 && cw <= 55.5) cwScore = 5;
+  else if (cw >= 54 && cw <= 54.5) cwScore = 3;
+  else                             cwScore = 0;
+  var cwNote = (cw >= 57 && cw <= 57.5) ? '57-57.5kgが主役(過去10年7勝・複30%)'
+             : (cw <= 53.5) ? '53.5kg以下は過去10年勝ち無し' : '';
+  items.weight = { score: cwScore, max: 12, label: '🎚️斤量', note: cwNote, group:'horse' };
+
+  // ③ 福島2000適性（data・max12）win12/place8/minor4/none0。当該コース(福島芝2000)実績
+  var fk = h.fukushima2000 || 'none';
+  var fkScore = fk === 'win' ? 12 : fk === 'place' ? 8 : fk === 'minor' ? 4 : 0;
+  var fkNote = fk === 'win' ? '福島芝2000で勝ち鞍あり◎' : fk === 'place' ? '福島芝2000で複勝歴あり' : fk === 'minor' ? '福島芝2000は出走歴のみ(着外中心)' : '福島芝2000実績なし＝中立';
+  items.fukushima = { score: fkScore, max: 12, label: '🏟福島2000適性', note: fkNote, group:'data' };
+
+  // ④ 年齢（horse・max8）5歳8/4歳6/6歳4/7歳以上-2。5歳中心・7歳以上は複5.9%で割引
+  var age = h.age || 0;
+  var ageScore = (age === 5) ? 8 : (age === 4) ? 6 : (age === 6) ? 4 : (age >= 7) ? -2 : 0;
+  var ageNote = (age >= 7) ? '7歳以上は割引(過去10年複5.9%)' : (age === 5) ? '5歳が中心世代' : '';
+  items.age = { score: ageScore, max: 8, label: '🎂年齢', note: ageNote, group:'horse' };
+
+  // ⑤ 人気（env・max8）2番8/1・3番6/4-5番4/6-9番2/10番以下1。2番人気が過去10年複60%で最良。※下位が上位を上回る逆転なし(単調)
+  var pop = h.popEstimate || 99;
+  var popScore = (pop === 2) ? 8 : (pop === 1 || pop === 3) ? 6 : (pop >= 4 && pop <= 5) ? 4 : (pop >= 6 && pop <= 9) ? 2 : 1;
+  var popNote = (pop === 2) ? '2番人気(過去10年複60%で最良)' : (pop === 1 || pop === 3) ? (pop + '番人気(上位人気)') : (pop + '番人気');
+  // 地力ガード: 3番人気以内は脚質/枠のマイナスで過度に沈めない
+  if (pop <= 3) popNote += ' / 地力上位・過度な軽視を回避';
+  // 穴3着フック: 6番人気以下でも 追込以外 かつ 福島2000実績あり は3着含み
+  if (pop >= 6 && ky.indexOf('追込') < 0 && fk !== 'none') popNote += ' / 3着穴含み(毎年6番人気以下が3着に絡む)';
+  items.popularity = { score: popScore, max: 8, label: '👥人気', note: popNote, group:'env' };
+
+  // ⑥ 前走人気着順（data・max6）前走1-2番人気→6 / 前走2着以内かつ5番人気内→4（両該当は6）。前走2番人気は過去10年複70%の鉄板
+  var ppop = (typeof h.prevPop === 'number') ? h.prevPop : null;
+  var prank = (typeof h.prevRank === 'number') ? h.prevRank : null;
+  var pfScore, pfNote;
+  if (ppop !== null && ppop <= 2)                               { pfScore = 6; pfNote = '前走' + ppop + '番人気(過去10年複70%の鉄板)'; }
+  else if (prank !== null && prank <= 2 && ppop !== null && ppop <= 5) { pfScore = 4; pfNote = '前走2着以内×5番人気内(前走好走)'; }
+  else                                                         { pfScore = 0; pfNote = '前走人気着順の該当なし'; }
+  items.prevPopRank = { score: pfScore, max: 6, label: '🔥前走人気着順', note: pfNote, group:'data' };
+
+  // ⑦ 前走格（data・max5）G3→5 / G1・G2→4 / L・OP→3 / 条件(勝クラス)→0。G3経由が本線
+  var pc = h.prevClass || '';
+  var pcScore = (pc === 'G3') ? 5 : (pc === 'G1' || pc === 'G2') ? 4 : (pc === 'L' || pc === 'OP') ? 3 : 0;
+  var pcNote = (pc === 'G3') ? 'G3経由が本線' : (pc === 'G1' || pc === 'G2') ? '重賞(G1/G2)組' : (pc === 'L' || pc === 'OP') ? 'OP/L組' : '条件戦組(過去10年好走稀)';
+  items.prevClass = { score: pcScore, max: 5, label: '📋前走格', note: pcNote, group:'data' };
+
+  // ⑧ 騎手（env・max3）名手3/標準2/他1
+  var jk = h.jockey || '';
+  var aceJ = ['戸崎圭','横山典','Ｍデムーロ','岩田康'];
+  var stdJ = ['田辺','池添','三浦','坂井','西村淳'];
+  var jScore = aceJ.some(function(n){ return jk.indexOf(n) >= 0; }) ? 3
+             : stdJ.some(function(n){ return jk.indexOf(n) >= 0; }) ? 2 : 1;
+  items.jockey = { score: jScore, max: 3, label: '🧑‍🦱騎手', note: (jScore === 3 ? '名手' : jScore === 2 ? '標準' : ''), group:'env' };
+
+  // ⑨ 枠（env・max3）2枠+3 / 内中枠(1,3,4,5,6)+1 / 8枠0 / 7枠-2。2枠は過去10年3勝・7枠は鬼門(複5%)
+  var wk = h.waku || 0;
+  var wkScore = (wk === 2) ? 3 : (wk === 7) ? -2 : (wk === 8) ? 0 : (wk === 1 || wk === 3 || wk === 4 || wk === 5 || wk === 6) ? 1 : 0;
+  var wkNote = (wk === 2) ? '2枠は過去10年3勝の好枠' : (wk === 7) ? '7枠は鬼門(過去10年複5%)' : '';
+  items.waku = { score: wkScore, max: 3, label: '⛩枠順', note: wkNote, group:'env' };
+
+  var total = 0, max = 0;
+  Object.keys(items).forEach(function(k){ var it = items[k]; if (it && typeof it.score === 'number') { total += it.score; max += (it.max || 0); } });
+  total = Math.max(0, total);
+
+  // pct は北九州/宝塚/安田と同じ79%アンカーのシグモイド（floor8/ceil79・center=medScore・k=4/(max-med)）
+  var pct;
+  if (_rawOnly) {
+    pct = 0;
+  } else {
+    var stats = _getTanabataScoreStats();
+    if (stats && stats.maxScore > stats.medScore) {
+      var floorPct = 8, ceilPct = 79, range = ceilPct - floorPct;
+      var k2 = 4.0 / Math.max(1, stats.maxScore - stats.medScore);
+      var raw = 1 / (1 + Math.exp(-k2 * (total - stats.medScore)));
+      pct = Math.round(floorPct + range * raw);
+    } else {
+      pct = (max > 0) ? Math.max(0, Math.min(99, Math.round(total / max * 100))) : 0;
+    }
+  }
+
+  return { total: total, max: max, pct: pct, items: items, penalty: 0 };
+}
+
 function computeScoreBreakdownRajioV1(horse, raceName, _rawOnly){
   var M = 75;
   if(!horse) return {total:0,max:M,pct:0,items:{},penalty:0};
@@ -23071,6 +23197,7 @@ function computeScoreBreakdown(horse, raceName) {
   if (raceName === 'ラジオNIKKEI賞') return computeScoreBreakdownRajioV1(horse, raceName);
   if (raceName === '函館記念') return computeScoreBreakdownHakodateV1(horse, raceName);
   if (raceName === '北九州記念') return computeScoreBreakdownKitakyushuV1(horse, raceName);
+  if (raceName === '七夕賞') return computeScoreBreakdownTanabataV1(horse, raceName);
   // ★回避馬は強制的に0%
   if (horse && horse.isAvoided) {
     return {
