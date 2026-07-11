@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260710-0590';
+  var CURRENT_VERSION = '20260710-0596';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -23157,8 +23157,11 @@ function _getTanabataV2ScoreStats() {
 }
 
 function computeScoreBreakdownTanabataV2(horse, raceName, _rawOnly) {
-  if (!horse) return { total: 0, max: 100, pct: 0, items: {}, penalty: 0 };
-  if (horse.isAvoided) return { total: 0, max: 100, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
+  // 道悪項ON/OFF: RACE_META['七夕賞'].babaWet===true のときだけ発火（良馬場時はΣmax=100、道悪時は106）
+  var _wetOn = (typeof RACE_META !== 'undefined' && RACE_META['七夕賞'] && RACE_META['七夕賞'].babaWet === true);
+  var _maxBase = _wetOn ? 106 : 100;
+  if (!horse) return { total: 0, max: _maxBase, pct: 0, items: {}, penalty: 0 };
+  if (horse.isAvoided) return { total: 0, max: _maxBase, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
   var h = horse;
   var items = {};
 
@@ -23263,6 +23266,18 @@ function computeScoreBreakdownTanabataV2(horse, raceName, _rawOnly) {
   var wkScore = (wk === 2 || wk === 6 || wk === 8) ? 2 : (wk === 7) ? -1 : 1;
   var wkNote = (wk === 7) ? '7枠は鬼門(過去10年複5%)' : (wk === 2) ? '2枠は過去10年3勝の好枠' : '';
   items.waku = { score: wkScore, max: 2, label: '⛩枠順', note: wkNote, group:'env' };
+
+  // ⑮ 道悪（baba・babaWet連動 ON/OFF）良馬場:max0で不発 / 道悪:max6 good+6/ok+3/none0/unknown-2
+  var wetScore, wetMax, wetNote;
+  if (!_wetOn) { wetScore = 0; wetMax = 0; wetNote = '良馬場: 道悪項は不発'; }
+  else {
+    var _wm = { good:6, ok:3, none:0, unknown:-2 };
+    var _wb = _wm[h.wetAptitude];
+    wetScore = (typeof _wb === 'number') ? _wb : 0;
+    wetMax = 6;
+    wetNote = '道悪馬場: 芝道悪実績を加点(good+6/ok+3/none0/unknown-2)';
+  }
+  items.wet = { score: wetScore, max: wetMax, label: '☔道悪', note: wetNote, group:'baba' };
 
   var total = 0, max = 0;
   Object.keys(items).forEach(function(k){ var it = items[k]; if (it && typeof it.score === 'number') { total += it.score; max += (it.max || 0); } });
