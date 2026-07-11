@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260710-0572';
+  var CURRENT_VERSION = '20260710-0578';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -23163,13 +23163,14 @@ function computeScoreBreakdownTanabataV2(horse, raceName, _rawOnly) {
   var fkNote = fk === 'win' ? '福島芝2000で勝ち鞍あり◎' : fk === 'place' ? '福島芝2000で複勝歴あり' : fk === 'minor' ? '福島芝2000は出走歴のみ(着外中心)' : '福島芝2000実績なし＝中立';
   items.fukushima = { score: fkScore, max: 12, label: '🏟福島2000適性', note: fkNote, group:'data' };
 
-  // ⑤ 距離ローテ（data・max12）短縮10/同距離7/延長3 ＋ 前走2200-2500=理想ゾーン+2。伊吹雅也2021-26: 短縮複27.1%>同23.3%>延長16.8%
+  // ⑤ 距離ローテ（data・max12）短縮10/同距離7/延長3 ＋ 前走2200-2400=理想ゾーン+2。前走2500mのみ七夕賞0-0-0-14の壁で-4。伊吹雅也2021-26: 短縮複27.1%>同23.3%>延長16.8%
   var pd = (typeof h.prevDist === 'number') ? h.prevDist : 0;
   var rote = h.distRote || (pd > 2000 ? '短縮' : (pd === 2000 ? '同距離' : '延長'));
   var roteBase = (rote === '短縮') ? 10 : (rote === '同距離') ? 7 : 3;
-  var idealBonus = (pd >= 2200 && pd <= 2500) ? 2 : 0;
-  var roteScore = roteBase + idealBonus;
-  var roteNote = '距離短縮 複勝27.1%>同距離23.3%>延長16.8%(2021-26)。前走2200-2500=複勝27.9%の理想ゾーン' + (idealBonus ? '(該当+2)' : '');
+  var idealBonus = (pd >= 2200 && pd <= 2400) ? 2 : 0;
+  var wallAdj = (pd === 2500) ? -4 : 0;
+  var roteScore = roteBase + idealBonus + wallAdj;
+  var roteNote = '距離短縮有利(複勝27.1%)だが前走2500mは七夕賞0-0-0-14の壁で減額。理想ゾーンは前走2200-2400' + (idealBonus ? '(該当+2)' : '') + (wallAdj ? '(2500m壁-4)' : '');
   items.distRote = { score: roteScore, max: 12, label: '🔄距離ローテ', note: roteNote, group:'data' };
 
   // ⑥ 人気（env・max8）2番8/1・3番7/4-5番4/6-9番2/10番以下1。※単調(2番spike以外は下位が上位を上回らない)
