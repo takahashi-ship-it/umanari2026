@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260710-0584';
+  var CURRENT_VERSION = '20260710-0590';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -6696,7 +6696,7 @@ const HORSES_BY_RACE = {
     "prevClass": "G2",
     "prevRank": 11,
     "prevPop": 13,
-    "fukushima2000": "place",
+    "fukushima2000": "L_place",
     "prevDist": 2500,
     "prevTrack": "関東",
     "father": "ハーツクライ",
@@ -6750,7 +6750,7 @@ const HORSES_BY_RACE = {
     "prevClass": "L",
     "prevRank": 12,
     "prevPop": 12,
-    "fukushima2000": "minor",
+    "fukushima2000": "none",
     "prevDist": 1800,
     "prevTrack": "関西",
     "father": "ザファクター",
@@ -6831,7 +6831,7 @@ const HORSES_BY_RACE = {
     "prevClass": "G3",
     "prevRank": 12,
     "prevPop": 14,
-    "fukushima2000": "minor",
+    "fukushima2000": "none",
     "prevDist": 1800,
     "prevTrack": "関東",
     "father": "ゴールドシップ",
@@ -6912,7 +6912,7 @@ const HORSES_BY_RACE = {
     "prevClass": "G3",
     "prevRank": 12,
     "prevPop": 15,
-    "fukushima2000": "place",
+    "fukushima2000": "jyusho",
     "prevDist": 2000,
     "prevTrack": "その他",
     "father": "エイシンフラッシュ",
@@ -6966,7 +6966,7 @@ const HORSES_BY_RACE = {
     "prevClass": "G2",
     "prevRank": 10,
     "prevPop": 6,
-    "fukushima2000": "win",
+    "fukushima2000": "jyoken",
     "prevDist": 2500,
     "prevTrack": "関東",
     "father": "シルバーステート",
@@ -7020,7 +7020,7 @@ const HORSES_BY_RACE = {
     "prevClass": "L",
     "prevRank": 3,
     "prevPop": 2,
-    "fukushima2000": "minor",
+    "fukushima2000": "none",
     "prevDist": 2400,
     "prevTrack": "関東",
     "father": "シルバーステート",
@@ -7101,7 +7101,7 @@ const HORSES_BY_RACE = {
     "prevClass": "L",
     "prevRank": 1,
     "prevPop": 5,
-    "fukushima2000": "win",
+    "fukushima2000": "L_win",
     "prevDist": 2000,
     "prevTrack": "関東",
     "father": "キズナ",
@@ -23189,11 +23189,17 @@ function computeScoreBreakdownTanabataV2(horse, raceName, _rawOnly) {
   var btNote = '福島芝2000m重賞でキングマンボ系複勝率33.3% vs ディープ系6.3%(2020~)';
   items.blood = { score: btScore, max: 12, label: '🩸血統', note: btNote, group:'data' };
 
-  // ④ 福島2000適性（data・max12）win12/place8/minor4/none0
+  // ④ 福島2000適性（data・max12）クラス別: 重賞好走jyusho12/L勝ちL_win10/L複勝L_place8/条件好走jyoken5/none0
   var fk = h.fukushima2000 || 'none';
-  var fkScore = fk === 'win' ? 12 : fk === 'place' ? 8 : fk === 'minor' ? 4 : 0;
-  var fkNote = fk === 'win' ? '福島芝2000で勝ち鞍あり◎' : fk === 'place' ? '福島芝2000で複勝歴あり' : fk === 'minor' ? '福島芝2000は出走歴のみ(着外中心)' : '福島芝2000実績なし＝中立';
+  var fkScore = (fk === 'jyusho') ? 12 : (fk === 'L_win') ? 10 : (fk === 'L_place') ? 8 : (fk === 'jyoken') ? 5 : 0;
+  var fkNote = (fk === 'jyusho') ? '福島2000重賞で好走◎' : (fk === 'L_win') ? '福島2000のL/OP勝ち' : (fk === 'L_place') ? '福島2000のL/OPで複勝' : (fk === 'jyoken') ? '福島2000は条件戦どまり(3勝クラス以下)' : '福島2000実績なし＝中立';
   items.fukushima = { score: fkScore, max: 12, label: '🏟福島2000適性', note: fkNote, group:'data' };
+  // ⑭ 前走大敗（data・減点専用 max0/min-4）前走10着以下は減点。ローテ変化(短縮/延長)ありは参考外として緩和(-2)
+  var _rk = (typeof h.prevRank === 'number') ? h.prevRank : 0;
+  var _rote2 = h.distRote || '';
+  var blScore = (_rk >= 10) ? ((_rote2 === '短縮' || _rote2 === '延長') ? -2 : -4) : 0;
+  var blNote = (blScore === -4) ? '前走' + _rk + '着(同距離大敗・減点-4)' : (blScore === -2) ? '前走' + _rk + '着だがローテ変化で緩和(-2)' : '';
+  items.prevBigLoss = { score: blScore, max: 0, label: '⚠️前走大敗', note: blNote, group:'data' };
 
   // ⑤ 距離ローテ（data・max12）短縮10/同距離7/延長3 ＋ 前走2200-2400=理想ゾーン+2。前走2500mのみ七夕賞0-0-0-14の壁で-4。伊吹雅也2021-26: 短縮複27.1%>同23.3%>延長16.8%
   var pd = (typeof h.prevDist === 'number') ? h.prevDist : 0;
