@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260710-0560';
+  var CURRENT_VERSION = '20260710-0566';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -6687,8 +6687,8 @@ const HORSES_BY_RACE = {
     "carriedWeight": 56,
     "jockey": "丸山",
     "stable": "美浦牧",
-    "odds": 35.6,
-    "popEstimate": 13,
+    "odds": 45.1,
+    "popEstimate": 15,
     "num": 1,
     "waku": 1,
     "kyakushitsu": "追込",
@@ -6700,7 +6700,9 @@ const HORSES_BY_RACE = {
     "prevDist": 2500,
     "prevTrack": "関東",
     "father": "ハーツクライ",
-    "bloodType": "その他"
+    "bloodType": "その他",
+    "fukushoLow": 7.9,
+    "fukushoHigh": 11.4
   },
   {
     "name": "コントラポスト",
@@ -6709,7 +6711,7 @@ const HORSES_BY_RACE = {
     "carriedWeight": 56,
     "jockey": "菊沢",
     "stable": "美浦菊沢",
-    "odds": 16.9,
+    "odds": 14.6,
     "popEstimate": 7,
     "num": 2,
     "waku": 1,
@@ -6722,7 +6724,9 @@ const HORSES_BY_RACE = {
     "prevDist": 1800,
     "prevTrack": "関東",
     "father": "ルーラーシップ",
-    "bloodType": "キングマンボ系"
+    "bloodType": "キングマンボ系",
+    "fukushoLow": 3.5,
+    "fukushoHigh": 4.9
   },
   {
     "name": "ショウナンマグマ",
@@ -6731,7 +6735,7 @@ const HORSES_BY_RACE = {
     "carriedWeight": 55,
     "jockey": "三浦",
     "stable": "美浦尾関",
-    "odds": 98.8,
+    "odds": 66.9,
     "popEstimate": 16,
     "num": 3,
     "waku": 2,
@@ -6744,7 +6748,9 @@ const HORSES_BY_RACE = {
     "prevDist": 1800,
     "prevTrack": "関西",
     "father": "ザファクター",
-    "bloodType": "その他"
+    "bloodType": "その他",
+    "fukushoLow": 16.4,
+    "fukushoHigh": 23.5
   },
   {
     "name": "カラマティアノス",
@@ -6766,7 +6772,9 @@ const HORSES_BY_RACE = {
     "prevDist": 1800,
     "prevTrack": "関東",
     "father": "レイデオロ",
-    "bloodType": "キングマンボ系"
+    "bloodType": "キングマンボ系",
+    "fukushoLow": 1.9,
+    "fukushoHigh": 2.4
   },
   {
     "name": "オーロラエックス",
@@ -6775,8 +6783,8 @@ const HORSES_BY_RACE = {
     "carriedWeight": 55,
     "jockey": "坂井",
     "stable": "栗東杉山晴",
-    "odds": 19.3,
-    "popEstimate": 8,
+    "odds": 23.7,
+    "popEstimate": 10,
     "num": 5,
     "waku": 3,
     "kyakushitsu": "差し",
@@ -6788,7 +6796,9 @@ const HORSES_BY_RACE = {
     "prevDist": 1800,
     "prevTrack": "関西",
     "father": "サトノダイヤモンド",
-    "bloodType": "ディープ系"
+    "bloodType": "ディープ系",
+    "fukushoLow": 5.4,
+    "fukushoHigh": 7.7
   },
   {
     "name": "マイネルモーント",
@@ -6797,8 +6807,8 @@ const HORSES_BY_RACE = {
     "carriedWeight": 56,
     "jockey": "石川",
     "stable": "美浦高木",
-    "odds": 25.1,
-    "popEstimate": 11,
+    "odds": 9.6,
+    "popEstimate": 6,
     "num": 6,
     "waku": 3,
     "kyakushitsu": "差し",
@@ -6810,7 +6820,9 @@ const HORSES_BY_RACE = {
     "prevDist": 1800,
     "prevTrack": "関東",
     "father": "ゴールドシップ",
-    "bloodType": "その他"
+    "bloodType": "その他",
+    "fukushoLow": 4.3,
+    "fukushoHigh": 6.1
   },
   {
     "name": "メリオーレム",
@@ -6819,8 +6831,8 @@ const HORSES_BY_RACE = {
     "carriedWeight": 55,
     "jockey": "Ｍデムーロ",
     "stable": "栗東友道",
-    "odds": 13.9,
-    "popEstimate": 6,
+    "odds": 20.5,
+    "popEstimate": 9,
     "num": 7,
     "waku": 4,
     "kyakushitsu": "差し",
@@ -6832,7 +6844,9 @@ const HORSES_BY_RACE = {
     "prevDist": 1800,
     "prevTrack": "関東",
     "father": "シュヴァルグラン",
-    "bloodType": "その他"
+    "bloodType": "その他",
+    "fukushoLow": 4.2,
+    "fukushoHigh": 6
   },
   {
     "name": "クリスマスパレード",
@@ -6841,8 +6855,8 @@ const HORSES_BY_RACE = {
     "carriedWeight": 55,
     "jockey": "杉原",
     "stable": "美浦加藤士",
-    "odds": 37.6,
-    "popEstimate": 14,
+    "odds": 31.5,
+    "popEstimate": 13,
     "num": 8,
     "waku": 4,
     "kyakushitsu": "追込",
@@ -6854,7 +6868,9 @@ const HORSES_BY_RACE = {
     "prevDist": 2500,
     "prevTrack": "関東",
     "father": "キタサンブラック",
-    "bloodType": "その他"
+    "bloodType": "その他",
+    "fukushoLow": 6.4,
+    "fukushoHigh": 9.2
   },
   {
     "name": "オニャンコポン",
@@ -6863,8 +6879,8 @@ const HORSES_BY_RACE = {
     "carriedWeight": 54,
     "jockey": "吉田豊",
     "stable": "美浦小島",
-    "odds": 85.2,
-    "popEstimate": 15,
+    "odds": 28.4,
+    "popEstimate": 11,
     "num": 9,
     "waku": 5,
     "kyakushitsu": "追込",
@@ -6876,7 +6892,9 @@ const HORSES_BY_RACE = {
     "prevDist": 2000,
     "prevTrack": "その他",
     "father": "エイシンフラッシュ",
-    "bloodType": "キングマンボ系"
+    "bloodType": "キングマンボ系",
+    "fukushoLow": 4.6,
+    "fukushoHigh": 6.6
   },
   {
     "name": "センツブラッド",
@@ -6885,8 +6903,8 @@ const HORSES_BY_RACE = {
     "carriedWeight": 56,
     "jockey": "原",
     "stable": "栗東斉藤崇",
-    "odds": 23.8,
-    "popEstimate": 10,
+    "odds": 18.6,
+    "popEstimate": 8,
     "num": 10,
     "waku": 5,
     "kyakushitsu": "先行",
@@ -6898,7 +6916,9 @@ const HORSES_BY_RACE = {
     "prevDist": 1800,
     "prevTrack": "関東",
     "father": "ルーラーシップ",
-    "bloodType": "キングマンボ系"
+    "bloodType": "キングマンボ系",
+    "fukushoLow": 4.1,
+    "fukushoHigh": 5.8
   },
   {
     "name": "アスクナイスショー",
@@ -6907,8 +6927,8 @@ const HORSES_BY_RACE = {
     "carriedWeight": 55,
     "jockey": "田辺",
     "stable": "美浦中舘",
-    "odds": 8.2,
-    "popEstimate": 5,
+    "odds": 5.3,
+    "popEstimate": 2,
     "num": 11,
     "waku": 6,
     "kyakushitsu": "先行",
@@ -6920,7 +6940,9 @@ const HORSES_BY_RACE = {
     "prevDist": 2500,
     "prevTrack": "関東",
     "father": "シルバーステート",
-    "bloodType": "ディープ系"
+    "bloodType": "ディープ系",
+    "fukushoLow": 1.5,
+    "fukushoHigh": 1.7
   },
   {
     "name": "リカンカブール",
@@ -6929,7 +6951,7 @@ const HORSES_BY_RACE = {
     "carriedWeight": 57,
     "jockey": "荻野極",
     "stable": "栗東田中克",
-    "odds": 29.5,
+    "odds": 29.8,
     "popEstimate": 12,
     "num": 12,
     "waku": 6,
@@ -6942,7 +6964,9 @@ const HORSES_BY_RACE = {
     "prevDist": 1800,
     "prevTrack": "関西",
     "father": "シルバーステート",
-    "bloodType": "ディープ系"
+    "bloodType": "ディープ系",
+    "fukushoLow": 4.9,
+    "fukushoHigh": 7
   },
   {
     "name": "バトルボーン",
@@ -6951,8 +6975,8 @@ const HORSES_BY_RACE = {
     "carriedWeight": 57,
     "jockey": "戸崎圭",
     "stable": "美浦林",
-    "odds": 5.6,
-    "popEstimate": 3,
+    "odds": 7.9,
+    "popEstimate": 4,
     "num": 13,
     "waku": 7,
     "kyakushitsu": "先行",
@@ -6964,7 +6988,9 @@ const HORSES_BY_RACE = {
     "prevDist": 2400,
     "prevTrack": "関東",
     "father": "シルバーステート",
-    "bloodType": "ディープ系"
+    "bloodType": "ディープ系",
+    "fukushoLow": 2.3,
+    "fukushoHigh": 3.2
   },
   {
     "name": "オールナット",
@@ -6973,8 +6999,8 @@ const HORSES_BY_RACE = {
     "carriedWeight": 57.5,
     "jockey": "西村淳",
     "stable": "栗東高野",
-    "odds": 21.9,
-    "popEstimate": 9,
+    "odds": 32.7,
+    "popEstimate": 14,
     "num": 14,
     "waku": 7,
     "kyakushitsu": "差し",
@@ -6986,7 +7012,9 @@ const HORSES_BY_RACE = {
     "prevDist": 2400,
     "prevTrack": "関西",
     "father": "サトノダイヤモンド",
-    "bloodType": "ディープ系"
+    "bloodType": "ディープ系",
+    "fukushoLow": 6.9,
+    "fukushoHigh": 10
   },
   {
     "name": "ヤマニンブークリエ",
@@ -6995,8 +7023,8 @@ const HORSES_BY_RACE = {
     "carriedWeight": 56,
     "jockey": "横山典",
     "stable": "栗東松永幹",
-    "odds": 7.5,
-    "popEstimate": 4,
+    "odds": 8.6,
+    "popEstimate": 5,
     "num": 15,
     "waku": 8,
     "kyakushitsu": "先行",
@@ -7008,7 +7036,9 @@ const HORSES_BY_RACE = {
     "prevDist": 2000,
     "prevTrack": "関東",
     "father": "キタサンブラック",
-    "bloodType": "その他"
+    "bloodType": "その他",
+    "fukushoLow": 2.8,
+    "fukushoHigh": 3.9
   },
   {
     "name": "サヴォーナ",
@@ -7017,8 +7047,8 @@ const HORSES_BY_RACE = {
     "carriedWeight": 58,
     "jockey": "池添",
     "stable": "栗東中竹",
-    "odds": 5.2,
-    "popEstimate": 2,
+    "odds": 7.4,
+    "popEstimate": 3,
     "num": 16,
     "waku": 8,
     "kyakushitsu": "先行",
@@ -7030,7 +7060,9 @@ const HORSES_BY_RACE = {
     "prevDist": 2000,
     "prevTrack": "関東",
     "father": "キズナ",
-    "bloodType": "ディープ系"
+    "bloodType": "ディープ系",
+    "fukushoLow": 2.8,
+    "fukushoHigh": 3.8
   }
 ],
 
