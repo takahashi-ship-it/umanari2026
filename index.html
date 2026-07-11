@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260710-0578';
+  var CURRENT_VERSION = '20260710-0584';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -6703,7 +6703,9 @@ const HORSES_BY_RACE = {
     "bloodType": "その他",
     "fukushoLow": 7.9,
     "fukushoHigh": 11.4,
-    "distRote": "短縮"
+    "distRote": "短縮",
+    "wetAptitude": "ok",
+    "wetRec": "稍重勝ち有(1-0-0-5)"
   },
   {
     "name": "コントラポスト",
@@ -6728,7 +6730,9 @@ const HORSES_BY_RACE = {
     "bloodType": "キングマンボ系",
     "fukushoLow": 3.5,
     "fukushoHigh": 4.9,
-    "distRote": "延長"
+    "distRote": "延長",
+    "wetAptitude": "ok",
+    "wetRec": "稍重勝ち有(1-0-0-2)"
   },
   {
     "name": "ショウナンマグマ",
@@ -6753,7 +6757,9 @@ const HORSES_BY_RACE = {
     "bloodType": "その他",
     "fukushoLow": 16.4,
     "fukushoHigh": 23.5,
-    "distRote": "延長"
+    "distRote": "延長",
+    "wetAptitude": "ok",
+    "wetRec": "稍重勝ち有(1-0-0-7)"
   },
   {
     "name": "カラマティアノス",
@@ -6778,7 +6784,9 @@ const HORSES_BY_RACE = {
     "bloodType": "キングマンボ系",
     "fukushoLow": 1.9,
     "fukushoHigh": 2.4,
-    "distRote": "延長"
+    "distRote": "延長",
+    "wetAptitude": "unknown",
+    "wetRec": "道悪経験なし"
   },
   {
     "name": "オーロラエックス",
@@ -6803,7 +6811,9 @@ const HORSES_BY_RACE = {
     "bloodType": "ディープ系",
     "fukushoLow": 5.4,
     "fukushoHigh": 7.7,
-    "distRote": "延長"
+    "distRote": "延長",
+    "wetAptitude": "ok",
+    "wetRec": "稍重3着(0-0-1-2)"
   },
   {
     "name": "マイネルモーント",
@@ -6828,7 +6838,9 @@ const HORSES_BY_RACE = {
     "bloodType": "その他",
     "fukushoLow": 4.3,
     "fukushoHigh": 6.1,
-    "distRote": "延長"
+    "distRote": "延長",
+    "wetAptitude": "ok",
+    "wetRec": "稍重2着(0-1-0-1)"
   },
   {
     "name": "メリオーレム",
@@ -6853,7 +6865,9 @@ const HORSES_BY_RACE = {
     "bloodType": "その他",
     "fukushoLow": 4.2,
     "fukushoHigh": 6,
-    "distRote": "延長"
+    "distRote": "延長",
+    "wetAptitude": "good",
+    "wetRec": "重で勝ち鞍(1-0-0-1)"
   },
   {
     "name": "クリスマスパレード",
@@ -6878,7 +6892,9 @@ const HORSES_BY_RACE = {
     "bloodType": "その他",
     "fukushoLow": 6.4,
     "fukushoHigh": 9.2,
-    "distRote": "短縮"
+    "distRote": "短縮",
+    "wetAptitude": "good",
+    "wetRec": "稍重勝ち(1-0-0-0)"
   },
   {
     "name": "オニャンコポン",
@@ -6903,7 +6919,9 @@ const HORSES_BY_RACE = {
     "bloodType": "キングマンボ系",
     "fukushoLow": 4.6,
     "fukushoHigh": 6.6,
-    "distRote": "同距離"
+    "distRote": "同距離",
+    "wetAptitude": "ok",
+    "wetRec": "重2着有(0-1-0-4)"
   },
   {
     "name": "センツブラッド",
@@ -6928,7 +6946,9 @@ const HORSES_BY_RACE = {
     "bloodType": "キングマンボ系",
     "fukushoLow": 4.1,
     "fukushoHigh": 5.8,
-    "distRote": "延長"
+    "distRote": "延長",
+    "wetAptitude": "good",
+    "wetRec": "稍重勝ち(1-0-0-0)"
   },
   {
     "name": "アスクナイスショー",
@@ -6953,7 +6973,9 @@ const HORSES_BY_RACE = {
     "bloodType": "ディープ系",
     "fukushoLow": 1.5,
     "fukushoHigh": 1.7,
-    "distRote": "短縮"
+    "distRote": "短縮",
+    "wetAptitude": "none",
+    "wetRec": "道悪0-0-0-2"
   },
   {
     "name": "リカンカブール",
@@ -6978,7 +7000,9 @@ const HORSES_BY_RACE = {
     "bloodType": "ディープ系",
     "fukushoLow": 4.9,
     "fukushoHigh": 7,
-    "distRote": "延長"
+    "distRote": "延長",
+    "wetAptitude": "none",
+    "wetRec": "道悪0-0-0-1"
   },
   {
     "name": "バトルボーン",
@@ -7003,7 +7027,9 @@ const HORSES_BY_RACE = {
     "bloodType": "ディープ系",
     "fukushoLow": 2.3,
     "fukushoHigh": 3.2,
-    "distRote": "短縮"
+    "distRote": "短縮",
+    "wetAptitude": "good",
+    "wetRec": "稍重で重賞級勝ち(1-0-0-0)"
   },
   {
     "name": "オールナット",
@@ -7028,7 +7054,9 @@ const HORSES_BY_RACE = {
     "bloodType": "ディープ系",
     "fukushoLow": 6.9,
     "fukushoHigh": 10,
-    "distRote": "短縮"
+    "distRote": "短縮",
+    "wetAptitude": "good",
+    "wetRec": "道悪1-1-0-2 複50%"
   },
   {
     "name": "ヤマニンブークリエ",
@@ -7053,7 +7081,9 @@ const HORSES_BY_RACE = {
     "bloodType": "その他",
     "fukushoLow": 2.8,
     "fukushoHigh": 3.9,
-    "distRote": "同距離"
+    "distRote": "同距離",
+    "wetAptitude": "none",
+    "wetRec": "菊花賞稍重16着(0-0-0-1)"
   },
   {
     "name": "サヴォーナ",
@@ -7078,7 +7108,9 @@ const HORSES_BY_RACE = {
     "bloodType": "ディープ系",
     "fukushoLow": 2.8,
     "fukushoHigh": 3.8,
-    "distRote": "同距離"
+    "distRote": "同距離",
+    "wetAptitude": "none",
+    "wetRec": "道悪0-0-0-1(阪神大賞典6着)"
   }
 ],
 
