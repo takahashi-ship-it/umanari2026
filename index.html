@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260712-0606';
+  var CURRENT_VERSION = '20260712-0612';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -6705,7 +6705,9 @@ const HORSES_BY_RACE = {
     "fukushoHigh": 9.5,
     "distRote": "短縮",
     "wetAptitude": "ok",
-    "wetRec": "稍重勝ち有(1-0-0-5)"
+    "wetRec": "稍重勝ち有(1-0-0-5)",
+    "jockeyFukushimaRate": 32.5,
+    "jockeySample": 126
   },
   {
     "name": "コントラポスト",
@@ -6732,7 +6734,9 @@ const HORSES_BY_RACE = {
     "fukushoHigh": 4.6,
     "distRote": "延長",
     "wetAptitude": "ok",
-    "wetRec": "稍重勝ち有(1-0-0-2)"
+    "wetRec": "稍重勝ち有(1-0-0-2)",
+    "jockeyFukushimaRate": 17.3,
+    "jockeySample": 110
   },
   {
     "name": "ショウナンマグマ",
@@ -6759,7 +6763,9 @@ const HORSES_BY_RACE = {
     "fukushoHigh": 22,
     "distRote": "延長",
     "wetAptitude": "ok",
-    "wetRec": "稍重勝ち有(1-0-0-7)"
+    "wetRec": "稍重勝ち有(1-0-0-7)",
+    "jockeyFukushimaRate": 29.6,
+    "jockeySample": 54
   },
   {
     "name": "カラマティアノス",
@@ -6786,7 +6792,9 @@ const HORSES_BY_RACE = {
     "fukushoHigh": 2.3,
     "distRote": "延長",
     "wetAptitude": "unknown",
-    "wetRec": "道悪経験なし"
+    "wetRec": "道悪経験なし",
+    "jockeyFukushimaRate": 37.5,
+    "jockeySample": 8
   },
   {
     "name": "オーロラエックス",
@@ -6813,7 +6821,9 @@ const HORSES_BY_RACE = {
     "fukushoHigh": 6.8,
     "distRote": "延長",
     "wetAptitude": "ok",
-    "wetRec": "稍重3着(0-0-1-2)"
+    "wetRec": "稍重3着(0-0-1-2)",
+    "jockeyFukushimaRate": 27.8,
+    "jockeySample": 18
   },
   {
     "name": "マイネルモーント",
@@ -6840,7 +6850,9 @@ const HORSES_BY_RACE = {
     "fukushoHigh": 4.2,
     "distRote": "延長",
     "wetAptitude": "ok",
-    "wetRec": "稍重2着(0-1-0-1)"
+    "wetRec": "稍重2着(0-1-0-1)",
+    "jockeyFukushimaRate": 19.4,
+    "jockeySample": 67
   },
   {
     "name": "メリオーレム",
@@ -6867,7 +6879,9 @@ const HORSES_BY_RACE = {
     "fukushoHigh": 5.8,
     "distRote": "延長",
     "wetAptitude": "good",
-    "wetRec": "重で勝ち鞍(1-0-0-1)"
+    "wetRec": "重で勝ち鞍(1-0-0-1)",
+    "jockeyFukushimaRate": 24,
+    "jockeySample": 25
   },
   {
     "name": "クリスマスパレード",
@@ -6894,7 +6908,9 @@ const HORSES_BY_RACE = {
     "fukushoHigh": 9,
     "distRote": "短縮",
     "wetAptitude": "good",
-    "wetRec": "稍重勝ち(1-0-0-0)"
+    "wetRec": "稍重勝ち(1-0-0-0)",
+    "jockeyFukushimaRate": 15.5,
+    "jockeySample": 58
   },
   {
     "name": "オニャンコポン",
@@ -6921,7 +6937,9 @@ const HORSES_BY_RACE = {
     "fukushoHigh": 8.2,
     "distRote": "同距離",
     "wetAptitude": "ok",
-    "wetRec": "重2着有(0-1-0-4)"
+    "wetRec": "重2着有(0-1-0-4)",
+    "jockeyFukushimaRate": 12.9,
+    "jockeySample": 31
   },
   {
     "name": "センツブラッド",
@@ -6948,7 +6966,9 @@ const HORSES_BY_RACE = {
     "fukushoHigh": 4.6,
     "distRote": "延長",
     "wetAptitude": "good",
-    "wetRec": "稍重勝ち(1-0-0-0)"
+    "wetRec": "稍重勝ち(1-0-0-0)",
+    "jockeyFukushimaRate": 14,
+    "jockeySample": 57
   },
   {
     "name": "アスクナイスショー",
@@ -6975,7 +6995,9 @@ const HORSES_BY_RACE = {
     "fukushoHigh": 2.5,
     "distRote": "短縮",
     "wetAptitude": "none",
-    "wetRec": "道悪0-0-0-2"
+    "wetRec": "道悪0-0-0-2",
+    "jockeyFukushimaRate": 36.4,
+    "jockeySample": 55
   },
   {
     "name": "リカンカブール",
@@ -7002,7 +7024,9 @@ const HORSES_BY_RACE = {
     "fukushoHigh": 5.9,
     "distRote": "延長",
     "wetAptitude": "none",
-    "wetRec": "道悪0-0-0-1"
+    "wetRec": "道悪0-0-0-1",
+    "jockeyFukushimaRate": 26.1,
+    "jockeySample": 69
   },
   {
     "name": "バトルボーン",
@@ -7029,7 +7053,9 @@ const HORSES_BY_RACE = {
     "fukushoHigh": 3,
     "distRote": "短縮",
     "wetAptitude": "good",
-    "wetRec": "稍重で重賞級勝ち(1-0-0-0)"
+    "wetRec": "稍重で重賞級勝ち(1-0-0-0)",
+    "jockeyFukushimaRate": 51.7,
+    "jockeySample": 87
   },
   {
     "name": "オールナット",
@@ -7056,7 +7082,9 @@ const HORSES_BY_RACE = {
     "fukushoHigh": 8.9,
     "distRote": "短縮",
     "wetAptitude": "good",
-    "wetRec": "道悪1-1-0-2 複50%"
+    "wetRec": "道悪1-1-0-2 複50%",
+    "jockeyFukushimaRate": 27.3,
+    "jockeySample": 55
   },
   {
     "name": "ヤマニンブークリエ",
@@ -7083,7 +7111,9 @@ const HORSES_BY_RACE = {
     "fukushoHigh": 3.5,
     "distRote": "同距離",
     "wetAptitude": "none",
-    "wetRec": "菊花賞稍重16着(0-0-0-1)"
+    "wetRec": "菊花賞稍重16着(0-0-0-1)",
+    "jockeyFukushimaRate": 16.7,
+    "jockeySample": 18
   },
   {
     "name": "サヴォーナ",
@@ -7110,7 +7140,9 @@ const HORSES_BY_RACE = {
     "fukushoHigh": 3.4,
     "distRote": "同距離",
     "wetAptitude": "none",
-    "wetRec": "道悪0-0-0-1(阪神大賞典6着)"
+    "wetRec": "道悪0-0-0-1(阪神大賞典6着)",
+    "jockeyFukushimaRate": 50,
+    "jockeySample": 4
   }
 ],
 
@@ -23159,7 +23191,7 @@ function _getTanabataV2ScoreStats() {
 function computeScoreBreakdownTanabataV2(horse, raceName, _rawOnly) {
   // 道悪項ON/OFF: RACE_META['七夕賞'].babaWet===true のときだけ発火（良馬場時はΣmax=100、道悪時は106）
   var _wetOn = (typeof RACE_META !== 'undefined' && RACE_META['七夕賞'] && RACE_META['七夕賞'].babaWet === true);
-  var _maxBase = _wetOn ? 106 : 100;
+  var _maxBase = _wetOn ? 108 : 102;
   if (!horse) return { total: 0, max: _maxBase, pct: 0, items: {}, penalty: 0 };
   if (horse.isAvoided) return { total: 0, max: _maxBase, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
   var h = horse;
@@ -23253,13 +23285,13 @@ function computeScoreBreakdownTanabataV2(horse, raceName, _rawOnly) {
   var ptScore = (pt === '関東') ? 3 : (pt === '関西') ? 1 : 2;
   items.prevTrack = { score: ptScore, max: 3, label: '🗾前走場', note: (pt ? '前走' + pt : ''), group:'env' };
 
-  // ⑫ 騎手（env・max3）名手3/標準2/他1
-  var jk = h.jockey || '';
-  var aceJ = ['戸崎圭','横山典','Ｍデムーロ','岩田康'];
-  var stdJ = ['田辺','池添','三浦','坂井','西村淳'];
-  var jScore = aceJ.some(function(n){ return jk.indexOf(n) >= 0; }) ? 3
-             : stdJ.some(function(n){ return jk.indexOf(n) >= 0; }) ? 2 : 1;
-  items.jockey = { score: jScore, max: 3, label: '🧑‍🦱騎手', note: (jScore === 3 ? '名手' : jScore === 2 ? '標準' : ''), group:'env' };
+  // ⑫ 騎手（env・max5）騎手×福島芝2000 実測複勝率ベース。小標本(n<10)は中央値25%へ収縮補正
+  var _jr = (typeof h.jockeyFukushimaRate === 'number') ? h.jockeyFukushimaRate : 0;
+  var _jn = (typeof h.jockeySample === 'number') ? h.jockeySample : 0;
+  var _jadj = (_jn < 10) ? (_jr * 0.4 + 25 * 0.6) : _jr;
+  var jScore = (_jadj >= 35) ? 5 : (_jadj >= 27) ? 4 : (_jadj >= 20) ? 2 : 0;
+  var jNote = '騎手×福島芝2000 複勝率' + _jr + '%(' + _jn + '走)' + (_jn < 10 ? ' ※小標本のため収縮補正' : '');
+  items.jockey = { score: jScore, max: 5, label: '🧑‍🦱騎手', note: jNote, group:'env' };
 
   // ⑬ 枠（env・max2）2・6・8枠→2 / その他→1 / 7枠→-1
   var wk = h.waku || 0;
