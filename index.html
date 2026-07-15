@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260713-0632';
+  var CURRENT_VERSION = '20260713-0636';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -23372,48 +23372,48 @@ function _getHakodate2saiScoreStats() {
 }
 
 function computeScoreBreakdownHakodate2saiV1(horse, raceName, _rawOnly) {
-  if (!horse) return { total: 0, max: 57, pct: 0, items: {}, penalty: 0 };
-  if (horse.isAvoided) return { total: 0, max: 57, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
+  if (!horse) return { total: 0, max: 55, pct: 0, items: {}, penalty: 0 };
+  if (horse.isAvoided) return { total: 0, max: 55, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
   var h = horse;
   var items = {};
 
-  // ① 上がり3F（horse・max13）最重要。33.6→13/33.7-33.9→11/34.0-34.6→7/34.7-35.0→4/35.1-35.9→2/36.0～→0
-  var a = (typeof h.agari3f === 'number') ? h.agari3f : 99;
-  var aScore = (a <= 33.6) ? 13 : (a <= 33.9) ? 11 : (a <= 34.6) ? 7 : (a <= 35.0) ? 4 : (a <= 35.9) ? 2 : 0;
-  items.agari = { score: aScore, max: 13, label: '🏇上がり3F', note: '過去10年 優勝馬の8割が上がり3位以内=最重要', group:'horse' };
+  // ① 勝ちっぷり・時計（data・max10）新馬/未勝利勝ちの芝ダ。芝→10/ダ→5/なし→0
+  var ws = h.wonSurface || 'なし';
+  var wsScore = (ws === '芝') ? 10 : (ws === 'ダ') ? 5 : 0;
+  items.won = { score: wsScore, max: 10, label: '🥇勝ちっぷり・時計', note: (ws==='芝'?'芝で勝ち鞍':ws==='ダ'?'ダートで勝ち鞍(芝に一枚劣る)':'未勝利'), group:'data' };
 
-  // ② 脚質（horse・max9）逃げ9/先行8/差し6/追込3 ※差しも切らない
+  // ② 馬体重（horse・max10）460+→10/450-459→8/440-449→5/420-439→2/420未満→0。450kg以上 複勝25.6% vs 未満15%
+  var bw = (typeof h.bataijyu === 'number') ? h.bataijyu : 0;
+  var bwScore = (bw >= 460) ? 10 : (bw >= 450) ? 8 : (bw >= 440) ? 5 : (bw >= 420) ? 2 : 0;
+  items.bataijyu = { score: bwScore, max: 10, label: '⚖️馬体重', note: '450kg以上 複勝率25.6% vs 未満15%(JRA公式)', group:'horse' };
+
+  // ③ 前走場所（env・max9）函館→9/函館ダ→5/他場→2。北海道組が他場を圧倒
+  var pt = h.prevTrack || '';
+  var ptScore = (pt === '函館') ? 9 : (pt === '函館ダ') ? 5 : 2;
+  items.prevTrack = { score: ptScore, max: 9, label: '🗾前走場所', note: '北海道組が他場を圧倒。他場からの連対は過去2頭のみ', group:'env' };
+
+  // ④ 脚質（horse・max9）逃げ9/先行8/差し6/追込4 ※差し追込も切らない
   var ky = h.kyakushitsu || h.style || h.runStyle || '';
-  var kyScore = (ky.indexOf('逃げ') >= 0) ? 9 : (ky.indexOf('先行') >= 0) ? 8 : (ky.indexOf('差し') >= 0) ? 6 : (ky.indexOf('追込') >= 0) ? 3 : 6;
+  var kyScore = (ky.indexOf('逃げ') >= 0) ? 9 : (ky.indexOf('先行') >= 0) ? 8 : (ky.indexOf('差し') >= 0) ? 6 : (ky.indexOf('追込') >= 0) ? 4 : 6;
   items.kyakushitsu = { score: kyScore, max: 9, label: '⚡脚質', group:'horse' };
 
-  // ③ 勝ちっぷり（data・max9）勝ち鞍の芝ダ。芝→9/ダ→5/なし→0
-  var ws = h.wonSurface || 'なし';
-  var wsScore = (ws === '芝') ? 9 : (ws === 'ダ') ? 5 : 0;
-  items.won = { score: wsScore, max: 9, label: '🥇勝ちっぷり', note: (ws==='芝'?'芝で勝ち鞍':ws==='ダ'?'ダートで勝ち鞍(芝に一枚劣る)':'未勝利'), group:'data' };
-
-  // ④ 血統（data・max8）米スピード血脈=函館2歳S好走。ビッグアーサー/ヘニーヒューズ/タワーオブロンドン/Blue Point/米スピード系(Twirling Candy等)→8 / その他中距離→4
+  // ⑤ 血統（data・max8）米スピード血脈=函館2歳S好走。ビッグアーサー/ヘニーヒューズ/タワーオブロンドン/Blue Point/米スピード系(Twirling Candy等)→8 / その他中距離(サートゥル/サリオス等)→4
   var f = h.father || '';
   var hiBlood = ['ビッグアーサー','ヘニーヒューズ','タワーオブロンドン','Blue Point','Twirling Candy'];
   var fScore = hiBlood.some(function(n){ return f.indexOf(n) >= 0; }) ? 8 : 4;
   items.blood = { score: fScore, max: 8, label: '🩸血統', note: 'ビッグアーサー(サクラバクシンオー系)・米スピード血脈が函館2歳S好走', group:'data' };
 
-  // ⑤ 前走場所（env・max7）函館→7/函館ダ→4/他場→2。北海道組が他場を圧倒
-  var pt = h.prevTrack || '';
-  var ptScore = (pt === '函館') ? 7 : (pt === '函館ダ') ? 4 : 2;
-  items.prevTrack = { score: ptScore, max: 7, label: '🗾前走場所', note: '北海道組が他場を圧倒。他場からの連対は過去2頭のみ', group:'env' };
-
-  // ⑥ 馬体重（horse・max6）460+→6/450-459→5/440-449→3/420-439→1/420未満→0。450kg以上 複勝25.6% vs 未満15%
-  var bw = (typeof h.bataijyu === 'number') ? h.bataijyu : 0;
-  var bwScore = (bw >= 460) ? 6 : (bw >= 450) ? 5 : (bw >= 440) ? 3 : (bw >= 420) ? 1 : 0;
-  items.bataijyu = { score: bwScore, max: 6, label: '⚖️馬体重', note: '450kg以上 複勝率25.6% vs 未満15%', group:'horse' };
-
-  // ⑦ キャリア（data・max5）1-2戦かつ勝ち鞍あり→5 / 3戦以上→-5(壁) / 勝ちなし→0。キャリア3戦以上は過去10年 馬券圏ゼロ
+  // ⑥ キャリア（data・max5）1-2戦かつ勝ち鞍あり→5 / 3戦以上→-5(壁) / 勝ちなし→0。キャリア3戦以上は過去10年 馬券圏ゼロ
   var cr = (typeof h.career === 'number') ? h.career : 0;
   var won = (h.wonSurface && h.wonSurface !== 'なし');
   var crScore = (cr >= 3) ? -5 : (won && cr <= 2) ? 5 : 0;
   var crNote = (cr >= 3) ? 'キャリア3戦以上=過去10年 馬券圏ゼロの壁(-5)' : (won && cr <= 2) ? '少キャリア×勝ち鞍あり(理想)' : '未勝利';
   items.career = { score: crScore, max: 5, label: '🌱キャリア', note: crNote, group:'data' };
+
+  // ⑦ 上がり3F（horse・max4）前走上がりの額面は予測力低い→参考程度の小配点に降格。33秒台→4/34秒台→3/35秒台→2/36秒～→0
+  var a = (typeof h.agari3f === 'number') ? h.agari3f : 99;
+  var aScore = (a < 34.0) ? 4 : (a < 35.0) ? 3 : (a < 36.0) ? 2 : 0;
+  items.agari = { score: aScore, max: 4, label: '🏇上がり3F', note: '前走上がりの額面は予測力低い(優勝馬の前走上がり平均35.0秒)。参考程度の小配点に降格', group:'horse' };
 
   // 🎯 枠（env・max0/金曜有効化のプレースホルダ）
   // 金曜枠確定後: 5-8枠(1着ゾーン)/1-4枠(3着ゾーン)を配点
