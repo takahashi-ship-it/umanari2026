@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260712-0624';
+  var CURRENT_VERSION = '20260712-0628';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13853,6 +13853,11 @@ function renderPastResults(){
   var anaCount=0,total=0; for(var j=0;j<rows.length;j++){ for(var m=0;m<3;m++){ total++; if(rows[j].res[m].pop>=10) anaCount++; } }
   html+='<p style="font-size:12px;color:#666;margin-top:10px">📌 馬券内30頭中 '+anaCount+'頭が10番人気以下（波乱度の目安）。🔥＝3連単100万円超。</p>';
   html+='</div>';
+  // 年次結果ブロックの下に、過去10年history(pastResults)があれば併記（trends保持レース限定＝七夕賞。他レースは無傷）
+  var _pd=(typeof RACE_PAST_DATA!=='undefined' && RACE_PAST_DATA[raceName])?RACE_PAST_DATA[raceName]:null;
+  if(_pd && _pd.trends && Array.isArray(_pd.pastResults) && _pd.pastResults.length && typeof renderPastResultsFromPastResults==='function'){
+    html+=renderPastResultsFromPastResults(_pd.pastResults);
+  }
   c.innerHTML=html;
 }
 
