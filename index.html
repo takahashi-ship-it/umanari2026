@@ -23658,8 +23658,8 @@ function _getHakodate2saiScoreStats() {
 }
 
 function computeScoreBreakdownHakodate2saiV1(horse, raceName, _rawOnly) {
-  if (!horse) return { total: 0, max: 64, pct: 0, items: {}, penalty: 0 };
-  if (horse.isAvoided) return { total: 0, max: 64, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
+  if (!horse) return { total: 0, max: 61, pct: 0, items: {}, penalty: 0 };
+  if (horse.isAvoided) return { total: 0, max: 61, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
   var h = horse;
   var items = {};
 
@@ -23706,10 +23706,7 @@ function computeScoreBreakdownHakodate2saiV1(horse, raceName, _rawOnly) {
   var iwScore = (iwv === 3 || iwv === 4) ? 4 : (iwv === 5) ? 3 : (iwv === 2) ? 2 : 1;
   items.interval = { score: iwScore, max: 4, label: '⏱️間隔', note: '中3-4週が理想。詰め(1週)・過度な間隔(6週+)は割引', group:'data' };
 
-  // ⑨ 上がり3F（horse・max3）前走上がり額面は予測力低く小配点。33秒台→3/34秒台→2/35秒台→1/36～→0
-  var a = (typeof h.agari3f === 'number') ? h.agari3f : 99;
-  var aScore = (a < 34.0) ? 3 : (a < 35.0) ? 2 : (a < 36.0) ? 1 : 0;
-  items.agari = { score: aScore, max: 3, label: '🏇上がり3F', note: '前走上がり額面は予測力低く小配点', group:'horse' };
+  // ※上がり3F項は削除(検証で予測力なし=優勝馬の前走上がり平均35.0秒)。agari3fフィールドは残すがスコア不使用。
 
   // 🎯 枠（env・max0/金曜有効化のプレースホルダ）
   // 金曜枠確定後: 5-8枠(1着ゾーン)/1-4枠(3着ゾーン)を配点
