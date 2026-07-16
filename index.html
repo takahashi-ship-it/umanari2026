@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260713-0641';
+  var CURRENT_VERSION = '20260713-0642';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -8587,6 +8587,526 @@ function getActiveConditions() {
  *     html : { type:"html",  title?, html:"..." }
  * ===================================================== */
 const RACE_PAST_DATA = {
+  '函館2歳S': {
+    "pastResults": [
+      {
+        "year": 2025,
+        "first": {
+          "name": "エイシンディード",
+          "pop": 9,
+          "prevRace": "アタックC",
+          "prevCourse": "門別ダ1000",
+          "prevClass": "地方認定",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "second": {
+          "name": "ブラックチャリス",
+          "pop": 1,
+          "prevRace": "新馬",
+          "prevCourse": "函館芝1200",
+          "prevClass": "新馬",
+          "prevPop": 3,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "third": {
+          "name": "カイショー",
+          "pop": 2,
+          "prevRace": "新馬",
+          "prevCourse": "函館芝1000",
+          "prevClass": "新馬",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        }
+      },
+      {
+        "year": 2024,
+        "first": {
+          "name": "サトノカルナバル",
+          "pop": 1,
+          "prevRace": "新馬",
+          "prevCourse": "東京芝1400",
+          "prevClass": "新馬",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "second": {
+          "name": "ニシノラヴァンダ",
+          "pop": 8,
+          "prevRace": "新馬",
+          "prevCourse": "函館芝1200",
+          "prevClass": "新馬",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "third": {
+          "name": "エンドレスサマー",
+          "pop": 2,
+          "prevRace": "新馬",
+          "prevCourse": "函館芝1200",
+          "prevClass": "新馬",
+          "prevPop": 2,
+          "prevRank": 1,
+          "last3fRank": null
+        }
+      },
+      {
+        "year": 2023,
+        "first": {
+          "name": "ゼルトザーム",
+          "pop": 10,
+          "prevRace": "新馬",
+          "prevCourse": "函館ダ1000",
+          "prevClass": "新馬",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "second": {
+          "name": "ナナオ",
+          "pop": 6,
+          "prevRace": "未勝利",
+          "prevCourse": "函館芝1200",
+          "prevClass": "未勝利",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "third": {
+          "name": "スカイキャンバス",
+          "pop": 4,
+          "prevRace": "新馬",
+          "prevCourse": "函館芝1000",
+          "prevClass": "新馬",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        }
+      },
+      {
+        "year": 2022,
+        "first": {
+          "name": "ブトンドール",
+          "pop": 4,
+          "prevRace": "新馬",
+          "prevCourse": "函館芝1200",
+          "prevClass": "新馬",
+          "prevPop": 4,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "second": {
+          "name": "クリダーム",
+          "pop": 3,
+          "prevRace": "新馬",
+          "prevCourse": "函館芝1200",
+          "prevClass": "新馬",
+          "prevPop": 2,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "third": {
+          "name": "オマツリオトコ",
+          "pop": 8,
+          "prevRace": "新馬",
+          "prevCourse": "函館ダ1000",
+          "prevClass": "新馬",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        }
+      },
+      {
+        "year": 2021,
+        "first": {
+          "name": "ナムラリコリス",
+          "pop": 3,
+          "prevRace": "未勝利",
+          "prevCourse": "函館芝1200",
+          "prevClass": "未勝利",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "second": {
+          "name": "カイカノキセキ",
+          "pop": 2,
+          "prevRace": "新馬",
+          "prevCourse": "札幌芝1000",
+          "prevClass": "新馬",
+          "prevPop": 3,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "third": {
+          "name": "グランデ",
+          "pop": 10,
+          "prevRace": "新馬",
+          "prevCourse": "阪神芝1600",
+          "prevClass": "新馬",
+          "prevPop": 5,
+          "prevRank": 5,
+          "last3fRank": null
+        }
+      },
+      {
+        "year": 2020,
+        "first": {
+          "name": "リンゴアメ",
+          "pop": 10,
+          "prevRace": "新馬",
+          "prevCourse": "函館芝1000",
+          "prevClass": "新馬",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "second": {
+          "name": "ルーチェドーロ",
+          "pop": 4,
+          "prevRace": "新馬",
+          "prevCourse": "函館ダ1000",
+          "prevClass": "新馬",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "third": {
+          "name": "ラヴケリー",
+          "pop": 3,
+          "prevRace": "新馬",
+          "prevCourse": "函館芝1200",
+          "prevClass": "新馬",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        }
+      },
+      {
+        "year": 2019,
+        "first": {
+          "name": "ビアンフェ",
+          "pop": 4,
+          "prevRace": "未勝利",
+          "prevCourse": "函館芝1200",
+          "prevClass": "未勝利",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "second": {
+          "name": "タイセイビジョン",
+          "pop": 2,
+          "prevRace": "新馬",
+          "prevCourse": "阪神芝1400",
+          "prevClass": "新馬",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "third": {
+          "name": "プリンスリターン",
+          "pop": 11,
+          "prevRace": "新馬",
+          "prevCourse": "函館芝1200",
+          "prevClass": "新馬",
+          "prevPop": 5,
+          "prevRank": 1,
+          "last3fRank": null
+        }
+      },
+      {
+        "year": 2018,
+        "first": {
+          "name": "アスターペガサス",
+          "pop": 2,
+          "prevRace": "新馬",
+          "prevCourse": "函館芝1200",
+          "prevClass": "新馬",
+          "prevPop": 5,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "second": {
+          "name": "ラブミーファイン",
+          "pop": 7,
+          "prevRace": "新馬",
+          "prevCourse": "函館芝1800",
+          "prevClass": "新馬",
+          "prevPop": 3,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "third": {
+          "name": "カルリーノ",
+          "pop": 3,
+          "prevRace": "未勝利",
+          "prevCourse": "函館芝1200",
+          "prevClass": "未勝利",
+          "prevPop": 2,
+          "prevRank": 1,
+          "last3fRank": null
+        }
+      },
+      {
+        "year": 2017,
+        "first": {
+          "name": "カシアス",
+          "pop": 1,
+          "prevRace": "未勝利",
+          "prevCourse": "函館芝1200",
+          "prevClass": "未勝利",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "second": {
+          "name": "ウインジェルベーラ",
+          "pop": 12,
+          "prevRace": "新馬",
+          "prevCourse": "函館芝1200",
+          "prevClass": "新馬",
+          "prevPop": 4,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "third": {
+          "name": "アリア",
+          "pop": 4,
+          "prevRace": "新馬",
+          "prevCourse": "函館芝1200",
+          "prevClass": "新馬",
+          "prevPop": 4,
+          "prevRank": 1,
+          "last3fRank": null
+        }
+      },
+      {
+        "year": 2016,
+        "first": {
+          "name": "レヴァンテライオン",
+          "pop": 2,
+          "prevRace": "新馬",
+          "prevCourse": "函館芝1200",
+          "prevClass": "新馬",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "second": {
+          "name": "モンドキャンノ",
+          "pop": 1,
+          "prevRace": "新馬",
+          "prevCourse": "函館芝1200",
+          "prevClass": "新馬",
+          "prevPop": 1,
+          "prevRank": 1,
+          "last3fRank": null
+        },
+        "third": {
+          "name": "タイムトリップ",
+          "pop": 13,
+          "prevRace": "新馬",
+          "prevCourse": "福島芝1200",
+          "prevClass": "新馬",
+          "prevPop": 2,
+          "prevRank": 1,
+          "last3fRank": null
+        }
+      }
+    ],
+    "trends": {
+      "tables": [
+        {
+          "title": "前走人気別成績",
+          "col1": "前走人気",
+          "rows": [
+            {
+              "label": "前走1番人気",
+              "rec": "7-4-5-0",
+              "highlight": true
+            },
+            {
+              "label": "前走2-3番人気",
+              "rec": "2-4-1-0"
+            },
+            {
+              "label": "前走4-5番人気",
+              "rec": "1-2-4-0"
+            },
+            {
+              "label": "前走6番人気以下",
+              "rec": "0-0-0-14"
+            }
+          ],
+          "note": "勝ち馬10頭中7頭が前走1番人気。前走6番人気以下は過去10年 馬券圏ゼロ(最強ファクト)"
+        },
+        {
+          "title": "前走レース種別",
+          "col1": "前走種別",
+          "rows": [
+            {
+              "label": "新馬",
+              "rec": "6-8-10-66",
+              "highlight": true
+            },
+            {
+              "label": "未勝利",
+              "rec": "3-2-0-16"
+            },
+            {
+              "label": "地方認定",
+              "rec": "1-0-0-3"
+            }
+          ],
+          "note": "馬券圏の80%が前走新馬・97%が新馬か未勝利"
+        },
+        {
+          "title": "単勝人気別成績",
+          "col1": "人気",
+          "rows": [
+            {
+              "label": "1番人気",
+              "rec": "2-2-0-6"
+            },
+            {
+              "label": "2番人気",
+              "rec": "2-2-2-4",
+              "highlight": true
+            },
+            {
+              "label": "3番人気",
+              "rec": "1-1-2-6"
+            },
+            {
+              "label": "4番人気",
+              "rec": "2-1-2-5"
+            },
+            {
+              "label": "5番人気",
+              "rec": "0-0-0-10"
+            },
+            {
+              "label": "6-9番人気",
+              "rec": "1-3-1-35"
+            },
+            {
+              "label": "10番人気以下",
+              "rec": "2-1-3-46"
+            }
+          ],
+          "note": "平均勝ち人気4.6番。全年で6番人気以下が馬券絡み・10番人気以下が2勝の波乱戦"
+        },
+        {
+          "title": "枠順別成績",
+          "col1": "枠",
+          "rows": [
+            {
+              "label": "1枠",
+              "rec": "1-0-3-10"
+            },
+            {
+              "label": "2枠",
+              "rec": "0-0-3-13"
+            },
+            {
+              "label": "3枠",
+              "rec": "1-3-2-11",
+              "highlight": true
+            },
+            {
+              "label": "4枠",
+              "rec": "0-2-2-14"
+            },
+            {
+              "label": "5枠",
+              "rec": "2-2-0-14"
+            },
+            {
+              "label": "6枠",
+              "rec": "2-2-0-16"
+            },
+            {
+              "label": "7枠",
+              "rec": "1-1-0-17"
+            },
+            {
+              "label": "8枠",
+              "rec": "3-0-0-17",
+              "highlight": true
+            }
+          ],
+          "note": "勝ち馬8頭が5-8枠・3着馬は全て1-4枠。8枠3勝/3枠複勝率35%"
+        },
+        {
+          "title": "脚質別成績",
+          "col1": "脚質",
+          "rows": [
+            {
+              "label": "逃げ",
+              "rec": "2-2-1-5",
+              "highlight": true
+            },
+            {
+              "label": "先行",
+              "rec": "4-7-5-19",
+              "highlight": true
+            },
+            {
+              "label": "差し",
+              "rec": "3-0-2-45"
+            },
+            {
+              "label": "追込",
+              "rec": "1-1-2-43"
+            }
+          ],
+          "note": "逃げ先行が中心。ただし差し追込も勝ち鞍あり。人気薄の好走は逃げ〜先行が6割"
+        },
+        {
+          "title": "馬体重別成績",
+          "col1": "馬体重",
+          "rows": [
+            {
+              "label": "450kg未満",
+              "rec": "2-4-3-51"
+            },
+            {
+              "label": "450kg以上",
+              "rec": "8-6-7-61",
+              "highlight": true
+            }
+          ],
+          "note": "450kg以上 複勝率25.6% vs 未満15%。450kg未満×3番人気以内は0-1-1-8で割引"
+        },
+        {
+          "title": "キャリア別成績",
+          "col1": "キャリア",
+          "rows": [
+            {
+              "label": "1戦",
+              "rec": "6-9-9-75",
+              "highlight": true
+            },
+            {
+              "label": "2戦",
+              "rec": "4-1-1-25"
+            },
+            {
+              "label": "3戦以上",
+              "rec": "0-0-0-12"
+            }
+          ],
+          "note": "キャリア3戦以上は過去10年 馬券圏ゼロ(消し基準)"
+        }
+      ]
+    }
+  },
   '七夕賞': {
     // 過去10年 1〜3着（生データ由来）。既存スキーマ(name/pop)に加え、前走情報(prevRace/prevCourse/prevClass/prevPop/prevRank)と
     // 当年七夕賞での上がり3F順位(last3fRank)を追記。命名は既存ロスターのprev*系に準拠。odds/sanrentan は未取得のため省略。
