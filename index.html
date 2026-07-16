@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260713-0644';
+  var CURRENT_VERSION = '20260713-0646';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -8923,29 +8923,29 @@ const RACE_PAST_DATA = {
     "trends": {
       "tables": [
         {
-          "title": "前走人気別（馬券圏30頭の内訳）",
+          "title": "馬券に絡んだ30頭の前走人気",
           "col1": "前走人気",
           "rows": [
             {
-              "label": "前走1番人気",
-              "rec": "16頭(53%)",
+              "label": "前走1番人気だった",
+              "rec": "16頭",
               "highlight": true
             },
             {
-              "label": "前走2-3番人気",
-              "rec": "7頭(23%)"
+              "label": "前走2〜3番人気だった",
+              "rec": "7頭"
             },
             {
-              "label": "前走4-5番人気",
-              "rec": "7頭(23%)"
+              "label": "前走4〜5番人気だった",
+              "rec": "7頭"
             },
             {
-              "label": "前走6番人気以下",
-              "rec": "0頭(0%)",
+              "label": "前走6番人気以下だった",
+              "rec": "0頭",
               "highlight": true
             }
           ],
-          "note": "過去10年の馬券圏30頭の前走人気内訳。前走6番人気以下は10年間で馬券絡みゼロ。※これは複勝率でなく馬券圏内のシェア(全出走馬の着外は未集計)"
+          "note": "過去10年の3着内30頭を「前走何番人気だったか」で分類。勝ち馬10頭中7頭が前走1番人気で、前走6番人気以下は10年間ゼロ。※これは各馬の複勝率ではなく、馬券圏馬の前走人気の分布"
         },
         {
           "title": "前走レース種別",
