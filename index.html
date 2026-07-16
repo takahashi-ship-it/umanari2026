@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260713-0648';
+  var CURRENT_VERSION = '20260713-0650';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -14577,8 +14577,58 @@ var RACE_RESULTS_DATA = {
 
 // 傾向集計テーブル描画（RACE_PAST_DATA[race].trends。trends 未定義レースは呼ばれても ''＝無傷）
 // 各行 rec="a-b-c-d" から複勝率を自動算出。列＝項目/着別度数/複勝率。
-function renderTrendTables(trends){
+// 函館2歳S: 傾向表の (表タイトル, 行ラベル) から該当馬の判定条件と良悪トーンを返す。対象外は null。
+// 単勝人気別は popEstimate 参照＝オッズ更新で描画毎に追随（ハードコードしない）。枠順別は枠未確定のため対象外。
+function _h2sTrendRowMatch(title, label){
+  var G='good', B='bad', N='neutral';
+  if(title.indexOf('前走人気')>=0){
+    if(label.indexOf('1番人気')>=0) return {tone:G, pred:function(h){return h.prevPop===1;}};
+    if(label.indexOf('6番人気')>=0) return {tone:B, pred:function(h){return typeof h.prevPop==='number'&&h.prevPop>=6;}};
+    if(label.indexOf('2')>=0 && label.indexOf('3')>=0) return {tone:N, pred:function(h){return h.prevPop===2||h.prevPop===3;}};
+    if(label.indexOf('4')>=0 && label.indexOf('5')>=0) return {tone:N, pred:function(h){return h.prevPop===4||h.prevPop===5;}};
+    return null;
+  }
+  if(title.indexOf('前走レース種別')>=0){
+    if(label.indexOf('新馬')>=0)   return {tone:G, pred:function(h){return h.prevType==='新馬';}};
+    if(label.indexOf('未勝利')>=0) return {tone:N, pred:function(h){return h.prevType==='未勝利';}};
+    if(label.indexOf('地方')>=0)   return {tone:B, pred:function(h){return h.prevType==='地方';}};
+    return null;
+  }
+  if(title.indexOf('単勝人気別')>=0){
+    if(label.indexOf('10番人気以下')>=0) return {tone:B, pred:function(h){return typeof h.popEstimate==='number'&&h.popEstimate>=10;}};
+    if(label.indexOf('6-9')>=0||label.indexOf('6〜9')>=0) return {tone:N, pred:function(h){return h.popEstimate>=6&&h.popEstimate<=9;}};
+    if(label.indexOf('5番人気')>=0) return {tone:B, pred:function(h){return h.popEstimate===5;}};
+    if(label.indexOf('4番人気')>=0) return {tone:G, pred:function(h){return h.popEstimate===4;}};
+    if(label.indexOf('3番人気')>=0) return {tone:G, pred:function(h){return h.popEstimate===3;}};
+    if(label.indexOf('2番人気')>=0) return {tone:G, pred:function(h){return h.popEstimate===2;}};
+    if(label.indexOf('1番人気')>=0) return {tone:N, pred:function(h){return h.popEstimate===1;}};
+    return null;
+  }
+  if(title.indexOf('脚質別')>=0){
+    if(label.indexOf('逃げ')>=0) return {tone:G, pred:function(h){return h.kyakushitsu==='逃げ';}};
+    if(label.indexOf('先行')>=0) return {tone:G, pred:function(h){return h.kyakushitsu==='先行';}};
+    if(label.indexOf('差し')>=0) return {tone:N, pred:function(h){return h.kyakushitsu==='差し';}};
+    if(label.indexOf('追込')>=0) return {tone:B, pred:function(h){return h.kyakushitsu==='追込';}};
+    return null;
+  }
+  if(title.indexOf('馬体重別')>=0){
+    if(label.indexOf('450kg未満')>=0) return {tone:B, pred:function(h){return typeof h.bataijyu==='number'&&h.bataijyu<450;}};
+    if(label.indexOf('450kg以上')>=0) return {tone:G, pred:function(h){return typeof h.bataijyu==='number'&&h.bataijyu>=450;}};
+    return null;
+  }
+  if(title.indexOf('キャリア別')>=0){
+    if(label.indexOf('3戦以上')>=0) return {tone:B, pred:function(h){return typeof h.career==='number'&&h.career>=3;}};
+    if(label.indexOf('1戦')>=0) return {tone:G, pred:function(h){return h.career===1;}};
+    if(label.indexOf('2戦')>=0) return {tone:G, pred:function(h){return h.career===2;}};
+    return null;
+  }
+  return null; // 枠順別 等はバッジ対象外
+}
+
+function renderTrendTables(trends, raceName){
   if(!trends || !Array.isArray(trends.tables) || !trends.tables.length) return '';
+  var isH2S = (raceName === '函館2歳S');
+  var h2sHorses = (isH2S && typeof HORSES_BY_RACE !== 'undefined') ? (HORSES_BY_RACE['函館2歳S'] || []).filter(function(x){ return x && !x.isAvoided; }) : [];
   var html='';
   trends.tables.forEach(function(t){
     html+='<div class="section"><h3>📊 '+t.title+'</h3>';
@@ -14598,6 +14648,19 @@ function renderTrendTables(trends){
           + '<td style="font-weight:600">'+r.label+'</td>'
           + '<td style="white-space:nowrap">'+(r.rec||'-')+'</td>'
           + '<td style="font-weight:700;color:var(--navy)">'+fk+'</td></tr>';
+      // 函館2歳S: 該当馬バッジ行（対象6表のみ・単勝人気別はpopEstimate動的）
+      if(isH2S){
+        var m=_h2sTrendRowMatch(t.title, r.label);
+        if(m){
+          var names=h2sHorses.filter(m.pred).map(function(x){ return x.name; });
+          var bg = m.tone==='good' ? '#e8f5e9' : m.tone==='bad' ? '#ffebee' : '#eceff1';
+          var fg = m.tone==='good' ? '#1b7a3d' : m.tone==='bad' ? '#c62828' : '#546e7a';
+          var cell = names.length
+            ? names.map(function(nm){ return '<span style="display:inline-block;background:'+bg+';color:'+fg+';font-size:9px;font-weight:600;padding:1px 6px;border-radius:8px;margin:1px 3px 1px 0;white-space:nowrap">'+nm+'</span>'; }).join('')
+            : '<span style="font-size:10px;color:#9aa0a6">該当なし</span>';
+          html += '<tr><td colspan="3" style="padding:1px 8px 6px 14px;border-bottom:1px solid #eee">'+cell+'</td></tr>';
+        }
+      }
     });
     html+='</tbody></table></div>';
     if(t.note) html+='<p style="font-size:11px;color:var(--text-mute);margin-top:4px">📌 '+t.note+'</p>';
@@ -14687,7 +14750,7 @@ function renderPastData() {
         html += '<div class="section"><p style="font-size:12px;line-height:1.7;color:var(--text-sub)">' + data.summary + '</p></div>';
       }
       // 傾向集計テーブル（trends を持つレースのみ。1〜3着一覧は「過去10年結果」タブ側に表示）
-      if (data.trends && typeof renderTrendTables==='function') html += renderTrendTables(data.trends);
+      if (data.trends && typeof renderTrendTables==='function') html += renderTrendTables(data.trends, currentRace);
       // コース特性（最優先表示）
       if (data.himitsuData4 && typeof renderHimitsuData4==='function') html += renderHimitsuData4(data.himitsuData4);
       html += renderTetsubanJirai(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
