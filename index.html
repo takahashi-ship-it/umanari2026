@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260713-0646';
+  var CURRENT_VERSION = '20260713-0648';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -17747,6 +17747,36 @@ function renderRaceSummaryBlock(raceName) {
   return html;
 }
 
+// 函館2歳S 傾向該当バッジ（良=緑/悪=赤）。函館2歳S以外は '' を返す（他レース無傷）
+function getHakodate2saiBadges(h, raceName) {
+  if (raceName !== '函館2歳S' || !h) return '';
+  var green = [], red = [];
+  // 🟢 良いデータ
+  if (h.prevPop === 1) green.push('前走1番人気');
+  if (h.prevType === '新馬') green.push('前走新馬');
+  if (typeof h.bataijyu === 'number') {
+    if (h.bataijyu >= 460) green.push('馬体重460+');
+    else if (h.bataijyu >= 450) green.push('馬体重450+');
+  }
+  if (h.kyakushitsu === '逃げ' || h.kyakushitsu === '先行') green.push(h.kyakushitsu);
+  var hiBlood = ['ビッグアーサー','ヘニーヒューズ','タワーオブロンドン','Blue Point','Twirling Candy'];
+  if (h.father && hiBlood.some(function(n){ return h.father.indexOf(n) >= 0; })) green.push('好血統');
+  // 🔴 悪いデータ
+  if (typeof h.prevPop === 'number' && h.prevPop >= 6) red.push('前走6人気以下');
+  if (h.prevType === '地方') red.push('地方認定');
+  if (typeof h.bataijyu === 'number' && h.bataijyu < 450) red.push('小柄' + h.bataijyu + 'kg');
+  if (typeof h.career === 'number' && h.career >= 3) red.push('キャリア3戦以上');
+  if (h.prevTrack === '他場') red.push('他場組');
+  if (h.wonSurface === 'ダ') red.push('ダート勝ち');
+  if (h.wonSurface === 'なし') red.push('勝ち鞍なし');
+  if (!green.length && !red.length) return '';
+  var html = '<div style="margin-top:3px;display:flex;flex-wrap:wrap;gap:3px">';
+  green.forEach(function(b){ html += '<span style="display:inline-block;background:#e8f5e9;color:#1b7a3d;font-size:9px;font-weight:600;padding:1px 6px;border-radius:8px;white-space:nowrap">🟢' + b + '</span>'; });
+  red.forEach(function(b){ html += '<span style="display:inline-block;background:#ffebee;color:#c62828;font-size:9px;font-weight:600;padding:1px 6px;border-radius:8px;white-space:nowrap">🔴' + b + '</span>'; });
+  html += '</div>';
+  return html;
+}
+
 function renderShutsubaTable() {
   // 1. レース別ヘッダーテキストを更新
   renderShutsubaHeader();
@@ -17821,8 +17851,8 @@ function renderShutsubaTable() {
     rows += '</td>';
     // 馬番
     rows += '<td style="text-align:center;padding:7px 4px;min-width:30px;font-weight:600">' + (h.umaban != null ? h.umaban : '<span style="color:#ccc">-</span>') + '</td>';
-    // 馬名
-    rows += '<td style="padding:7px 6px;min-width:110px;font-weight:600;color:#1a2744;white-space:nowrap">' + h.name + '</td>';
+    // 馬名（函館2歳Sは傾向該当バッジを名前下に表示）
+    rows += '<td style="padding:7px 6px;min-width:110px;font-weight:600;color:#1a2744"><span style="white-space:nowrap">' + h.name + '</span>' + getHakodate2saiBadges(h, raceName) + '</td>';
     // 性齢
     rows += '<td style="text-align:center;padding:7px 4px;min-width:36px;color:#555">' + (h.sex || '') + (h.age || '') + '</td>';
     // 斤量
