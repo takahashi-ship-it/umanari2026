@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260713-0650';
+  var CURRENT_VERSION = '20260716-0652';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -3098,45 +3098,175 @@ document.querySelectorAll('#contentTabs .tab').forEach(t => {
 const HORSES_BY_RACE = {
   '函館2歳S': [
   {
-    "num": null,
-    "name": "シグレ",
+    "num": 1,
+    "name": "ダマスク",
     "sex": null,
     "age": 2,
     "carriedWeight": 55,
-    "popEstimate": 1,
-    "jockey": "武豊",
+    "popEstimate": 12,
+    "jockey": "黛",
+    "agari3f": 36.5,
+    "bataijyu": 438,
+    "kyakushitsu": "先行",
+    "prevTrack": "函館ダ",
+    "father": "サリオス",
+    "career": 1,
+    "wonSurface": "ダ",
+    "prevPop": 1,
+    "prevType": "新馬",
+    "intervalWeeks": 2,
+    "waku": 1,
+    "odds": 81.5
+  },
+  {
+    "num": 2,
+    "name": "ダイシンドラゴン",
+    "sex": null,
+    "age": 2,
+    "carriedWeight": 55,
+    "popEstimate": 9,
+    "jockey": "丹内",
+    "agari3f": 35.4,
+    "bataijyu": 446,
+    "kyakushitsu": "先行",
+    "prevTrack": "函館",
+    "father": "ビッグアーサー",
+    "career": 2,
+    "wonSurface": "芝",
+    "prevPop": 1,
+    "prevType": "未勝利",
+    "intervalWeeks": 3,
+    "waku": 2,
+    "odds": 27.3
+  },
+  {
+    "num": 3,
+    "name": "セタキト",
+    "sex": null,
+    "age": 2,
+    "carriedWeight": 55,
+    "popEstimate": 11,
+    "jockey": "斎藤新",
+    "agari3f": 33.7,
+    "bataijyu": 472,
+    "kyakushitsu": "逃げ",
+    "prevTrack": "函館",
+    "father": "フォーウィールドライブ",
+    "career": 1,
+    "wonSurface": "芝",
+    "prevPop": 6,
+    "prevType": "新馬",
+    "intervalWeeks": 5,
+    "waku": 3,
+    "odds": 33.5
+  },
+  {
+    "num": 4,
+    "name": "アルテクィーン",
+    "sex": null,
+    "age": 2,
+    "carriedWeight": 55,
+    "popEstimate": 7,
+    "jockey": "鮫島駿",
     "agari3f": 34.6,
+    "bataijyu": 464,
+    "kyakushitsu": "先行",
+    "prevTrack": "函館",
+    "father": "カラヴァッジオ",
+    "career": 2,
+    "wonSurface": "なし",
+    "prevPop": 1,
+    "prevType": "未勝利",
+    "intervalWeeks": 2,
+    "waku": 4,
+    "odds": 21.1
+  },
+  {
+    "num": 5,
+    "name": "フェリチタ",
+    "sex": null,
+    "age": 2,
+    "carriedWeight": 55,
+    "popEstimate": 5,
+    "jockey": "横山和",
+    "agari3f": 34.5,
     "bataijyu": 440,
     "kyakushitsu": "逃げ",
     "prevTrack": "函館",
-    "father": "Twirling Candy",
+    "father": "タワーオブロンドン",
     "career": 1,
     "wonSurface": "芝",
-    "prevPop": 1,
+    "prevPop": 3,
     "prevType": "新馬",
-    "intervalWeeks": 3
+    "intervalWeeks": 4,
+    "waku": 4,
+    "odds": 16.4
   },
   {
-    "num": null,
-    "name": "ロンドンガーズ",
+    "num": 6,
+    "name": "ウンスイ",
     "sex": null,
     "age": 2,
     "carriedWeight": 55,
-    "popEstimate": 2,
-    "jockey": "北村友",
-    "agari3f": 33.8,
-    "bataijyu": 442,
-    "kyakushitsu": "逃げ",
-    "prevTrack": "他場",
-    "father": "グレーターロンドン",
-    "career": 1,
-    "wonSurface": "芝",
-    "prevPop": 2,
-    "prevType": "新馬",
-    "intervalWeeks": 5
+    "popEstimate": 13,
+    "jockey": "横山琉",
+    "agari3f": 43,
+    "bataijyu": 480,
+    "kyakushitsu": "先行",
+    "prevTrack": "函館ダ",
+    "father": "オーヴァルエース",
+    "career": 2,
+    "wonSurface": "ダ",
+    "prevPop": 1,
+    "prevType": "地方",
+    "intervalWeeks": 7,
+    "waku": 5,
+    "odds": 229.2
   },
   {
-    "num": null,
+    "num": 7,
+    "name": "ショウナンカノア",
+    "sex": null,
+    "age": 2,
+    "carriedWeight": 55,
+    "popEstimate": 8,
+    "jockey": "池添",
+    "agari3f": 34.3,
+    "bataijyu": 464,
+    "kyakushitsu": "先行",
+    "prevTrack": "函館",
+    "father": "ドレフォン",
+    "career": 2,
+    "wonSurface": "芝",
+    "prevPop": 3,
+    "prevType": "未勝利",
+    "intervalWeeks": 2,
+    "waku": 5,
+    "odds": 22.2
+  },
+  {
+    "num": 8,
+    "name": "クロリス",
+    "sex": null,
+    "age": 2,
+    "carriedWeight": 55,
+    "popEstimate": 10,
+    "jockey": "岩田康",
+    "agari3f": 38.6,
+    "bataijyu": 462,
+    "kyakushitsu": "先行",
+    "prevTrack": "函館ダ",
+    "father": "ヘニーヒューズ",
+    "career": 1,
+    "wonSurface": "ダ",
+    "prevPop": 4,
+    "prevType": "新馬",
+    "intervalWeeks": 5,
+    "waku": 6,
+    "odds": 27.6
+  },
+  {
+    "num": 9,
     "name": "イモージェン",
     "sex": null,
     "age": 2,
@@ -3152,10 +3282,54 @@ const HORSES_BY_RACE = {
     "wonSurface": "芝",
     "prevPop": 3,
     "prevType": "新馬",
-    "intervalWeeks": 4
+    "intervalWeeks": 4,
+    "waku": 6,
+    "odds": 4.1
   },
   {
-    "num": null,
+    "num": 10,
+    "name": "ノリヤンモーニン",
+    "sex": null,
+    "age": 2,
+    "carriedWeight": 55,
+    "popEstimate": 6,
+    "jockey": "浜中",
+    "agari3f": 35.4,
+    "bataijyu": 462,
+    "kyakushitsu": "逃げ",
+    "prevTrack": "函館ダ",
+    "father": "モーニン",
+    "career": 1,
+    "wonSurface": "ダ",
+    "prevPop": 4,
+    "prevType": "新馬",
+    "intervalWeeks": 4,
+    "waku": 7,
+    "odds": 20.7
+  },
+  {
+    "num": 11,
+    "name": "シグレ",
+    "sex": null,
+    "age": 2,
+    "carriedWeight": 55,
+    "popEstimate": 1,
+    "jockey": "武豊",
+    "agari3f": 34.6,
+    "bataijyu": 440,
+    "kyakushitsu": "逃げ",
+    "prevTrack": "函館",
+    "father": "Twirling Candy",
+    "career": 1,
+    "wonSurface": "芝",
+    "prevPop": 1,
+    "prevType": "新馬",
+    "intervalWeeks": 3,
+    "waku": 7,
+    "odds": 3.4
+  },
+  {
+    "num": 12,
     "name": "ダイメイビッグボス",
     "sex": null,
     "age": 2,
@@ -3171,216 +3345,30 @@ const HORSES_BY_RACE = {
     "wonSurface": "芝",
     "prevPop": 2,
     "prevType": "新馬",
-    "intervalWeeks": 5
+    "intervalWeeks": 5,
+    "waku": 8,
+    "odds": 7.9
   },
   {
-    "num": null,
-    "name": "フレイコン",
+    "num": 13,
+    "name": "ロンドンガーズ",
     "sex": null,
     "age": 2,
     "carriedWeight": 55,
-    "popEstimate": 5,
-    "jockey": "未定",
-    "agari3f": 34.6,
-    "bataijyu": 490,
+    "popEstimate": 2,
+    "jockey": "北村友",
+    "agari3f": 33.8,
+    "bataijyu": 442,
     "kyakushitsu": "逃げ",
-    "prevTrack": "函館",
-    "father": "Blue Point",
+    "prevTrack": "他場",
+    "father": "グレーターロンドン",
     "career": 1,
     "wonSurface": "芝",
-    "prevPop": 1,
+    "prevPop": 2,
     "prevType": "新馬",
-    "intervalWeeks": 1
-  },
-  {
-    "num": null,
-    "name": "フェリチタ",
-    "sex": null,
-    "age": 2,
-    "carriedWeight": 55,
-    "popEstimate": 6,
-    "jockey": "横山和",
-    "agari3f": 34.5,
-    "bataijyu": 440,
-    "kyakushitsu": "逃げ",
-    "prevTrack": "函館",
-    "father": "タワーオブロンドン",
-    "career": 1,
-    "wonSurface": "芝",
-    "prevPop": 3,
-    "prevType": "新馬",
-    "intervalWeeks": 4
-  },
-  {
-    "num": null,
-    "name": "アルテクィーン",
-    "sex": null,
-    "age": 2,
-    "carriedWeight": 55,
-    "popEstimate": 7,
-    "jockey": "杉山",
-    "agari3f": 34.6,
-    "bataijyu": 464,
-    "kyakushitsu": "先行",
-    "prevTrack": "函館",
-    "father": "カラヴァッジオ",
-    "career": 2,
-    "wonSurface": "なし",
-    "prevPop": 1,
-    "prevType": "未勝利",
-    "intervalWeeks": 2
-  },
-  {
-    "num": null,
-    "name": "ノリヤンモーニン",
-    "sex": null,
-    "age": 2,
-    "carriedWeight": 55,
-    "popEstimate": 8,
-    "jockey": "浜中",
-    "agari3f": 35.4,
-    "bataijyu": 462,
-    "kyakushitsu": "逃げ",
-    "prevTrack": "函館ダ",
-    "father": "モーニン",
-    "career": 1,
-    "wonSurface": "ダ",
-    "prevPop": 4,
-    "prevType": "新馬",
-    "intervalWeeks": 4
-  },
-  {
-    "num": null,
-    "name": "ショウナンカノア",
-    "sex": null,
-    "age": 2,
-    "carriedWeight": 55,
-    "popEstimate": 9,
-    "jockey": "池添",
-    "agari3f": 34.3,
-    "bataijyu": 464,
-    "kyakushitsu": "先行",
-    "prevTrack": "函館",
-    "father": "ドレフォン",
-    "career": 2,
-    "wonSurface": "芝",
-    "prevPop": 3,
-    "prevType": "未勝利",
-    "intervalWeeks": 2
-  },
-  {
-    "num": null,
-    "name": "ダイシンドラゴン",
-    "sex": null,
-    "age": 2,
-    "carriedWeight": 55,
-    "popEstimate": 10,
-    "jockey": "丹内",
-    "agari3f": 35.4,
-    "bataijyu": 446,
-    "kyakushitsu": "先行",
-    "prevTrack": "函館",
-    "father": "ビッグアーサー",
-    "career": 2,
-    "wonSurface": "芝",
-    "prevPop": 1,
-    "prevType": "未勝利",
-    "intervalWeeks": 3
-  },
-  {
-    "num": null,
-    "name": "クロリス",
-    "sex": null,
-    "age": 2,
-    "carriedWeight": 55,
-    "popEstimate": 11,
-    "jockey": "岩田康",
-    "agari3f": 38.6,
-    "bataijyu": 462,
-    "kyakushitsu": "先行",
-    "prevTrack": "函館ダ",
-    "father": "ヘニーヒューズ",
-    "career": 1,
-    "wonSurface": "ダ",
-    "prevPop": 4,
-    "prevType": "新馬",
-    "intervalWeeks": 5
-  },
-  {
-    "num": null,
-    "name": "セタキト",
-    "sex": null,
-    "age": 2,
-    "carriedWeight": 55,
-    "popEstimate": 12,
-    "jockey": "斎藤新",
-    "agari3f": 33.7,
-    "bataijyu": 472,
-    "kyakushitsu": "逃げ",
-    "prevTrack": "函館",
-    "father": "フォーウィールドライブ",
-    "career": 1,
-    "wonSurface": "芝",
-    "prevPop": 6,
-    "prevType": "新馬",
-    "intervalWeeks": 5
-  },
-  {
-    "num": null,
-    "name": "ダマスク",
-    "sex": null,
-    "age": 2,
-    "carriedWeight": 55,
-    "popEstimate": 13,
-    "jockey": "黛",
-    "agari3f": 36.5,
-    "bataijyu": 438,
-    "kyakushitsu": "先行",
-    "prevTrack": "函館ダ",
-    "father": "サリオス",
-    "career": 1,
-    "wonSurface": "ダ",
-    "prevPop": 1,
-    "prevType": "新馬",
-    "intervalWeeks": 2
-  },
-  {
-    "num": null,
-    "name": "ウンスイ",
-    "sex": null,
-    "age": 2,
-    "carriedWeight": 55,
-    "popEstimate": 14,
-    "jockey": "横山琉",
-    "agari3f": 43,
-    "bataijyu": 480,
-    "kyakushitsu": "先行",
-    "prevTrack": "函館ダ",
-    "father": "オーヴァルエース",
-    "career": 2,
-    "wonSurface": "ダ",
-    "prevPop": 1,
-    "prevType": "地方",
-    "intervalWeeks": 7
-  },
-  {
-    "num": null,
-    "name": "アイルドフルール",
-    "sex": null,
-    "age": 2,
-    "carriedWeight": 55,
-    "popEstimate": 15,
-    "jockey": "未定",
-    "agari3f": 36.4,
-    "bataijyu": 400,
-    "kyakushitsu": "差し",
-    "prevTrack": "函館",
-    "father": "ミッキーアイル",
-    "career": 3,
-    "wonSurface": "なし",
-    "prevPop": 9,
-    "prevType": "未勝利",
-    "intervalWeeks": 2
+    "intervalWeeks": 5,
+    "waku": 8,
+    "odds": 3.7
   }
 ],
   '北九州記念': [
@@ -17813,7 +17801,7 @@ function renderRaceSummaryBlock(raceName) {
 // 函館2歳S 傾向該当バッジ（良=緑/悪=赤）。函館2歳S以外は '' を返す（他レース無傷）
 function getHakodate2saiBadges(h, raceName) {
   if (raceName !== '函館2歳S' || !h) return '';
-  var green = [], red = [];
+  var green = [], blue = [], red = [];
   // 🟢 良いデータ
   if (h.prevPop === 1) green.push('前走1番人気');
   if (h.prevType === '新馬') green.push('前走新馬');
@@ -17824,6 +17812,11 @@ function getHakodate2saiBadges(h, raceName) {
   if (h.kyakushitsu === '逃げ' || h.kyakushitsu === '先行') green.push(h.kyakushitsu);
   var hiBlood = ['ビッグアーサー','ヘニーヒューズ','タワーオブロンドン','Blue Point','Twirling Candy'];
   if (h.father && hiBlood.some(function(n){ return h.father.indexOf(n) >= 0; })) green.push('好血統');
+  // 枠バッジ（確定後）: 5-8枠=勝ち枠(緑)・8枠は過去3勝を併記 / 1-4枠=3着枠(青)
+  if (typeof h.waku === 'number') {
+    if (h.waku >= 5 && h.waku <= 8) { green.push('勝ち枠(5-8枠)'); if (h.waku === 8) green.push('8枠(過去3勝)'); }
+    else if (h.waku >= 1 && h.waku <= 4) { blue.push('3着枠(1-4枠)'); }
+  }
   // 🔴 悪いデータ
   if (typeof h.prevPop === 'number' && h.prevPop >= 6) red.push('前走6人気以下');
   if (h.prevType === '地方') red.push('地方認定');
@@ -17832,9 +17825,10 @@ function getHakodate2saiBadges(h, raceName) {
   if (h.prevTrack === '他場') red.push('他場組');
   if (h.wonSurface === 'ダ') red.push('ダート勝ち');
   if (h.wonSurface === 'なし') red.push('勝ち鞍なし');
-  if (!green.length && !red.length) return '';
+  if (!green.length && !blue.length && !red.length) return '';
   var html = '<div style="margin-top:3px;display:flex;flex-wrap:wrap;gap:3px">';
   green.forEach(function(b){ html += '<span style="display:inline-block;background:#e8f5e9;color:#1b7a3d;font-size:9px;font-weight:600;padding:1px 6px;border-radius:8px;white-space:nowrap">🟢' + b + '</span>'; });
+  blue.forEach(function(b){ html += '<span style="display:inline-block;background:#e3f2fd;color:#1565c0;font-size:9px;font-weight:600;padding:1px 6px;border-radius:8px;white-space:nowrap">🔵' + b + '</span>'; });
   red.forEach(function(b){ html += '<span style="display:inline-block;background:#ffebee;color:#c62828;font-size:9px;font-weight:600;padding:1px 6px;border-radius:8px;white-space:nowrap">🔴' + b + '</span>'; });
   html += '</div>';
   return html;
@@ -24272,8 +24266,8 @@ function _getHakodate2saiScoreStats() {
 }
 
 function computeScoreBreakdownHakodate2saiV1(horse, raceName, _rawOnly) {
-  if (!horse) return { total: 0, max: 61, pct: 0, items: {}, penalty: 0 };
-  if (horse.isAvoided) return { total: 0, max: 61, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
+  if (!horse) return { total: 0, max: 66, pct: 0, items: {}, penalty: 0 };
+  if (horse.isAvoided) return { total: 0, max: 66, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
   var h = horse;
   var items = {};
 
@@ -24322,9 +24316,10 @@ function computeScoreBreakdownHakodate2saiV1(horse, raceName, _rawOnly) {
 
   // ※上がり3F項は削除(検証で予測力なし=優勝馬の前走上がり平均35.0秒)。agari3fフィールドは残すがスコア不使用。
 
-  // 🎯 枠（env・max0/金曜有効化のプレースホルダ）
-  // 金曜枠確定後: 5-8枠(1着ゾーン)/1-4枠(3着ゾーン)を配点
-  items.waku = { score: 0, max: 0, label: '🎯枠順', note: '金曜枠確定後に配点(5-8枠=1着ゾーン/1-4枠=3着ゾーン)', group:'env' };
+  // 🎯 枠（env・max5）枠順確定反映。5-8枠→5(1着ゾーン)/3枠→3(複勝35%)/1枠→2(3着3回)/2・4枠→1
+  var wk = h.waku || 0;
+  var wkScore = (wk >= 5 && wk <= 8) ? 5 : (wk === 3) ? 3 : (wk === 1) ? 2 : (wk === 2 || wk === 4) ? 1 : 0;
+  items.waku = { score: wkScore, max: 5, label: '🎯枠順', note: '勝ち馬8/10が5-8枠・3着馬は全て1-4枠。8枠3勝/3枠複勝35%', group:'env' };
 
   var total = 0, max = 0;
   Object.keys(items).forEach(function(k){ var it = items[k]; if (it && typeof it.score === 'number') { total += it.score; max += (it.max || 0); } });
