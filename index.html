@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260716-0654';
+  var CURRENT_VERSION = '20260717-0656';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -3116,7 +3116,9 @@ const HORSES_BY_RACE = {
     "prevType": "新馬",
     "intervalWeeks": 2,
     "waku": 1,
-    "odds": 55.8
+    "odds": 66.9,
+    "fukushoLow": 7.3,
+    "fukushoHigh": 9.9
   },
   {
     "num": 2,
@@ -3124,7 +3126,7 @@ const HORSES_BY_RACE = {
     "sex": null,
     "age": 2,
     "carriedWeight": 55,
-    "popEstimate": 9,
+    "popEstimate": 8,
     "jockey": "丹内",
     "agari3f": 35.4,
     "bataijyu": 446,
@@ -3137,7 +3139,9 @@ const HORSES_BY_RACE = {
     "prevType": "未勝利",
     "intervalWeeks": 3,
     "waku": 2,
-    "odds": 23.5
+    "odds": 18.8,
+    "fukushoLow": 3.4,
+    "fukushoHigh": 4.5
   },
   {
     "num": 3,
@@ -3145,7 +3149,7 @@ const HORSES_BY_RACE = {
     "sex": null,
     "age": 2,
     "carriedWeight": 55,
-    "popEstimate": 11,
+    "popEstimate": 5,
     "jockey": "斎藤新",
     "agari3f": 33.7,
     "bataijyu": 472,
@@ -3158,7 +3162,9 @@ const HORSES_BY_RACE = {
     "prevType": "新馬",
     "intervalWeeks": 5,
     "waku": 3,
-    "odds": 29.5
+    "odds": 12.3,
+    "fukushoLow": 4,
+    "fukushoHigh": 5.4
   },
   {
     "num": 4,
@@ -3166,7 +3172,7 @@ const HORSES_BY_RACE = {
     "sex": null,
     "age": 2,
     "carriedWeight": 55,
-    "popEstimate": 6,
+    "popEstimate": 9,
     "jockey": "鮫島駿",
     "agari3f": 34.6,
     "bataijyu": 464,
@@ -3179,7 +3185,9 @@ const HORSES_BY_RACE = {
     "prevType": "未勝利",
     "intervalWeeks": 2,
     "waku": 4,
-    "odds": 19.2
+    "odds": 22.1,
+    "fukushoLow": 3.6,
+    "fukushoHigh": 4.9
   },
   {
     "num": 5,
@@ -3187,7 +3195,7 @@ const HORSES_BY_RACE = {
     "sex": null,
     "age": 2,
     "carriedWeight": 55,
-    "popEstimate": 5,
+    "popEstimate": 10,
     "jockey": "横山和",
     "agari3f": 34.5,
     "bataijyu": 440,
@@ -3200,7 +3208,9 @@ const HORSES_BY_RACE = {
     "prevType": "新馬",
     "intervalWeeks": 4,
     "waku": 4,
-    "odds": 16.1
+    "odds": 31.9,
+    "fukushoLow": 4.2,
+    "fukushoHigh": 5.7
   },
   {
     "num": 6,
@@ -3221,7 +3231,9 @@ const HORSES_BY_RACE = {
     "prevType": "地方",
     "intervalWeeks": 7,
     "waku": 5,
-    "odds": 209.3
+    "odds": 90.4,
+    "fukushoLow": 12,
+    "fukushoHigh": 16.2
   },
   {
     "num": 7,
@@ -3242,7 +3254,9 @@ const HORSES_BY_RACE = {
     "prevType": "未勝利",
     "intervalWeeks": 2,
     "waku": 5,
-    "odds": 19.7
+    "odds": 15,
+    "fukushoLow": 2.7,
+    "fukushoHigh": 3.6
   },
   {
     "num": 8,
@@ -3250,7 +3264,7 @@ const HORSES_BY_RACE = {
     "sex": null,
     "age": 2,
     "carriedWeight": 55,
-    "popEstimate": 10,
+    "popEstimate": 11,
     "jockey": "岩田康",
     "agari3f": 38.6,
     "bataijyu": 462,
@@ -3263,7 +3277,9 @@ const HORSES_BY_RACE = {
     "prevType": "新馬",
     "intervalWeeks": 5,
     "waku": 6,
-    "odds": 25.1
+    "odds": 43.2,
+    "fukushoLow": 5.3,
+    "fukushoHigh": 7.2
   },
   {
     "num": 9,
@@ -3271,7 +3287,7 @@ const HORSES_BY_RACE = {
     "sex": null,
     "age": 2,
     "carriedWeight": 55,
-    "popEstimate": 3,
+    "popEstimate": 2,
     "jockey": "佐々木",
     "agari3f": 33.6,
     "bataijyu": 442,
@@ -3284,7 +3300,9 @@ const HORSES_BY_RACE = {
     "prevType": "新馬",
     "intervalWeeks": 4,
     "waku": 6,
-    "odds": 4.4
+    "odds": 4.2,
+    "fukushoLow": 1.7,
+    "fukushoHigh": 2.2
   },
   {
     "num": 10,
@@ -3292,7 +3310,7 @@ const HORSES_BY_RACE = {
     "sex": null,
     "age": 2,
     "carriedWeight": 55,
-    "popEstimate": 8,
+    "popEstimate": 6,
     "jockey": "浜中",
     "agari3f": 35.4,
     "bataijyu": 462,
@@ -3305,7 +3323,9 @@ const HORSES_BY_RACE = {
     "prevType": "新馬",
     "intervalWeeks": 4,
     "waku": 7,
-    "odds": 23.1
+    "odds": 12.7,
+    "fukushoLow": 3,
+    "fukushoHigh": 4.1
   },
   {
     "num": 11,
@@ -3313,7 +3333,7 @@ const HORSES_BY_RACE = {
     "sex": null,
     "age": 2,
     "carriedWeight": 55,
-    "popEstimate": 2,
+    "popEstimate": 1,
     "jockey": "武豊",
     "agari3f": 34.6,
     "bataijyu": 440,
@@ -3326,7 +3346,9 @@ const HORSES_BY_RACE = {
     "prevType": "新馬",
     "intervalWeeks": 3,
     "waku": 7,
-    "odds": 3.8
+    "odds": 3.2,
+    "fukushoLow": 1.6,
+    "fukushoHigh": 2
   },
   {
     "num": 12,
@@ -3347,7 +3369,9 @@ const HORSES_BY_RACE = {
     "prevType": "新馬",
     "intervalWeeks": 5,
     "waku": 8,
-    "odds": 7.1
+    "odds": 10,
+    "fukushoLow": 2.8,
+    "fukushoHigh": 3.8
   },
   {
     "num": 13,
@@ -3355,7 +3379,7 @@ const HORSES_BY_RACE = {
     "sex": null,
     "age": 2,
     "carriedWeight": 55,
-    "popEstimate": 1,
+    "popEstimate": 3,
     "jockey": "北村友",
     "agari3f": 33.8,
     "bataijyu": 442,
@@ -3368,7 +3392,9 @@ const HORSES_BY_RACE = {
     "prevType": "新馬",
     "intervalWeeks": 5,
     "waku": 8,
-    "odds": 3.7
+    "odds": 4.7,
+    "fukushoLow": 1.7,
+    "fukushoHigh": 2.2
   }
 ],
   '北九州記念': [
