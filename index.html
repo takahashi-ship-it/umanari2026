@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260719-0664';
+  var CURRENT_VERSION = '20260719-0665';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13272,6 +13272,105 @@ const RACE_PAST_DATA = {
   },
 };
 
+
+RACE_PAST_DATA['関屋記念'] = {
+  pastResults: [
+    {year:2025,
+      first:{name:"カナテープ",pop:1,prevRace:null,prevCourse:null,prevClass:null,prevPop:null,prevRank:null,last3fRank:1},
+      second:{name:"オフトレイル",pop:10,prevRace:null,prevCourse:null,prevClass:null,prevPop:null,prevRank:null,last3fRank:2},
+      third:{name:"ボンドガール※2着同着",pop:2,prevRace:null,prevCourse:null,prevClass:null,prevPop:null,prevRank:null,last3fRank:4}},
+    {year:2024,
+      first:{name:"トゥードジボン",pop:3,prevRace:"米子S",prevCourse:"阪神芝1600",prevClass:"L",prevPop:4,prevRank:1,last3fRank:null},
+      second:{name:"ディオ",pop:8,prevRace:"米子S",prevCourse:"阪神芝1600",prevClass:"L",prevPop:3,prevRank:2,last3fRank:null},
+      third:{name:"ジュンブロッサム",pop:1,prevRace:"水無月S",prevCourse:null,prevClass:null,prevPop:1,prevRank:1,last3fRank:null}},
+    {year:2023,
+      first:{name:"アヴェラーレ",pop:4,prevRace:"京王杯SC",prevCourse:"東京芝1400",prevClass:"G2",prevPop:4,prevRank:4,last3fRank:null},
+      second:{name:"ディヴィーナ",pop:2,prevRace:"中京記念",prevCourse:"中京芝1600",prevClass:"G3",prevPop:2,prevRank:2,last3fRank:null},
+      third:{name:"ラインベック",pop:6,prevRace:"米子S",prevCourse:"阪神芝1600",prevClass:"L",prevPop:7,prevRank:2,last3fRank:null}},
+    {year:2022,
+      first:{name:"ウインカーネリアン",pop:1,prevRace:"米子S",prevCourse:"阪神芝1600",prevClass:"L",prevPop:1,prevRank:1,last3fRank:null},
+      second:{name:"シュリ",pop:12,prevRace:"メイS",prevCourse:"東京芝1800",prevClass:"L",prevPop:7,prevRank:9,last3fRank:null},
+      third:{name:"ダノンザキッド",pop:2,prevRace:"安田記念",prevCourse:"東京芝1600",prevClass:"G1",prevPop:7,prevRank:6,last3fRank:null}},
+    {year:2021,
+      first:{name:"ロータスランド",pop:4,prevRace:"中京記念",prevCourse:"中京芝1600",prevClass:"G3",prevPop:3,prevRank:5,last3fRank:null},
+      second:{name:"カラテ",pop:6,prevRace:"安田記念",prevCourse:"東京芝1600",prevClass:"G1",prevPop:10,prevRank:13,last3fRank:null},
+      third:{name:"ソングライン",pop:1,prevRace:"NHKマイルC",prevCourse:"東京芝1600",prevClass:"G1",prevPop:7,prevRank:2,last3fRank:null}},
+    {year:2020,
+      first:{name:"サトノアーサー",pop:4,prevRace:"エプソムC",prevCourse:"東京芝1800",prevClass:"G3",prevPop:1,prevRank:6,last3fRank:null},
+      second:{name:"トロワゼトワル",pop:8,prevRace:"中京記念",prevCourse:"中京芝1600",prevClass:"G3",prevPop:4,prevRank:17,last3fRank:null},
+      third:{name:"アンドラステ",pop:1,prevRace:"エプソムC",prevCourse:"東京芝1800",prevClass:"G3",prevPop:4,prevRank:4,last3fRank:null}},
+    {year:2019,
+      first:{name:"ミッキーグローリー",pop:1,prevRace:"マイルCS※要検証",prevCourse:"京都芝1600",prevClass:"G1",prevPop:8,prevRank:5,last3fRank:null},
+      second:{name:"ミエノサクシード",pop:6,prevRace:"中京記念",prevCourse:"中京芝1600",prevClass:"G3",prevPop:4,prevRank:4,last3fRank:null},
+      third:{name:"ソーグリッタリング",pop:4,prevRace:"エプソムC",prevCourse:"東京芝1800",prevClass:"G3",prevPop:1,prevRank:3,last3fRank:null}},
+    {year:2018,
+      first:{name:"プリモシーン",pop:1,prevRace:"NHKマイルC",prevCourse:"東京芝1600",prevClass:"G1",prevPop:5,prevRank:5,last3fRank:null},
+      second:{name:"ワントゥワン",pop:5,prevRace:"中京記念",prevCourse:"中京芝1600",prevClass:"G3",prevPop:3,prevRank:5,last3fRank:null},
+      third:{name:"エイシンティンクル",pop:3,prevRace:"豊明S",prevCourse:null,prevClass:null,prevPop:4,prevRank:1,last3fRank:null}},
+    {year:2017,
+      first:{name:"マルターズアポジー",pop:7,prevRace:"七夕賞",prevCourse:"福島芝2000",prevClass:"G3",prevPop:2,prevRank:11,last3fRank:null},
+      second:{name:"ウインガニオン",pop:4,prevRace:"中京記念",prevCourse:"中京芝1600",prevClass:"G3",prevPop:5,prevRank:1,last3fRank:null},
+      third:{name:"ダノンリバティ",pop:5,prevRace:"中京記念",prevCourse:"中京芝1600",prevClass:"G3",prevPop:3,prevRank:5,last3fRank:null}},
+    {year:2016,
+      first:{name:"ヤングマンパワー",pop:3,prevRace:"多摩川S",prevCourse:"東京芝1600",prevClass:"3勝クラス",prevPop:2,prevRank:1,last3fRank:null},
+      second:{name:"ダノンリバティ",pop:7,prevRace:"中京記念",prevCourse:"中京芝1600",prevClass:"G3",prevPop:5,prevRank:5,last3fRank:null},
+      third:{name:"マジックタイム",pop:1,prevRace:"ヴィクトリアM",prevCourse:"東京芝1600",prevClass:"G1",prevPop:6,prevRank:6,last3fRank:null}}
+  ],
+  trends: { tables: [
+    {title:"単勝人気別（2015-2025・11年）", col1:"人気", rows:[
+      {label:"1番人気",     rec:"4-0-4-3",  highlight:true},
+      {label:"2番人気",     rec:"1-2-1-7"},
+      {label:"3番人気",     rec:"2-0-1-8"},
+      {label:"4〜6番人気",  rec:"3-5-3-22"},
+      {label:"7〜9番人気",  rec:"1-3-1-28"},
+      {label:"10番人気以下",rec:"0-2-0-79"}
+    ], note:"別定時代(〜2024)は10人気以下が0-1-0-71＝複勝1.4%の壁だったが、ハンデ戦初年度の2025にオフトレイル(10人気57.5kg)が2着同着。壁は緩んだ可能性あり、無条件適用は危険。"},
+
+    {title:"年齢別（2015-2025・11年）", col1:"年齢", rows:[
+      {label:"3歳", rec:"1-0-2-7"},
+      {label:"4歳", rec:"2-3-2-28"},
+      {label:"5歳", rec:"5-7-5-55", highlight:true},
+      {label:"6歳", rec:"3-2-1-30"},
+      {label:"7歳", rec:"0-0-0-25", highlight:true},
+      {label:"8歳", rec:"0-0-0-2"}
+    ], note:"7歳は11年連続で0-0-0-25。n=25・0連対で『壁の思想』の適用対象。2025も7歳3頭(8着/17着/18着)が全滅。主力は5歳。"},
+
+    {title:"枠順別（2015-2025・11年）", col1:"枠", rows:[
+      {label:"1枠", rec:"1-2-0-16"},
+      {label:"2枠", rec:"1-0-1-18"},
+      {label:"3枠", rec:"1-0-3-17"},
+      {label:"4枠", rec:"0-2-1-18"},
+      {label:"5枠", rec:"0-0-2-20"},
+      {label:"6枠", rec:"0-3-1-18"},
+      {label:"7枠", rec:"5-3-1-18", highlight:true},
+      {label:"8枠", rec:"3-2-1-22"}
+    ], note:"7枠が5勝。7-8枠で11年中ほぼ毎年どちらかが絡む。ただし2025は2着同着が1枠と6枠で、外枠一辺倒ではない。"},
+
+    {title:"所属別（2015-2025・11年）", col1:"所属", rows:[
+      {label:"美浦", rec:"7-2-3-73"},
+      {label:"栗東", rec:"4-10-7-74", highlight:true}
+    ], note:"勝ち切るのは美浦(7勝)、3着内に多く顔を出すのは栗東(21回)。3連単のヒモは栗東を厚く。"},
+
+    {title:"4角位置率別 3着内シェア（2016-2025）", col1:"4角位置", rows:[
+      {label:"0.20以下（前）",     rec:"3着内10頭 / 母数不明"},
+      {label:"0.20〜0.70（中団）", rec:"3着内13頭 / 母数不明"},
+      {label:"0.70以上（後）",     rec:"3着内7頭 / 母数不明"}
+    ], note:"位置率=4角通過順÷頭数。勝ち馬は前4/中3/後3で脚質にほぼ無関係。5年(2016/18/19/20/24)は『極端に前＋極端に後ろ』が同時に馬券圏内で、中団が最も割を食う。着外の母数が取れないため率は出さない。"},
+
+    {title:"勝ち馬の上がり3F（2016-2025）", col1:"年", rows:[
+      {label:"2025 カナテープ",       rec:"32.5（メンバー最速・レコード決着）", highlight:true},
+      {label:"2024 トゥードジボン",   rec:"33.3"},
+      {label:"2023 アヴェラーレ",     rec:"32.8"},
+      {label:"2022 ウインカーネリアン",rec:"32.9（稍重）"},
+      {label:"2021 ロータスランド",   rec:"34.1"},
+      {label:"2020 サトノアーサー",   rec:"33.7"},
+      {label:"2019 ミッキーグローリー",rec:"32.2"},
+      {label:"2018 プリモシーン",     rec:"33.4"},
+      {label:"2017 マルターズアポジー",rec:"34.3（逃げ切り）"},
+      {label:"2016 ヤングマンパワー", rec:"33.7"}
+    ], note:"平均33.4。位置取りがどこであれ、上がりを使えない馬は勝っていない。脚質より上がり性能が本質ファクター。"}
+  ]}
+};
 function renderKinkaGolden(race, horses){
   /* KINKA_GOLDEN_V1 */
   if(race!=='函館記念') return '';
