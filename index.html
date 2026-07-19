@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260717-0656';
+  var CURRENT_VERSION = '20260719-0660';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -3118,7 +3118,10 @@ const HORSES_BY_RACE = {
     "waku": 1,
     "odds": 66.9,
     "fukushoLow": 7.3,
-    "fukushoHigh": 9.9
+    "fukushoHigh": 9.9,
+    "prevRank": 1,
+    "training": "B",
+    "wetType": "power"
   },
   {
     "num": 2,
@@ -3141,7 +3144,10 @@ const HORSES_BY_RACE = {
     "waku": 2,
     "odds": 18.8,
     "fukushoLow": 3.4,
-    "fukushoHigh": 4.5
+    "fukushoHigh": 4.5,
+    "prevRank": 1,
+    "training": "A",
+    "wetType": "power"
   },
   {
     "num": 3,
@@ -3164,7 +3170,10 @@ const HORSES_BY_RACE = {
     "waku": 3,
     "odds": 12.3,
     "fukushoLow": 4,
-    "fukushoHigh": 5.4
+    "fukushoHigh": 5.4,
+    "prevRank": 1,
+    "training": "A",
+    "wetType": "power"
   },
   {
     "num": 4,
@@ -3187,7 +3196,10 @@ const HORSES_BY_RACE = {
     "waku": 4,
     "odds": 22.1,
     "fukushoLow": 3.6,
-    "fukushoHigh": 4.9
+    "fukushoHigh": 4.9,
+    "prevRank": 2,
+    "training": "C",
+    "wetType": "wetwin"
   },
   {
     "num": 5,
@@ -3210,7 +3222,10 @@ const HORSES_BY_RACE = {
     "waku": 4,
     "odds": 31.9,
     "fukushoLow": 4.2,
-    "fukushoHigh": 5.7
+    "fukushoHigh": 5.7,
+    "prevRank": 1,
+    "training": "B",
+    "wetType": "power"
   },
   {
     "num": 6,
@@ -3233,7 +3248,10 @@ const HORSES_BY_RACE = {
     "waku": 5,
     "odds": 90.4,
     "fukushoLow": 12,
-    "fukushoHigh": 16.2
+    "fukushoHigh": 16.2,
+    "prevRank": 6,
+    "training": "B",
+    "wetType": "power"
   },
   {
     "num": 7,
@@ -3256,7 +3274,10 @@ const HORSES_BY_RACE = {
     "waku": 5,
     "odds": 15,
     "fukushoLow": 2.7,
-    "fukushoHigh": 3.6
+    "fukushoHigh": 3.6,
+    "prevRank": 1,
+    "training": "B",
+    "wetType": "power"
   },
   {
     "num": 8,
@@ -3269,7 +3290,7 @@ const HORSES_BY_RACE = {
     "agari3f": 38.6,
     "bataijyu": 462,
     "kyakushitsu": "先行",
-    "prevTrack": "函館ダ",
+    "prevTrack": "他場ダ",
     "father": "ヘニーヒューズ",
     "career": 1,
     "wonSurface": "ダ",
@@ -3279,7 +3300,10 @@ const HORSES_BY_RACE = {
     "waku": 6,
     "odds": 43.2,
     "fukushoLow": 5.3,
-    "fukushoHigh": 7.2
+    "fukushoHigh": 7.2,
+    "prevRank": 1,
+    "training": "B",
+    "wetType": "power"
   },
   {
     "num": 9,
@@ -3302,7 +3326,10 @@ const HORSES_BY_RACE = {
     "waku": 6,
     "odds": 4.2,
     "fukushoLow": 1.7,
-    "fukushoHigh": 2.2
+    "fukushoHigh": 2.2,
+    "prevRank": 1,
+    "training": "S",
+    "wetType": "light"
   },
   {
     "num": 10,
@@ -3325,7 +3352,10 @@ const HORSES_BY_RACE = {
     "waku": 7,
     "odds": 12.7,
     "fukushoLow": 3,
-    "fukushoHigh": 4.1
+    "fukushoHigh": 4.1,
+    "prevRank": 1,
+    "training": "B",
+    "wetType": "power"
   },
   {
     "num": 11,
@@ -3348,7 +3378,10 @@ const HORSES_BY_RACE = {
     "waku": 7,
     "odds": 3.2,
     "fukushoLow": 1.6,
-    "fukushoHigh": 2
+    "fukushoHigh": 2,
+    "prevRank": 1,
+    "training": "A",
+    "wetType": "power"
   },
   {
     "num": 12,
@@ -3371,7 +3404,10 @@ const HORSES_BY_RACE = {
     "waku": 8,
     "odds": 10,
     "fukushoLow": 2.8,
-    "fukushoHigh": 3.8
+    "fukushoHigh": 3.8,
+    "prevRank": 1,
+    "training": "B",
+    "wetType": "wetwin"
   },
   {
     "num": 13,
@@ -3394,7 +3430,10 @@ const HORSES_BY_RACE = {
     "waku": 8,
     "odds": 4.7,
     "fukushoLow": 1.7,
-    "fukushoHigh": 2.2
+    "fukushoHigh": 2.2,
+    "prevRank": 1,
+    "training": "S",
+    "wetType": "light"
   }
 ],
   '北九州記念': [
@@ -7504,7 +7543,7 @@ window.HORSES_BY_RACE = HORSES_BY_RACE;
  * ===================================================== */
 const RACE_META = {
   '函館2歳S': {
-    babaWet:false, gradeLine:"G3", title:"函館2歳S", date:"2026-07-19 (日)",
+    babaWet:true, gradeLine:"G3", title:"函館2歳S", date:"2026-07-19 (日)",
     venue:"函館競馬場", surface:"芝1200m", age:"2歳", distance:1200, direction:"right",
     isFinished:false, pageTitle:"JRA重賞予想 2026 | 函館2歳S",
     notice:"⚠ 枠順確定前(金曜確定)。枠スコアは確定後に反映。",
@@ -24292,15 +24331,21 @@ function _getHakodate2saiScoreStats() {
 }
 
 function computeScoreBreakdownHakodate2saiV1(horse, raceName, _rawOnly) {
-  if (!horse) return { total: 0, max: 66, pct: 0, items: {}, penalty: 0 };
-  if (horse.isAvoided) return { total: 0, max: 66, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
+  // 道悪項ON/OFF: RACE_META['函館2歳S'].babaWet===true のときだけ発火（良馬場Σmax72・道悪80）
+  var _wetOn = (typeof RACE_META !== 'undefined' && RACE_META['函館2歳S'] && RACE_META['函館2歳S'].babaWet === true);
+  var _maxBase = _wetOn ? 80 : 72;
+  if (!horse) return { total: 0, max: _maxBase, pct: 0, items: {}, penalty: 0 };
+  if (horse.isAvoided) return { total: 0, max: _maxBase, pct: 0, items: {}, isAvoided: true, avoidReason: horse.avoidReason || '出走回避' };
   var h = horse;
   var items = {};
 
-  // ① 前走人気（data・max11）最強ファクト。1人気→11/2-3人気→7/4-5人気→3/6人気～→0
+  // ① 前走人気（data・max11）最強ファクト。1人気→11/2-3人気→7/4-5人気→3/6人気～→0。※前走着順で減点(2着-4/3着以下-8)
   var pp = (typeof h.prevPop === 'number') ? h.prevPop : 99;
   var ppScore = (pp === 1) ? 11 : (pp <= 3) ? 7 : (pp <= 5) ? 3 : 0;
-  items.prevPop = { score: ppScore, max: 11, label: '🔥前走人気', note: '勝ち馬7/10が前走1番人気。前走6人気以下は馬券圏ゼロ(最強ファクト)', group:'data' };
+  var _prk = (typeof h.prevRank === 'number') ? h.prevRank : 1;
+  if (_prk === 2) ppScore = Math.max(0, ppScore - 4);
+  else if (_prk >= 3) ppScore = Math.max(0, ppScore - 8);
+  items.prevPop = { score: ppScore, max: 11, label: '🔥前走人気', note: '勝ち馬7/10が前走1番人気。※前走人気は前走勝ちが前提のため、前走2着-4/3着以下-8', group:'data' };
 
   // ② 前走種別（data・max9）新馬→9/未勝利→7/地方→3
   var ptype = h.prevType || '';
@@ -24324,9 +24369,9 @@ function computeScoreBreakdownHakodate2saiV1(horse, raceName, _rawOnly) {
 
   // ⑥ 血統（data・max7）米スピード血脈=函館2歳S好走。ビッグアーサー/ヘニーヒューズ/タワーオブロンドン/Blue Point/米スピード系(Twirling Candy等)→7 / その他中距離(サートゥル/サリオス等)→4
   var f = h.father || '';
-  var hiBlood = ['ビッグアーサー','ヘニーヒューズ','タワーオブロンドン','Blue Point','Twirling Candy'];
+  var hiBlood = ['ビッグアーサー','ヘニーヒューズ','タワーオブロンドン','Blue Point','Twirling Candy','フォーウィールドライブ'];
   var fScore = hiBlood.some(function(n){ return f.indexOf(n) >= 0; }) ? 7 : 4;
-  items.blood = { score: fScore, max: 7, label: '🩸血統', note: 'ビッグアーサー(サクラバクシンオー系)・米スピード血脈が函館2歳S好走', group:'data' };
+  items.blood = { score: fScore, max: 7, label: '🩸血統', note: 'ビッグアーサー(サクラバクシンオー系)・米スピード血脈が函館2歳S好走 ※フォーウィールドライブは函館芝で複勝率50%(6走の小標本)', group:'data' };
 
   // ⑦ キャリア（data・max5）1-2戦かつ勝ち鞍あり→5 / 3戦以上→-5(壁) / 勝ちなし→0。キャリア3戦以上は過去10年 馬券圏ゼロ
   var cr = (typeof h.career === 'number') ? h.career : 0;
@@ -24335,10 +24380,10 @@ function computeScoreBreakdownHakodate2saiV1(horse, raceName, _rawOnly) {
   var crNote = (cr >= 3) ? 'キャリア3戦以上=過去10年 馬券圏ゼロの壁(-5)' : (won && cr <= 2) ? '少キャリア×勝ち鞍あり(理想)' : '未勝利';
   items.career = { score: crScore, max: 5, label: '🌱キャリア', note: crNote, group:'data' };
 
-  // ⑧ 間隔（data・max4）3-4週→4/5週→3/2週→2/1週 or 6週以上→1
+  // ⑧ 間隔（data・max4）中4週以上→4/中3週→3/中1週→2/中2週→1/連闘→0。intervalWeeksは中◯週の数値
   var iwv = (typeof h.intervalWeeks === 'number') ? h.intervalWeeks : 0;
-  var iwScore = (iwv === 3 || iwv === 4) ? 4 : (iwv === 5) ? 3 : (iwv === 2) ? 2 : 1;
-  items.interval = { score: iwScore, max: 4, label: '⏱️間隔', note: '中3-4週が理想。詰め(1週)・過度な間隔(6週+)は割引', group:'data' };
+  var iwScore = (iwv >= 4) ? 4 : (iwv === 3) ? 3 : (iwv === 1) ? 2 : (iwv === 2) ? 1 : 0;
+  items.interval = { score: iwScore, max: 4, label: '⏱️間隔', note: '中4週以上が複勝率33.3%で最良、中3週26.7%、中1週21.2%、中2週15%、連闘0%', group:'data' };
 
   // ※上がり3F項は削除(検証で予測力なし=優勝馬の前走上がり平均35.0秒)。agari3fフィールドは残すがスコア不使用。
 
@@ -24346,6 +24391,20 @@ function computeScoreBreakdownHakodate2saiV1(horse, raceName, _rawOnly) {
   var wk = h.waku || 0;
   var wkScore = (wk >= 5 && wk <= 8) ? 5 : (wk === 3) ? 3 : (wk === 1) ? 2 : (wk === 2 || wk === 4) ? 1 : 0;
   items.waku = { score: wkScore, max: 5, label: '🎯枠順', note: '勝ち馬8/10が5-8枠・3着馬は全て1-4枠。8枠3勝/3枠複勝35%', group:'env' };
+
+  // ⑨ 調教評価（horse・max6）S→6/A→5/B→3/C→1/D→0
+  var _tr = h.training || '';
+  var trScore = (_tr === 'S') ? 6 : (_tr === 'A') ? 5 : (_tr === 'B') ? 3 : (_tr === 'C') ? 1 : 0;
+  items.training = { score: trScore, max: 6, label: '🔧調教評価', note: '追い切り評価(umasiru)。※過去10年での予測力は未検証のため配点は控えめ', group:'horse' };
+
+  // ⑩ 道悪適性（env・babaWet連動 max0/8）重馬場時のみ発火。power8/wetwin6/neutral4/light2
+  if (!_wetOn) {
+    items.wet = { score: 0, max: 0, label: '💧道悪適性', note: '良馬場: 道悪項は不発', group:'env' };
+  } else {
+    var _wm = { power:8, wetwin:6, neutral:4, light:2 };
+    var _wb = _wm[h.wetType];
+    items.wet = { score: (typeof _wb === 'number') ? _wb : 4, max: 8, label: '💧道悪適性', note: '重馬場: パワー型/ダート勝ち馬が有利(2023重ゼルト・2022稍ブトンドール)。時計が掛かると前走ダート組の複勝率27.3%', group:'env' };
+  }
 
   var total = 0, max = 0;
   Object.keys(items).forEach(function(k){ var it = items[k]; if (it && typeof it.score === 'number') { total += it.score; max += (it.max || 0); } });
