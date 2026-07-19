@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260719-0662';
+  var CURRENT_VERSION = '20260719-0664';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2926,7 +2926,7 @@ const STATUS_BADGE = {
 };
 
 const TARGET_RACE_NAME = "オークス";
-const SUPPORTED_RACES = new Set(["函館2歳S", "天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S","ラジオNIKKEI賞","函館記念","北九州記念","七夕賞",]);
+const SUPPORTED_RACES = new Set(["関屋記念", "函館2歳S", "天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S","ラジオNIKKEI賞","函館記念","北九州記念","七夕賞",]);
 
 function getDefaultDisplayMonth() {
   // 直近の「予想中」(SUPPORTED && upcoming) レースの開催月を返す
@@ -3096,6 +3096,8 @@ document.querySelectorAll('#contentTabs .tab').forEach(t => {
  *  setCurrentRace() で HORSES / window.horses が差し替わる。
  * ===================================================== */
 const HORSES_BY_RACE = {
+  // 関屋記念: 出走馬未確定。空ロスターで開放(setCurrentRaceはロスター未存在だとMETA適用前にreturnし平安バグ再発するため空配列で回避)。確定後に投入。
+  '関屋記念': [],
   '函館2歳S': [
   {
     "num": 1,
@@ -7542,6 +7544,12 @@ window.HORSES_BY_RACE = HORSES_BY_RACE;
  * 3.05) RACE METADATA (タイトル・コース等)
  * ===================================================== */
 const RACE_META = {
+  '関屋記念': {
+    babaWet:false, gradeLine:"G3", title:"関屋記念", date:"2026-07-26 (日)",
+    venue:"新潟競馬場", surface:"芝1600m", age:"3歳上", distance:1600, direction:"left",
+    isFinished:false, pageTitle:"JRA重賞予想 2026 | 関屋記念",
+    notice:"⚠ 出走馬・枠順確定前の暫定開放。ロスターは確定後に投入。",
+    babaPrediction:{ status:"良馬場想定", icon:"☀️", color:"#1D9E75", comment:"新潟芝1600m外・直線658mの差し得コース" } },
   '函館2歳S': {
     babaWet:true, gradeLine:"G3", title:"函館2歳S", date:"2026-07-19 (日)",
     venue:"函館競馬場", surface:"芝1200m", age:"2歳", distance:1200, direction:"right",
