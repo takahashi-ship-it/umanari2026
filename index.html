@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260719-0666';
+  var CURRENT_VERSION = '20260719-0667';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -3097,7 +3097,22 @@ document.querySelectorAll('#contentTabs .tab').forEach(t => {
  * ===================================================== */
 const HORSES_BY_RACE = {
   // 関屋記念: 出走馬未確定。空ロスターで開放(setCurrentRaceはロスター未存在だとMETA適用前にreturnし平安バグ再発するため空配列で回避)。確定後に投入。
-  '関屋記念': [],
+  '関屋記念': [
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {}
+  ],
   '函館2歳S': [
   {
     "num": 1,
