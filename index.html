@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260719-0667';
+  var CURRENT_VERSION = '20260721-0668';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -3098,20 +3098,20 @@ document.querySelectorAll('#contentTabs .tab').forEach(t => {
 const HORSES_BY_RACE = {
   // 関屋記念: 出走馬未確定。空ロスターで開放(setCurrentRaceはロスター未存在だとMETA適用前にreturnし平安バグ再発するため空配列で回避)。確定後に投入。
   '関屋記念': [
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {}
+    {"name":"ダノンセンチュリー","sex":"牡","age":4,"carriedWeight":56,"jockey":"戸崎圭","stable":"美浦宮田","odds":2.9,"popEstimate":1},
+    {"name":"アンパドゥ","sex":"牡","age":5,"carriedWeight":56,"jockey":"岩田望","stable":"美浦木村","odds":5.4,"popEstimate":2},
+    {"name":"エルトンバローズ","sex":"牡","age":6,"carriedWeight":59,"jockey":"コレット","stable":"栗東杉山晴","odds":7.5,"popEstimate":3},
+    {"name":"ランスオブカオス","sex":"牡","age":4,"carriedWeight":58,"jockey":"石川","stable":"栗東奥村豊","odds":9.6,"popEstimate":4},
+    {"name":"サンダーストラック","sex":"牡","age":3,"carriedWeight":54,"jockey":"未定","stable":"美浦木村","odds":11,"popEstimate":5},
+    {"name":"ファーヴェント","sex":"牡","age":5,"carriedWeight":57,"jockey":"未定","stable":"栗東藤原","odds":12.4,"popEstimate":6},
+    {"name":"ドロップオブライト","sex":"牝","age":7,"carriedWeight":56.5,"jockey":"松若","stable":"栗東福永","odds":13.8,"popEstimate":7},
+    {"name":"シリウスコルト","sex":"牡","age":5,"carriedWeight":58,"jockey":"田辺","stable":"美浦田中勝","odds":20.2,"popEstimate":8},
+    {"name":"ジュタ","sex":"牡","age":4,"carriedWeight":56,"jockey":"未定","stable":"栗東矢作","odds":23.1,"popEstimate":9},
+    {"name":"クランフォード","sex":"牝","age":5,"carriedWeight":54,"jockey":"菊沢","stable":"栗東杉山晴","odds":25.8,"popEstimate":10},
+    {"name":"マテンロウスカイ","sex":"セ","age":7,"carriedWeight":58,"jockey":"横山典","stable":"栗東松永幹","odds":28.5,"popEstimate":11},
+    {"name":"ブエナオンダ","sex":"牡","age":5,"carriedWeight":58,"jockey":"田口","stable":"栗東須貝","odds":32.6,"popEstimate":12},
+    {"name":"レディマリオン","sex":"牝","age":5,"carriedWeight":52,"jockey":"今村","stable":"栗東長谷川","odds":43,"popEstimate":13},
+    {"name":"メタルスピード","sex":"牡","age":6,"carriedWeight":55,"jockey":"斎藤新","stable":"美浦斎藤誠","odds":43.5,"popEstimate":14}
   ],
   '函館2歳S': [
   {
