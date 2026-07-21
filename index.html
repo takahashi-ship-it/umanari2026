@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260721-0670';
+  var CURRENT_VERSION = '20260721-0672';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13384,7 +13384,7 @@ RACE_PAST_DATA['関屋記念'] = {
       {label:"6枠", rec:"0-3-1-16"},
       {label:"7枠", rec:"5-3-0-17", highlight:true},
       {label:"8枠", rec:"2-2-1-21"}
-    ], note:"7枠が5勝・勝率20.0%で突出。7-8枠で1着シェア70%。ただし7枠は3着0回＝『勝つか飛ぶか』。3着付けには使いにくい。"},
+    ], note:"7枠が5勝・勝率20.0%で突出。7-8枠で1着シェア70%。ただし7枠は3着0回＝『勝つか飛ぶか』。3着付けには使いにくい。※外部集計で1〜2枠を2-2-1-23とするものがあるが着外9頭欠落の誤り。母数は168(年齢別と一致)で1〜2枠は2-2-1-32が正。"},
 
     {title:"東西別（2016-2025・10年）", col1:"所属", rows:[
       {label:"関東馬（美浦）", rec:"7-2-2-68"},
@@ -13440,6 +13440,11 @@ RACE_PAST_DATA['関屋記念'] = {
       {label:"負け1.0〜1.9",  rec:"0-2-0-35"},
       {label:"負け2.0秒〜",   rec:"1-1-0-8"}
     ], note:"前走0.5秒差以内が7-5-5。0.6秒以上負けた馬は複勝1桁台に落ちる。例外は17年マルターズアポジー(七夕賞2.0秒差負け→逃げ切り)で、条件替わりの逃げ馬は着差を問わない。"},
+
+    {title:"しらさぎS(前身=米子S)組 × 前走着順", col1:"前走着順", rows:[
+      {label:"前走2着以内", rec:"2-1-1-1", highlight:true},
+      {label:"前走3着以下", rec:"0-0-0-9", highlight:true}
+    ], note:"【最重要】同レース組は前走着順で真っ二つ。2016-2025で馬券圏内の4頭(24年トゥードジボン1着/24年ディオ2着/23年ラインベック3着/22年ウインカーネリアン1着)は全て前走2着以内。2025年の開催時期変更(8月2週→7月4週)でこのローテが主流化した。n=9の小標本だが反対側が4/5で当たっており、単なるゼロとは重みが異なる。"},
 
     {title:"本番の上がり3F順位（結果論・参考）", col1:"上がり順位", rows:[
       {label:"1位",     rec:"3-1-3-6",  highlight:true},
@@ -21702,6 +21707,18 @@ function computeScoreBreakdownSekiyaV2(horse, raceName){
       kin+'kg（3着内馬の過去最高は57.5kg／ハンデ戦はn=1年のため配点は軽め）', 'env');
 
   add('年齢', (age===3||age===5)?4:((age===4||age===6)?3:0), 4, age+'歳（5歳が3着内シェア50.0%）', 'horse');
+
+  var pr = String(horse.prevRace||'');
+  var isSM = (pr.indexOf('しらさぎ') >= 0 || pr.indexOf('米子') >= 0);
+  var prk = Number(horse.prevRank)||99;
+  if (isSM){
+    if (prk <= 2) add('サマーマイル直行[summerMile]', 5, 5,
+      'しらさぎS/米子S ' + prk + '着 → 前走2着以内は 2-1-1-1（複勝80%）', 'data');
+    else add('【壁】サマーマイル直行[summerMile]', -6, 0,
+      'しらさぎS/米子S ' + prk + '着 → 前走3着以下は 0-0-0-9（複勝0%）。n=9の小標本だが反対側が4/5', 'data');
+  } else {
+    add('サマーマイル直行[summerMile]', 0, 5, '該当なし（前走: ' + (pr||'不明') + '）', 'data');
+  }
 
   add('芝1600m連対歴', (Number(horse.m1600Placed)||0)>0?2:0, 2,
       (horse.m1600||0)+'戦 連対'+(horse.m1600Placed||0), 'horse');
