@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260721-0669';
+  var CURRENT_VERSION = '20260721-0670';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -3098,20 +3098,20 @@ document.querySelectorAll('#contentTabs .tab').forEach(t => {
 const HORSES_BY_RACE = {
   // 関屋記念: 出走馬未確定。空ロスターで開放(setCurrentRaceはロスター未存在だとMETA適用前にreturnし平安バグ再発するため空配列で回避)。確定後に投入。
   '関屋記念': [
-    {"name":"ダノンセンチュリー","sex":"牡","age":4,"carriedWeight":56,"jockey":"戸崎圭","stable":"美浦宮田","odds":2.9,"popEstimate":1, "prevRace":"京王杯スプリングC", "prevPlace":"東京", "prevSurf":"芝", "prevDist":1400, "prevClass":"G2", "prevPop":2, "prevRank":9, "prevDiff":0.6, "prevLast3f":"33.0", "runStyle":"中団", "posRatio":0.58, "niigataMile":1, "niigataMilePlaced":1, "m1600":4, "m1600Placed":4, "career":7},
-    {"name":"アンパドゥ","sex":"牡","age":5,"carriedWeight":56,"jockey":"岩田望","stable":"美浦木村","odds":5.4,"popEstimate":2, "prevRace":"分倍河原S", "prevPlace":"東京", "prevSurf":"芝", "prevDist":1600, "prevClass":"3勝", "prevPop":1, "prevRank":1, "prevDiff":0.0, "prevLast3f":"32.7", "runStyle":"中団", "posRatio":0.43, "niigataMile":1, "niigataMilePlaced":1, "m1600":6, "m1600Placed":5, "career":6},
-    {"name":"エルトンバローズ","sex":"牡","age":6,"carriedWeight":59,"jockey":"コレット","stable":"栗東杉山晴","odds":7.5,"popEstimate":3, "prevRace":"しらさぎS", "prevPlace":"阪神", "prevSurf":"芝", "prevDist":1600, "prevClass":"G3", "prevPop":7, "prevRank":1, "prevDiff":-0.1, "prevLast3f":"34.2", "runStyle":"先行", "posRatio":0.32, "niigataMile":0, "niigataMilePlaced":0, "m1600":11, "m1600Placed":4, "career":22},
-    {"name":"ランスオブカオス","sex":"牡","age":4,"carriedWeight":58,"jockey":"石川","stable":"栗東奥村豊","odds":9.6,"popEstimate":4, "prevRace":"読売マイラーズC", "prevPlace":"京都", "prevSurf":"芝", "prevDist":1600, "prevClass":"G2", "prevPop":8, "prevRank":11, "prevDiff":0.4, "prevLast3f":"33.4", "runStyle":"中団", "posRatio":0.34, "niigataMile":0, "niigataMilePlaced":0, "m1600":7, "m1600Placed":2, "career":10},
-    {"name":"サンダーストラック","sex":"牡","age":3,"carriedWeight":54,"jockey":"未定","stable":"美浦木村","odds":11,"popEstimate":5, "prevRace":"NHKマイルC", "prevPlace":"東京", "prevSurf":"芝", "prevDist":1600, "prevClass":"G1", "prevPop":7, "prevRank":7, "prevDiff":0.6, "prevLast3f":"34.8", "runStyle":"中団", "posRatio":0.38, "niigataMile":0, "niigataMilePlaced":0, "m1600":4, "m1600Placed":2, "career":5},
-    {"name":"ファーヴェント","sex":"牡","age":5,"carriedWeight":57,"jockey":"未定","stable":"栗東藤原","odds":12.4,"popEstimate":6, "prevRace":"しらさぎS", "prevPlace":"阪神", "prevSurf":"芝", "prevDist":1600, "prevClass":"G3", "prevPop":2, "prevRank":9, "prevDiff":0.4, "prevLast3f":"34.6", "runStyle":"先行", "posRatio":0.28, "niigataMile":1, "niigataMilePlaced":1, "m1600":8, "m1600Placed":3, "career":18},
-    {"name":"ドロップオブライト","sex":"牝","age":7,"carriedWeight":56.5,"jockey":"松若","stable":"栗東福永","odds":13.8,"popEstimate":7, "prevRace":"ヴィクトリアマイル", "prevPlace":"東京", "prevSurf":"芝", "prevDist":1600, "prevClass":"G1", "prevPop":15, "prevRank":18, "prevDiff":1.2, "prevLast3f":"32.9", "runStyle":"後方", "posRatio":0.64, "niigataMile":0, "niigataMilePlaced":0, "m1600":5, "m1600Placed":2, "career":32},
-    {"name":"シリウスコルト","sex":"牡","age":5,"carriedWeight":58,"jockey":"田辺","stable":"美浦田中勝","odds":20.2,"popEstimate":8, "prevRace":"安田記念", "prevPlace":"東京", "prevSurf":"芝", "prevDist":1600, "prevClass":"G1", "prevPop":15, "prevRank":14, "prevDiff":1.1, "prevLast3f":"33.6", "runStyle":"中団", "posRatio":0.45, "niigataMile":1, "niigataMilePlaced":0, "m1600":6, "m1600Placed":1, "career":21},
-    {"name":"ジュタ","sex":"牡","age":4,"carriedWeight":56,"jockey":"未定","stable":"栗東矢作","odds":23.1,"popEstimate":9, "prevRace":"函館記念", "prevPlace":"函館", "prevSurf":"芝", "prevDist":2000, "prevClass":"G3", "prevPop":5, "prevRank":14, "prevDiff":1.4, "prevLast3f":"36.4", "runStyle":"中団", "posRatio":0.38, "niigataMile":0, "niigataMilePlaced":0, "m1600":0, "m1600Placed":0, "career":9},
-    {"name":"クランフォード","sex":"牝","age":5,"carriedWeight":54,"jockey":"菊沢","stable":"栗東杉山晴","odds":25.8,"popEstimate":10, "prevRace":"谷川岳S", "prevPlace":"新潟", "prevSurf":"芝", "prevDist":1400, "prevClass":"OP(L)", "prevPop":1, "prevRank":11, "prevDiff":0.8, "prevLast3f":"35.6", "runStyle":"先行", "posRatio":0.28, "niigataMile":0, "niigataMilePlaced":0, "m1600":5, "m1600Placed":2, "career":15},
-    {"name":"マテンロウスカイ","sex":"セ","age":7,"carriedWeight":58,"jockey":"横山典","stable":"栗東松永幹","odds":28.5,"popEstimate":11, "prevRace":"読売マイラーズC", "prevPlace":"京都", "prevSurf":"芝", "prevDist":1600, "prevClass":"G2", "prevPop":14, "prevRank":17, "prevDiff":0.9, "prevLast3f":"33.7", "runStyle":"中団", "posRatio":0.48, "niigataMile":0, "niigataMilePlaced":0, "m1600":6, "m1600Placed":2, "career":27},
-    {"name":"ブエナオンダ","sex":"牡","age":5,"carriedWeight":58,"jockey":"田口","stable":"栗東須貝","odds":32.6,"popEstimate":12, "prevRace":"しらさぎS", "prevPlace":"阪神", "prevSurf":"芝", "prevDist":1600, "prevClass":"G3", "prevPop":13, "prevRank":7, "prevDiff":0.3, "prevLast3f":"34.1", "runStyle":"中団", "posRatio":0.52, "niigataMile":0, "niigataMilePlaced":0, "m1600":11, "m1600Placed":3, "career":22},
-    {"name":"レディマリオン","sex":"牝","age":5,"carriedWeight":52,"jockey":"今村","stable":"栗東長谷川","odds":43,"popEstimate":13, "prevRace":"福島牝馬S", "prevPlace":"福島", "prevSurf":"芝", "prevDist":1800, "prevClass":"G3", "prevPop":15, "prevRank":14, "prevDiff":1.4, "prevLast3f":"35.6", "runStyle":"先行", "posRatio":0.32, "niigataMile":0, "niigataMilePlaced":0, "m1600":1, "m1600Placed":0, "career":16},
-    {"name":"メタルスピード","sex":"牡","age":6,"carriedWeight":55,"jockey":"斎藤新","stable":"美浦斎藤誠","odds":43.5,"popEstimate":14, "prevRace":"しらさぎS", "prevPlace":"阪神", "prevSurf":"芝", "prevDist":1600, "prevClass":"G3", "prevPop":14, "prevRank":10, "prevDiff":0.9, "prevLast3f":"35.9", "runStyle":"逃げ", "posRatio":0.11, "niigataMile":2, "niigataMilePlaced":1, "m1600":26, "m1600Placed":9, "career":39}
+    {"name":"ダノンセンチュリー","sex":"牡","age":4,"carriedWeight":56,"jockey":"戸崎圭","stable":"美浦宮田","odds":2.9,"popEstimate":1, "prevRace":"京王杯スプリングC", "prevPlace":"東京", "prevSurf":"芝", "prevDist":1400, "prevClass":"G2", "prevPop":2, "prevRank":9, "prevDiff":0.6, "prevLast3f":"33.0", "runStyle":"中団", "posRatio":0.58, "niigataMile":1, "niigataMilePlaced":1, "m1600":4, "m1600Placed":4, "career":7, "longStraightScore":4, "longStraightNote":"条件戦のみ連対4／OP以上は未経験", "jusyoPlaced":0, "jusyoRuns":2},
+    {"name":"アンパドゥ","sex":"牡","age":5,"carriedWeight":56,"jockey":"岩田望","stable":"美浦木村","odds":5.4,"popEstimate":2, "prevRace":"分倍河原S", "prevPlace":"東京", "prevSurf":"芝", "prevDist":1600, "prevClass":"3勝", "prevPop":1, "prevRank":1, "prevDiff":0.0, "prevLast3f":"32.7", "runStyle":"中団", "posRatio":0.43, "niigataMile":1, "niigataMilePlaced":1, "m1600":6, "m1600Placed":5, "career":6, "longStraightScore":4, "longStraightNote":"条件戦のみ連対5／OP以上は未経験", "jusyoPlaced":0, "jusyoRuns":0},
+    {"name":"エルトンバローズ","sex":"牡","age":6,"carriedWeight":59,"jockey":"コレット","stable":"栗東杉山晴","odds":7.5,"popEstimate":3, "prevRace":"しらさぎS", "prevPlace":"阪神", "prevSurf":"芝", "prevDist":1600, "prevClass":"G3", "prevPop":7, "prevRank":1, "prevDiff":-0.1, "prevLast3f":"34.2", "runStyle":"先行", "posRatio":0.32, "niigataMile":0, "niigataMilePlaced":0, "m1600":11, "m1600Placed":4, "career":22, "longStraightScore":2, "longStraightNote":"2戦 連対0", "jusyoPlaced":4, "jusyoRuns":16},
+    {"name":"ランスオブカオス","sex":"牡","age":4,"carriedWeight":58,"jockey":"石川","stable":"栗東奥村豊","odds":9.6,"popEstimate":4, "prevRace":"読売マイラーズC", "prevPlace":"京都", "prevSurf":"芝", "prevDist":1600, "prevClass":"G2", "prevPop":8, "prevRank":11, "prevDiff":0.4, "prevLast3f":"33.4", "runStyle":"中団", "posRatio":0.34, "niigataMile":0, "niigataMilePlaced":0, "m1600":7, "m1600Placed":2, "career":10, "longStraightScore":2, "longStraightNote":"1戦 連対0", "jusyoPlaced":1, "jusyoRuns":7},
+    {"name":"サンダーストラック","sex":"牡","age":3,"carriedWeight":54,"jockey":"未定","stable":"美浦木村","odds":11,"popEstimate":5, "prevRace":"NHKマイルC", "prevPlace":"東京", "prevSurf":"芝", "prevDist":1600, "prevClass":"G1", "prevPop":7, "prevRank":7, "prevDiff":0.6, "prevLast3f":"34.8", "runStyle":"中団", "posRatio":0.38, "niigataMile":0, "niigataMilePlaced":0, "m1600":4, "m1600Placed":2, "career":5, "longStraightScore":2, "longStraightNote":"1戦 連対0", "jusyoPlaced":1, "jusyoRuns":3},
+    {"name":"ファーヴェント","sex":"牡","age":5,"carriedWeight":57,"jockey":"未定","stable":"栗東藤原","odds":12.4,"popEstimate":6, "prevRace":"しらさぎS", "prevPlace":"阪神", "prevSurf":"芝", "prevDist":1600, "prevClass":"G3", "prevPop":2, "prevRank":9, "prevDiff":0.4, "prevLast3f":"34.6", "runStyle":"先行", "posRatio":0.28, "niigataMile":1, "niigataMilePlaced":1, "m1600":8, "m1600Placed":3, "career":18, "longStraightScore":5, "longStraightNote":"OP以上1戦(連対0)+条件戦連対1", "jusyoPlaced":1, "jusyoRuns":6},
+    {"name":"ドロップオブライト","sex":"牝","age":7,"carriedWeight":56.5,"jockey":"松若","stable":"栗東福永","odds":13.8,"popEstimate":7, "prevRace":"ヴィクトリアマイル", "prevPlace":"東京", "prevSurf":"芝", "prevDist":1600, "prevClass":"G1", "prevPop":15, "prevRank":18, "prevDiff":1.2, "prevLast3f":"32.9", "runStyle":"後方", "posRatio":0.64, "niigataMile":0, "niigataMilePlaced":0, "m1600":5, "m1600Placed":2, "career":32, "longStraightScore":2, "longStraightNote":"1戦 連対0", "jusyoPlaced":3, "jusyoRuns":14},
+    {"name":"シリウスコルト","sex":"牡","age":5,"carriedWeight":58,"jockey":"田辺","stable":"美浦田中勝","odds":20.2,"popEstimate":8, "prevRace":"安田記念", "prevPlace":"東京", "prevSurf":"芝", "prevDist":1600, "prevClass":"G1", "prevPop":15, "prevRank":14, "prevDiff":1.1, "prevLast3f":"33.6", "runStyle":"中団", "posRatio":0.45, "niigataMile":1, "niigataMilePlaced":0, "m1600":6, "m1600Placed":1, "career":21, "longStraightScore":2, "longStraightNote":"3戦 連対0", "jusyoPlaced":2, "jusyoRuns":9},
+    {"name":"ジュタ","sex":"牡","age":4,"carriedWeight":56,"jockey":"未定","stable":"栗東矢作","odds":23.1,"popEstimate":9, "prevRace":"函館記念", "prevPlace":"函館", "prevSurf":"芝", "prevDist":2000, "prevClass":"G3", "prevPop":5, "prevRank":14, "prevDiff":1.4, "prevLast3f":"36.4", "runStyle":"中団", "posRatio":0.38, "niigataMile":0, "niigataMilePlaced":0, "m1600":0, "m1600Placed":0, "career":9, "longStraightScore":1, "longStraightNote":"未経験", "jusyoPlaced":0, "jusyoRuns":3},
+    {"name":"クランフォード","sex":"牝","age":5,"carriedWeight":54,"jockey":"菊沢","stable":"栗東杉山晴","odds":25.8,"popEstimate":10, "prevRace":"谷川岳S", "prevPlace":"新潟", "prevSurf":"芝", "prevDist":1400, "prevClass":"OP(L)", "prevPop":1, "prevRank":11, "prevDiff":0.8, "prevLast3f":"35.6", "runStyle":"先行", "posRatio":0.28, "niigataMile":0, "niigataMilePlaced":0, "m1600":5, "m1600Placed":2, "career":15, "longStraightScore":1, "longStraightNote":"未経験", "jusyoPlaced":0, "jusyoRuns":4},
+    {"name":"マテンロウスカイ","sex":"セ","age":7,"carriedWeight":58,"jockey":"横山典","stable":"栗東松永幹","odds":28.5,"popEstimate":11, "prevRace":"読売マイラーズC", "prevPlace":"京都", "prevSurf":"芝", "prevDist":1600, "prevClass":"G2", "prevPop":14, "prevRank":17, "prevDiff":0.9, "prevLast3f":"33.7", "runStyle":"中団", "posRatio":0.48, "niigataMile":0, "niigataMilePlaced":0, "m1600":6, "m1600Placed":2, "career":27, "longStraightScore":2, "longStraightNote":"2戦 連対0", "jusyoPlaced":2, "jusyoRuns":13},
+    {"name":"ブエナオンダ","sex":"牡","age":5,"carriedWeight":58,"jockey":"田口","stable":"栗東須貝","odds":32.6,"popEstimate":12, "prevRace":"しらさぎS", "prevPlace":"阪神", "prevSurf":"芝", "prevDist":1600, "prevClass":"G3", "prevPop":13, "prevRank":7, "prevDiff":0.3, "prevLast3f":"34.1", "runStyle":"中団", "posRatio":0.52, "niigataMile":0, "niigataMilePlaced":0, "m1600":11, "m1600Placed":3, "career":22, "longStraightScore":2, "longStraightNote":"3戦 連対0", "jusyoPlaced":2, "jusyoRuns":9},
+    {"name":"レディマリオン","sex":"牝","age":5,"carriedWeight":52,"jockey":"今村","stable":"栗東長谷川","odds":43,"popEstimate":13, "prevRace":"福島牝馬S", "prevPlace":"福島", "prevSurf":"芝", "prevDist":1800, "prevClass":"G3", "prevPop":15, "prevRank":14, "prevDiff":1.4, "prevLast3f":"35.6", "runStyle":"先行", "posRatio":0.32, "niigataMile":0, "niigataMilePlaced":0, "m1600":1, "m1600Placed":0, "career":16, "longStraightScore":1, "longStraightNote":"未経験", "jusyoPlaced":0, "jusyoRuns":5},
+    {"name":"メタルスピード","sex":"牡","age":6,"carriedWeight":55,"jockey":"斎藤新","stable":"美浦斎藤誠","odds":43.5,"popEstimate":14, "prevRace":"しらさぎS", "prevPlace":"阪神", "prevSurf":"芝", "prevDist":1600, "prevClass":"G3", "prevPop":14, "prevRank":10, "prevDiff":0.9, "prevLast3f":"35.9", "runStyle":"逃げ", "posRatio":0.11, "niigataMile":2, "niigataMilePlaced":1, "m1600":26, "m1600Placed":9, "career":39, "longStraightScore":4, "longStraightNote":"条件戦のみ連対1／OP以上は未経験", "jusyoPlaced":0, "jusyoRuns":6}
   ],
   '函館2歳S': [
   {
@@ -21649,7 +21649,10 @@ function calcLastFScore(horse) {
  * 既存UI互換のため return shape は { total, max, pct, items, penalty } を維持
  */
 
-function computeScoreBreakdown関屋記念V1(horse, raceName){
+
+
+
+function computeScoreBreakdownSekiyaV2(horse, raceName){
   var meta = (typeof RACE_META !== 'undefined' && RACE_META[raceName]) ? RACE_META[raceName] : {};
   var items = [];
   function add(label, score, max, note, group){ items.push({label:label, score:score, max:max, note:note, group:group}); }
@@ -21664,50 +21667,51 @@ function computeScoreBreakdown関屋記念V1(horse, raceName){
   var pl  = horse.prevPlace || '';
   var stl = horse.runStyle || '中団';
 
-  var dS = (pd === 1600) ? 10 : (pd > 1600 ? 6 : 3);
-  add('前走距離', dS, 10, (horse.prevSurf||'') + pd + 'm → 1600m（同距離組は3着内シェア66.7%／延長は複勝10.0%）', 'data');
+  add('前走距離', (pd===1600)?10:(pd>1600?6:3), 10,
+      (horse.prevSurf||'')+pd+'m → 1600m（同距離組は3着内シェア66.7%／延長は複勝10.0%）', 'data');
 
-  var base = {'逃げ':12, '先行':9, '中団':5, '後方':4};
-  var sS = base[stl] !== undefined ? base[stl] : 5;
-  var paceAdj = 0, paceNote = '';
-  if (meta.paceExpect === 'H'){ paceAdj = (stl==='逃げ'? -3 : stl==='先行'? -1 : stl==='中団'? 2 : 3); paceNote = '／H想定で補正' + (paceAdj>0?'+':'') + paceAdj; }
-  else if (meta.paceExpect === 'S'){ paceAdj = (stl==='逃げ'? 4 : stl==='先行'? 2 : stl==='中団'? -1 : -3); paceNote = '／S想定で補正' + (paceAdj>0?'+':'') + paceAdj; }
-  sS = Math.max(0, Math.min(12, sS + paceAdj));
-  add('脚質（ペース連動）', sS, 12, stl + '（位置率' + (horse.posRatio!==undefined?horse.posRatio:'-') + '）逃げ複勝50.0%／中団13.5%' + paceNote, 'env');
+  var base = {'逃げ':9, '先行':7, '中団':4, '後方':3};
+  var sS = base[stl]!==undefined ? base[stl] : 4;
+  var adj = 0, pn = '';
+  if (meta.paceExpect === 'H'){ adj = (stl==='逃げ'?-3 : stl==='先行'?-1 : stl==='中団'?2 : 3); pn = '／H想定 補正'+(adj>0?'+':'')+adj; }
+  else if (meta.paceExpect === 'S'){ adj = (stl==='逃げ'?3 : stl==='先行'?2 : stl==='中団'?-1 : -2); pn = '／S想定 補正'+(adj>0?'+':'')+adj; }
+  sS = Math.max(0, Math.min(12, sS + adj));
+  add('脚質（ペース連動）', sS, 12,
+      stl+'（位置率'+(horse.posRatio!==undefined?horse.posRatio:'-')+'）逃げ複勝50.0%／中団13.5%'+pn, 'env');
 
-  var cM = {'G1':8, '3勝':6, 'G3':4, 'OP(L)':4, '2勝':4, 'G2':3};
-  add('前走クラス', cM[pc]!==undefined?cM[pc]:1, 8, pc + '（G1組が複勝33.3%で最上位）', 'data');
+  var cM = {'G1':8,'3勝':6,'G3':4,'OP(L)':4,'2勝':4,'G2':3};
+  add('前走クラス', cM[pc]!==undefined?cM[pc]:1, 8, pc+'（G1組が複勝33.3%で最上位）', 'data');
 
-  var pS = (pp===3)?8 : (pp===4)?7 : (pp<=5)?6 : (pp<=9)?2 : 1;
-  add('前走人気', pS, 8, pp + '番人気（5番人気以内が9-8-5／6番人気以下は複勝9.3%）', 'data');
+  add('前走人気', (pp===3)?8:(pp===4)?7:(pp<=5)?6:(pp<=9)?2:1, 8,
+      pp+'番人気（5番人気以内が9-8-5／6番人気以下は複勝9.3%）', 'data');
 
-  var plM = {'京都':7, '東京':5, '中京':4, '小倉':4, '阪神':3, '福島':2, '函館':1, '中山':1, '新潟':0};
-  add('前走場所', plM[pl]!==undefined?plM[pl]:1, 7, pl + '（東京組は1着シェア50%）', 'data');
+  var plM = {'京都':7,'東京':5,'中京':4,'小倉':4,'阪神':3,'福島':2,'函館':1,'中山':1,'新潟':0};
+  add('前走場所', plM[pl]!==undefined?plM[pl]:1, 7, pl+'（東京組は1着シェア50%）', 'data');
 
-  var dfS = (pdf <= 0.5) ? 6 : (pdf <= 0.9) ? 2 : 1;
-  add('前走着差', dfS, 6, pdf + '秒（0.5秒差以内が7-5-5）', 'data');
+  add('前走着差', (pdf<=0.5)?6:(pdf<=0.9)?2:1, 6, pdf+'秒（0.5秒差以内が7-5-5）', 'data');
 
-  add('性別', (sex==='牝')?6:3, 6, sex + '（牝馬複勝28.9% vs 牡セン13.8%）', 'horse');
+  add('性別', (sex==='牝')?6:3, 6, sex+'（牝馬複勝28.9% vs 牡セン13.8%）', 'horse');
 
-  var nm = Number(horse.niigataMile)||0, nmp = Number(horse.niigataMilePlaced)||0;
-  var nS = nmp>0 ? 9 : (nm>0 ? 5 : 2);
-  add('新潟芝1600実績', nS, 9, nm>0 ? (nm + '戦 連対' + nmp) : '未経験', 'horse');
+  add('長直線コース実績', Number(horse.longStraightScore)||1, 9,
+      (horse.longStraightNote||'不明')+'（東京芝1600＋新潟芝1600。クラス補正あり＝条件戦の実績は割引）', 'horse');
 
-  var kS = (kin<=54)?4 : (kin<=56)?3 : (kin<=57)?2 : (kin<=58)?1 : 0;
-  add('斤量（ハンデ）', kS, 4, kin + 'kg（3着内馬の過去最高は57.5kg／ハンデ戦はn=1年のため配点は軽め）', 'env');
+  add('重賞連対歴', (Number(horse.jusyoPlaced)||0)>0 ? 6 : ((Number(horse.jusyoRuns)||0)>0 ? 2 : 0), 6,
+      '重賞連対'+(horse.jusyoPlaced||0)+'／出走'+(horse.jusyoRuns||0), 'horse');
 
-  var aS = (age===3||age===5)?4 : (age===4||age===6)?3 : 0;
-  add('年齢', aS, 4, age + '歳（5歳が3着内シェア50.0%）', 'horse');
+  add('斤量（ハンデ）', (kin<=54)?4:(kin<=56)?3:(kin<=57)?2:(kin<=58)?1:0, 4,
+      kin+'kg（3着内馬の過去最高は57.5kg／ハンデ戦はn=1年のため配点は軽め）', 'env');
 
-  add('芝1600m連対歴', (Number(horse.m1600Placed)||0)>0 ? 2 : 0, 2, (horse.m1600||0) + '戦 連対' + (horse.m1600Placed||0), 'horse');
+  add('年齢', (age===3||age===5)?4:((age===4||age===6)?3:0), 4, age+'歳（5歳が3着内シェア50.0%）', 'horse');
 
-  var wall = 0;
-  if (age >= 7){ wall -= 15; add('【壁】7歳以上', -15, 0, '過去10年 0-0-0-27（複勝0%）。軸から外すが相手からは消さない', 'data'); }
-  if (pl === '新潟'){ wall -= 6; add('【壁】前走新潟', -6, 0, '過去10年 0-0-0-10', 'data'); }
+  add('芝1600m連対歴', (Number(horse.m1600Placed)||0)>0?2:0, 2,
+      (horse.m1600||0)+'戦 連対'+(horse.m1600Placed||0), 'horse');
 
-  var total = 0; for (var i=0;i<items.length;i++) total += items[i].score;
-  total = Math.max(0, total);
-  return { items: items, total: total, max: 80 };
+  if (age >= 7) add('【壁】7歳以上', -15, 0, '過去10年 0-0-0-27（複勝0%）。軸から外すが相手からは消さない', 'data');
+  if (pl === '新潟') add('【壁】前走新潟', -6, 0, '過去10年 0-0-0-10', 'data');
+
+  var total = 0, mx = 0;
+  for (var i=0;i<items.length;i++){ total += items[i].score; mx += items[i].max; }
+  return { items: items, total: Math.max(0, total), max: mx };
 }
 
 function computePositionalFit関屋記念(horse){
@@ -24898,7 +24902,7 @@ function computeScoreBreakdown(horse, raceName) {
   if (raceName === '北九州記念') return computeScoreBreakdownKitakyushuV1(horse, raceName);
   if (raceName === '七夕賞') return computeScoreBreakdownTanabataV2(horse, raceName);
   if (raceName === '函館2歳S') return computeScoreBreakdownHakodate2saiV1(horse, raceName);
-  if(raceName==='関屋記念') return computeScoreBreakdown関屋記念V1(horse, raceName);
+  if(raceName==='関屋記念') return computeScoreBreakdownSekiyaV2(horse, raceName);
   // ★回避馬は強制的に0%
   if (horse && horse.isAvoided) {
     return {
