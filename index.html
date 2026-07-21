@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260721-0672';
+  var CURRENT_VERSION = '20260721-0673';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -21714,7 +21714,7 @@ function computeScoreBreakdownSekiyaV2(horse, raceName){
   if (isSM){
     if (prk <= 2) add('サマーマイル直行[summerMile]', 5, 5,
       'しらさぎS/米子S ' + prk + '着 → 前走2着以内は 2-1-1-1（複勝80%）', 'data');
-    else add('【壁】サマーマイル直行[summerMile]', -6, 0,
+    else add('【壁】サマーマイル直行[summerMile]', -6, 5,
       'しらさぎS/米子S ' + prk + '着 → 前走3着以下は 0-0-0-9（複勝0%）。n=9の小標本だが反対側が4/5', 'data');
   } else {
     add('サマーマイル直行[summerMile]', 0, 5, '該当なし（前走: ' + (pr||'不明') + '）', 'data');
