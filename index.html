@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260721-0676';
+  var CURRENT_VERSION = '20260721-0677';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -21657,7 +21657,25 @@ function calcLastFScore(horse) {
 
 
 
-function computeScoreBreakdownSekiyaV2(horse, raceName){
+
+function _getSekiyaScoreStats(raceName){
+  if (typeof window !== 'undefined' && window.__sekiyaStats && window.__sekiyaStats.race === raceName)
+    return window.__sekiyaStats;
+  var horses = (typeof HORSES_BY_RACE !== 'undefined' && HORSES_BY_RACE[raceName]) ? HORSES_BY_RACE[raceName] : [];
+  var scores = [];
+  for (var i=0;i<horses.length;i++){
+    var bd = computeScoreBreakdownSekiyaV2(horses[i], raceName, true);
+    scores.push(bd.total);
+  }
+  scores.sort(function(a,b){return a-b;});
+  var maxScore = scores.length ? scores[scores.length-1] : 1;
+  var medScore = scores.length ? scores[Math.floor(scores.length/2)] : 0;
+  var stats = { race: raceName, maxScore: maxScore, medScore: medScore };
+  if (typeof window !== 'undefined') window.__sekiyaStats = stats;
+  return stats;
+}
+
+function computeScoreBreakdownSekiyaV2(horse, raceName, _rawOnly){
   var meta = (typeof RACE_META !== 'undefined' && RACE_META[raceName]) ? RACE_META[raceName] : {};
   var items = [];
   function add(label, score, max, note, group){ items.push({label:label, score:score, max:max, note:note, group:group}); }
@@ -21716,8 +21734,14 @@ function computeScoreBreakdownSekiyaV2(horse, raceName){
   add('騎手×新潟芝1600', jnS, 4,
       (jn>0 ? ('通算'+(horse.jockeyNiigataRec||'')+'／収縮複勝率'+(jnRate*100).toFixed(0)+'%') : '当該騎手データなし＝中立'), 'env');
 
-  add('斤量（ハンデ）', (kin<=54)?4:(kin<=56)?3:(kin<=57)?2:(kin<=58)?1:0, 4,
-      kin+'kg（3着内馬の過去最高は57.5kg／ハンデ戦はn=1年のため配点は軽め）', 'env');
+  var kinS;
+  if (kin <= 51)      kinS = 2;
+  else if (kin <= 53) kinS = 0;
+  else if (kin <= 55) kinS = 10;
+  else if (kin <= 57) kinS = 7;
+  else                kinS = 1;
+  add('斤量（ハンデ）', kinS, 10,
+      kin+'kg（斤量別複勝率 実データ: 53.5-55kg=21.3% / 55.5-57kg=16.2% / 57.5-59kg=11.1%・0勝。夏の重ハンデは勝ち切れない）', 'env');
 
   add('年齢', (age===3||age===5)?4:((age===4||age===6)?3:0), 4, age+'歳（5歳が3着内シェア50.0%）', 'horse');
 
@@ -21749,7 +21773,15 @@ function computeScoreBreakdownSekiyaV2(horse, raceName){
 
   var total = 0, mx = 0;
   for (var i=0;i<items.length;i++){ total += items[i].score; mx += items[i].max; }
-  return { items: items, total: Math.max(0, total), max: mx };
+  total = Math.max(0, total);
+  if (_rawOnly) return { items: items, total: total, max: mx, pct: 0, penalty: 0 };
+  var stats = _getSekiyaScoreStats(raceName);
+  var floorPct = 8, ceilPct = 79, range = ceilPct - floorPct;
+  var k = 4.0 / Math.max(1, stats.maxScore - stats.medScore);
+  var raw = 1 / (1 + Math.exp(-k * (total - stats.medScore)));
+  var pct = Math.round(floorPct + range * raw);
+  pct = Math.max(0, Math.min(99, pct));
+  return { items: items, total: total, max: mx, pct: pct, penalty: 0 };
 }
 
 function computePositionalFit関屋記念(horse){
