@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260721-0683';
+  var CURRENT_VERSION = '20260721-0684';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7564,7 +7564,7 @@ const RACE_META = {
     venue:"新潟競馬場", surface:"芝1600m", age:"3歳上", distance:1600, direction:"left",
     isFinished:false, pageTitle:"JRA重賞予想 2026 | 関屋記念",
     notice:"⚠ 出走馬・枠順確定前の暫定開放。ロスターは確定後に投入。",
-    babaPrediction:{ status:"良馬場想定", icon:"☀️", color:"#1D9E75", comment:"新潟芝1600m外・直線658mの差し得コース" }, paceExpect:'H', paceNote:'メタルスピードが唯一の逃げ馬。8枠14番だが幕張S(8枠16番)で大外から逃げ切り勝ちがあり枠は無関係。同馬が逃げた時のテン3Fは34.2-34.6で、関屋記念の10年データでは前3F34.5秒以下の年に逃げ馬が8/10/12着と総崩れするゾーン。よってHペース想定。※新潟では未逃走(2025豊栄特別は5-5で4着)という反証あり' },
+    babaPrediction:{ status:"良馬場想定", icon:"☀️", color:"#1D9E75", comment:"新潟芝1600m外・直線658mの差し得コース" }, paceExpect:'S', paceNote:'当初は良馬場10年データからH想定だったが、土曜新潟の同一条件(芝1600外・稍重)実測で逃げ切り決着・1番人気の後方待機馬は4着で届かず。道悪では前が止まらないためS(前残り)想定に修正。当日さらに悪化(重〜不良)見込みで先行有利を継続' },
   '函館2歳S': {
     babaWet:true, gradeLine:"G3", title:"函館2歳S", date:"2026-07-19 (日)",
     venue:"函館競馬場", surface:"芝1200m", age:"2歳", distance:1200, direction:"right",
