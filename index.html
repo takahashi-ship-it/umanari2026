@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260726-0686';
+  var CURRENT_VERSION = '20260726-0687';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2926,7 +2926,7 @@ const STATUS_BADGE = {
 };
 
 const TARGET_RACE_NAME = "オークス";
-const SUPPORTED_RACES = new Set(["関屋記念", "函館2歳S", "天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S","ラジオNIKKEI賞","函館記念","北九州記念","七夕賞",]);
+const SUPPORTED_RACES = new Set(['クイーンS', "関屋記念", "函館2歳S", "天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S","ラジオNIKKEI賞","函館記念","北九州記念","七夕賞",]);
 
 function getDefaultDisplayMonth() {
   // 直近の「予想中」(SUPPORTED && upcoming) レースの開催月を返す
@@ -7503,7 +7503,26 @@ const HORSES_BY_RACE = {
   }
 ],
 
-};
+}
+HORSES_BY_RACE['クイーンS'] = [
+    {"name":"アンゴラブラック", "sex":"牝", "age":5, "carriedWeight":55.0, "jockey":"未定", "stable":"美浦尾関", "odds":20.5, "popEstimate":8},
+    {"name":"ヴーレヴー", "sex":"牝", "age":4, "carriedWeight":55.0, "jockey":"横山典", "stable":"栗東武幸", "odds":16.2, "popEstimate":6},
+    {"name":"エラトー", "sex":"牝", "age":5, "carriedWeight":55.0, "jockey":"未定", "stable":"栗東上村", "odds":68.0, "popEstimate":13},
+    {"name":"エリカエクスプレス", "sex":"牝", "age":4, "carriedWeight":55.0, "jockey":"武豊", "stable":"栗東杉山晴", "odds":3.4, "popEstimate":1},
+    {"name":"カテリーナ", "sex":"牝", "age":5, "carriedWeight":55.0, "jockey":"浜中", "stable":"栗東田中克", "odds":21.1, "popEstimate":10},
+    {"name":"クリノメイ", "sex":"牝", "age":4, "carriedWeight":56.0, "jockey":"富田", "stable":"栗東須貝", "odds":77.0, "popEstimate":14},
+    {"name":"ケリフレッドアスク", "sex":"牝", "age":4, "carriedWeight":57.0, "jockey":"横山武", "stable":"栗東藤原", "odds":10.7, "popEstimate":4},
+    {"name":"コガネノソラ", "sex":"牝", "age":5, "carriedWeight":56.0, "jockey":"丹内", "stable":"美浦菊沢", "odds":8.6, "popEstimate":3},
+    {"name":"ココナッツブラウン", "sex":"牝", "age":6, "carriedWeight":55.0, "jockey":"北村友", "stable":"栗東上村", "odds":3.5, "popEstimate":2},
+    {"name":"パレハ", "sex":"牝", "age":5, "carriedWeight":55.0, "jockey":"舟山", "stable":"栗東新谷", "odds":98.3, "popEstimate":15},
+    {"name":"ピンクジン", "sex":"牝", "age":6, "carriedWeight":55.0, "jockey":"未定", "stable":"美浦室井", "odds":202.2, "popEstimate":16},
+    {"name":"フェスティバルヒル", "sex":"牝", "age":3, "carriedWeight":52.0, "jockey":"西村淳", "stable":"栗東四位", "odds":11.8, "popEstimate":5},
+    {"name":"フレミングフープ", "sex":"牝", "age":5, "carriedWeight":55.0, "jockey":"吉田隼", "stable":"栗東友道", "odds":36.3, "popEstimate":12},
+    {"name":"ボンドガール", "sex":"牝", "age":5, "carriedWeight":55.0, "jockey":"佐々木", "stable":"美浦手塚久", "odds":20.5, "popEstimate":9},
+    {"name":"リラボニート", "sex":"牝", "age":5, "carriedWeight":55.0, "jockey":"鮫島駿", "stable":"栗東須貝", "odds":29.2, "popEstimate":11},
+    {"name":"ルージュソリテール", "sex":"牝", "age":4, "carriedWeight":55.0, "jockey":"西塚", "stable":"栗東藤原", "odds":16.4, "popEstimate":7}
+];
+;
 
 // 人気表示ヘルパー（出馬表・信頼度スコア・危険馬チェックで共通利用）
 function getPopLabel(pop) { return pop ? pop + '番人気' : '-'; }
@@ -8020,6 +8039,7 @@ const RACE_META = {
   notice: "⚠ 出走18頭・予想オッズ／人気のみ登録。枠順は確定前、過去データ・スコアロジックは未整備。",
   babaPrediction: { status: "良馬場想定", icon: "☀️", color: "#1D9E75", comment: "阪神芝2200m" },
 },
+  'クイーンS': { gradeLine:'G3', title:'クイーンS', date:'2026-08-02', venue:'札幌競馬場', surface:'芝1800m', age:'3歳以上牝馬', distance:1800, direction:'右', isFinished:false, pageTitle:'クイーンS 予想 | UMANARI2026', notice:'', babaWet:false, babaPrediction:'良', status:'予想中', paceExpect:'', paceNote:'' }
 };
 
 /* =====================================================
