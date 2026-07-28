@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260726-0691';
+  var CURRENT_VERSION = '20260726-0690';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7523,96 +7523,6 @@ HORSES_BY_RACE['クイーンS'] = [
     {"name":"ルージュソリテール", "sex":"牝", "age":4, "carriedWeight":55.0, "jockey":"西塚", "stable":"栗東藤原", "odds":16.4, "popEstimate":7, "prevRace":"府中牝馬S", "prevCourse":"東京芝1800", "prevClass":"G2", "prevPop":6, "prevRank":12, "prevDiff":1.0, "runStyle":"先行", "posRatio":0.32, "yoshiba":"0-0-0-0", "sapporo":"0-0-0-0", "m1800":"1-1-0-2", "yoshibaPl":0, "sapporoPl":0, "g1Runs":1, "g1Best":8, "opYoshibaPl":0}
 ];
 ;
-
-
-/* ===== クイーンS 専用スコアエンジン (Σmax=74) ================================
-   根拠: RTF248戦実測(2026-07-28) + 過去10年データ4資料
-   - 洋芝はクラス別に分解して評価 (DATA_RULES §18)。生カウント(例:カテリーナ
-     洋芝4-2-0-3)は中身が全て2〜3勝クラスで「北海道の条件戦に何年いたか」を
-     測ってしまうため、OP以上での実績のみを評価対象とする。
-   - 洋芝未経験は減点しない (§21: 未経験 ≠ 不適)。歴代勝ち馬10頭は全て
-     本州/海外からの参戦で、北海道前哨戦経由の勝ち馬はゼロ。
-   - 巴賞0-0-0-8 / 函館記念0-0-0-4 は独立2ソースで裏取り済みの「壁」。
-   - 枠(12)・血統(4)は中立値で器のみ確保。金曜の枠確定/血統取得時は
-     QS_FACTS の waku / sire を差し替えるだけ。エンジン改訂は不要。
-   - ロスター参照は name のみ。prev系フィールドの誤りに影響されない。
-   ========================================================================= */
-var QS_FACTS = {
-"エリカエクスプレス":{prev:"VM",grade:"G1連対",yoshiba:"未経験",m1800T:0,m1800R:1,age:4,style:"逃げ",prevRank:4,kin:55,belong:"栗東",waku:null,sire:null,memo:"秋華賞2着/洋芝0戦/前走VM5人4着"},
-"ココナッツブラウン":{prev:"VM",grade:"G2連対",yoshiba:"重賞連対",m1800T:7,m1800R:8,age:6,style:"後方",prevRank:5,kin:55,belong:"栗東",waku:null,sire:null,memo:"札幌記念(G2)2着+昨年QS2着/洋芝重賞で連対2回は唯一"},
-"ボンドガール":{prev:"VM",grade:"G1連対",yoshiba:"重賞連対",m1800T:1,m1800R:3,age:5,style:"後方",prevRank:11,kin:55,belong:"美浦",waku:null,sire:null,memo:"重賞2着7回/新馬以来未勝利/2024年QS2着(1枠51kg)"},
-"コガネノソラ":{prev:"府中牝馬S",grade:"G3勝ち",yoshiba:"重賞連対",m1800T:6,m1800R:8,age:5,style:"後方",prevRank:5,kin:56,belong:"美浦",waku:null,sire:"ゴールドシップ",memo:"2024年QS勝ち(51kg)/今回56kg=+5kg/前走府中牝馬S(G3)3人5着"},
-"アンゴラブラック":{prev:"本州重賞",grade:"G2連対",yoshiba:"未経験",m1800T:2,m1800R:3,age:5,style:"先行",prevRank:10,kin:55,belong:"美浦",waku:null,sire:null,memo:"アイルランドT(G2)2着+中山金杯(G3)2着/洋芝0戦/前走新潟大賞典10着"},
-"ルージュソリテール":{prev:"府中牝馬S",grade:"G1_6-9",yoshiba:"未経験",m1800T:2,m1800R:4,age:4,style:"先行",prevRank:12,kin:55,belong:"栗東",waku:null,sire:null,memo:"阪神牝馬S(G2)3着/秋華賞8着/前走府中牝馬S(G3)12着"},
-"ケリフレッドアスク":{prev:"函館記念",grade:"G2勝ち",yoshiba:"重賞連対",m1800T:2,m1800R:4,age:4,style:"後方",prevRank:2,kin:57,belong:"栗東",waku:null,sire:null,memo:"紫苑S(G2)勝ち=57kgの根拠/函館記念2着は洋芝重賞連対"},
-"クリノメイ":{prev:"本州重賞",grade:"G2勝ち",yoshiba:"条件戦のみ",m1800T:0,m1800R:1,age:4,style:"後方",prevRank:15,kin:56,belong:"栗東",waku:null,sire:null,memo:"チューリップ賞(G2)9人勝ち/前走から148日/札幌は新馬勝ちのみ"},
-"フレミングフープ":{prev:"本州重賞",grade:"重賞出走のみ",yoshiba:"未経験",m1800T:2,m1800R:3,age:5,style:"先行",prevRank:12,kin:55,belong:"栗東",waku:null,sire:null,memo:"前走中山牝馬S12着から148日/馬体490kg台"},
-"ヴーレヴー":{prev:"巴賞",grade:"G1_6-9",yoshiba:"OP連対",m1800T:1,m1800R:2,age:4,style:"先行",prevRank:1,kin:55,belong:"栗東",waku:null,sire:null,memo:"巴賞1着だが巴賞組0-0-0-8/馬体497kg"},
-"カテリーナ":{prev:"五稜郭S",grade:"なし",yoshiba:"条件戦のみ",m1800T:4,m1800R:7,age:5,style:"中団",prevRank:1,kin:55,belong:"栗東",waku:null,sire:null,memo:"洋芝9戦は全て条件戦(重賞0戦)/重賞出走歴なし"},
-"フェスティバルヒル":{prev:"桜花賞",grade:"G3勝ち",yoshiba:"未経験",m1800T:0,m1800R:0,age:3,style:"後方",prevRank:17,kin:52,belong:"栗東",waku:null,sire:null,memo:"ファンタジーS(G3)勝ち/桜花賞組0-0-0-3/通算4戦"},
-"リラボニート":{prev:"巴賞",grade:"G3連対",yoshiba:"重賞OP着外",m1800T:6,m1800R:9,age:5,style:"先行",prevRank:6,kin:55,belong:"栗東",waku:null,sire:null,memo:"ターコイズS(G3)2着/札幌3-0-0-0だが全て条件戦"},
-"ピンクジン":{prev:"五稜郭S",grade:"なし",yoshiba:"条件戦のみ",m1800T:4,m1800R:16,age:6,style:"先行",prevRank:5,kin:55,belong:"美浦",waku:null,sire:null,memo:"洋芝16戦は全て条件戦/6歳/重賞出走歴なし"},
-"エラトー":{prev:"巴賞",grade:"重賞出走のみ",yoshiba:"重賞OP着外",m1800T:6,m1800R:10,age:5,style:"先行",prevRank:4,kin:55,belong:"栗東",waku:null,sire:null,memo:"巴賞4着/馬体499kg/重賞は全て着外"},
-"パレハ":{prev:"巴賞",grade:"重賞3着",yoshiba:"重賞OP着外",m1800T:3,m1800R:8,age:5,style:"中団",prevRank:8,kin:55,belong:"栗東",waku:null,sire:null,memo:"福島記念3着/昨年QS8人5着/巴賞2人8着"}
-};
-var _QS_PREV={"VM":14,"古馬G1":12,"海外G1":12,"オークス":10,"府中牝馬S":10,"本州重賞":9,"本州3勝OP":7,"桜花賞":5,"五稜郭S":5,"2勝":3,"巴賞":1,"函館記念":1};
-var _QS_WAKU={1:11,2:12,3:6,4:3,5:7,6:5,7:4,8:4};
-var _QS_GRADE={"G1連対":8,"G2連対":7,"G1_3-5":7,"G2勝ち":6,"G3勝ち":6,"G1_6-9":5,"G3連対":5,"G1_10~":3,"重賞3着":3,"重賞出走のみ":2,"なし":1};
-var _QS_YOSHIBA={"重賞連対":8,"重賞着外OP連対":6,"OP連対":6,"未経験":4,"条件戦のみ":4,"重賞OP着外":3};
-var _QS_STYLE={"先行":6,"中団":6,"後方":5,"逃げ":4};
-var _QS_BLOOD={"ゴールドシップ":4,"ハービンジャー":4,"ドゥラメンテ":4,"キズナ":3,"ロードカナロア":3,"スワーヴリチャード":3,"キタサンブラック":3};
-var _qsStatsCache=null;
-function _getQueenSScoreStats(){
-  if(_qsStatsCache) return _qsStatsCache;
-  var hs=(typeof HORSES_BY_RACE!=='undefined'&&HORSES_BY_RACE['クイーンS'])||[];
-  var a=[];for(var i=0;i<hs.length;i++){a.push(computeScoreBreakdownQueenS(hs[i],true).total);}
-  if(!a.length){_qsStatsCache={mean:47,sd:6.5};return _qsStatsCache;}
-  var m=0;for(var j=0;j<a.length;j++)m+=a[j];m/=a.length;
-  var v=0;for(var k=0;k<a.length;k++)v+=(a[k]-m)*(a[k]-m);v/=a.length;
-  _qsStatsCache={mean:m,sd:Math.sqrt(v)||1};return _qsStatsCache;
-}
-function computeScoreBreakdownQueenS(horse,_rawOnly){
-  var nm=(horse&&(horse.name||horse.horseName))||'';
-  var f=QS_FACTS[nm];
-  var it=[],pen=0;
-  function add(key,label,score,max,detail){
-    it.push({key:key,label:label,name:label,score:score,value:score,max:max,detail:detail,note:detail});
-  }
-  if(!f){
-    add('na','データ未登録',0,74,'QS_FACTS に '+nm+' が存在しません');
-    return {items:it,total:0,max:74,pct:8,penalty:0};
-  }
-  var pv=_QS_PREV[f.prev]!=null?_QS_PREV[f.prev]:5;
-  add('prev','前走レース',pv,14,f.prev+(pv<=1?'（過去10年3着内ゼロの壁）':''));
-  var wk=(f.waku==null)?6:(_QS_WAKU[f.waku]!=null?_QS_WAKU[f.waku]:6);
-  add('waku','枠',wk,12,f.waku==null?'枠順未確定→中立6':(f.waku+'枠'));
-  var gr=_QS_GRADE[f.grade]!=null?_QS_GRADE[f.grade]:1;
-  add('grade','重賞級地力',gr,8,f.grade);
-  var yo=_QS_YOSHIBA[f.yoshiba]!=null?_QS_YOSHIBA[f.yoshiba]:4;
-  add('yoshiba','洋芝適性(クラス補正)',yo,8,f.yoshiba);
-  var m8=(f.m1800R===0)?3:(f.m1800T>=4?6:(f.m1800T>=2?5:(f.m1800T>=1?4:2)));
-  add('m1800','芝1800適性',m8,6,'3着内'+f.m1800T+'回/'+f.m1800R+'戦');
-  var ag=(f.age===4)?6:((f.age===3&&f.kin<=52)?5:(f.age===5?5:(f.age===6?2:1)));
-  add('age','年齢',ag,6,f.age+'歳');
-  var st=_QS_STYLE[f.style]!=null?_QS_STYLE[f.style]:5;
-  add('style','脚質',st,6,f.style);
-  var pr=(f.prevRank<=3)?4:(f.prevRank<=9?3:1.5);
-  add('prevRank','前走着順',pr,4,f.prevRank+'着');
-  var bl=(f.sire&&_QS_BLOOD[f.sire]!=null)?_QS_BLOOD[f.sire]:2;
-  add('blood','血統',bl,4,f.sire?f.sire:'未取得→中立2');
-  var kg=(f.kin<=55)?3:(f.kin===56?2:1);
-  add('kin','斤量',kg,3,f.kin+'kg');
-  var bg=(f.belong==='美浦')?3:2;
-  add('belong','所属',bg,3,f.belong);
-  var total=0,max=0;
-  for(var i=0;i<it.length;i++){total+=it[i].score;max+=it[i].max;}
-  if(_rawOnly) return {items:it,total:total,max:max,pct:null,penalty:pen};
-  var s=_getQueenSScoreStats();
-  var FLOOR=8,CEIL=79,z=(total-s.mean)/s.sd;
-  var pct=FLOOR+(CEIL-FLOOR)/(1+Math.exp(-1.6*z));
-  pct=Math.round(pct*10)/10;
-  return {items:it,total:total,max:max,pct:pct,penalty:pen,memo:f.memo};
-}
 
 // 人気表示ヘルパー（出馬表・信頼度スコア・危険馬チェックで共通利用）
 function getPopLabel(pop) { return pop ? pop + '番人気' : '-'; }
@@ -25196,7 +25106,6 @@ function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
 }
 
 function computeScoreBreakdown(horse, raceName) {
-  if(typeof raceName!=='undefined' && raceName==='クイーンS') return computeScoreBreakdownQueenS(horse);
   if (raceName === 'ラジオNIKKEI賞') return computeScoreBreakdownRajioV1(horse, raceName);
   if (raceName === '函館記念') return computeScoreBreakdownHakodateV1(horse, raceName);
   if (raceName === '北九州記念') return computeScoreBreakdownKitakyushuV1(horse, raceName);
