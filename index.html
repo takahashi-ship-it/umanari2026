@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260726-0687';
+  var CURRENT_VERSION = '20260726-0688';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13308,6 +13308,107 @@ const RACE_PAST_DATA = {
 };
 
 
+
+RACE_PAST_DATA['クイーンS'] = {
+  pastResults: [
+    {year:2025,
+      first:{name:"アルジーヌ",pop:1,prevRace:"ヴィクトリアM",prevCourse:"東京芝1600",prevClass:"G1",prevPop:5,prevRank:4,last3fRank:null},
+      second:{name:"ココナッツブラウン",pop:2,prevRace:"錦S",prevCourse:"京都芝1600",prevClass:"L",prevPop:2,prevRank:1,last3fRank:null},
+      third:{name:"フェアエールング",pop:4,prevRace:"福島牝馬S",prevCourse:"福島芝1800",prevClass:"G3",prevPop:6,prevRank:2,last3fRank:null}},
+    {year:2024,
+      first:{name:"コガネノソラ",pop:5,prevRace:"オークス",prevCourse:"東京芝2400",prevClass:"G1",prevPop:7,prevRank:12,last3fRank:null},
+      second:{name:"ボンドガール",pop:2,prevRace:"NHKマイルC",prevCourse:"東京芝1600",prevClass:"G1",prevPop:3,prevRank:17,last3fRank:null},
+      third:{name:"アルジーヌ",pop:7,prevRace:"博多S",prevCourse:"小倉芝1800",prevClass:"3勝",prevPop:2,prevRank:1,last3fRank:null}},
+    {year:2023,
+      first:{name:"ドゥーラ",pop:1,prevRace:"オークス",prevCourse:"東京芝2400",prevClass:"G1",prevPop:15,prevRank:3,last3fRank:null},
+      second:{name:"ウインピクシス",pop:9,prevRace:"福島牝馬S",prevCourse:"福島芝1800",prevClass:"G3",prevPop:3,prevRank:13,last3fRank:null},
+      third:{name:"コスタボニータ",pop:3,prevRace:"メイS",prevCourse:"東京芝1800",prevClass:"L",prevPop:8,prevRank:6,last3fRank:null}},
+    {year:2022,
+      first:{name:"テルツェット",pop:2,prevRace:"ヴィクトリアM",prevCourse:"東京芝1600",prevClass:"G1",prevPop:8,prevRank:13,last3fRank:null},
+      second:{name:"サトノセシル",pop:8,prevRace:"江の島S",prevCourse:"東京芝1800",prevClass:"3勝",prevPop:2,prevRank:4,last3fRank:null},
+      third:{name:"ローザノワール",pop:3,prevRace:"ヴィクトリアM",prevCourse:"東京芝1600",prevClass:"G1",prevPop:18,prevRank:4,last3fRank:null}},
+    {year:2021,
+      first:{name:"テルツェット",pop:3,prevRace:"ヴィクトリアM",prevCourse:"東京芝1600",prevClass:"G1",prevPop:3,prevRank:14,last3fRank:null},
+      second:{name:"マジックキャッスル",pop:1,prevRace:"ヴィクトリアM",prevCourse:"東京芝1600",prevClass:"G1",prevPop:5,prevRank:3,last3fRank:null},
+      third:{name:"サトノセシル",pop:8,prevRace:"洞爺湖特別",prevCourse:"函館芝2000",prevClass:"3勝",prevPop:2,prevRank:1,last3fRank:null}},
+    {year:2020,
+      first:{name:"レッドアネモス",pop:11,prevRace:"マーメイドS",prevCourse:"阪神芝2000",prevClass:"G3",prevPop:9,prevRank:8,last3fRank:null},
+      second:{name:"ビーチサンバ",pop:4,prevRace:"ヴィクトリアM",prevCourse:"東京芝1600",prevClass:"G1",prevPop:9,prevRank:9,last3fRank:null},
+      third:{name:"スカーレットカラー",pop:1,prevRace:"ヴィクトリアM",prevCourse:"東京芝1600",prevClass:"G1",prevPop:7,prevRank:15,last3fRank:null}},
+    {year:2019,
+      first:{name:"ミッキーチャーム",pop:1,prevRace:"ヴィクトリアM",prevCourse:"東京芝1600",prevClass:"G1",prevPop:6,prevRank:8,last3fRank:null},
+      second:{name:"スカーレットカラー",pop:5,prevRace:"マーメイドS",prevCourse:"阪神芝2000",prevClass:"G3",prevPop:5,prevRank:3,last3fRank:null},
+      third:{name:"カリビアンゴールド",pop:9,prevRace:"五稜郭S",prevCourse:"函館芝1800",prevClass:"3勝",prevPop:3,prevRank:2,last3fRank:null}},
+    {year:2018,
+      first:{name:"ディアドラ",pop:1,prevRace:"ドバイターフ",prevCourse:"海外芝1800",prevClass:"G1",prevPop:null,prevRank:3,last3fRank:null},
+      second:{name:"フロンテアクイーン",pop:4,prevRace:"中山牝馬S",prevCourse:"中山芝1800",prevClass:"G3",prevPop:2,prevRank:2,last3fRank:null},
+      third:{name:"ソウルスターリング",pop:2,prevRace:"ヴィクトリアM",prevCourse:"東京芝1600",prevClass:"G1",prevPop:5,prevRank:7,last3fRank:null}},
+    {year:2017,
+      first:{name:"アエロリット",pop:2,prevRace:"NHKマイルC",prevCourse:"東京芝1600",prevClass:"G1",prevPop:2,prevRank:1,last3fRank:null},
+      second:{name:"トーセンビクトリー",pop:6,prevRace:"マーメイドS",prevCourse:"阪神芝2000",prevClass:"G3",prevPop:1,prevRank:9,last3fRank:null},
+      third:{name:"クインズミラーグロ",pop:8,prevRace:"マーメイドS",prevCourse:"阪神芝2000",prevClass:"G3",prevPop:2,prevRank:2,last3fRank:null}},
+    {year:2016,
+      first:{name:"マコトブリジャール",pop:9,prevRace:"福島牝馬S",prevCourse:"福島芝1800",prevClass:"G3",prevPop:15,prevRank:1,last3fRank:null},
+      second:{name:"シャルール",pop:1,prevRace:"ヴィクトリアM",prevCourse:"東京芝1600",prevClass:"G1",prevPop:9,prevRank:18,last3fRank:null},
+      third:{name:"ダンツキャンサー",pop:11,prevRace:"安土城S",prevCourse:"京都芝1400",prevClass:"OP",prevPop:14,prevRank:2,last3fRank:null}}
+  ],
+  trends: { tables: [
+    {title:"脚質別（2016-2025・10年／勝ち馬の4角位置）", col1:"脚質", rows:[
+      {label:"逃げ",   rec:"1-1-1-? (勝1:2017アエロリット)"},
+      {label:"先行",   rec:"2-0-0-? (勝2:2019ミッキー/2016マコト)"},
+      {label:"中団",   rec:"5-? (勝5:25/24/22/20/…)", highlight:true},
+      {label:"後方",   rec:"2-? (勝2:2023ドゥーラ/2018ディアドラ)"}
+    ], note:"【最重要】勝ち馬10頭の4角位置は中団5・先行2・後方2・逃げ1。『札幌小回り＝内先行有利』という通説に反し、勝ち切るのは中団差し。枠は内有利だが脚質は中団。着外の母数が取れないため率は出さずシェアのみ(DATA_RULES 4-2-5)。"},
+
+    {title:"単勝人気別（2016-2025・10年）", col1:"人気", rows:[
+      {label:"1番人気",     rec:"4-2-1-3", highlight:true},
+      {label:"2番人気",     rec:"2-2-1-5"},
+      {label:"3番人気",     rec:"1-0-2-7"},
+      {label:"4〜6番人気",  rec:"1-4-1-24"},
+      {label:"7〜9番人気",  rec:"1-2-4-23"},
+      {label:"10番人気以下",rec:"1-0-1-41"}
+    ], note:"1番人気は複勝70%で信頼できる。ただし2020レッドアネモス(11人気)・2016マコト(9人気)・2018以外の勝ち馬に人気薄が混じり、7-9番人気も複勝23.3%と侮れない。"},
+
+    {title:"年齢別（2016-2025・10年）", col1:"年齢", rows:[
+      {label:"3歳", rec:"3-1-0-12", highlight:true},
+      {label:"4歳", rec:"4-5-3-31"},
+      {label:"5歳", rec:"2-3-6-38"},
+      {label:"6歳", rec:"1-1-1-20"},
+      {label:"7歳以上", rec:"0-0-0-2"}
+    ], note:"3歳が勝率18.8%で最高。勝った3歳3頭(2024コガネ51/2023ドゥーラ51/2017アエロリット52)は全て軽ハンデ。今年の3歳はフェスティバルヒル1頭(52kg)だが前走桜花賞17着。4歳が最多勝(4勝)で本線。"},
+
+    {title:"枠順別（2016-2025・10年）", col1:"枠", rows:[
+      {label:"1枠", rec:"2-2-2-4", highlight:true},
+      {label:"2枠", rec:"2-1-4-3", highlight:true},
+      {label:"3枠", rec:"0-2-0-14"},
+      {label:"4枠", rec:"0-1-1-16"},
+      {label:"5枠", rec:"1-2-1-15"},
+      {label:"6枠", rec:"1-1-0-18"},
+      {label:"7枠", rec:"3-1-1-15"},
+      {label:"8枠", rec:"1-0-1-18"}
+    ], note:"1-2枠が複勝60-70%と圧倒的。札幌1800は2コーナー奥のポケット発走で内枠のロス最小が効く。7枠も3勝あるが複勝25%。3-4枠・8枠は苦戦。枠順確定後に最重視するファクター。"},
+
+    {title:"所属別（2016-2025・10年）", col1:"所属", rows:[
+      {label:"美浦", rec:"4-5-4-33", highlight:true},
+      {label:"栗東", rec:"6-5-6-70"}
+    ], note:"勝ち数は栗東6だが、複勝率は美浦28.3% > 栗東19.5%。頭数の少ない美浦の方が率が高い。"},
+
+    {title:"前走レース別 3着内シェア（2016-2025）", col1:"前走", rows:[
+      {label:"ヴィクトリアM(G1)", rec:"3着内9頭", highlight:true},
+      {label:"福島牝馬S(G3)",     rec:"3着内3頭"},
+      {label:"マーメイドS(G3)",   rec:"3着内3頭"},
+      {label:"オークス/優駿牝(G1)",rec:"3着内2頭(3歳)"},
+      {label:"NHKマイルC(G1)",    rec:"3着内2頭"},
+      {label:"洞爺湖/五稜郭/博多S(3勝)", rec:"3着内3頭(札幌函館ローカル)"}
+    ], note:"【最重要】前走ヴィクトリアM組が30頭中9頭で最多。ただしVM組で好走した馬は札幌/洋芝実績を持つか、VMで見せ場のあった馬。単にVM大敗しただけの馬は札幌適性が別途必要。3勝クラスの札幌函館ローカル組(五稜郭S等)も上がり馬として侮れない。"},
+
+    {title:"前走間隔（2016-2025）", col1:"間隔", rows:[
+      {label:"中10週(VM直行)",  rec:"好走多数"},
+      {label:"中6週(マーメイド等)", rec:"3着内3頭"},
+      {label:"中2-4週(ローカル叩き)", rec:"3着内複数"}
+    ], note:"VM(5月)から中10週の休み明けが定番ローテで好走している。休み明けを嫌う必要はない。"}
+  ]}
+};
 RACE_PAST_DATA['関屋記念'] = {
   pastResults: [
     {year:2025,
