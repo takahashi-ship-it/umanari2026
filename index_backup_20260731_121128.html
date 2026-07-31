@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260726-0693';
+  var CURRENT_VERSION = '20260726-0692';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2916,7 +2916,7 @@ const RACES = [
   {date:"2026-12-13", name:"ターコイズS",             grade:"G3", venue:"中山", surface:"芝1600m", status:"upcoming"},
   {date:"2026-12-20", name:"有馬記念",                grade:"G1", venue:"中山", surface:"芝2500m", status:"upcoming"},
   {date:"2026-12-20", name:"阪神C",                   grade:"G2", venue:"阪神", surface:"芝1400m", status:"upcoming"},
-  {date:"2026-12-27", name:"ホープフルS",             grade:"G1", venue:"中山", surface:"芝2000m", status:"upcoming"}
+  {date:"2026-12-27", name:"ホープフルS",             grade:"G1", venue:"中山", surface:"芝2000m", status:"upcoming"},
 ];
 
 const STATUS_BADGE = {
@@ -7514,6 +7514,8 @@ HORSES_BY_RACE['クイーンS'] = [
     {"name":"ケリフレッドアスク", "sex":"牝", "age":4, "carriedWeight":57.0, "jockey":"横山武", "stable":"栗東藤原", "odds":10.7, "popEstimate":4, "prevRace":"函館記念", "prevCourse":"函館芝2000", "prevClass":"G3", "prevPop":7, "prevRank":2, "prevDiff":0.1, "runStyle":"後方", "posRatio":0.72, "yoshiba":"0-1-0-0", "sapporo":"0-0-0-0", "m1800":"0-1-1-2", "yoshibaPl":1, "sapporoPl":0, "g1Runs":4, "g1Best":8, "opYoshibaPl":1},
     {"name":"コガネノソラ", "sex":"牝", "age":5, "carriedWeight":56.0, "jockey":"丹内", "stable":"美浦菊沢", "odds":8.6, "popEstimate":3, "prevRace":"府中牝馬S", "prevCourse":"東京芝1800", "prevClass":"G3", "prevPop":3, "prevRank":5, "prevDiff":0.8, "runStyle":"中団", "posRatio":0.55, "yoshiba":"1-0-0-0", "sapporo":"1-0-0-0", "m1800":"5-0-1-2", "yoshibaPl":1, "sapporoPl":1, "g1Runs":2, "g1Best":9, "opYoshibaPl":1},
     {"name":"ココナッツブラウン", "sex":"牝", "age":6, "carriedWeight":55.0, "jockey":"北村友", "stable":"栗東上村", "odds":3.5, "popEstimate":2, "prevRace":"ヴィクトリアM", "prevCourse":"東京芝1600", "prevClass":"G1", "prevPop":7, "prevRank":5, "prevDiff":0.4, "runStyle":"後方", "posRatio":0.7, "yoshiba":"2-3-0-0", "sapporo":"1-2-0-0", "m1800":"3-2-2-1", "yoshibaPl":5, "sapporoPl":3, "g1Runs":2, "g1Best":5, "opYoshibaPl":2},
+    {"name":"パレハ", "sex":"牝", "age":5, "carriedWeight":55.0, "jockey":"舟山", "stable":"栗東新谷", "odds":98.3, "popEstimate":15, "prevRace":"巴賞", "prevCourse":"函館芝1800", "prevClass":"OP(L)", "prevPop":2, "prevRank":8, "prevDiff":0.6, "runStyle":"中団", "posRatio":0.52, "yoshiba":"2-0-0-2", "sapporo":"0-0-0-1", "m1800":"2-1-0-5", "yoshibaPl":2, "sapporoPl":0, "g1Runs":1, "g1Best":15, "opYoshibaPl":1},
+    {"name":"ピンクジン", "sex":"牝", "age":6, "carriedWeight":55.0, "jockey":"未定", "stable":"美浦室井", "odds":202.2, "popEstimate":16, "prevRace":"五稜郭S", "prevCourse":"函館芝1800", "prevClass":"3勝", "prevPop":9, "prevRank":5, "prevDiff":0.7, "runStyle":"先行", "posRatio":0.38, "yoshiba":"2-2-2-10", "sapporo":"2-1-1-3", "m1800":"2-0-2-12", "yoshibaPl":4, "sapporoPl":3, "g1Runs":0, "g1Best":null, "opYoshibaPl":0},
     {"name":"フェスティバルヒル", "sex":"牝", "age":3, "carriedWeight":52.0, "jockey":"西村淳", "stable":"栗東四位", "odds":11.8, "popEstimate":5, "prevRace":"桜花賞", "prevCourse":"阪神芝1600", "prevClass":"G1", "prevPop":8, "prevRank":17, "prevDiff":2.0, "runStyle":"後方", "posRatio":0.7, "yoshiba":"0-0-0-0", "sapporo":"0-0-0-0", "m1800":"0-0-0-0", "yoshibaPl":0, "sapporoPl":0, "g1Runs":1, "g1Best":17, "opYoshibaPl":0},
     {"name":"フレミングフープ", "sex":"牝", "age":5, "carriedWeight":55.0, "jockey":"吉田隼", "stable":"栗東友道", "odds":36.3, "popEstimate":12, "prevRace":"中山牝馬S", "prevCourse":"中山芝1800", "prevClass":"G3", "prevPop":8, "prevRank":12, "prevDiff":1.2, "runStyle":"中団", "posRatio":0.55, "yoshiba":"0-0-0-0", "sapporo":"0-0-0-0", "m1800":"2-0-0-1", "yoshibaPl":0, "sapporoPl":0, "g1Runs":0, "g1Best":null, "opYoshibaPl":0},
     {"name":"ボンドガール", "sex":"牝", "age":5, "carriedWeight":55.0, "jockey":"佐々木", "stable":"美浦手塚久", "odds":20.5, "popEstimate":9, "prevRace":"ヴィクトリアM", "prevCourse":"東京芝1600", "prevClass":"G1", "prevPop":11, "prevRank":11, "prevDiff":0.9, "runStyle":"後方", "posRatio":0.68, "yoshiba":"0-1-0-0", "sapporo":"0-1-0-0", "m1800":"0-1-0-2", "yoshibaPl":1, "sapporoPl":1, "g1Runs":5, "g1Best":2, "opYoshibaPl":1},
@@ -7536,20 +7538,22 @@ HORSES_BY_RACE['クイーンS'] = [
    - ロスター参照は name のみ。prev系フィールドの誤りに影響されない。
    ========================================================================= */
 var QS_FACTS = {
-"エリカエクスプレス":{prev:"VM",grade:"G1連対",yoshiba:"未経験",m1800T:0,m1800R:1,age:4,style:"逃げ",prevRank:4,kin:55,belong:"栗東",waku:6,sire:null,memo:"秋華賞2着/洋芝0戦/前走VM5人4着"},
-"ココナッツブラウン":{prev:"VM",grade:"G2連対",yoshiba:"重賞連対",m1800T:7,m1800R:8,age:6,style:"後方",prevRank:5,kin:55,belong:"栗東",waku:5,sire:null,memo:"札幌記念(G2)2着+昨年QS2着/洋芝重賞で連対2回は唯一"},
-"ボンドガール":{prev:"VM",grade:"G1連対",yoshiba:"重賞連対",m1800T:1,m1800R:3,age:5,style:"後方",prevRank:11,kin:55,belong:"美浦",waku:7,sire:null,memo:"重賞2着7回/新馬以来未勝利/2024年QS2着(1枠51kg)"},
-"コガネノソラ":{prev:"府中牝馬S",grade:"G3勝ち",yoshiba:"重賞連対",m1800T:6,m1800R:8,age:5,style:"後方",prevRank:5,kin:56,belong:"美浦",waku:7,sire:null,memo:"2024年QS勝ち(51kg)/今回56kg=+5kg/前走府中牝馬S(G3)3人5着"},
-"アンゴラブラック":{prev:"本州重賞",grade:"G2連対",yoshiba:"未経験",m1800T:2,m1800R:3,age:5,style:"先行",prevRank:10,kin:55,belong:"美浦",waku:4,sire:null,memo:"アイルランドT(G2)2着+中山金杯(G3)2着/洋芝0戦/前走新潟大賞典10着"},
-"ルージュソリテール":{prev:"府中牝馬S",grade:"G1_6-9",yoshiba:"未経験",m1800T:2,m1800R:4,age:4,style:"先行",prevRank:12,kin:55,belong:"栗東",waku:8,sire:null,memo:"阪神牝馬S(G2)3着/秋華賞8着/前走府中牝馬S(G3)12着"},
-"ケリフレッドアスク":{prev:"函館記念",grade:"G2勝ち",yoshiba:"重賞連対",m1800T:2,m1800R:4,age:4,style:"後方",prevRank:2,kin:57,belong:"栗東",waku:2,sire:null,memo:"紫苑S(G2)勝ち=57kgの根拠/函館記念2着は洋芝重賞連対"},
-"クリノメイ":{prev:"本州重賞",grade:"G2勝ち",yoshiba:"条件戦のみ",m1800T:0,m1800R:1,age:4,style:"後方",prevRank:15,kin:56,belong:"栗東",waku:4,sire:null,memo:"チューリップ賞(G2)9人勝ち/前走から148日/札幌は新馬勝ちのみ"},
-"フレミングフープ":{prev:"本州重賞",grade:"重賞出走のみ",yoshiba:"未経験",m1800T:2,m1800R:3,age:5,style:"先行",prevRank:12,kin:55,belong:"栗東",waku:1,sire:null,memo:"前走中山牝馬S12着から148日/馬体490kg台"},
-"ヴーレヴー":{prev:"巴賞",grade:"G1_6-9",yoshiba:"OP連対",m1800T:1,m1800R:2,age:4,style:"先行",prevRank:1,kin:55,belong:"栗東",waku:8,sire:null,memo:"巴賞1着だが巴賞組0-0-0-8/馬体497kg"},
-"カテリーナ":{prev:"五稜郭S",grade:"なし",yoshiba:"条件戦のみ",m1800T:4,m1800R:7,age:5,style:"中団",prevRank:1,kin:55,belong:"栗東",waku:3,sire:null,memo:"洋芝9戦は全て条件戦(重賞0戦)/重賞出走歴なし"},
-"フェスティバルヒル":{prev:"桜花賞",grade:"G3勝ち",yoshiba:"未経験",m1800T:0,m1800R:0,age:3,style:"後方",prevRank:17,kin:52,belong:"栗東",waku:6,sire:null,memo:"ファンタジーS(G3)勝ち/桜花賞組0-0-0-3/通算4戦"},
-"リラボニート":{prev:"巴賞",grade:"G3連対",yoshiba:"重賞OP着外",m1800T:6,m1800R:9,age:5,style:"先行",prevRank:6,kin:55,belong:"栗東",waku:3,sire:null,memo:"ターコイズS(G3)2着/札幌3-0-0-0だが全て条件戦"},
-"エラトー":{prev:"巴賞",grade:"重賞出走のみ",yoshiba:"重賞OP着外",m1800T:6,m1800R:10,age:5,style:"先行",prevRank:4,kin:55,belong:"栗東",waku:5,sire:null,memo:"巴賞4着/馬体499kg/重賞は全て着外"}
+"エリカエクスプレス":{prev:"VM",grade:"G1連対",yoshiba:"未経験",m1800T:0,m1800R:1,age:4,style:"逃げ",prevRank:4,kin:55,belong:"栗東",waku:null,sire:null,memo:"秋華賞2着/洋芝0戦/前走VM5人4着"},
+"ココナッツブラウン":{prev:"VM",grade:"G2連対",yoshiba:"重賞連対",m1800T:7,m1800R:8,age:6,style:"後方",prevRank:5,kin:55,belong:"栗東",waku:null,sire:null,memo:"札幌記念(G2)2着+昨年QS2着/洋芝重賞で連対2回は唯一"},
+"ボンドガール":{prev:"VM",grade:"G1連対",yoshiba:"重賞連対",m1800T:1,m1800R:3,age:5,style:"後方",prevRank:11,kin:55,belong:"美浦",waku:null,sire:null,memo:"重賞2着7回/新馬以来未勝利/2024年QS2着(1枠51kg)"},
+"コガネノソラ":{prev:"府中牝馬S",grade:"G3勝ち",yoshiba:"重賞連対",m1800T:6,m1800R:8,age:5,style:"後方",prevRank:5,kin:56,belong:"美浦",waku:null,sire:null,memo:"2024年QS勝ち(51kg)/今回56kg=+5kg/前走府中牝馬S(G3)3人5着"},
+"アンゴラブラック":{prev:"本州重賞",grade:"G2連対",yoshiba:"未経験",m1800T:2,m1800R:3,age:5,style:"先行",prevRank:10,kin:55,belong:"美浦",waku:null,sire:null,memo:"アイルランドT(G2)2着+中山金杯(G3)2着/洋芝0戦/前走新潟大賞典10着"},
+"ルージュソリテール":{prev:"府中牝馬S",grade:"G1_6-9",yoshiba:"未経験",m1800T:2,m1800R:4,age:4,style:"先行",prevRank:12,kin:55,belong:"栗東",waku:null,sire:null,memo:"阪神牝馬S(G2)3着/秋華賞8着/前走府中牝馬S(G3)12着"},
+"ケリフレッドアスク":{prev:"函館記念",grade:"G2勝ち",yoshiba:"重賞連対",m1800T:2,m1800R:4,age:4,style:"後方",prevRank:2,kin:57,belong:"栗東",waku:null,sire:null,memo:"紫苑S(G2)勝ち=57kgの根拠/函館記念2着は洋芝重賞連対"},
+"クリノメイ":{prev:"本州重賞",grade:"G2勝ち",yoshiba:"条件戦のみ",m1800T:0,m1800R:1,age:4,style:"後方",prevRank:15,kin:56,belong:"栗東",waku:null,sire:null,memo:"チューリップ賞(G2)9人勝ち/前走から148日/札幌は新馬勝ちのみ"},
+"フレミングフープ":{prev:"本州重賞",grade:"重賞出走のみ",yoshiba:"未経験",m1800T:2,m1800R:3,age:5,style:"先行",prevRank:12,kin:55,belong:"栗東",waku:null,sire:null,memo:"前走中山牝馬S12着から148日/馬体490kg台"},
+"ヴーレヴー":{prev:"巴賞",grade:"G1_6-9",yoshiba:"OP連対",m1800T:1,m1800R:2,age:4,style:"先行",prevRank:1,kin:55,belong:"栗東",waku:null,sire:null,memo:"巴賞1着だが巴賞組0-0-0-8/馬体497kg"},
+"カテリーナ":{prev:"五稜郭S",grade:"なし",yoshiba:"条件戦のみ",m1800T:4,m1800R:7,age:5,style:"中団",prevRank:1,kin:55,belong:"栗東",waku:null,sire:null,memo:"洋芝9戦は全て条件戦(重賞0戦)/重賞出走歴なし"},
+"フェスティバルヒル":{prev:"桜花賞",grade:"G3勝ち",yoshiba:"未経験",m1800T:0,m1800R:0,age:3,style:"後方",prevRank:17,kin:52,belong:"栗東",waku:null,sire:null,memo:"ファンタジーS(G3)勝ち/桜花賞組0-0-0-3/通算4戦"},
+"リラボニート":{prev:"巴賞",grade:"G3連対",yoshiba:"重賞OP着外",m1800T:6,m1800R:9,age:5,style:"先行",prevRank:6,kin:55,belong:"栗東",waku:null,sire:null,memo:"ターコイズS(G3)2着/札幌3-0-0-0だが全て条件戦"},
+"ピンクジン":{prev:"五稜郭S",grade:"なし",yoshiba:"条件戦のみ",m1800T:4,m1800R:16,age:6,style:"先行",prevRank:5,kin:55,belong:"美浦",waku:null,sire:null,memo:"洋芝16戦は全て条件戦/6歳/重賞出走歴なし"},
+"エラトー":{prev:"巴賞",grade:"重賞出走のみ",yoshiba:"重賞OP着外",m1800T:6,m1800R:10,age:5,style:"先行",prevRank:4,kin:55,belong:"栗東",waku:null,sire:null,memo:"巴賞4着/馬体499kg/重賞は全て着外"},
+"パレハ":{prev:"巴賞",grade:"重賞3着",yoshiba:"重賞OP着外",m1800T:3,m1800R:8,age:5,style:"中団",prevRank:8,kin:55,belong:"栗東",waku:null,sire:null,memo:"福島記念3着/昨年QS8人5着/巴賞2人8着"}
 };
 var _QS_PREV={"VM":14,"古馬G1":12,"海外G1":12,"オークス":10,"府中牝馬S":10,"本州重賞":9,"本州3勝OP":7,"桜花賞":5,"五稜郭S":5,"2勝":3,"巴賞":1,"函館記念":1};
 var _QS_WAKU={1:11,2:12,3:6,4:3,5:7,6:5,7:4,8:4};
@@ -8140,10 +8144,10 @@ let currentRace = "オークス";
 
 /* 共通条件（全レースで常時適用） */
 const COMMON_GOOD_CONDITIONS = [
-  { label: "前走G1・G2好走（1〜3着）",  match: h => (h.prevGrade === "G1" || h.prevGrade === "G2") && h.prevRank >= 1 && h.prevRank <= 3 }
+  { label: "前走G1・G2好走（1〜3着）",  match: h => (h.prevGrade === "G1" || h.prevGrade === "G2") && h.prevRank >= 1 && h.prevRank <= 3 },
 ];
 const COMMON_BAD_CONDITIONS = [
-  { label: "前走大敗（10着以下）",      match: h => h.prevRank >= 10 }
+  { label: "前走大敗（10着以下）",      match: h => h.prevRank >= 10 },
 ];
 
 /* レース固有条件 */
@@ -8751,14 +8755,14 @@ const RACE_DANGER_LOGIC = {
       { label: "⚠️前走上がり3F 35秒以上（瞬発力不足）",
         match: h => h.prev1Last3F != null && h.prev1Last3F >= 35.0 },
     ],
-  }
+  },
 };
 
 function getActiveConditions() {
   const rc = RACE_CONDITIONS[currentRace] || { good: [], bad: [] };
   return {
     good: [...rc.good, ...COMMON_GOOD_CONDITIONS],
-    bad:  [...rc.bad,  ...COMMON_BAD_CONDITIONS]
+    bad:  [...rc.bad,  ...COMMON_BAD_CONDITIONS],
   };
 }
 
@@ -13390,7 +13394,7 @@ const RACE_PAST_DATA = {
       '💡 1番人気は勝率20%で過信禁物・荒れやすい。データ軸は人気薄でも該当馬(カルプス5番/クラスペ7番/ウイング10番)。',
       '⚙️ 枠順・調教・馬体重・当日馬場は未反映の暫定版。'
     ]
-  }
+  },
 };
 
 
@@ -15615,13 +15619,13 @@ function calcSpeedIndex(horse) {
     '中山芝2200m': 136.0,
     '福島芝2000m': 122.0,
     '小倉芝2000m': 122.5,
-    '小倉芝1800m': 109.5
+    '小倉芝1800m': 109.5,
   };
   const BABA_CORRECTION = {
     '良': 0,
     '稍重': -0.5,
     '重': -1.5,
-    '不良': -2.5
+    '不良': -2.5,
   };
   if (!horse.prevTime || !horse.prevCourse) return null;
   const base = BASE_TIMES[horse.prevCourse];
@@ -15989,7 +15993,7 @@ var ANA_CONDITIONS_NHK = [
   { id:'ana20', label:'⭐前走2着以下かつ勝ち馬とタイム差0.4秒以内が最好成績', detail:'JRA公式2026', type:'plus',
     matchFn: function(h){ return h.prev1r >= 2 && h.prev1r <= 5; } },
   { id:'ana21', label:'過去10年の優勝馬は全員デビュー戦勝利', detail:'7頭がデビュー2戦目も勝利', type:'plus',
-    matchFn: function(h){ return h.debutWin === true || h.newmaWin === true; } }
+    matchFn: function(h){ return h.debutWin === true || h.newmaWin === true; } },
 ];
 
 // 穴馬条件・該当馬バッジレンダラー
@@ -17846,7 +17850,7 @@ var FINISHED_RACE_RESULTS = {
   '葵ステークス':   '✅ このレースは終了しました | 1着：デアヴェローチェ（5人気・◎軸）　2着：ヒシアイラ（6人気・○）　3着：タマモイカロス（3人気・✕完全消し誤算） | 馬券購入なし・予想完璧的中（仮想単勝870円・馬単9,530円）',
   '日本ダービー':   '✅ このレースは終了しました ★大爆発 | 1着：17番ロブチェン（1人気・◎軸）　2着：13番パントルナイーフ（4人気）　3着：5番バステール（11人気・D群押さえ） | 3連単 17→13→5：47,050円 × 5口 = 235,250円 | 投資45,000円→回収率523%・利益+190,250円',
   '目黒記念':       '✅ このレースは終了しました（軸的中・ガミ） | 1着：4番ファイアンクランツ（3人気・▲）　2着：6番ウィクトルウェルス（1人気・◎軸）　3着：11番ダノンシーマ（2人気・☆） | 3連単：4,410円 | 126点マルチで投資12,600円→払戻4,410円（堅レースガミ・3週連続軸馬3着内的中）',
-  '安田記念':       '<div style="font-size:10px;color:#FAC775;margin-bottom:4px;letter-spacing:1px">⚠️ 軸◎3着内的中だが収支マイナス</div><div>1着：4番シックスペンス（8人気）　2着：11番ワールズエンド（7人気）＝14番ガイアフォース（1人気・◎軸／AIスコア130点・スコア1位）※2着同着｜3連複 4-11-14：48,600円的中｜投資56,400円→払戻48,600円・収支-7,800円（軸ガイア2着同着で4戦連続軸馬3着内的中・3連単は相手から11ワールズを外し獲り逃し）</div>'
+  '安田記念':       '<div style="font-size:10px;color:#FAC775;margin-bottom:4px;letter-spacing:1px">⚠️ 軸◎3着内的中だが収支マイナス</div><div>1着：4番シックスペンス（8人気）　2着：11番ワールズエンド（7人気）＝14番ガイアフォース（1人気・◎軸／AIスコア130点・スコア1位）※2着同着｜3連複 4-11-14：48,600円的中｜投資56,400円→払戻48,600円・収支-7,800円（軸ガイア2着同着で4戦連続軸馬3着内的中・3連単は相手から11ワールズを外し獲り逃し）</div>',
 };
 
 function updateFinishedBanner(raceName) {
@@ -18604,7 +18608,7 @@ const SEISEKI_DATA = [
   { race:'NHKマイルC', date:'5/10', invest:42000, payout:52300,  grade:'G1' },
   { race:'ヴィクトリアマイル', date:'5/17', invest:46800, payout:11010,  grade:'G1' },
   { race:'平安S',         date:'5/23', invest:6000,  payout:0,      grade:'G3' },
-  { race:'オークス',       date:'5/24', invest:16800, payout:0,      grade:'G1' }
+  { race:'オークス',       date:'5/24', invest:16800, payout:0,      grade:'G1' },
 ];
 
 function renderSeisekiGraph() {
@@ -21732,7 +21736,7 @@ var KAIMOKU_DATA = {
     },
     _selectedN: 6,
     unitCost: 100,
-  }
+  },
 };
 
 // レース距離・方向ヘルパー
@@ -26470,7 +26474,7 @@ var JIKU_TRACKING = [
     note: 'スコア軸◎エコロディノスは9着に大敗しscoreHit:false。1着ファウストラーゼン(7人)・2着ケリフレッドアスク(9人)・3着ピースワンデュック(10人)の人気薄3頭決着(3連単326,840円)。荒れ指数で右回り苦手として割り引いたピースが3着に巻き返し。軸不振で人気薄上位を取り逃す。' },
   { race: 'ラジオNIKKEI賞', aiJiku: 'クカイリモク', scoreJiku: 'クカイリモク',
     result: '9着', aiHit: false, scoreHit: false, comboHit: false,
-    note: 'スコア軸◎クカイリモクは9着でscoreHit:false。1着サノノグレーター(4人・前走皐月賞G1組・グレイルロンサム系)・2着ディールメーカー(8人・前走NZT G2)・3着リッツパーティー(1人)。3歳ハンデ戦で前走クラスG1組の格を軸に取れなかったのが反省点。3連単52,690円。' }
+    note: 'スコア軸◎クカイリモクは9着でscoreHit:false。1着サノノグレーター(4人・前走皐月賞G1組・グレイルロンサム系)・2着ディールメーカー(8人・前走NZT G2)・3着リッツパーティー(1人)。3歳ハンデ戦で前走クラスG1組の格を軸に取れなかったのが反省点。3連単52,690円。' },
 ];
 
 function renderJikuTracking() {
@@ -26774,7 +26778,7 @@ function updateHeaderStats() {
     { invest: 0,     payout: 0,      name: '葵ステークス' },
     { invest: 45000, payout: 235250, name: '日本ダービー' },
     { invest: 12600, payout: 4410,   name: '目黒記念' },
-    { invest: 56400, payout: 48600,  name: '安田記念' }
+    { invest: 56400, payout: 48600,  name: '安田記念' },
   ];
 
   const totalInvest = seisekiData.reduce((s,r) => s + r.invest, 0);
@@ -27645,7 +27649,7 @@ RACE_META['平安ステークス'] = {
   distance: 1900,
   direction: 'right',
   isFinished: false,
-  babaPrediction: { status: "良馬場想定", icon: "☀️", color: "#1D9E75", comment: "京都ダート開催" }
+  babaPrediction: { status: "良馬場想定", icon: "☀️", color: "#1D9E75", comment: "京都ダート開催" },
 };
 
 
@@ -27697,7 +27701,7 @@ function renderHeianBadges(horses) {
       match:function(h){ return h.age >= 7 && h.popEstimate >= 7; } },
     { label:'⚠️ 差し・追込脚質', color:'#993556', textColor:'#FBEAF0',
       desc:'コーナー加速が必要・鬼門',
-      match:function(h){ return (h.pace || '').indexOf('差し') >= 0 || (h.pace || '').indexOf('追込') >= 0; } }
+      match:function(h){ return (h.pace || '').indexOf('差し') >= 0 || (h.pace || '').indexOf('追込') >= 0; } },
   ];
   var h = '';
   h += '<div class="section" style="margin-top:16px;padding:12px 14px;background:var(--bg);border:0.5px solid var(--border);border-radius:8px">';
@@ -27762,7 +27766,7 @@ function renderOaksBadges(horses) {
       match:function(h){ return h.father && (h.father.indexOf('キングカメハメハ') >= 0 || h.father.indexOf('アルアイン') >= 0); } },
     { label:'⚠️ 距離不安（スプリンター系）', color:'#993556', textColor:'#fff',
       desc:'父or母父がスプリンター系→ソダシ（父クロフネ）8着の前例',
-      match:function(h){ return h.father && (h.father.indexOf('ドレフォン') >= 0 || h.father.indexOf('ロードカナロア') >= 0 || h.father.indexOf('クロフネ') >= 0); } }
+      match:function(h){ return h.father && (h.father.indexOf('ドレフォン') >= 0 || h.father.indexOf('ロードカナロア') >= 0 || h.father.indexOf('クロフネ') >= 0); } },
   ];
   var h = '';
   h += '<div class="section" style="margin-top:16px;padding:12px 14px;background:var(--bg);border:0.5px solid var(--border);border-radius:8px">';
