@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260802-0694';
+  var CURRENT_VERSION = '20260726-0693';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1592,7 +1592,7 @@
         padding:6px 16px;
       ">
         <span style="font-size:11px;color:#666;font-weight:500">2026年通算回収率</span>
-        <span id="header-kaishuritu" style="font-size:20px;font-weight:800;color:#0F6E56;letter-spacing:.02em">143.7%</span>
+        <span id="header-kaishuritu" style="font-size:20px;font-weight:800;color:#0F6E56;letter-spacing:.02em">141.9%</span>
         <span id="header-badge" style="font-size:10px;background:#0F6E56;color:#fff;
                      padding:2px 6px;border-radius:9px;font-weight:600">黒字</span>
       </div>
@@ -1605,11 +1605,11 @@
         font-size:11px;
         color:#888;
       ">
-        <span>投資 <strong id="header-invest" style="color:#333">542,800円</strong></span>
+        <span>投資 <strong id="header-invest" style="color:#333">533,800円</strong></span>
         <span style="color:#ccc">→</span>
-        <span>払戻 <strong id="header-payout" style="color:#0F6E56">779,730円</strong></span>
+        <span>払戻 <strong id="header-payout" style="color:#0F6E56">757,520円</strong></span>
         <span style="color:#ccc">|</span>
-        <span><strong id="header-rieki" style="color:#0F6E56">+236,930円</strong></span>
+        <span><strong id="header-rieki" style="color:#0F6E56">+223,720円</strong></span>
       </div>
     </div>
   </div>
@@ -1749,25 +1749,25 @@
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
           <div>
             <div style="font-size:13px;font-weight:500;color:#085041;margin-bottom:2px">2026年 通算収支</div>
-            <div style="font-size:11px;color:#3B6D11">22レース（皐月賞・青葉賞・フローラS・マイラーズC・天皇賞春・京都新聞杯・エプソムC・NHKマイルC・ヴィクトリアマイル・平安S・オークス・葵S※・日本ダービー・目黒記念・安田記念・函館スプリントS・宝塚記念・しらさぎS・府中牝馬S・函館記念・クイーンS）</div>
+            <div style="font-size:11px;color:#3B6D11">21レース（皐月賞・青葉賞・フローラS・マイラーズC・天皇賞春・京都新聞杯・エプソムC・NHKマイルC・ヴィクトリアマイル・平安S・オークス・葵S※・日本ダービー・目黒記念・安田記念・函館スプリントS・宝塚記念・しらさぎS・府中牝馬S・函館記念・ラジオNIKKEI賞）</div>
           </div>
           <div style="text-align:right">
-            <div style="font-size:24px;font-weight:800;color:#0F6E56">+236,930円</div>
-            <div style="font-size:12px;color:#3B6D11">回収率 <strong>143.7%</strong> ✅ 黒字</div>
+            <div style="font-size:24px;font-weight:800;color:#0F6E56">+223,720円</div>
+            <div style="font-size:12px;color:#3B6D11">回収率 <strong>141.9%</strong> ✅ 黒字</div>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">
           <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
             <div style="font-size:10px;color:var(--text-mute)">総投資</div>
-            <div style="font-size:14px;font-weight:700;color:var(--text)">542,800円</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text)">533,800円</div>
           </div>
           <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
             <div style="font-size:10px;color:var(--text-mute)">総払戻</div>
-            <div style="font-size:14px;font-weight:700;color:#0F6E56">779,730円</div>
+            <div style="font-size:14px;font-weight:700;color:#0F6E56">757,520円</div>
           </div>
           <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
             <div style="font-size:10px;color:var(--text-mute)">的中率（予想含む）</div>
-            <div style="font-size:14px;font-weight:700;color:#185FA5">11/22</div>
+            <div style="font-size:14px;font-weight:700;color:#185FA5">10/21</div>
             <div style="font-size:9px;color:var(--text-mute)">※葵Sは予想的中・馬券購入なし</div>
           </div>
         </div>
@@ -4073,7 +4073,7 @@ const HORSES_BY_RACE = {
         {date:'2024/03/02', course:'中山', raceName:'夕刊フジオーシャンS(GIII)', grade:'G3', atama:16, umaban:14, odds:40.3, pop:14, rank:12, jockey:'石川裕紀', carriedWeight:57.0, surface:'芝', distance:1200, baba:'稍', time:'1:08.8', passing:'2-2', corner4:2, last3f:35.4, r:null},
         {date:'2024/01/28', course:'京都', raceName:'シルクロードS(GIII)', grade:'G3', atama:18, umaban:17, odds:11.4, pop:5, rank:16, jockey:'松山弘平', carriedWeight:57.0, surface:'芝', distance:1200, baba:'良', time:'1:09.4', passing:'8-8', corner4:8, last3f:35.1, r:null},
         {date:'2023/12/03', course:'中山', raceName:'ラピスラズリS(L)', grade:'', atama:11, umaban:8, odds:6.2, pop:3, rank:1, jockey:'戸崎圭太', carriedWeight:57.0, surface:'芝', distance:1200, baba:'良', time:'1:07.8', passing:'4-3', corner4:3, last3f:33.6, r:null},
-        {date:'2023/11/22', course:'新潟', raceName:'北陸S(3勝クラス)', grade:'', atama:18, umaban:1, odds:6.7, pop:3, rank:1, jockey:'石橋脩', carriedWeight:58.0, surface:'芝', distance:1200, baba:'重', time:'1:09.4', passing:'6-5', corner4:5, last3f:35.5, r:null},
+        {date:'2023/10/21', course:'新潟', raceName:'北陸S(3勝クラス)', grade:'', atama:18, umaban:1, odds:6.7, pop:3, rank:1, jockey:'石橋脩', carriedWeight:58.0, surface:'芝', distance:1200, baba:'重', time:'1:09.4', passing:'6-5', corner4:5, last3f:35.5, r:null},
         {date:'2023/08/19', course:'小倉', raceName:'佐世保S(3勝クラス)', grade:'', atama:11, umaban:2, odds:3.7, pop:2, rank:4, jockey:'幸英明', carriedWeight:58.0, surface:'芝', distance:1200, baba:'良', time:'1:07.6', passing:'3-3', corner4:3, last3f:34.6, r:null},
         {date:'2023/07/15', course:'福島', raceName:'バーデンバーデンC(3勝クラス)', grade:'', atama:11, umaban:10, odds:5.7, pop:4, rank:2, jockey:'北村宏司', carriedWeight:58.0, surface:'芝', distance:1200, baba:'稍', time:'1:10.7', passing:'3-3', corner4:3, last3f:36.1, r:null},
         {date:'2023/06/10', course:'阪神', raceName:'水無月S(3勝クラス)', grade:'', atama:16, umaban:13, odds:5.2, pop:2, rank:16, jockey:'幸英明', carriedWeight:58.0, surface:'芝', distance:1200, baba:'良', time:'1:09.3', passing:'6-6', corner4:6, last3f:35.7, r:null},
