@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260804-0697';
+  var CURRENT_VERSION = '20260802-0696';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2888,7 +2888,7 @@ const RACES = [
   {date:"2026-08-02", name:"クイーンS",               grade:"G3", venue:"札幌", surface:"芝1800m", status:"upcoming"},
   {date:"2026-08-09", name:"エルムS",                 grade:"G3", venue:"札幌", surface:"ダ1700m", status:"upcoming"},
   {date:"2026-08-10", name:"CBC賞",                   grade:"G3", venue:"中京", surface:"芝1200m", status:"upcoming"},
-  {date:"2026-08-09", name:"レパードS",               grade:"G3", venue:"新潟", surface:"ダ1800m", status:"upcoming"},
+  {date:"2026-08-10", name:"レパードS",               grade:"G3", venue:"新潟", surface:"ダ1800m", status:"upcoming"},
   {date:"2026-08-16", name:"中京記念",                grade:"G3", venue:"中京", surface:"芝1600m", status:"upcoming"},
   {date:"2026-08-16", name:"札幌記念",                grade:"G2", venue:"札幌", surface:"芝2000m", status:"upcoming"},
   {date:"2026-08-23", name:"新潟2歳S",                grade:"G3", venue:"新潟", surface:"芝1600m", status:"upcoming"},
@@ -2948,7 +2948,7 @@ const STATUS_BADGE = {
 };
 
 const TARGET_RACE_NAME = "オークス";
-const SUPPORTED_RACES = new Set(['レパードS','クイーンS', "関屋記念", "函館2歳S", "天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S","ラジオNIKKEI賞","函館記念","北九州記念","七夕賞",]);
+const SUPPORTED_RACES = new Set(['クイーンS', "関屋記念", "函館2歳S", "天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S","ラジオNIKKEI賞","函館記念","北九州記念","七夕賞",]);
 
 function getDefaultDisplayMonth() {
   // 直近の「予想中」(SUPPORTED && upcoming) レースの開催月を返す
@@ -13416,90 +13416,6 @@ const RACE_PAST_DATA = {
 };
 
 
-
-RACE_PAST_DATA['レパードS'] = {
-  pastResults: [
-    {year:2025, first:{name:"ドンインザムード",pop:5,prevRace:"2勝クラス",prevCourse:"ダ",prevClass:"2勝",prevPop:1,prevRank:6,last3fRank:null},
-                second:{name:"ルヴァンユニベール",pop:12,prevRace:"2勝クラス",prevCourse:"ダ",prevClass:"2勝",prevPop:2,prevRank:2,last3fRank:null},
-                third:{name:"ヒルノハンブルク",pop:11,prevRace:"ユニコーンS",prevCourse:"ダ",prevClass:"G3",prevPop:7,prevRank:5,last3fRank:null}},
-    {year:2024, first:{name:"ミッキーファイト",pop:1,prevRace:"ユニコーンS",prevCourse:"ダ",prevClass:"G3",prevPop:1,prevRank:3,last3fRank:null},
-                second:{name:"サトノフェニックス",pop:11,prevRace:"UAEダービー",prevCourse:"ダ",prevClass:"G2",prevPop:null,prevRank:null,last3fRank:null},
-                third:{name:"ミッキークレスト",pop:6,prevRace:"1勝クラス",prevCourse:"ダ",prevClass:"1勝",prevPop:1,prevRank:1,last3fRank:null}},
-    {year:2023, first:{name:"ライオットガール",pop:5,prevRace:"マレーシアC",prevCourse:"ダ",prevClass:"OP",prevPop:6,prevRank:4,last3fRank:null},
-                second:{name:"オメガギネス",pop:3,prevRace:"1勝クラス",prevCourse:"ダ",prevClass:"1勝",prevPop:4,prevRank:1,last3fRank:null},
-                third:{name:"ルクスフロンティア",pop:8,prevRace:"1勝クラス",prevCourse:"ダ",prevClass:"1勝",prevPop:4,prevRank:1,last3fRank:null}},
-    {year:2022, first:{name:"カフジオクタゴン",pop:7,prevRace:"鷹取特別",prevCourse:"ダ",prevClass:"2勝",prevPop:5,prevRank:1,last3fRank:null},
-                second:{name:"タイセイドレフォン",pop:1,prevRace:"弥富特別",prevCourse:"ダ",prevClass:"2勝",prevPop:1,prevRank:1,last3fRank:null},
-                third:{name:"ハピ",pop:2,prevRace:"ジャパンダートダービー",prevCourse:"ダ",prevClass:"Jpn1",prevPop:null,prevRank:4,last3fRank:null}},
-    {year:2021, first:{name:"メイショウムラクモ",pop:1,prevRace:"いわき特別",prevCourse:"ダ",prevClass:"2勝",prevPop:1,prevRank:1,last3fRank:null},
-                second:{name:"スウィープザボード",pop:10,prevRace:"1勝クラス",prevCourse:"ダ",prevClass:"1勝",prevPop:1,prevRank:1,last3fRank:null},
-                third:{name:"レプンカムイ",pop:6,prevRace:"インディアT",prevCourse:"ダ",prevClass:"OP",prevPop:1,prevRank:2,last3fRank:null}},
-    {year:2020, first:{name:"ケンシンコウ",pop:7,prevRace:"ユニコーンS",prevCourse:"ダ",prevClass:"G3",prevPop:11,prevRank:3,last3fRank:null},
-                second:{name:"ミヤジコクオウ",pop:2,prevRace:"ジャパンダートダービー",prevCourse:"ダ",prevClass:"Jpn1",prevPop:null,prevRank:5,last3fRank:null},
-                third:{name:"ブランクチェック",pop:5,prevRace:"2勝クラス",prevCourse:"ダ",prevClass:"2勝",prevPop:1,prevRank:1,last3fRank:null}},
-    {year:2019, first:{name:"ハヤヤッコ",pop:10,prevRace:"青竜S",prevCourse:"ダ",prevClass:"OP",prevPop:6,prevRank:8,last3fRank:null},
-                second:{name:"デルマルーヴル",pop:1,prevRace:"ジャパンダートダービー",prevCourse:"ダ",prevClass:"Jpn1",prevPop:null,prevRank:2,last3fRank:null},
-                third:{name:"トイガー",pop:11,prevRace:"ジャパンダートダービー",prevCourse:"ダ",prevClass:"Jpn1",prevPop:null,prevRank:6,last3fRank:null}},
-    {year:2018, first:{name:"グリム",pop:5,prevRace:"ユニコーンS",prevCourse:"ダ",prevClass:"G3",prevPop:2,prevRank:9,last3fRank:null},
-                second:{name:"ヒラボクラターシュ",pop:10,prevRace:"濃尾特別",prevCourse:"ダ",prevClass:"2勝",prevPop:5,prevRank:4,last3fRank:null},
-                third:{name:"ビッグスモーキー",pop:9,prevRace:"安達太良S",prevCourse:"ダ",prevClass:"OP",prevPop:2,prevRank:5,last3fRank:null}},
-    {year:2017, first:{name:"ローズプリンスダム",pop:11,prevRace:"ジャパンダートダービー",prevCourse:"ダ",prevClass:"Jpn1",prevPop:null,prevRank:8,last3fRank:null},
-                second:{name:"サルサディオーネ",pop:12,prevRace:"500万下",prevCourse:"ダ",prevClass:"1勝",prevPop:2,prevRank:1,last3fRank:null},
-                third:{name:"エピカリス",pop:1,prevRace:"ベルモントS",prevCourse:"ダ",prevClass:"G1",prevPop:null,prevRank:null,last3fRank:null}},
-    {year:2016, first:{name:"グレンツェント",pop:2,prevRace:"ユニコーンS",prevCourse:"ダ",prevClass:"G3",prevPop:3,prevRank:3,last3fRank:null},
-                second:{name:"ケイティブレイブ",pop:1,prevRace:"ジャパンダートダービー",prevCourse:"ダ",prevClass:"Jpn1",prevPop:null,prevRank:2,last3fRank:null},
-                third:{name:"レガーロ",pop:6,prevRace:"兵庫チャンピオンシップ",prevCourse:"ダ",prevClass:"Jpn2",prevPop:null,prevRank:4,last3fRank:null}}
-  ],
-  trends: { tables: [
-    {title:"枠順別成績（過去10年）", col1:"枠", rows:[
-      {label:"1枠", rec:"3-0-1-6（勝率30.0%・複勝40.0%）", highlight:true},
-      {label:"2枠", rec:"1-2-2-14（複勝26.3%）"},
-      {label:"3枠", rec:"1-0-1-17（複勝10.5%）"},
-      {label:"4枠", rec:"2-3-0-15（複勝25.0%）"},
-      {label:"5枠", rec:"1-1-3-15（複勝25.0%）"},
-      {label:"6枠", rec:"0-1-3-15（複勝21.1%）"},
-      {label:"7枠", rec:"0-0-0-20（複勝0%）", highlight:true},
-      {label:"8枠", rec:"2-3-0-15（複勝25.0%）"}
-    ], note:"7枠は分母20で3着内ゼロ＝明確な壁。1枠はのべ10頭中3勝（2025ドンインザムード・2024ミッキーファイト・2020ケンシンコウ）。ただし過去10年は全て15頭立て（2016のみ13頭）で、13頭立ての今年は1〜3枠各1頭・4〜8枠各2頭となり枠割りが異なる点に注意。"},
-
-    {title:"人気別成績（過去10年）", col1:"人気", rows:[
-      {label:"1番人気", rec:"2-3-1-4（複勝60.0%）", highlight:true},
-      {label:"2番人気", rec:"1-1-1-7（複勝30.0%）"},
-      {label:"3番人気", rec:"0-1-0-9（複勝10.0%）", highlight:true},
-      {label:"4〜6番人気", rec:"3-0-4-23（複勝23.3%）"},
-      {label:"7〜9番人気", rec:"2-0-2-26（複勝13.3%）"},
-      {label:"10番人気以下", rec:"2-5-2-48（複勝15.8%）", highlight:true}
-    ], note:"1番人気は複勝60%で軸として信頼できる一方、10番人気以下が2着5回・1着2回。3番人気は勝ちゼロ・複勝10%で最悪。『人気-大穴-中穴』の決着が多く、軸1頭マルチが最も噛み合う構造。"},
-
-    {title:"勝ち馬の前走レース（過去10年）", col1:"前走", rows:[
-      {label:"ユニコーンS(G3)", rec:"4勝（2016・2018・2020・2024）", highlight:true},
-      {label:"条件戦(1勝・2勝)", rec:"3勝（2021・2022・2025）", highlight:true},
-      {label:"OP特別", rec:"2勝（2019青竜S・2023マレーシアC）"},
-      {label:"ジャパンダートダービー", rec:"1勝（2017）／2着3回・3着2回"}
-    ], note:"JDD組は10年で1勝のみだが2着3回・3着2回と紐では堅実。逆に条件戦組が3勝しており、クイーンSと違い『前走の格』は勝敗を決めない。ユニコーンS組が最多4勝で本線。"},
-
-    {title:"勝ち馬の1角通過順（過去10年）", col1:"年", rows:[
-      {label:"5番手以内", rec:"7勝（2016⑤・2017④・2018①・2020②・2021②・2024③・2025③）", highlight:true},
-      {label:"6番手以降", rec:"3勝（2019⑫・2022⑨・2023②※4角まで2番手）"}
-    ], note:"新潟ダート1800mは1角までの距離が短く先行有利。勝ち馬10頭中7頭が1角5番手以内。差し切りは2019ハヤヤッコ（⑫→⑨）と2022カフジオクタゴン（⑨→⑤）の2例のみ。"},
-
-    {title:"馬場状態（過去10年）", col1:"馬場", rows:[
-      {label:"良", rec:"8回"},
-      {label:"不良", rec:"2回（2020・2025）"}
-    ], note:"不良馬場だった2020年は1枠7番人気ケンシンコウ、2025年は1枠5番人気ドンインザムードが勝利。いずれも内枠先行馬で、渋ったダートでは内前の優位がさらに強まる。"},
-
-    {title:"所属別成績（過去10年）", col1:"所属", rows:[
-      {label:"美浦", rec:"6-2-3-48（勝率10.2%・複勝18.6%）", highlight:true},
-      {label:"栗東", rec:"4-8-7-69（勝率4.5%・複勝21.6%）"}
-    ], note:"勝率は美浦が栗東の2倍以上（10.2% vs 4.5%）。一方で複勝率は栗東がやや上。関東馬は勝ち切り、関西馬は2着3着に流れる傾向。"},
-
-    {title:"配当傾向（過去10年）", col1:"項目", rows:[
-      {label:"二桁人気の3着内", rec:"9頭（2着5回・1着2回・3着2回）", highlight:true},
-      {label:"1番人気の勝利", rec:"2回（2021・2024）"},
-      {label:"最大の波乱", rec:"2017年 11人気→12人気→1人気"}
-    ], note:"3歳限定・キャリアの浅さ・ダート適性の未確定が重なり荒れやすい。頭数13頭と少ないため、軸を1番人気に置きつつ相手を二桁人気まで広げる組み立てが有効。"}
-  ]}
-};
 
 RACE_PAST_DATA['クイーンS'] = {
   pastResults: [
