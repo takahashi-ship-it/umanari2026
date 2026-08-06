@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260805-0701';
+  var CURRENT_VERSION = '20260805-0702';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7660,19 +7660,19 @@ function computeScoreBreakdownQueenS(horse,_rawOnly){
    - 枠12は金曜確定まで全馬6（中立）。確定後は waku を差し替えるだけ
    ========================================================================= */
 var LEO_FACTS = {
-"メルカントゥール":{dirtCls:"重賞連対",prev:"JRA重賞",dRuns:4,left:"未経験",style:0.33,sire:"ルヴァンスレーヴ",belong:"栗東",jk:"乗替",gap:99,waku:null,memo:"ユニコーンS(G3)2着/4戦2勝/前走から99日"},
-"パイロマンサー":{dirtCls:"重賞連対",prev:"海外",dRuns:4,left:"未経験",style:0.07,sire:"パイロ",belong:"栗東",jk:"乗替",gap:134,waku:null,memo:"4戦4勝/全日本2歳優駿(JpnI)＋UAEダービー(G2)/134日"},
-"ドンエレクトス":{dirtCls:"OP複数連対",prev:"OP特別",dRuns:9,left:"連対",style:0.29,sire:"ダノンレジェンド",belong:"美浦",jk:"継続",gap:92,waku:null,memo:"OP4戦1-3-0-0/左回りダ2-3-0-2/前走青竜S1着"},
-"マクリール":{dirtCls:"OP連対",prev:"2勝",dRuns:6,left:"連対",style:0.25,sire:"ロードカナロア",belong:"美浦",jk:"乗替",gap:63,waku:null,memo:"雲取賞(JpnIII)3着/青竜S2着/左回りダ2-2-0-0"},
-"テンカムテキ":{dirtCls:"1勝級",prev:"2勝",dRuns:6,left:"連対",style:0.15,sire:"ナダル",belong:"美浦",jk:"乗替",gap:63,waku:null,memo:"父ナダルは2025年3着/美浦/丹内→石川へ乗替"},
-"タガノアバンドーネ":{dirtCls:"2-3勝勝ち",prev:"2勝",dRuns:6,left:"未経験",style:0.17,sire:"モズアスコット",belong:"栗東",jk:"乗替",gap:49,waku:null,memo:"ダ6戦/OP5着/川田→菱田へ乗替"},
-"ショウナンバンライ":{dirtCls:"2-3勝勝ち",prev:"2勝",dRuns:2,left:"未経験",style:0.11,sire:"オルフェーヴル",belong:"栗東",jk:"継続",gap:28,waku:null,memo:"ダート2戦のみ/OP以上未経験/左回り未経験/ダで57kg初"},
-"パラダイスフェイス":{dirtCls:"1勝級",prev:"1勝",dRuns:9,left:"着外のみ",style:0.26,sire:"エスポワールシチー",belong:"美浦",jk:"乗替",gap:22,waku:null,memo:"ダ9戦/左回りダ0-0-0-3/中3週"},
-"オオツカ":{dirtCls:"1勝級",prev:"1勝",dRuns:4,left:"連対",style:0.05,sire:"キタサンブラック",belong:"栗東",jk:"乗替",gap:28,waku:null,memo:"メンバー最先行(0.05)/左回りダ1-0-0-0"},
-"ファイアマン":{dirtCls:"1勝級",prev:"1勝",dRuns:5,left:"連対",style:0.58,sire:"母父パイロ",belong:"美浦",jk:"継続",gap:78,waku:null,memo:"13頭で唯一の差し馬/新潟ダ1800で未勝利勝ち/母父パイロ"},
-"チェリヴェント":{dirtCls:"1勝級",prev:"1勝",dRuns:5,left:"未経験",style:0.14,sire:"コントレイル",belong:"栗東",jk:"継続",gap:63,waku:null,memo:"ダ1800で1-1-1-2/左回り未経験"},
-"ヒシアムルーズ":{dirtCls:"1勝級",prev:"1勝",dRuns:1,left:"連対",style:0.18,sire:"サートゥルナーリア",belong:"美浦",jk:"乗替",gap:71,waku:null,memo:"ダート1戦のみ(東京ダ1600を1着)/芝で青葉賞13着"},
-"オンザムービー":{dirtCls:"1勝級",prev:"1勝",dRuns:2,left:"未経験",style:0.09,sire:"サンダースノー",belong:"栗東",jk:"乗替",gap:15,waku:null,memo:"ダート2戦2勝/騎手未定/中2週"}
+"メルカントゥール":{prevCorner:"◯",prevWt:522,nonSD:false,dirtCls:"重賞連対",prev:"JRA重賞",dRuns:4,left:"未経験",style:0.33,sire:"ルヴァンスレーヴ",belong:"栗東",jk:"乗替",gap:99,waku:null,memo:"ユニコーンS(G3)2着/4戦2勝/前走から99日"},
+"パイロマンサー":{prevCorner:"—",prevWt:null,nonSD:true,dirtCls:"重賞連対",prev:"海外",dRuns:4,left:"未経験",style:0.07,sire:"パイロ",belong:"栗東",jk:"乗替",gap:134,waku:null,memo:"4戦4勝/全日本2歳優駿(JpnI)＋UAEダービー(G2)/134日"},
+"ドンエレクトス":{prevCorner:"◯",prevWt:468,nonSD:true,dirtCls:"OP複数連対",prev:"OP特別",dRuns:9,left:"連対",style:0.29,sire:"ダノンレジェンド",belong:"美浦",jk:"継続",gap:92,waku:null,memo:"OP4戦1-3-0-0/左回りダ2-3-0-2/前走青竜S1着"},
+"マクリール":{prevCorner:"×",prevWt:464,nonSD:true,dirtCls:"OP連対",prev:"2勝",dRuns:6,left:"連対",style:0.25,sire:"ロードカナロア",belong:"美浦",jk:"乗替",gap:63,waku:null,memo:"雲取賞(JpnIII)3着/青竜S2着/左回りダ2-2-0-0"},
+"テンカムテキ":{prevCorner:"◯",prevWt:508,nonSD:true,dirtCls:"1勝級",prev:"2勝",dRuns:6,left:"連対",style:0.15,sire:"ナダル",belong:"美浦",jk:"乗替",gap:63,waku:null,memo:"父ナダルは2025年3着/美浦/丹内→石川へ乗替"},
+"タガノアバンドーネ":{prevCorner:"◯",prevWt:480,nonSD:false,dirtCls:"2-3勝勝ち",prev:"2勝",dRuns:6,left:"未経験",style:0.17,sire:"モズアスコット",belong:"栗東",jk:"乗替",gap:49,waku:null,memo:"ダ6戦/OP5着/川田→菱田へ乗替"},
+"ショウナンバンライ":{prevCorner:"◯",prevWt:474,nonSD:false,dirtCls:"2-3勝勝ち",prev:"2勝",dRuns:2,left:"未経験",style:0.11,sire:"オルフェーヴル",belong:"栗東",jk:"継続",gap:28,waku:null,memo:"ダート2戦のみ/OP以上未経験/左回り未経験/ダで57kg初"},
+"パラダイスフェイス":{prevCorner:"◯",prevWt:506,nonSD:false,dirtCls:"1勝級",prev:"1勝",dRuns:9,left:"着外のみ",style:0.26,sire:"エスポワールシチー",belong:"美浦",jk:"乗替",gap:22,waku:null,memo:"ダ9戦/左回りダ0-0-0-3/中3週"},
+"オオツカ":{prevCorner:"◯",prevWt:444,nonSD:false,dirtCls:"1勝級",prev:"1勝",dRuns:4,left:"連対",style:0.05,sire:"キタサンブラック",belong:"栗東",jk:"乗替",gap:28,waku:null,memo:"メンバー最先行(0.05)/左回りダ1-0-0-0"},
+"ファイアマン":{prevCorner:"◯",prevWt:496,nonSD:true,dirtCls:"1勝級",prev:"1勝",dRuns:5,left:"連対",style:0.58,sire:"母父パイロ",belong:"美浦",jk:"継続",gap:78,waku:null,memo:"13頭で唯一の差し馬/新潟ダ1800で未勝利勝ち/母父パイロ"},
+"チェリヴェント":{prevCorner:"◯",prevWt:500,nonSD:false,dirtCls:"1勝級",prev:"1勝",dRuns:5,left:"未経験",style:0.14,sire:"コントレイル",belong:"栗東",jk:"継続",gap:63,waku:null,memo:"ダ1800で1-1-1-2/左回り未経験"},
+"ヒシアムルーズ":{prevCorner:"◯",prevWt:474,nonSD:true,dirtCls:"1勝級",prev:"1勝",dRuns:1,left:"連対",style:0.18,sire:"サートゥルナーリア",belong:"美浦",jk:"乗替",gap:71,waku:null,memo:"ダート1戦のみ(東京ダ1600を1着)/芝で青葉賞13着"},
+"オンザムービー":{prevCorner:"×",prevWt:488,nonSD:false,dirtCls:"1勝級",prev:"1勝",dRuns:2,left:"未経験",style:0.09,sire:"サンダースノー",belong:"栗東",jk:"乗替",gap:15,waku:null,memo:"ダート2戦2勝/騎手未定/中2週"}
 };
 var _LEO_DCLS={"重賞連対":14,"OP複数連対":12,"OP連対":10,"2-3勝勝ち":7,"1勝級":5,"未経験":4};
 var _LEO_PREV={"海外":8,"地方DG":8,"JRA重賞":7,"3勝":7,"2勝":5,"1勝":4,"OP特別":2};
@@ -7696,7 +7696,7 @@ function computeScoreBreakdownLeopard(horse,_rawOnly){
     it.push({key:key,label:label,name:label,score:score,value:score,max:max,detail:detail,note:detail});
   }
   if(!f){ add('na','データ未登録',0,70,'LEO_FACTS に '+nm+' が存在しません');
-    return {items:it,total:0,max:70,pct:8,penalty:0}; }
+    return {items:it,total:0,max:86,pct:8,penalty:0}; }
   var dc=_LEO_DCLS[f.dirtCls]!=null?_LEO_DCLS[f.dirtCls]:5;
   add('dirtCls','ダート中距離実績(クラス補正)',dc,14,f.dirtCls);
   var wk=(f.waku==null)?6:(_LEO_WAKU[f.waku]!=null?_LEO_WAKU[f.waku]:6);
@@ -7707,8 +7707,14 @@ function computeScoreBreakdownLeopard(horse,_rawOnly){
   add('dRuns','ダート経験の厚さ',dr,7,'ダート'+f.dRuns+'戦');
   var lf=_LEO_LEFT[f.left]!=null?_LEO_LEFT[f.left]:4;
   add('left','左回りダート',lf,6,f.left);
-  var st=(f.style<0.25)?6:(f.style<0.45?5.5:4);
-  add('style','先行力',st,6,'4角位置率'+f.style.toFixed(2)+'（今年は13頭中12頭が0.33以下＝ほぼ定数）');
+  var st=(f.style<0.12)?10:(f.style<0.20?9:(f.style<0.30?7.5:(f.style<0.45?6:3)));
+  add('style','先行力',st,10,'4角位置率'+f.style.toFixed(2)+'（逃げ複勝60%/先行40.5%/中団15.5%/後方0-0-0-42）');
+  var pc=(f.prevCorner==='×')?1:(f.prevCorner==='◯'?5:4);
+  add('prevCorner','前走の初角位置',pc,5,f.prevCorner==='×'?'2勝クラス以下で1/3頭外（10年0-2-1-36・勝率0%）':(f.prevCorner==='◯'?'1/3頭以内':'海外/対象外→中立'));
+  var nd=f.nonSD?4:2.5;
+  add('nonSD','血統系統',nd,4,f.nonSD?'父・母父とも非サンデー系（複勝22.4%・単回194）':'サンデー系を含む（複勝18.9%・単回67）');
+  var pw=(f.prevWt==null)?2:(f.prevWt<=479?3:(f.prevWt<=499?2:1.5));
+  add('prevWt','前走馬体重',pw,3,(f.prevWt?f.prevWt+'kg':'不明')+'（460-479kgが複勝26.5%）');
   var sr=_LEO_SIRE[f.sire]!=null?_LEO_SIRE[f.sire]:3;
   add('sire','血統',sr,5,f.sire);
   var bg=(f.belong==='美浦')?4:2.5;
