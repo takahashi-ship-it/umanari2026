@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260805-0701';
+  var CURRENT_VERSION = '20260804-0700';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7646,84 +7646,6 @@ function computeScoreBreakdownQueenS(horse,_rawOnly){
   var pct=FLOOR+(CEIL-FLOOR)/(1+Math.exp(-1.6*z));
   pct=Math.round(pct*10)/10;
   return {items:it,total:total,max:max,pct:pct,penalty:pen,memo:f.memo};
-}
-
-
-/* ===== レパードS 専用スコアエンジン (Σmax=70) ==============================
-   根拠: RTF88戦の実測(2026-08-05) + 過去10年データ(JRA公式/馬ランド)
-   - 斤量/性別/年齢は全馬同一(牡3・57.0kg)のため項目を作らない（分散0）
-   - 人気は配点しない。市場評価を取り込むと乖離検出能力が死ぬ（クイーンSの教訓）
-   - ダート中距離実績はクラス別に分解して評価（§18/§24）。生カウントでは
-     ショウナンバンライの2連勝とドンエレクトスのOP4戦連対が同等に見えてしまう
-   - 先行力は今年13頭中12頭が位置率0.33以下でほぼ定数のため配点を軽く（§25）
-   - 左回りダート未経験は減点しない（§21: 未経験≠不適）
-   - 枠12は金曜確定まで全馬6（中立）。確定後は waku を差し替えるだけ
-   ========================================================================= */
-var LEO_FACTS = {
-"メルカントゥール":{dirtCls:"重賞連対",prev:"JRA重賞",dRuns:4,left:"未経験",style:0.33,sire:"ルヴァンスレーヴ",belong:"栗東",jk:"乗替",gap:99,waku:null,memo:"ユニコーンS(G3)2着/4戦2勝/前走から99日"},
-"パイロマンサー":{dirtCls:"重賞連対",prev:"海外",dRuns:4,left:"未経験",style:0.07,sire:"パイロ",belong:"栗東",jk:"乗替",gap:134,waku:null,memo:"4戦4勝/全日本2歳優駿(JpnI)＋UAEダービー(G2)/134日"},
-"ドンエレクトス":{dirtCls:"OP複数連対",prev:"OP特別",dRuns:9,left:"連対",style:0.29,sire:"ダノンレジェンド",belong:"美浦",jk:"継続",gap:92,waku:null,memo:"OP4戦1-3-0-0/左回りダ2-3-0-2/前走青竜S1着"},
-"マクリール":{dirtCls:"OP連対",prev:"2勝",dRuns:6,left:"連対",style:0.25,sire:"ロードカナロア",belong:"美浦",jk:"乗替",gap:63,waku:null,memo:"雲取賞(JpnIII)3着/青竜S2着/左回りダ2-2-0-0"},
-"テンカムテキ":{dirtCls:"1勝級",prev:"2勝",dRuns:6,left:"連対",style:0.15,sire:"ナダル",belong:"美浦",jk:"乗替",gap:63,waku:null,memo:"父ナダルは2025年3着/美浦/丹内→石川へ乗替"},
-"タガノアバンドーネ":{dirtCls:"2-3勝勝ち",prev:"2勝",dRuns:6,left:"未経験",style:0.17,sire:"モズアスコット",belong:"栗東",jk:"乗替",gap:49,waku:null,memo:"ダ6戦/OP5着/川田→菱田へ乗替"},
-"ショウナンバンライ":{dirtCls:"2-3勝勝ち",prev:"2勝",dRuns:2,left:"未経験",style:0.11,sire:"オルフェーヴル",belong:"栗東",jk:"継続",gap:28,waku:null,memo:"ダート2戦のみ/OP以上未経験/左回り未経験/ダで57kg初"},
-"パラダイスフェイス":{dirtCls:"1勝級",prev:"1勝",dRuns:9,left:"着外のみ",style:0.26,sire:"エスポワールシチー",belong:"美浦",jk:"乗替",gap:22,waku:null,memo:"ダ9戦/左回りダ0-0-0-3/中3週"},
-"オオツカ":{dirtCls:"1勝級",prev:"1勝",dRuns:4,left:"連対",style:0.05,sire:"キタサンブラック",belong:"栗東",jk:"乗替",gap:28,waku:null,memo:"メンバー最先行(0.05)/左回りダ1-0-0-0"},
-"ファイアマン":{dirtCls:"1勝級",prev:"1勝",dRuns:5,left:"連対",style:0.58,sire:"母父パイロ",belong:"美浦",jk:"継続",gap:78,waku:null,memo:"13頭で唯一の差し馬/新潟ダ1800で未勝利勝ち/母父パイロ"},
-"チェリヴェント":{dirtCls:"1勝級",prev:"1勝",dRuns:5,left:"未経験",style:0.14,sire:"コントレイル",belong:"栗東",jk:"継続",gap:63,waku:null,memo:"ダ1800で1-1-1-2/左回り未経験"},
-"ヒシアムルーズ":{dirtCls:"1勝級",prev:"1勝",dRuns:1,left:"連対",style:0.18,sire:"サートゥルナーリア",belong:"美浦",jk:"乗替",gap:71,waku:null,memo:"ダート1戦のみ(東京ダ1600を1着)/芝で青葉賞13着"},
-"オンザムービー":{dirtCls:"1勝級",prev:"1勝",dRuns:2,left:"未経験",style:0.09,sire:"サンダースノー",belong:"栗東",jk:"乗替",gap:15,waku:null,memo:"ダート2戦2勝/騎手未定/中2週"}
-};
-var _LEO_DCLS={"重賞連対":14,"OP複数連対":12,"OP連対":10,"2-3勝勝ち":7,"1勝級":5,"未経験":4};
-var _LEO_PREV={"海外":8,"地方DG":8,"JRA重賞":7,"3勝":7,"2勝":5,"1勝":4,"OP特別":2};
-var _LEO_WAKU={1:12,2:9,3:5,4:9,5:9,6:7,7:1,8:9};
-var _LEO_LEFT={"連対":6,"未経験":4,"着外のみ":3};
-var _LEO_SIRE={"パイロ":5,"ナダル":5,"母父パイロ":4.5,"ダノンレジェンド":4,"エスポワールシチー":4,"ルヴァンスレーヴ":4,"サンダースノー":4,"モズアスコット":4};
-var _leoCache=null;
-function _getLeopardScoreStats(){
-  if(_leoCache) return _leoCache;
-  var a=[],k;
-  for(k in LEO_FACTS) a.push(computeScoreBreakdownLeopard({name:k},true).total);
-  if(!a.length){_leoCache={mean:47,sd:5};return _leoCache;}
-  var m=0,i;for(i=0;i<a.length;i++)m+=a[i];m/=a.length;
-  var v=0;for(i=0;i<a.length;i++)v+=(a[i]-m)*(a[i]-m);v/=a.length;
-  _leoCache={mean:m,sd:Math.sqrt(v)||1};return _leoCache;
-}
-function computeScoreBreakdownLeopard(horse,_rawOnly){
-  var nm=(horse&&(horse.name||horse.horseName))||'';
-  var f=LEO_FACTS[nm], it=[];
-  function add(key,label,score,max,detail){
-    it.push({key:key,label:label,name:label,score:score,value:score,max:max,detail:detail,note:detail});
-  }
-  if(!f){ add('na','データ未登録',0,70,'LEO_FACTS に '+nm+' が存在しません');
-    return {items:it,total:0,max:70,pct:8,penalty:0}; }
-  var dc=_LEO_DCLS[f.dirtCls]!=null?_LEO_DCLS[f.dirtCls]:5;
-  add('dirtCls','ダート中距離実績(クラス補正)',dc,14,f.dirtCls);
-  var wk=(f.waku==null)?6:(_LEO_WAKU[f.waku]!=null?_LEO_WAKU[f.waku]:6);
-  add('waku','枠',wk,12,f.waku==null?'枠順未確定→中立6':(f.waku+'枠'+(f.waku===7?'（10年0-0-0-20の壁）':(f.waku===1?'（10年3勝・複勝40%）':''))));
-  var pv=_LEO_PREV[f.prev]!=null?_LEO_PREV[f.prev]:4;
-  add('prev','前走カテゴリ',pv,8,f.prev+(f.prev==='OP特別'?'（10年複勝8.3%で最低）':''));
-  var dr=(f.dRuns>=9)?7:(f.dRuns>=6?6:(f.dRuns>=4?5:(f.dRuns>=3?4:(f.dRuns>=2?2:1))));
-  add('dRuns','ダート経験の厚さ',dr,7,'ダート'+f.dRuns+'戦');
-  var lf=_LEO_LEFT[f.left]!=null?_LEO_LEFT[f.left]:4;
-  add('left','左回りダート',lf,6,f.left);
-  var st=(f.style<0.25)?6:(f.style<0.45?5.5:4);
-  add('style','先行力',st,6,'4角位置率'+f.style.toFixed(2)+'（今年は13頭中12頭が0.33以下＝ほぼ定数）');
-  var sr=_LEO_SIRE[f.sire]!=null?_LEO_SIRE[f.sire]:3;
-  add('sire','血統',sr,5,f.sire);
-  var bg=(f.belong==='美浦')?4:2.5;
-  add('belong','所属',bg,4,f.belong+'（10年 美浦勝率10.2% vs 栗東4.5%）');
-  var jk=(f.jk==='乗替')?3:2;
-  add('jk','騎手',jk,3,f.jk+'（10番人気以下の激走9頭中8頭が乗替）');
-  var gp=(f.gap<=20)?3:(f.gap<=70?5:(f.gap<=105?4:2));
-  add('gap','レース間隔',gp,5,f.gap+'日');
-  var total=0,max=0,i;
-  for(i=0;i<it.length;i++){total+=it[i].score;max+=it[i].max;}
-  total=Math.round(total*10)/10;
-  if(_rawOnly) return {items:it,total:total,max:max,pct:null,penalty:0};
-  var s=_getLeopardScoreStats(), z=(total-s.mean)/s.sd;
-  var pct=8+(79-8)/(1+Math.exp(-1.6*z));
-  return {items:it,total:total,max:max,pct:Math.round(pct*10)/10,penalty:0,memo:f.memo};
 }
 
 // 人気表示ヘルパー（出馬表・信頼度スコア・危険馬チェックで共通利用）
@@ -25399,7 +25321,6 @@ function computeScoreBreakdownHakodateV1(horse, raceName, _rawOnly){
 }
 
 function computeScoreBreakdown(horse, raceName) {
-  if(typeof raceName!=='undefined' && raceName==='レパードS') return computeScoreBreakdownLeopard(horse);
   if(typeof raceName!=='undefined' && raceName==='クイーンS') return computeScoreBreakdownQueenS(horse);
   if (raceName === 'ラジオNIKKEI賞') return computeScoreBreakdownRajioV1(horse, raceName);
   if (raceName === '函館記念') return computeScoreBreakdownHakodateV1(horse, raceName);
