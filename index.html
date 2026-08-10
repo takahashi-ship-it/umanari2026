@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260809-0705';
+  var CURRENT_VERSION = '20260810-0706';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1774,6 +1774,24 @@
       </div>
 
       
+        <!-- レパードS（結果サマリー・8/9・見送り） -->
+        <div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="font-weight:bold;font-size:1.05em;color:#fff;">レパードS(G3) <span style="color:#999;font-size:0.85em;">8/9 新潟・ダ1800m</span></span>
+            <span style="background:#7a2a2a;color:#fff;padding:3px 10px;border-radius:6px;font-size:0.85em;">見送り</span>
+          </div>
+          <div style="color:#ccc;font-size:0.9em;line-height:1.7;">
+            <div>1着 ④チェリヴェント(6人 20.8) / 2着 ⑪パイロマンサー(4人 5.9) / 3着 ⑫メルカントゥール(1人 2.7)</div>
+            <div style="margin-top:4px;">3連単 43,120円(145人気) ／ 3連複 3,980円 ／ 馬連 5,680円</div>
+            <div style="margin-top:4px;">◎パイロマンサー(モデル1位72.5/86・3人気)=<b style="color:#7fd17f;">2着</b>（軸は3着内）／ モデル3位メルカントゥール3着</div>
+            <div style="margin-top:6px;display:flex;gap:16px;">
+              <span>投資 <b>0円</b></span><span>払戻 <b>0円</b></span><span>収支 <b>0円</b></span>
+            </div>
+            <div style="margin-top:8px;padding:8px;background:#00000033;border-radius:6px;font-size:0.88em;color:#bbb;">
+              💭 ◎パイロマンサーが2着で軸は3着内（軸複勝的中）。だが1着チェリヴェント(モデル8位・6人気)を相手評価から外し馬券的中は困難だった。1番人気ショウナンバンライ(モデル最下位12位・7枠0-0-0-20の壁)は6着で消しは正解。堅軸2着でも相手抜けの構造は継続課題のため今回は馬券見送り（投資0円）。
+            </div>
+          </div>
+        </div>
         <!-- クイーンS（結果サマリー・8/2・的中） -->
         <div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -2796,7 +2814,7 @@
 
 <script>
 /* 終了レースのリスト（カレンダー初回レンダリング前に定義必須） */
-var FINISHED_RACES = ['クイーンS','関屋記念', '函館2歳S', '七夕賞', '函館記念','ラジオNIKKEI賞','しらさぎステークス','府中牝馬S','天皇賞（春）', '京都新聞杯', 'エプソムC', 'NHKマイルC', '新潟大賞典', 'ヴィクトリアマイル', '平安ステークス', 'オークス', '葵ステークス', '日本ダービー', '目黒記念', '安田記念', '函館スプリントS', '宝塚記念', '北九州記念'];
+var FINISHED_RACES = ['レパードS', 'クイーンS','関屋記念', '函館2歳S', '七夕賞', '函館記念','ラジオNIKKEI賞','しらさぎステークス','府中牝馬S','天皇賞（春）', '京都新聞杯', 'エプソムC', 'NHKマイルC', '新潟大賞典', 'ヴィクトリアマイル', '平安ステークス', 'オークス', '葵ステークス', '日本ダービー', '目黒記念', '安田記念', '函館スプリントS', '宝塚記念', '北九州記念'];
 
 /* =====================================================
  * 1) RACE CALENDAR
@@ -2948,7 +2966,7 @@ const STATUS_BADGE = {
 };
 
 const TARGET_RACE_NAME = "オークス";
-const SUPPORTED_RACES = new Set(['レパードS','クイーンS', "関屋記念", "函館2歳S", "天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S","ラジオNIKKEI賞","函館記念","北九州記念","七夕賞",]);
+const SUPPORTED_RACES = new Set(['札幌記念', 'レパードS','クイーンS', "関屋記念", "函館2歳S", "天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S","ラジオNIKKEI賞","函館記念","北九州記念","七夕賞",]);
 
 function getDefaultDisplayMonth() {
   // 直近の「予想中」(SUPPORTED && upcoming) レースの開催月を返す
@@ -8246,6 +8264,7 @@ const RACE_META = {
   babaPrediction: { status: "良馬場想定", icon: "☀️", color: "#1D9E75", comment: "阪神芝2200m" },
 },
   'レパードS': { gradeLine:'G3', title:'レパードS', date:'2026-08-09', venue:'新潟競馬場', surface:'ダ1800m', age:'3歳', distance:1800, direction:'左', isFinished:false, pageTitle:'レパードS 予想 | UMANARI2026', notice:'', babaWet:false, babaPrediction:'良', status:'予想中', paceExpect:'', paceNote:'' },
+  '札幌記念': { gradeLine:'G2', title:'札幌記念', date:'2026-08-16', venue:'札幌競馬場', surface:'芝2000m', age:'3歳以上', distance:2000, direction:'右', isFinished:false, pageTitle:'札幌記念 予想 | UMANARI2026', notice:'', babaWet:false, babaPrediction:'良', status:'予想中', paceExpect:'', paceNote:'' },
   'クイーンS': { gradeLine:'G3', title:'クイーンS', date:'2026-08-02', venue:'札幌競馬場', surface:'芝1800m', age:'3歳以上牝馬', distance:1800, direction:'右', isFinished:false, pageTitle:'クイーンS 予想 | UMANARI2026', notice:'', babaWet:false, babaPrediction:'良', status:'予想中', paceExpect:'', paceNote:'' }
 };
 
@@ -26682,7 +26701,13 @@ var JIKU_TRACKING = [
     note: 'スコア軸◎エコロディノスは9着に大敗しscoreHit:false。1着ファウストラーゼン(7人)・2着ケリフレッドアスク(9人)・3着ピースワンデュック(10人)の人気薄3頭決着(3連単326,840円)。荒れ指数で右回り苦手として割り引いたピースが3着に巻き返し。軸不振で人気薄上位を取り逃す。' },
   { race: 'ラジオNIKKEI賞', aiJiku: 'クカイリモク', scoreJiku: 'クカイリモク',
     result: '9着', aiHit: false, scoreHit: false, comboHit: false,
-    note: 'スコア軸◎クカイリモクは9着でscoreHit:false。1着サノノグレーター(4人・前走皐月賞G1組・グレイルロンサム系)・2着ディールメーカー(8人・前走NZT G2)・3着リッツパーティー(1人)。3歳ハンデ戦で前走クラスG1組の格を軸に取れなかったのが反省点。3連単52,690円。' }
+    note: 'スコア軸◎クカイリモクは9着でscoreHit:false。1着サノノグレーター(4人・前走皐月賞G1組・グレイルロンサム系)・2着ディールメーカー(8人・前走NZT G2)・3着リッツパーティー(1人)。3歳ハンデ戦で前走クラスG1組の格を軸に取れなかったのが反省点。3連単52,690円。' },
+  { race: 'クイーンS',        aiJiku: 'ココナッツブラウン', scoreJiku: 'ココナッツブラウン',
+    result: '1着', aiHit: true,  scoreHit: true,  comboHit: true,
+    note: 'ココナッツブラウン1着✅ ◎＝モデル1位が的中。モデル3位コガネノソラ2着・モデル13位フェスティバルヒルが最下位14着。3連単軸1頭マルチで+13,210円（回収率246.8%）' },
+  { race: 'レパードS',        aiJiku: 'パイロマンサー',     scoreJiku: 'パイロマンサー',
+    result: '2着', aiHit: true,  scoreHit: true,  comboHit: true,
+    note: 'パイロマンサー2着✅ 軸は3着内（軸複勝的中）。モデル3位メルカントゥール3着。1着は8位チェリヴェント（6人気）を相手から外し不的中相当。1番人気ショウナンバンライ（モデル最下位12位）は6着で消しは正解。馬券購入なし' }
 ];
 
 function renderJikuTracking() {
