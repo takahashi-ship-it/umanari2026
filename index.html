@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260810-2145';
+  var CURRENT_VERSION = '20260810-2320';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7726,7 +7726,7 @@ function _getLeopardScoreStats(){
 }
 
 // ===== 札幌記念 専用エンジン (G2 / 札幌芝2000m / 古馬混合 / 58.0kg定量) =====
-// Σmax=78 / 11項目。目的関数は3着内率(3連単マルチ用)であり勝率ではない。
+// Σmax=75 / 11項目。目的関数は3着内率(3連単マルチ用)であり勝率ではない。
 // 配点しない: 枠(2017-2020集中の時期バイアス) / 人気(市場評価) / 所属(実レンジ0) / 血統(§25資料不一致)
 // §24 洋芝・芝2000はOP以上に層別。§28 未経験は減点しない。前走ダートは中立(傾向データが芝前走のみで構築)。
 
@@ -7789,16 +7789,17 @@ function computeScoreBreakdownSapporo(h, _rawOnly){
   var diff=Math.abs(pd-2000), lv = diff<=200?2 : diff<=400?1.5 : diff<=800?1 : 0.5;
   add('距離連続性',lv,2,'前走'+h.prevDist+' 差'+diff+'m');
 
-  // 11. 種牡馬コース実績 max6  札幌芝2000の産駒成績。未掲載=中立(§23) / 分母で縮小補正
+  // 11. 種牡馬コース実績 max3  札幌芝2000の産駒成績。未掲載=中立(§23) / 分母で縮小補正
+  // 配点6→3に減点(2026-08-10): 16頭中9頭が中立で実レンジ1.7点しかなく、§25「実レンジ0の項目は序列に寄与しない」に照らし過大だったため。変更は枠順・オッズ確定前に実施。
   var sire=(h.sire||'').replace(/\(.*$/,'').trim(), sc=SAPPORO_SIRE_COURSE[sire], scv, scn;
-  if(!sc){ scv=3; scn='未掲載='+(sire||'父不明')+' 中立(§23 欠損は不良ではない)'; }
+  if(!sc){ scv=1.5; scn='未掲載='+(sire||'父不明')+' 中立(§23 欠損は不良ではない)'; }
   else {
     var sn=sc[0]+sc[1]+sc[2]+sc[3], spl=(sc[0]+sc[1]+sc[2])/sn, sconf=Math.min(1,sn/40);
-    var raw=6*Math.min(1,spl/0.35);
-    scv=Math.round((3+(raw-3)*sconf)*10)/10;
+    var raw=3*Math.min(1,spl/0.35);
+    scv=Math.round((1.5+(raw-1.5)*sconf)*100)/100;
     scn=sire+' '+sc.join('-')+' 複勝'+Math.round(spl*1000)/10+'% 分母'+sn+' 信頼度'+Math.round(sconf*100)/100;
   }
-  add('種牡馬コース実績',scv,6,scn);
+  add('種牡馬コース実績',scv,3,scn);
 
   var total=it.reduce(function(a,x){return a+x.value;},0);
   var max=it.reduce(function(a,x){return a+x.max;},0);
