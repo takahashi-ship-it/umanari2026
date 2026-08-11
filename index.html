@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260810-2320';
+  var CURRENT_VERSION = '20260811-0030';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -13842,57 +13842,57 @@ RACE_PAST_DATA['クイーンS'] = {
 };
 
 RACE_PAST_DATA['札幌記念'] = {
-  note: "2016-2025。斤量定量。2016-2019は牡57.0、2020年以降は牡58.0（定量基準改定）。開催区分は2024年以前=2回札幌、2025年以降=1回札幌。/ trends母数: 枠・人気・年齢・前走クラスは142（独立3資料一致）、脚質・4角・前走着順は141、所属は140（単一資料のみ）。出走頭数合計143との差は着順・前走記録なしの個体。理由は一次資料未確認のため断定しない。",
+  note: "2016-2025。斤量定量。2016-2019は牡57.0、2020年以降は牡58.0（定量基準改定）。開催区分は2024年以前=2回札幌、2025年以降=1回札幌。/ trends母数: 枠・人気・年齢・前走クラスは142（独立3資料一致）、脚質・4角・前走着順は141、所属は140（単一資料のみ）。出走頭数合計143との差は着順・前走記録なしの個体。理由は一次資料未確認のため断定しない。/ 過去10年30頭の父系統・母父系統は第4の分類体系(サンデーサイレンスを独立させHaloを用いない粒度)であり、ロスターのsireLine(5代血統表: Halo/Mr.Prospector/Danzig/DeputyMinister)およびうましる版・Winsight版と粒度が異なる。系統は配点しない。/ ハービンジャー産駒の3着内5頭は全て2018-2021に集中し2022年以降ゼロ(1枠の時期バイアスと同型)。該当はグランディア・ローシャムパーク。",
   results: [
     {year:2025, date:"8/17", meeting:"1回札幌8日目", cond:"曇 稍重", field:16, rows:[
-      {rank:1, waku:9,  name:"トップナイフ",       sexAge:"牡5", pop:10, jockey:"横山典", kg:58.0, stable:"昆貢",   time:"2:01.5", ag3f:36.2, bw:"484(-8)",  pass:"12-11-5-3",  sire:"デクラレーションオブウォー", bms:"スピニングワールド", prev:"函館記", gap:"中6週", prevPop:4,  prevRank:10},
-      {rank:2, waku:15, name:"ココナッツブラウン", sexAge:"牝5", pop:2,  jockey:"北村友", kg:56.0, stable:"上村洋", margin:"1",   ag3f:35.5, bw:"460(-10)", pass:"11-11-12-10", sire:"キタサンブラック", bms:"キングカメハメハ", prev:"クイS", gap:"中1週", prevPop:2,  prevRank:2},
-      {rank:3, waku:14, name:"アラタ",             sexAge:"牡8", pop:13, jockey:"浜中俊", kg:58.0, stable:"和田勇", margin:"3/4", ag3f:35.0, bw:"472(+4)",  pass:"14-14-14-10", sire:"キングカメハメハ", bms:"ハーツクライ", prev:"天皇賞", gap:"4ヶ月", prevPop:13, prevRank:15}
+      {rank:1, waku:9,  name:"トップナイフ",       sexAge:"牡5", pop:10, jockey:"横山典", kg:58.0, stable:"昆貢",   time:"2:01.5", ag3f:36.2, bw:"484(-8)",  pass:"12-11-5-3",  sire:"デクラレーションオブウォー", sireLine:"Danzig", bmsLine:"Nureyev", dam:"ビーウインド", bms:"スピニングワールド", prev:"函館記", gap:"中6週", prevPop:4,  prevRank:10},
+      {rank:2, waku:15, name:"ココナッツブラウン", sexAge:"牝5", pop:2,  jockey:"北村友", kg:56.0, stable:"上村洋", margin:"1",   ag3f:35.5, bw:"460(-10)", pass:"11-11-12-10", sire:"キタサンブラック", sireLine:"サンデーサイレンス", bmsLine:"MrProspector", dam:"ルアーズストリート", bms:"キングカメハメハ", prev:"クイS", gap:"中1週", prevPop:2,  prevRank:2},
+      {rank:3, waku:14, name:"アラタ",             sexAge:"牡8", pop:13, jockey:"浜中俊", kg:58.0, stable:"和田勇", margin:"3/4", ag3f:35.0, bw:"472(+4)",  pass:"14-14-14-10", sire:"キングカメハメハ", sireLine:"MrProspector", bmsLine:"サンデーサイレンス", dam:"サンシャイン", bms:"ハーツクライ", prev:"天皇賞", gap:"4ヶ月", prevPop:13, prevRank:15}
     ]},
     {year:2024, date:"8/18", meeting:"2回札幌4日目", cond:"晴 良", field:12, rows:[
-      {rank:1, waku:12, name:"ノースブリッジ",     sexAge:"牡6", pop:5, jockey:"岩田康", kg:58.0, stable:"奥村武", time:"1:59.6", ag3f:35.0, bw:"502(+1)", pass:"2-2-2-2", sire:"モーリス",   bms:"アドマイヤムーン", prev:"QE2", gap:"4ヶ月", prevPop:null, prevRank:3},
-      {rank:2, waku:2,  name:"ジオグリフ",         sexAge:"牡5", pop:3, jockey:"横山武", kg:58.0, stable:"木村哲", margin:"1 3/4", ag3f:35.0, bw:"512(+2)", pass:"3-3-3-3", sire:"ドレフォン", bms:"キングカメハメハ", prev:"安田記", gap:"中10週", prevPop:12, prevRank:6},
-      {rank:3, waku:9,  name:"ステラヴェローチェ", sexAge:"牡6", pop:4, jockey:"横山典", kg:58.0, stable:"須貝尚", margin:"1",     ag3f:34.9, bw:"508(+2)", pass:"6-6-6-5", sire:"バゴ",       bms:"ディープインパクト", prev:"安田記", gap:"中10週", prevPop:7, prevRank:9}
+      {rank:1, waku:12, name:"ノースブリッジ",     sexAge:"牡6", pop:5, jockey:"岩田康", kg:58.0, stable:"奥村武", time:"1:59.6", ag3f:35.0, bw:"502(+1)", pass:"2-2-2-2", sire:"モーリス", sireLine:"Roberto", bmsLine:"MrProspector", dam:"アメージングムーン",   bms:"アドマイヤムーン", prev:"QE2", gap:"4ヶ月", prevPop:null, prevRank:3},
+      {rank:2, waku:2,  name:"ジオグリフ",         sexAge:"牡5", pop:3, jockey:"横山武", kg:58.0, stable:"木村哲", margin:"1 3/4", ag3f:35.0, bw:"512(+2)", pass:"3-3-3-3", sire:"ドレフォン", sireLine:"StormBird", bmsLine:"MrProspector", dam:"アロマティコ", bms:"キングカメハメハ", prev:"安田記", gap:"中10週", prevPop:12, prevRank:6},
+      {rank:3, waku:9,  name:"ステラヴェローチェ", sexAge:"牡6", pop:4, jockey:"横山典", kg:58.0, stable:"須貝尚", margin:"1",     ag3f:34.9, bw:"508(+2)", pass:"6-6-6-5", sire:"バゴ", sireLine:"RedGod", bmsLine:"サンデーサイレンス", dam:"オーマイベイビー",       bms:"ディープインパクト", prev:"安田記", gap:"中10週", prevPop:7, prevRank:9}
     ]},
     {year:2023, date:"8/20", meeting:"2回札幌4日目", cond:"晴 稍重", field:15, rows:[
-      {rank:1, waku:13, name:"プログノーシス",   sexAge:"牡5", pop:2, jockey:"川田将", kg:58.0, stable:"中内田", time:"2:01.5", ag3f:36.0, bw:"476(+2)", pass:"13-11-5-2", sire:"ディープインパクト", bms:"Observatory", prev:"QE2", gap:"4ヶ月", prevPop:null, prevRank:2},
-      {rank:2, waku:10, name:"トップナイフ",     sexAge:"牡3", pop:9, jockey:"横山和", kg:55.0, stable:"昆貢",   margin:"4", ag3f:36.9, bw:"482(-2)", pass:"6-5-3-1",  sire:"デクラレーションオブウォー", bms:"スピニングワールド", prev:"東京優", gap:"中11週", prevPop:10, prevRank:14},
-      {rank:3, waku:1,  name:"ソーヴァリアント", sexAge:"牡5", pop:4, jockey:"Cルメ",  kg:58.0, stable:"大竹正", margin:"3", ag3f:36.7, bw:"508(0)",  pass:"10-8-10-3", sire:"オルフェーヴル", bms:"シンボリクリスエス", prev:"鳴尾記", gap:"中10週", prevPop:1, prevRank:12}
+      {rank:1, waku:13, name:"プログノーシス",   sexAge:"牡5", pop:2, jockey:"川田将", kg:58.0, stable:"中内田", time:"2:01.5", ag3f:36.0, bw:"476(+2)", pass:"13-11-5-2", sire:"ディープインパクト", sireLine:"サンデーサイレンス", bmsLine:"MrProspector", dam:"ヴェルダ", bms:"Observatory", prev:"QE2", gap:"4ヶ月", prevPop:null, prevRank:2},
+      {rank:2, waku:10, name:"トップナイフ",     sexAge:"牡3", pop:9, jockey:"横山和", kg:55.0, stable:"昆貢",   margin:"4", ag3f:36.9, bw:"482(-2)", pass:"6-5-3-1",  sire:"デクラレーションオブウォー", sireLine:"Danzig", bmsLine:"Nureyev", dam:"ビーウインド", bms:"スピニングワールド", prev:"東京優", gap:"中11週", prevPop:10, prevRank:14},
+      {rank:3, waku:1,  name:"ソーヴァリアント", sexAge:"牡5", pop:4, jockey:"Cルメ",  kg:58.0, stable:"大竹正", margin:"3", ag3f:36.7, bw:"508(0)",  pass:"10-8-10-3", sire:"オルフェーヴル", sireLine:"サンデーサイレンス", bmsLine:"Roberto", dam:"ソーマジック", bms:"シンボリクリスエス", prev:"鳴尾記", gap:"中10週", prevPop:1, prevRank:12}
     ]},
     {year:2022, date:"8/21", meeting:"2回札幌4日目", cond:"晴 良", field:16, rows:[
-      {rank:1, waku:4, name:"ジャックドール",   sexAge:"牡4", pop:3, jockey:"藤岡佑", kg:57.0, stable:"藤岡健", time:"2:01.2", ag3f:37.3, bw:"516(+8)", pass:"3-4-3-2", sire:"モーリス",       bms:"Unbridled's Song", prev:"大阪杯", gap:"5ヶ月", prevPop:2, prevRank:5},
-      {rank:2, waku:3, name:"パンサラッサ",     sexAge:"牡5", pop:2, jockey:"吉田豊", kg:57.0, stable:"矢作芳", margin:"クビ",  ag3f:37.7, bw:"470(-6)", pass:"1-1-1-1", sire:"ロードカナロア",   bms:"Montjeu", prev:"宝塚記", gap:"中7週", prevPop:6, prevRank:8},
-      {rank:3, waku:9, name:"ウインマリリン",   sexAge:"牝5", pop:5, jockey:"松岡正", kg:55.0, stable:"手塚貴", margin:"1 1/2", ag3f:37.4, bw:"488(+12)", pass:"3-3-3-3", sire:"スクリーンヒーロー", bms:"Fusaichi Pegasus", prev:"宝塚記", gap:"中7週", prevPop:9, prevRank:7}
+      {rank:1, waku:4, name:"ジャックドール",   sexAge:"牡4", pop:3, jockey:"藤岡佑", kg:57.0, stable:"藤岡健", time:"2:01.2", ag3f:37.3, bw:"516(+8)", pass:"3-4-3-2", sire:"モーリス", sireLine:"Roberto", bmsLine:"MrProspector", dam:"ラヴァリーノ",       bms:"Unbridled's Song", prev:"大阪杯", gap:"5ヶ月", prevPop:2, prevRank:5},
+      {rank:2, waku:3, name:"パンサラッサ",     sexAge:"牡5", pop:2, jockey:"吉田豊", kg:57.0, stable:"矢作芳", margin:"クビ",  ag3f:37.7, bw:"470(-6)", pass:"1-1-1-1", sire:"ロードカナロア", sireLine:"MrProspector", bmsLine:"Sadler'sWells", dam:"ミスペンバリー",   bms:"Montjeu", prev:"宝塚記", gap:"中7週", prevPop:6, prevRank:8},
+      {rank:3, waku:9, name:"ウインマリリン",   sexAge:"牝5", pop:5, jockey:"松岡正", kg:55.0, stable:"手塚貴", margin:"1 1/2", ag3f:37.4, bw:"488(+12)", pass:"3-3-3-3", sire:"スクリーンヒーロー", sireLine:"Roberto", bmsLine:"MrProspector", dam:"コスモチェーロ", bms:"Fusaichi Pegasus", prev:"宝塚記", gap:"中7週", prevPop:9, prevRank:7}
     ]},
     {year:2021, date:"8/22", meeting:"2回札幌4日目", cond:"曇 良", field:13, rows:[
-      {rank:1, waku:13, name:"ソダシ",             sexAge:"牝3", pop:2, jockey:"吉田隼", kg:52.0, stable:"須貝尚", time:"1:59.5", ag3f:35.4, bw:"472(0)",  pass:"2-2-1-1", sire:"クロフネ",         bms:"キングカメハメハ", prev:"優駿牝", gap:"3ヶ月", prevPop:1, prevRank:8},
-      {rank:2, waku:4,  name:"ラヴズオンリーユー", sexAge:"牝5", pop:1, jockey:"川田将", kg:55.0, stable:"矢作芳", margin:"3/4",   ag3f:35.1, bw:"470(-8)", pass:"7-7-6-5", sire:"ディープインパクト", bms:"Storm Cat", prev:"QE2", gap:"4ヶ月", prevPop:null, prevRank:1},
-      {rank:3, waku:7,  name:"ペルシアンナイト",   sexAge:"牡7", pop:8, jockey:"横山武", kg:57.0, stable:"池江泰", margin:"アタマ", ag3f:35.2, bw:"502(+10)", pass:"5-4-4-3", sire:"ハービンジャー", bms:"サンデーサイレンス", prev:"鳴尾記", gap:"中10週", prevPop:7, prevRank:4}
+      {rank:1, waku:13, name:"ソダシ",             sexAge:"牝3", pop:2, jockey:"吉田隼", kg:52.0, stable:"須貝尚", time:"1:59.5", ag3f:35.4, bw:"472(0)",  pass:"2-2-1-1", sire:"クロフネ", sireLine:"ViceRegent", bmsLine:"MrProspector", dam:"ブチコ",         bms:"キングカメハメハ", prev:"優駿牝", gap:"3ヶ月", prevPop:1, prevRank:8},
+      {rank:2, waku:4,  name:"ラヴズオンリーユー", sexAge:"牝5", pop:1, jockey:"川田将", kg:55.0, stable:"矢作芳", margin:"3/4",   ag3f:35.1, bw:"470(-8)", pass:"7-7-6-5", sire:"ディープインパクト", sireLine:"サンデーサイレンス", bmsLine:"StormBird", dam:"ラヴズオンリーミー", bms:"Storm Cat", prev:"QE2", gap:"4ヶ月", prevPop:null, prevRank:1},
+      {rank:3, waku:7,  name:"ペルシアンナイト",   sexAge:"牡7", pop:8, jockey:"横山武", kg:57.0, stable:"池江泰", margin:"アタマ", ag3f:35.2, bw:"502(+10)", pass:"5-4-4-3", sire:"ハービンジャー", sireLine:"Danzig", bmsLine:"サンデーサイレンス", dam:"オリエントチャーム", bms:"サンデーサイレンス", prev:"鳴尾記", gap:"中10週", prevPop:7, prevRank:4}
     ]},
     {year:2020, date:"8/23", meeting:"2回札幌4日目", cond:"晴 良", field:12, rows:[
-      {rank:1, waku:1, name:"ノームコア",       sexAge:"牝5", pop:2, jockey:"横山典", kg:55.0, stable:"萩原清", time:"1:59.4", ag3f:34.5, bw:"468(+2)", pass:"6-6-7-5", sire:"ハービンジャー",   bms:"クロフネ", prev:"安田記", gap:"中10週", prevPop:7, prevRank:4},
-      {rank:2, waku:2, name:"ペルシアンナイト", sexAge:"牡6", pop:6, jockey:"大野拓", kg:57.0, stable:"池江泰", margin:"1",     ag3f:34.5, bw:"500(0)",  pass:"9-9-9-7", sire:"ハービンジャー",   bms:"サンデーサイレンス", prev:"宝塚記", gap:"中7週", prevPop:13, prevRank:15},
-      {rank:3, waku:6, name:"ラッキーライラック", sexAge:"牝5", pop:1, jockey:"Mデム", kg:55.0, stable:"松永幹", margin:"1 1/2", ag3f:35.5, bw:"524(0)", pass:"2-2-2-2", sire:"オルフェーヴル", bms:"Flower Alley", prev:"宝塚記", gap:"中7週", prevPop:3, prevRank:6}
+      {rank:1, waku:1, name:"ノームコア",       sexAge:"牝5", pop:2, jockey:"横山典", kg:55.0, stable:"萩原清", time:"1:59.4", ag3f:34.5, bw:"468(+2)", pass:"6-6-7-5", sire:"ハービンジャー", sireLine:"Danzig", bmsLine:"ViceRegent", dam:"クロノロジスト",   bms:"クロフネ", prev:"安田記", gap:"中10週", prevPop:7, prevRank:4},
+      {rank:2, waku:2, name:"ペルシアンナイト", sexAge:"牡6", pop:6, jockey:"大野拓", kg:57.0, stable:"池江泰", margin:"1",     ag3f:34.5, bw:"500(0)",  pass:"9-9-9-7", sire:"ハービンジャー", sireLine:"Danzig", bmsLine:"サンデーサイレンス", dam:"オリエントチャーム",   bms:"サンデーサイレンス", prev:"宝塚記", gap:"中7週", prevPop:13, prevRank:15},
+      {rank:3, waku:6, name:"ラッキーライラック", sexAge:"牝5", pop:1, jockey:"Mデム", kg:55.0, stable:"松永幹", margin:"1 1/2", ag3f:35.5, bw:"524(0)", pass:"2-2-2-2", sire:"オルフェーヴル", sireLine:"サンデーサイレンス", bmsLine:"MrProspector", dam:"ライラックスアンド", bms:"Flower Alley", prev:"宝塚記", gap:"中7週", prevPop:3, prevRank:6}
     ]},
     {year:2019, date:"8/18", meeting:"2回札幌2日目", cond:"晴 良", field:14, rows:[
-      {rank:1, waku:1,  name:"ブラストワンピース", sexAge:"牡4", pop:3, jockey:"川田将", kg:57.0, stable:"大竹正", time:"2:00.1", ag3f:34.9, bw:"536(-2)", pass:"9-9-8-6",  sire:"ハービンジャー",     bms:"キングカメハメハ", prev:"目黒記", gap:"中11週", prevPop:1, prevRank:8},
-      {rank:2, waku:10, name:"サングレーザー",     sexAge:"牡5", pop:4, jockey:"岩田康", kg:57.0, stable:"浅見秀", margin:"クビ", ag3f:35.6, bw:"486(0)",  pass:"3-3-4-2",  sire:"ディープインパクト", bms:"Deputy Minister", prev:"安田記", gap:"中10週", prevPop:6, prevRank:5},
-      {rank:3, waku:9,  name:"フィエールマン",     sexAge:"牡4", pop:1, jockey:"Cルメ",  kg:57.0, stable:"手塚貴", margin:"1",   ag3f:34.9, bw:"480(0)",  pass:"9-9-10-9", sire:"ディープインパクト", bms:"Green Tune", prev:"天皇賞", gap:"4ヶ月", prevPop:1, prevRank:1}
+      {rank:1, waku:1,  name:"ブラストワンピース", sexAge:"牡4", pop:3, jockey:"川田将", kg:57.0, stable:"大竹正", time:"2:00.1", ag3f:34.9, bw:"536(-2)", pass:"9-9-8-6",  sire:"ハービンジャー", sireLine:"Danzig", bmsLine:"MrProspector", dam:"ツルマルワンピース",     bms:"キングカメハメハ", prev:"目黒記", gap:"中11週", prevPop:1, prevRank:8},
+      {rank:2, waku:10, name:"サングレーザー",     sexAge:"牡5", pop:4, jockey:"岩田康", kg:57.0, stable:"浅見秀", margin:"クビ", ag3f:35.6, bw:"486(0)",  pass:"3-3-4-2",  sire:"ディープインパクト", sireLine:"サンデーサイレンス", bmsLine:"ViceRegent", dam:"マンティスハント", bms:"Deputy Minister", prev:"安田記", gap:"中10週", prevPop:6, prevRank:5},
+      {rank:3, waku:9,  name:"フィエールマン",     sexAge:"牡4", pop:1, jockey:"Cルメ",  kg:57.0, stable:"手塚貴", margin:"1",   ag3f:34.9, bw:"480(0)",  pass:"9-9-10-9", sire:"ディープインパクト", sireLine:"サンデーサイレンス", bmsLine:"Nijinsky", dam:"リュヌドール", bms:"Green Tune", prev:"天皇賞", gap:"4ヶ月", prevPop:1, prevRank:1}
     ]},
     {year:2018, date:"8/19", meeting:"2回札幌2日目", cond:"曇 稍重", field:16, rows:[
-      {rank:1, waku:2,  name:"サングレーザー", sexAge:"牡4", pop:2, jockey:"福永祐", kg:57.0, stable:"浅見秀", time:"2:01.1", ag3f:36.8, bw:"488(+2)", pass:"7-7-7-9",     sire:"ディープインパクト", bms:"Deputy Minister", prev:"安田記", gap:"中10週", prevPop:3, prevRank:5},
-      {rank:2, waku:5,  name:"マカヒキ",       sexAge:"牡5", pop:1, jockey:"Cルメ",  kg:57.0, stable:"友道康", margin:"ハナ", ag3f:36.4, bw:"506(+6)", pass:"15-14-13-11", sire:"ディープインパクト", bms:"フレンチデピュティ", prev:"JC", gap:"9ヶ月", prevPop:6, prevRank:4},
-      {rank:3, waku:15, name:"モズカッチャン", sexAge:"牝4", pop:4, jockey:"Mデム",  kg:55.0, stable:"鮫島一", margin:"アタマ", ag3f:36.0, bw:"484(--)", pass:"16-16-16-14", sire:"ハービンジャー", bms:"キングカメハメハ", prev:"DSC", gap:"5ヶ月", prevPop:null, prevRank:6}
+      {rank:1, waku:2,  name:"サングレーザー", sexAge:"牡4", pop:2, jockey:"福永祐", kg:57.0, stable:"浅見秀", time:"2:01.1", ag3f:36.8, bw:"488(+2)", pass:"7-7-7-9",     sire:"ディープインパクト", sireLine:"サンデーサイレンス", bmsLine:"ViceRegent", dam:"マンティスハント", bms:"Deputy Minister", prev:"安田記", gap:"中10週", prevPop:3, prevRank:5},
+      {rank:2, waku:5,  name:"マカヒキ",       sexAge:"牡5", pop:1, jockey:"Cルメ",  kg:57.0, stable:"友道康", margin:"ハナ", ag3f:36.4, bw:"506(+6)", pass:"15-14-13-11", sire:"ディープインパクト", sireLine:"サンデーサイレンス", bmsLine:"ViceRegent", dam:"ウィキウィキ", bms:"フレンチデピュティ", prev:"JC", gap:"9ヶ月", prevPop:6, prevRank:4},
+      {rank:3, waku:15, name:"モズカッチャン", sexAge:"牝4", pop:4, jockey:"Mデム",  kg:55.0, stable:"鮫島一", margin:"アタマ", ag3f:36.0, bw:"484(--)", pass:"16-16-16-14", sire:"ハービンジャー", sireLine:"Danzig", bmsLine:"MrProspector", dam:"サイトディーラー", bms:"キングカメハメハ", prev:"DSC", gap:"5ヶ月", prevPop:null, prevRank:6}
     ]},
     {year:2017, date:"8/20", meeting:"2回札幌2日目", cond:"晴 良", field:13, rows:[
-      {rank:1, waku:1, name:"サクラアンプルール", sexAge:"牡6", pop:6,  jockey:"蛯名正", kg:57.0, stable:"金成貴", time:"2:00.4", ag3f:35.0, bw:"476(+2)", pass:"6-7-6-6",   sire:"キングカメハメハ", bms:"サンデーサイレンス", prev:"函館記", gap:"中4週", prevPop:8,  prevRank:9},
-      {rank:2, waku:2, name:"ナリタハリケーン",   sexAge:"牡8", pop:12, jockey:"藤岡康", kg:57.0, stable:"中尾秀", margin:"クビ", ag3f:34.7, bw:"486(0)",  pass:"11-10-9-8", sire:"キングカメハメハ", bms:"サンデーサイレンス", prev:"函館記", gap:"中4週", prevPop:12, prevRank:7},
-      {rank:3, waku:3, name:"ヤマカツエース",     sexAge:"牡5", pop:1,  jockey:"池添謙", kg:57.0, stable:"池添兼", margin:"1 1/2", ag3f:35.4, bw:"508(-6)", pass:"6-5-5-4", sire:"キングカメハメハ", bms:"グラスワンダー", prev:"大阪杯", gap:"5ヶ月", prevPop:4, prevRank:3}
+      {rank:1, waku:1, name:"サクラアンプルール", sexAge:"牡6", pop:6,  jockey:"蛯名正", kg:57.0, stable:"金成貴", time:"2:00.4", ag3f:35.0, bw:"476(+2)", pass:"6-7-6-6",   sire:"キングカメハメハ", sireLine:"MrProspector", bmsLine:"サンデーサイレンス", dam:"サクラメガ", bms:"サンデーサイレンス", prev:"函館記", gap:"中4週", prevPop:8,  prevRank:9},
+      {rank:2, waku:2, name:"ナリタハリケーン",   sexAge:"牡8", pop:12, jockey:"藤岡康", kg:57.0, stable:"中尾秀", margin:"クビ", ag3f:34.7, bw:"486(0)",  pass:"11-10-9-8", sire:"キングカメハメハ", sireLine:"MrProspector", bmsLine:"サンデーサイレンス", dam:"シュペリユール", bms:"サンデーサイレンス", prev:"函館記", gap:"中4週", prevPop:12, prevRank:7},
+      {rank:3, waku:3, name:"ヤマカツエース",     sexAge:"牡5", pop:1,  jockey:"池添謙", kg:57.0, stable:"池添兼", margin:"1 1/2", ag3f:35.4, bw:"508(-6)", pass:"6-5-5-4", sire:"キングカメハメハ", sireLine:"MrProspector", bmsLine:"Roberto", dam:"ヤマカツマリリン", bms:"グラスワンダー", prev:"大阪杯", gap:"5ヶ月", prevPop:4, prevRank:3}
     ]},
     {year:2016, date:"8/21", meeting:"2回札幌2日目", cond:"雨 稍重", field:16, rows:[
-      {rank:1, waku:13, name:"ネオリアリズム",   sexAge:"牡5", pop:5, jockey:"Cルメ",  kg:57.0, stable:"堀宣行", time:"2:01.7", ag3f:36.9, bw:"496(-18)", pass:"1-1-1-1",     sire:"ネオユニヴァース",   bms:"Meadowlake", prev:"函館記", gap:"中4週", prevPop:4,  prevRank:6},
-      {rank:2, waku:15, name:"モーリス",         sexAge:"牡5", pop:1, jockey:"Jモレ",  kg:57.0, stable:"堀宣行", margin:"2",   ag3f:36.3, bw:"510(-4)",  pass:"8-9-9-7",     sire:"スクリーンヒーロー", bms:"カーネギー", prev:"安田記", gap:"中10週", prevPop:1,  prevRank:2},
-      {rank:3, waku:2,  name:"レインボーライン", sexAge:"牡3", pop:4, jockey:"福永祐", kg:54.0, stable:"浅見秀", margin:"クビ", ag3f:36.3, bw:"442(+10)", pass:"11-11-12-11", sire:"ステイゴールド", bms:"フレンチデピュティ", prev:"東京優", gap:"中11週", prevPop:12, prevRank:8}
+      {rank:1, waku:13, name:"ネオリアリズム",   sexAge:"牡5", pop:5, jockey:"Cルメ",  kg:57.0, stable:"堀宣行", time:"2:01.7", ag3f:36.9, bw:"496(-18)", pass:"1-1-1-1",     sire:"ネオユニヴァース", sireLine:"サンデーサイレンス", bmsLine:"StSimon", dam:"トキオリアリティー",   bms:"Meadowlake", prev:"函館記", gap:"中4週", prevPop:4,  prevRank:6},
+      {rank:2, waku:15, name:"モーリス",         sexAge:"牡5", pop:1, jockey:"Jモレ",  kg:57.0, stable:"堀宣行", margin:"2",   ag3f:36.3, bw:"510(-4)",  pass:"8-9-9-7",     sire:"スクリーンヒーロー", sireLine:"Roberto", bmsLine:"Sadler'sWells", dam:"メジロフランシス", bms:"カーネギー", prev:"安田記", gap:"中10週", prevPop:1,  prevRank:2},
+      {rank:3, waku:2,  name:"レインボーライン", sexAge:"牡3", pop:4, jockey:"福永祐", kg:54.0, stable:"浅見秀", margin:"クビ", ag3f:36.3, bw:"442(+10)", pass:"11-11-12-11", sire:"ステイゴールド", sireLine:"サンデーサイレンス", bmsLine:"ViceRegent", dam:"レーゲンボーゲン", bms:"フレンチデピュティ", prev:"東京優", gap:"中11週", prevPop:12, prevRank:8}
     ]}
   ],
   trends: {
