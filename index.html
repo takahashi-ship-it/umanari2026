@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260814-0900';
+  var CURRENT_VERSION = '20260814-1100';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -20332,6 +20332,26 @@ function _getHorsePositives(horse, raceName) {
     return p;
   }
 
+  // SAPPORO_BADGES
+  // ===== 札幌記念 専用バッジ (RACE_PAST_DATA['札幌記念'].trends の実測値のみ使用) =====
+  if (raceName === '札幌記念') {
+    var pc = h.prevClass, pr = h.prevRank;
+    var isG1 = (pc === 'G1'), isOvG1 = (pc === '海外G1');
+    if (isG1) p.push('🎯 前走G1（4-7-7-27・複勝40.0%）');
+    if (isOvG1) p.push('🎯 前走海外G1（2-1-1-12・複勝25.0%）');
+    if ((isG1 || isOvG1) && pr >= 6) p.push('🎯 前走G1で6着以下＝巻き返しパターン（4-3-5-29・複勝29.3%／勝ち馬10頭中5頭）');
+    if (h.age === 5) p.push('🎂 5歳＝最強年代（4-7-4-24・複勝38.5%）');
+    if (h.age === 3) p.push('🎂 3歳（1-1-1-4・複勝42.9%）');
+    if (h.c4n && (h.c4in6 / h.c4n) >= 0.7) p.push('🏃 4角6番手以内が多い（1-6番手 9-5-6-46・複勝30.3%／勝ち馬10頭中9頭）');
+    var yo = h.yoshibaOP || [0,0,0,0];
+    if (yo[0] + yo[1] + yo[2] > 0) p.push('🌿 洋芝OP以上で3着内歴あり（' + yo.join('-') + '）');
+    var m2 = h.m2000OP || [0,0,0,0];
+    if (m2[0] + m2[1] + m2[2] > 0) p.push('📏 芝2000 OP以上で3着内歴あり（' + m2.join('-') + '）');
+    if (h.prevDist && h.prevDist.indexOf('ダ') === 0) p.push('ℹ️ 前走ダート＝中立扱い（傾向データが芝前走のみで構築のため加減点なし）');
+    p.push('ℹ️ 枠・人気・所属・血統系統は配点していません（時期バイアス／市場評価／実レンジ0／資料間の分類不一致のため）');
+    return p;
+  }
+  if (raceName !== '安田記念') return p;
   // 美浦×牝馬（強）/ 牝馬全体（弱）
   if (horse.sex === '牝' && stable.indexOf('美浦') >= 0) {
     p.push({ icon:'🌸', text:'美浦×牝馬（複勝率66.7%★★★最強条件）', _strong: true });
@@ -20507,6 +20527,15 @@ function _getHorseNegatives(horse, raceName) {
     return n;
   }
 
+  // ===== 札幌記念 専用バッジ =====
+  if (raceName === '札幌記念') {
+    if (h.prevClass === '非重賞') n.push('⚠️ 前走非重賞（0-0-0-13／§26により1着から外す根拠のみ・紐には残す）');
+    if (h.c4avg != null && h.c4avg >= 9.0 && (h.c4n || 0) >= 5) n.push('⚠️ 追込傾向 4角平均' + h.c4avg + '（追込 0-1-2-37・複勝7.5%）');
+    if (h.prevRank === 1) n.push('⚠️ 前走1着（0-1-1-14・連勝例なし）');
+    if (h.age >= 7) n.push('ℹ️ ' + h.age + '歳（7歳 0-0-1-17）※§29により消し材料にはしない');
+    return n;
+  }
+  if (raceName !== '安田記念') return n;
   // 前走5人気以下（国内・着外）
   if (!horse.prevIsOverseas && typeof horse.prevPop === 'number' && horse.prevPop >= 5
       && (!horse.prevRank || horse.prevRank >= 4)) {
