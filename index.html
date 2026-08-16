@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260816-1800';
+  var CURRENT_VERSION = '20260816-1900';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1760,7 +1760,7 @@
       <div id="results-log-container"></div>
 
 <!-- 宝塚記念（◎○▲完全1-2-3着的中だがトリガミ・収支マイナス） -->
-      <div class="card" style="border:1.5px solid #639922">
+      <details class="race-row"><summary><span class="rr-d">6/14</span><span class="rr-n">宝塚記念</span><span class="rr-g">G1</span><span class="plus">的中</span></summary><div class="card" style="border:1.5px solid #639922">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">宝塚記念</div>
@@ -1803,10 +1803,10 @@
             ◎○▲が1-2-3着で完全的中。データ予想は完璧だったが、相手を9頭に広げすぎてトリガミ（的中も収支マイナス）。堅い決着では相手を絞るべきだった、馬券構成の課題が残った一戦。突然の大雨でゴールドシップ産駒タバルに展開向き、データの本命が絶対王者クロワを下した。
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- 函館スプリントS（◎軸5着で不的中・収支マイナス） -->
-      <div class="card" style="border:1.5px solid #c0392b">
+      <details class="race-row"><summary><span class="rr-d">6/13</span><span class="rr-n">函館スプリントS</span><span class="rr-g">G3</span><span class="minus">不的中</span></summary><div class="card" style="border:1.5px solid #c0392b">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">函館スプリントS</div>
@@ -1849,10 +1849,10 @@
             ◎カルプス5着。△ピューロ1着・▲レイピア3着と印は捉えたが、軸カルプスがクビ・クビ差の5着惜敗。軸1頭マルチで相手にピューロ(7)も入れていたが、軸が飛んで不的中。牝馬は前で運べのデータは的中（ピューロ1着）も、勝ったのは本命でなく相手だった。軸選びが明暗を分けた一戦。
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- 安田記念（3連複的中だが収支マイナス） -->
-      <div class="card" style="border:1.5px solid #c0392b">
+      <details class="race-row"><summary><span class="rr-d">6/7</span><span class="rr-n">安田記念</span><span class="rr-g">G1</span><span class="plus">的中</span></summary><div class="card" style="border:1.5px solid #c0392b">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">安田記念</div>
@@ -1895,10 +1895,10 @@
             ◎軸ガイアフォース2着同着で4戦連続軸馬3着内的中（平安S/ダービー/目黒/安田）。後3F33.0は出走馬中最速。3連複は的中したが、2着同着で本来3連単も2本当たりだったところ、相手から11ワールズエンド（伏兵筆頭★5・AIは推奨）を外して獲り逃し、収支マイナスに。
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- 目黒記念（軸◎ウィクトル2着的中・ガミ） -->
-      <div class="card" style="border:1.5px solid #639922">
+      <details class="race-row"><summary><span class="rr-d">5/31</span><span class="rr-n">目黒記念</span><span class="rr-g">G2</span><span class="plus">的中</span></summary><div class="card" style="border:1.5px solid #639922">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">目黒記念</div>
@@ -1950,10 +1950,10 @@
             </div>
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- 日本ダービー（3連単45,000円→235,250円・回収率523%大爆発） -->
-      <div class="card" style="border:1.5px solid #FFD700;background:#FFFEF5">
+      <details class="race-row"><summary><span class="rr-d">5/31</span><span class="rr-n">日本ダービー</span><span class="rr-g">G1</span><span class="plus">的中</span></summary><div class="card" style="border:1.5px solid #FFD700;background:#FFFEF5">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">日本ダービー</div>
@@ -2003,10 +2003,10 @@
             </div>
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- 葵ステークス（予想完璧的中・馬券購入なし） -->
-      <div class="card" style="border:1.5px solid #639922">
+      <details class="race-row"><summary><span class="rr-d">5/30</span><span class="rr-n">葵ステークス</span><span class="rr-g">G3</span><span class="plus">的中</span></summary><div class="card" style="border:1.5px solid #639922">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">葵ステークス</div>
@@ -2058,10 +2058,10 @@
             </div>
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- オークス -->
-      <div class="card" style="border:1.5px solid #c0392b">
+      <details class="race-row"><summary><span class="rr-d">5/24</span><span class="rr-n">オークス</span><span class="rr-g">G1</span><span class="minus">不的中</span></summary><div class="card" style="border:1.5px solid #c0392b">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">オークス</div>
@@ -2110,10 +2110,10 @@
             </div>
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- 平安ステークス -->
-      <div class="card" style="border:1.5px solid #c0392b">
+      <details class="race-row"><summary><span class="rr-d">5/23</span><span class="rr-n">平安ステークス</span><span class="rr-g">G3</span><span class="plus">的中</span></summary><div class="card" style="border:1.5px solid #c0392b">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">平安ステークス</div>
@@ -2155,10 +2155,10 @@
             軸◎ロードクロンヌ1着・穴馬リスト◎タイトニット3着で軸馬予想は完璧的中。ただし2着に9人気ヴァルツァーシャル（買い目外）が突っ込み3連単83人気の大波乱に。3連複14-5-11なら7,770円的中だった。買い目構成の課題が残るレース
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- ヴィクトリアマイル -->
-      <div class="card" style="border:1.5px solid #c0392b">
+      <details class="race-row"><summary><span class="rr-d">5/17</span><span class="rr-n">ヴィクトリアマイル</span><span class="rr-g">G1</span><span class="plus">的中</span></summary><div class="card" style="border:1.5px solid #c0392b">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">ヴィクトリアマイル</div>
@@ -2200,10 +2200,10 @@
             ⚠️ 完璧的中（スコア1位×AI推奨×義英真本命の三位一体）だが、相手13頭の156点購入で点数過多。1〜3番人気決着の3,670円配当では回収不可。次回は相手6〜8頭に絞る運用へ
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- 新潟大賞典 -->
-      <div class="card" style="border:1.5px solid #c0392b">
+      <div style="display:none" data-miokuri="新潟大賞典"><div class="card" style="border:1.5px solid #c0392b">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">新潟大賞典</div>
@@ -2230,10 +2230,10 @@
             軸ドゥラドーレス（1人気3.1倍）・シュガークン（2人気5.5倍）共に着外。1番人気・2番人気が過去10年0勝のデータ通り。ハンデ戦の荒れを過小評価。馬券購入なしのため収支影響なし
           </div>
         </div>
-      </div>
+      </div></div>
 
       <!-- NHKマイルC -->
-      <div class="card" style="border:1.5px solid #639922">
+      <details class="race-row"><summary><span class="rr-d">5/10</span><span class="rr-n">NHKマイルC</span><span class="rr-g">G1</span><span class="plus">的中</span></summary><div class="card" style="border:1.5px solid #639922">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">NHKマイルC</div>
@@ -2277,10 +2277,10 @@
             ✅ 軸エコロアルバ（2番人気）は着外。3連単ボックス7頭（07・10・11・12・16・17・18）で的中目（17→16→11）をカバー。8枠勢2頭（17ロデオドライブ・16アスクイキゴミ）と6枠アドマイヤクワッズで確保。
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- エプソムカップ -->
-      <div class="card">
+      <details class="race-row"><summary><span class="rr-d">5/9</span><span class="rr-n">エプソムカップ</span><span class="rr-g">G3</span><span class="minus">不的中</span></summary><div class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">エプソムカップ</div>
@@ -2322,10 +2322,10 @@
             ❌ 敗因：サクラファレル（D.レーン）は4歳・東京2戦2勝・調教Aの好データだったが着外。1着トロヴァトーレ・2着ステレンボッシュ・3着レガーロデルシエロは相手には含まれていたが、軸違いで不的中。
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- 京都新聞杯 -->
-      <div class="card" style="border:1.5px solid #639922">
+      <details class="race-row"><summary><span class="rr-d">5/9</span><span class="rr-n">京都新聞杯</span><span class="rr-g">G2</span><span class="plus">的中</span></summary><div class="card" style="border:1.5px solid #639922">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">京都新聞杯</div>
@@ -2369,10 +2369,10 @@
             ✅ 軸コンジェスタス（4番人気・3枠5番・コントレイル産駒）が1着！データトリプル該当が見事に的中。10番人気ラディアントスター3着の波乱もマルチでカバーし完璧的中。
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- 天皇賞（春） -->
-      <div class="card">
+      <details class="race-row"><summary><span class="rr-d">5/3</span><span class="rr-n">天皇賞（春）</span><span class="rr-g">G1</span><span class="minus">不的中</span></summary><div class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">天皇賞（春）</div>
@@ -2415,10 +2415,10 @@
             ❌ 敗因：軸アドマイヤテラは3着に粘ったが、2着のヴェルテンベルク（15番）が相手に含まれていなかった。15番を相手に入れていれば70,630円×5=353,150円の的中だった。
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- マイラーズカップ -->
-      <div class="card" style="border:1.5px solid #639922">
+      <details class="race-row"><summary><span class="rr-d">4/26</span><span class="rr-n">マイラーズカップ</span><span class="rr-g">G2</span><span class="plus">的中</span></summary><div class="card" style="border:1.5px solid #639922">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">マイラーズカップ</div>
@@ -2463,10 +2463,10 @@
             ✅ 的中根拠：1番人気複勝率88%×調教S×中28週の十分な間隔
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- フローラステークス -->
-      <div class="card">
+      <details class="race-row"><summary><span class="rr-d">4/26</span><span class="rr-n">フローラステークス</span><span class="rr-g">G2</span><span class="minus">不的中</span></summary><div class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">フローラステークス</div>
@@ -2511,10 +2511,10 @@
             ❌ 敗因：軸のラベルセーヌ（2番）が5着。消しにしたエンネ（7枠）が2着に激走
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- 青葉賞 -->
-      <div class="card">
+      <details class="race-row"><summary><span class="rr-d">4/25</span><span class="rr-n">青葉賞</span><span class="rr-g">G2</span><span class="minus">不的中</span></summary><div class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">青葉賞</div>
@@ -2560,10 +2560,10 @@
             ❌ 敗因：軸の15番ノーブルサヴェージが故障競走中止のため不成立
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- 皐月賞 -->
-      <div class="card" style="border:1.5px solid #639922">
+      <details class="race-row"><summary><span class="rr-d">4/19</span><span class="rr-n">皐月賞</span><span class="rr-g">G1</span><span class="plus">的中</span></summary><div class="card" style="border:1.5px solid #639922">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">皐月賞</div>
@@ -2607,7 +2607,7 @@
             ✅ 軸ロブチェン（1番人気）が逃げ切りコースレコードV！9番人気ライヒスアドラー3着で高配当的中！
           </div>
         </div>
-      </div>
+      </div></details>
 
       <!-- 収支グラフセクションは削除（2026-05-30） -->
 
@@ -26905,6 +26905,12 @@ var JIKU_TRACKING = [
 
 
 // ===== 収支レポート データ駆動化 (RESULTS_LOG + 自動集計) =====
+// ===== LEGACY_TOTALS 内訳(検証・2026-08-16調査) =====
+// races:16/hits:10 は「表示上の通算 23レース・12的中」から直近ダーク7レース(内的中2=札幌記念・クイーンS)を引いた逆算値。
+// ※実カード数との差異: ライトカードは実際18枚(的中11/不的中6/見送り1=新潟大賞典)存在し、
+//   ダーク7枚と合わせ計25枚。ユーザー手動管理の通算23/12はカード実数25/13と元々一致しない(通算記録が基準)。
+// 葵S(予想完璧的中・馬券購入なし)は hits に含まれる=的中率は「予想含む」基準。見送り(レパードS/新潟大賞典)は分母に含むが的中ではない。
+// invest/payout は現行通算(559,600/977,220)から確定ダーク7枚を引いた確定値なので金額は正確。
 var LEGACY_TOTALS = {"invest": 484600, "payout": 757520, "races": 16, "hits": 10, "legacyNames": "皐月賞・青葉賞・フローラS・マイラーズC・天皇賞春・京都新聞杯・エプソムC・NHKマイルC・ヴィクトリアマイル・平安S・オークス・葵S※・日本ダービー・目黒記念・安田記念・函館スプリントS・宝塚記念"};
 var RESULTS_LOG = [{"race": "札幌記念", "grade": "G2", "dv": "8/16 札幌・芝2000m", "status": "的中", "invest": 16800, "payout": 197490, "lines": ["<div>1着 ⑮シェイクユアハート(3人) / 2着 ⑧サクラファレル(5人) / 3着 ⑭レディネス(11人)</div>", "<div style=\"margin-top:4px;\">3連単 ⑮→⑧→⑭ <b style=\"color:#7fd17f;\">197,490円</b>(605人気) / ◎⑮シェイクユアハート(モデル1位pct71.5)=<b style=\"color:#7fd17f;\">1着的中</b></div>", "<div style=\"margin-top:4px;\">買い目 3連単 軸1頭ながしマルチ 軸⑮・相手⑤⑥⑦⑧⑩⑬⑭⑯ 168点(8x7x3)×100円</div>"], "review": "モデル1位シェイクユアハートが1着。前走宝塚14着=G1系6着以下を最高評価する設計が的中。2着サクラファレル(モデル7位)・3着レディネス(モデル14位/前走非重賞0-0-0-13該当)は相手に追加した馬。最も強く推したホウオウビスケッツ(モデル3位)は10着、軸推奨ショウヘイ(モデル2位)は7着。堅く見えた1〜2番人気が飛び、モデルが人気を配点しない設計が生きた一戦。"}, {"race": "レパードS", "grade": "G3", "dv": "8/9 新潟・ダ1800m", "status": "見送り", "invest": 0, "payout": 0, "lines": ["<div>1着 ④チェリヴェント(6人 20.8) / 2着 ⑪パイロマンサー(4人 5.9) / 3着 ⑫メルカントゥール(1人 2.7)</div>", "<div style=\"margin-top:4px;\">3連単 43,120円(145人気) ／ 3連複 3,980円 ／ 馬連 5,680円</div>", "<div style=\"margin-top:4px;\">◎パイロマンサー(モデル1位72.5/86・3人気)=<b style=\"color:#7fd17f;\">2着</b>（軸は3着内）／ モデル3位メルカントゥール3着</div>"], "review": "◎パイロマンサーが2着で軸は3着内（軸複勝的中）。だが1着チェリヴェント(モデル8位・6人気)を相手評価から外し馬券的中は困難だった。1番人気ショウナンバンライ(モデル最下位12位・7枠0-0-0-20の壁)は6着で消しは正解。堅軸2着でも相手抜けの構造は継続課題のため今回は馬券見送り（投資0円）。"}, {"race": "クイーンS", "grade": "G3", "dv": "8/2 札幌・芝1800m(右A)", "status": "的中", "invest": 9000, "payout": 22210, "lines": ["<div>第74回 北海道新聞杯クイーンステークス（GIII）／ 14頭 ／ 晴・良 ／ 勝ち時計 1:46.1</div>", "<div style=\"margin-top:4px;\">1着 ⑦ココナッツブラウン(牝6・55.0・北村友一／1人 2.9) 上がり<b style=\"color:#7fd17f;\">34.1</b>＝メンバー最速／通過 11-11-10-4</div>", "<div style=\"margin-top:4px;\">2着 ⑪コガネノソラ(牝5・56.0・丹内祐次／3人 8.8) 上がり 34.4</div>", "<div style=\"margin-top:4px;\">3着 ⑭ヴーレヴー(牝4・55.0・横山典弘／4人 10.7) 通過 2-2-2-2</div>", "<div style=\"margin-top:4px;\">3連単 ⑦→⑪→⑭ <b style=\"color:#7fd17f;\">22,210円</b>(49番人気) ／ ◎⑦ココナッツブラウン=<b style=\"color:#7fd17f;\">1着的中</b></div>", "<div style=\"margin-top:4px;\">印 ◎⑦ココナッツブラウン(モデル1位 61/74)→1着 ／ ○⑫ボンドガール(2位 57.5)→<b style=\"color:#e77;\">10着</b> ／ ▲⑪コガネノソラ(3位 54.0)→2着</div>", "<div style=\"margin-top:4px;\">買い目 3連単 軸1頭マルチ 軸⑦・相手⑨⑭⑪②⑫⑩ 90点×100円</div>"], "review": "モデル1位のココナッツブラウンが1着、3位コガネノソラが2着、13位フェスティバルヒルが最下位14着。Σmax74・11項目エンジンの序列はそのまま結果に出た。決め手はヴーレヴーを相手に残したこと。AIは「巴賞組0-0-0-8」を根拠に3着候補からも外していたが、分母8の0勝データで完全排除したのが誤りだった。前走クラスの壁は「1着から外す」根拠であって「3着からも外す」根拠ではない（§26）。フォーメーションなら1着2着を当てながら3着で全滅していたところを、軸1頭マルチが救った（§27）。"}, {"race": "函館記念", "grade": "G3", "dv": "6/28 函館・芝2000m", "status": "不的中", "invest": 12000, "payout": 0, "lines": ["<div>1着 ②ファウストラーゼン(7人) / 2着 ⑩ケリフレッドアスク(9人) / 3着 ③ピースワンデュック(10人)</div>", "<div style=\"margin-top:4px;\">3連単 326,840円(大波乱) ／ ◎エコロディノス=<b style=\"color:#e77;\">9着</b></div>"], "review": "◎エコロディノスが9着に大敗。7-9-10番人気での3連単326,840円という人気薄決着を3連単6頭BOXで取れず。荒れ指数で「右回り苦手」として割り引いた3着ピースワンデュックが巻き返した点、人気薄の地力上位を軸の不振でまとめて取り逃した点が反省。軸の信頼度が低いハンデ重賞でBOX6頭は範囲不足。"}, {"race": "ラジオNIKKEI賞", "grade": "G3", "dv": "6/28 福島・芝1800m", "status": "不的中", "invest": 12000, "payout": 0, "lines": ["<div>1着 ⑬サノノグレーター(4人) / 2着 ⑧ディールメーカー(8人) / 3着 ⑤リッツパーティー(1人)</div>", "<div style=\"margin-top:4px;\">3連単 52,690円 ／ ◎クカイリモク=<b style=\"color:#e77;\">9着</b></div>"], "review": "◎クカイリモクが9着。1着サノノグレーター(前走皐月賞G1組・父グレイルロンサム系のパワー血統)を軸に推せなかったのが致命傷。3歳ハンデ戦では「前走クラスG1組」の格を最重視すべきだった。3着リッツパーティーは1番人気で軸候補だったが、ここを切ったのも痛恨。前走グレード上位を軽視した配点を見直す。"}, {"race": "しらさぎステークス", "grade": "G3", "dv": "6/21 阪神・稍重", "status": "不的中", "invest": 12600, "payout": 0, "lines": ["<div>1着 ⑩エルトンバローズ(7人) / 2着 ⑦キープカルム(6人) / 3着 ⑪エコロアルバ(1人)</div>", "<div style=\"margin-top:4px;\">3連単 90,760円 ／ ◎エコロアルバ=<b style=\"color:#7fd17f;\">3着(複勝圏)</b></div>"], "review": "◎エコロは一次情報(重G1・朝日杯FS4着/パワー型)で軸に格上げ→3着に好走で格上げ判断は正解。だが稍重に回復した馬場で1着エルトン・2着キープの先行勢が残り、相手7頭から漏れた。「重前提・前×道悪巧者」に寄せすぎ、地力ある先行馬を切ったのが反省。軸は当てたが相手で取りこぼし=春からの課題が再現。"}, {"race": "府中牝馬S", "grade": "G3", "dv": "6/21 東京・稍重", "status": "不的中", "invest": 12600, "payout": 0, "lines": ["<div>1着 ⑦セキトバイースト(5人) / 2着 ②ウイントワイライト(9人) / 3着 ④ミアネーロ(14人)</div>", "<div style=\"margin-top:4px;\">3連単 1,066,160円(大波乱) ／ ◎セキトバイースト=<b style=\"color:#7fd17f;\">1着的中</b></div>"], "review": "◎セキトバ1着は完璧(コガネ→セキトバへの軸変更が正解・道悪軸◎)。だが2着ウイント・3着ミアネーロは共に後方脚質。前残り重視で追込のエストゥ・パラディを相手から切った調整が完全に裏目=馬場は想定ほど前有利でなかった。軸的中でも相手の脚質を絞りすぎて大波乱を取り逃した。"}];
 
