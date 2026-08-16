@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260814-1100';
+  var CURRENT_VERSION = '20260816-1600';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1592,7 +1592,7 @@
         padding:6px 16px;
       ">
         <span style="font-size:11px;color:#666;font-weight:500">2026年通算回収率</span>
-        <span id="header-kaishuritu" style="font-size:20px;font-weight:800;color:#0F6E56;letter-spacing:.02em">143.7%</span>
+        <span id="header-kaishuritu" style="font-size:20px;font-weight:800;color:#0F6E56;letter-spacing:.02em">174.6%</span>
         <span id="header-badge" style="font-size:10px;background:#0F6E56;color:#fff;
                      padding:2px 6px;border-radius:9px;font-weight:600">黒字</span>
       </div>
@@ -1605,11 +1605,11 @@
         font-size:11px;
         color:#888;
       ">
-        <span>投資 <strong id="header-invest" style="color:#333">542,800円</strong></span>
+        <span>投資 <strong id="header-invest" style="color:#333">559,600円</strong></span>
         <span style="color:#ccc">→</span>
-        <span>払戻 <strong id="header-payout" style="color:#0F6E56">779,730円</strong></span>
+        <span>払戻 <strong id="header-payout" style="color:#0F6E56">977,220円</strong></span>
         <span style="color:#ccc">|</span>
-        <span><strong id="header-rieki" style="color:#0F6E56">+236,930円</strong></span>
+        <span><strong id="header-rieki" style="color:#0F6E56">+417,620円</strong></span>
       </div>
     </div>
   </div>
@@ -1749,31 +1749,49 @@
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
           <div>
             <div style="font-size:13px;font-weight:500;color:#085041;margin-bottom:2px">2026年 通算収支</div>
-            <div style="font-size:11px;color:#3B6D11">22レース（皐月賞・青葉賞・フローラS・マイラーズC・天皇賞春・京都新聞杯・エプソムC・NHKマイルC・ヴィクトリアマイル・平安S・オークス・葵S※・日本ダービー・目黒記念・安田記念・函館スプリントS・宝塚記念・しらさぎS・府中牝馬S・函館記念・クイーンS）</div>
+            <div style="font-size:11px;color:#3B6D11">23レース（皐月賞・青葉賞・フローラS・マイラーズC・天皇賞春・京都新聞杯・エプソムC・NHKマイルC・ヴィクトリアマイル・平安S・オークス・葵S※・日本ダービー・目黒記念・安田記念・函館スプリントS・宝塚記念・しらさぎS・府中牝馬S・函館記念・クイーンS・札幌記念）</div>
           </div>
           <div style="text-align:right">
-            <div style="font-size:24px;font-weight:800;color:#0F6E56">+236,930円</div>
-            <div style="font-size:12px;color:#3B6D11">回収率 <strong>143.7%</strong> ✅ 黒字</div>
+            <div style="font-size:24px;font-weight:800;color:#0F6E56">+417,620円</div>
+            <div style="font-size:12px;color:#3B6D11">回収率 <strong>174.6%</strong> ✅ 黒字</div>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">
           <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
             <div style="font-size:10px;color:var(--text-mute)">総投資</div>
-            <div style="font-size:14px;font-weight:700;color:var(--text)">542,800円</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text)">559,600円</div>
           </div>
           <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
             <div style="font-size:10px;color:var(--text-mute)">総払戻</div>
-            <div style="font-size:14px;font-weight:700;color:#0F6E56">779,730円</div>
+            <div style="font-size:14px;font-weight:700;color:#0F6E56">977,220円</div>
           </div>
           <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
             <div style="font-size:10px;color:var(--text-mute)">的中率（予想含む）</div>
-            <div style="font-size:14px;font-weight:700;color:#185FA5">11/22</div>
+            <div style="font-size:14px;font-weight:700;color:#185FA5">12/23</div>
             <div style="font-size:9px;color:var(--text-mute)">※葵Sは予想的中・馬券購入なし</div>
           </div>
         </div>
       </div>
 
       
+        <!-- 札幌記念（結果サマリー・8/16・的中） -->
+        <div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="font-weight:bold;font-size:1.05em;color:#fff;">札幌記念(G2) <span style="color:#999;font-size:0.85em;">8/16 札幌・芝2000m</span></span>
+            <span style="background:#7fd17f;color:#1f1f2e;padding:3px 10px;border-radius:6px;font-size:0.85em;">的中</span>
+          </div>
+          <div style="color:#ccc;font-size:0.9em;line-height:1.7;">
+            <div>1着 ⑮シェイクユアハート(3人) / 2着 ⑧サクラファレル(5人) / 3着 ⑭レディネス(11人)</div>
+            <div style="margin-top:4px;">3連単 ⑮→⑧→⑭ <b style="color:#7fd17f;">197,490円</b>(605人気) / ◎⑮シェイクユアハート(モデル1位pct71.5)=<b style="color:#7fd17f;">1着的中</b></div>
+            <div style="margin-top:4px;">買い目 3連単 軸1頭ながしマルチ 軸⑮・相手⑤⑥⑦⑧⑩⑬⑭⑯ 168点(8x7x3)×100円</div>
+            <div style="margin-top:6px;display:flex;gap:16px;">
+              <span>投資 <b>16,800円</b></span><span>払戻 <b style="color:#7fd17f;">197,490円</b></span><span>収支 <b style="color:#7fd17f;">+180,690円</b></span><span>回収率 <b style="color:#7fd17f;">1,175.5%</b></span>
+            </div>
+            <div style="margin-top:8px;padding:8px;background:#00000033;border-radius:6px;font-size:0.88em;color:#bbb;">
+              💭 モデル1位シェイクユアハートが1着。前走宝塚14着=G1系6着以下を最高評価する設計が的中。2着サクラファレル(モデル7位)・3着レディネス(モデル14位/前走非重賞0-0-0-13該当)は相手に追加した馬。最も強く推したホウオウビスケッツ(モデル3位)は10着、軸推奨ショウヘイ(モデル2位)は7着。堅く見えた1〜2番人気が飛び、モデルが人気を配点しない設計が生きた一戦。
+            </div>
+          </div>
+        </div>
         <!-- レパードS（結果サマリー・8/9・見送り） -->
         <div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -2814,7 +2832,7 @@
 
 <script>
 /* 終了レースのリスト（カレンダー初回レンダリング前に定義必須） */
-var FINISHED_RACES = ['レパードS', 'クイーンS','関屋記念', '函館2歳S', '七夕賞', '函館記念','ラジオNIKKEI賞','しらさぎステークス','府中牝馬S','天皇賞（春）', '京都新聞杯', 'エプソムC', 'NHKマイルC', '新潟大賞典', 'ヴィクトリアマイル', '平安ステークス', 'オークス', '葵ステークス', '日本ダービー', '目黒記念', '安田記念', '函館スプリントS', '宝塚記念', '北九州記念'];
+var FINISHED_RACES = ['札幌記念', 'レパードS', 'クイーンS','関屋記念', '函館2歳S', '七夕賞', '函館記念','ラジオNIKKEI賞','しらさぎステークス','府中牝馬S','天皇賞（春）', '京都新聞杯', 'エプソムC', 'NHKマイルC', '新潟大賞典', 'ヴィクトリアマイル', '平安ステークス', 'オークス', '葵ステークス', '日本ダービー', '目黒記念', '安田記念', '函館スプリントS', '宝塚記念', '北九州記念'];
 
 /* =====================================================
  * 1) RACE CALENDAR
@@ -27020,7 +27038,10 @@ var JIKU_TRACKING = [
     note: 'ココナッツブラウン1着✅ ◎＝モデル1位が的中。モデル3位コガネノソラ2着・モデル13位フェスティバルヒルが最下位14着。3連単軸1頭マルチで+13,210円（回収率246.8%）' },
   { race: 'レパードS',        aiJiku: 'パイロマンサー',     scoreJiku: 'パイロマンサー',
     result: '2着', aiHit: true,  scoreHit: true,  comboHit: true,
-    note: 'パイロマンサー2着✅ 軸は3着内（軸複勝的中）。モデル3位メルカントゥール3着。1着は8位チェリヴェント（6人気）を相手から外し不的中相当。1番人気ショウナンバンライ（モデル最下位12位）は6着で消しは正解。馬券購入なし' }
+    note: 'パイロマンサー2着✅ 軸は3着内（軸複勝的中）。モデル3位メルカントゥール3着。1着は8位チェリヴェント（6人気）を相手から外し不的中相当。1番人気ショウナンバンライ（モデル最下位12位）は6着で消しは正解。馬券購入なし' },
+  { race: '札幌記念',        aiJiku: 'シェイクユアハート', scoreJiku: 'シェイクユアハート',
+    result: '1着', aiHit: true,  scoreHit: true,  comboHit: true,
+    note: 'モデル1位(pct71.5)シェイクユアハートが1着✅ 前走宝塚記念14着=G1系6着以下を最高評価する設計が的中。3連単⑮→⑧→⑭ 197,490円(605人気)を軸1頭マルチ168点で的中し+180,690円(回収率1,175.5%)。2着サクラファレル(モデル7位)・3着レディネス(モデル14位/前走非重賞0-0-0-13該当)は相手に追加した馬。最も強く推したホウオウビスケッツ(モデル3位)は10着、軸推奨ショウヘイ(モデル2位)は7着。' }
 ];
 
 function renderJikuTracking() {
