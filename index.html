@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260816-1900';
+  var CURRENT_VERSION = '20260816-2000';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2113,7 +2113,7 @@
       </div></details>
 
       <!-- 平安ステークス -->
-      <details class="race-row"><summary><span class="rr-d">5/23</span><span class="rr-n">平安ステークス</span><span class="rr-g">G3</span><span class="plus">的中</span></summary><div class="card" style="border:1.5px solid #c0392b">
+      <details class="race-row"><summary><span class="rr-d">5/23</span><span class="rr-n">平安ステークス</span><span class="rr-g">G3</span><span class="minus">不的中</span></summary><div class="card" style="border:1.5px solid #c0392b">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text)">平安ステークス</div>
@@ -26911,7 +26911,43 @@ var JIKU_TRACKING = [
 //   ダーク7枚と合わせ計25枚。ユーザー手動管理の通算23/12はカード実数25/13と元々一致しない(通算記録が基準)。
 // 葵S(予想完璧的中・馬券購入なし)は hits に含まれる=的中率は「予想含む」基準。見送り(レパードS/新潟大賞典)は分母に含むが的中ではない。
 // invest/payout は現行通算(559,600/977,220)から確定ダーク7枚を引いた確定値なので金額は正確。
-var LEGACY_TOTALS = {"invest": 484600, "payout": 757520, "races": 16, "hits": 10, "legacyNames": "皐月賞・青葉賞・フローラS・マイラーズC・天皇賞春・京都新聞杯・エプソムC・NHKマイルC・ヴィクトリアマイル・平安S・オークス・葵S※・日本ダービー・目黒記念・安田記念・函館スプリントS・宝塚記念"};
+var LEGACY_RACES = [
+  {"race":"宝塚記念","invest":72000,"payout":60400},
+  {"race":"函館スプリントS","invest":12600,"payout":0},
+  {"race":"安田記念","invest":56400,"payout":48600},
+  {"race":"目黒記念","invest":12600,"payout":4410},
+  {"race":"日本ダービー","invest":45000,"payout":235250},
+  {"race":"葵S","invest":0,"payout":0,"virtualHit":true},
+  {"race":"オークス","invest":16800,"payout":0},
+  {"race":"平安S","invest":6000,"payout":0},
+  {"race":"ヴィクトリアマイル","invest":46800,"payout":11010},
+  {"race":"新潟大賞典","invest":0,"payout":0,"status":"見送り"},
+  {"race":"NHKマイルC","invest":42000,"payout":52300},
+  {"race":"エプソムC","invest":16800,"payout":0},
+  {"race":"京都新聞杯","invest":16800,"payout":74860},
+  {"race":"天皇賞春","invest":63000,"payout":0},
+  {"race":"マイラーズC","invest":9000,"payout":70140},
+  {"race":"フローラS","invest":9000,"payout":0},
+  {"race":"青葉賞","invest":4800,"payout":0},
+  {"race":"皐月賞","invest":55000,"payout":200550}
+];
+// LEGACY_TOTALS を LEGACY_RACES(ライト18枚の実データ)から自動算出（2026-08-16 是正）
+// 旧: races:16 は表示上の通算23レースからダーク7を逆算した手動値で、実カード数(18)と乖離していた。
+// 新: ライト実数18枚から算出 -> races:18 / hits:10。的中判定 = payout>0 || virtualHit。
+//   * hits は旧定数(10)と一致=的中数は元々正しく、誤っていたのは race 数(16→18)のみ。
+//   * よって通算は「23戦→25戦」に是正、的中は12のまま(=12的中/25戦)。金額(484,600/757,520)は不変。
+//   * 平安S/オークス等は payout:0(軸は的中でも馬券は外れ)=非的中。ダークの府中牝馬S(◎1着だがpayout0)と同基準。
+//   * 葵S(予想的中・馬券購入なし)は virtualHit=true で hits に算入(的中率は「予想含む」基準)。
+//   * 見送り(status==='見送り'=新潟大賞典/レパードS)は races には数えるが hits には数えない。
+var LEGACY_TOTALS = (function(){
+  var inv=0, pay=0, hits=0;
+  LEGACY_RACES.forEach(function(r){
+    inv+=r.invest; pay+=r.payout;
+    if(r.payout>0 || r.virtualHit) hits++;
+  });
+  return {invest:inv, payout:pay, races:LEGACY_RACES.length, hits:hits,
+          legacyNames:"皐月賞・青葉賞・フローラS・マイラーズC・天皇賞春・京都新聞杯・エプソムC・NHKマイルC・ヴィクトリアマイル・平安S・オークス・葵S※・日本ダービー・目黒記念・安田記念・函館スプリントS・宝塚記念"};
+})();
 var RESULTS_LOG = [{"race": "札幌記念", "grade": "G2", "dv": "8/16 札幌・芝2000m", "status": "的中", "invest": 16800, "payout": 197490, "lines": ["<div>1着 ⑮シェイクユアハート(3人) / 2着 ⑧サクラファレル(5人) / 3着 ⑭レディネス(11人)</div>", "<div style=\"margin-top:4px;\">3連単 ⑮→⑧→⑭ <b style=\"color:#7fd17f;\">197,490円</b>(605人気) / ◎⑮シェイクユアハート(モデル1位pct71.5)=<b style=\"color:#7fd17f;\">1着的中</b></div>", "<div style=\"margin-top:4px;\">買い目 3連単 軸1頭ながしマルチ 軸⑮・相手⑤⑥⑦⑧⑩⑬⑭⑯ 168点(8x7x3)×100円</div>"], "review": "モデル1位シェイクユアハートが1着。前走宝塚14着=G1系6着以下を最高評価する設計が的中。2着サクラファレル(モデル7位)・3着レディネス(モデル14位/前走非重賞0-0-0-13該当)は相手に追加した馬。最も強く推したホウオウビスケッツ(モデル3位)は10着、軸推奨ショウヘイ(モデル2位)は7着。堅く見えた1〜2番人気が飛び、モデルが人気を配点しない設計が生きた一戦。"}, {"race": "レパードS", "grade": "G3", "dv": "8/9 新潟・ダ1800m", "status": "見送り", "invest": 0, "payout": 0, "lines": ["<div>1着 ④チェリヴェント(6人 20.8) / 2着 ⑪パイロマンサー(4人 5.9) / 3着 ⑫メルカントゥール(1人 2.7)</div>", "<div style=\"margin-top:4px;\">3連単 43,120円(145人気) ／ 3連複 3,980円 ／ 馬連 5,680円</div>", "<div style=\"margin-top:4px;\">◎パイロマンサー(モデル1位72.5/86・3人気)=<b style=\"color:#7fd17f;\">2着</b>（軸は3着内）／ モデル3位メルカントゥール3着</div>"], "review": "◎パイロマンサーが2着で軸は3着内（軸複勝的中）。だが1着チェリヴェント(モデル8位・6人気)を相手評価から外し馬券的中は困難だった。1番人気ショウナンバンライ(モデル最下位12位・7枠0-0-0-20の壁)は6着で消しは正解。堅軸2着でも相手抜けの構造は継続課題のため今回は馬券見送り（投資0円）。"}, {"race": "クイーンS", "grade": "G3", "dv": "8/2 札幌・芝1800m(右A)", "status": "的中", "invest": 9000, "payout": 22210, "lines": ["<div>第74回 北海道新聞杯クイーンステークス（GIII）／ 14頭 ／ 晴・良 ／ 勝ち時計 1:46.1</div>", "<div style=\"margin-top:4px;\">1着 ⑦ココナッツブラウン(牝6・55.0・北村友一／1人 2.9) 上がり<b style=\"color:#7fd17f;\">34.1</b>＝メンバー最速／通過 11-11-10-4</div>", "<div style=\"margin-top:4px;\">2着 ⑪コガネノソラ(牝5・56.0・丹内祐次／3人 8.8) 上がり 34.4</div>", "<div style=\"margin-top:4px;\">3着 ⑭ヴーレヴー(牝4・55.0・横山典弘／4人 10.7) 通過 2-2-2-2</div>", "<div style=\"margin-top:4px;\">3連単 ⑦→⑪→⑭ <b style=\"color:#7fd17f;\">22,210円</b>(49番人気) ／ ◎⑦ココナッツブラウン=<b style=\"color:#7fd17f;\">1着的中</b></div>", "<div style=\"margin-top:4px;\">印 ◎⑦ココナッツブラウン(モデル1位 61/74)→1着 ／ ○⑫ボンドガール(2位 57.5)→<b style=\"color:#e77;\">10着</b> ／ ▲⑪コガネノソラ(3位 54.0)→2着</div>", "<div style=\"margin-top:4px;\">買い目 3連単 軸1頭マルチ 軸⑦・相手⑨⑭⑪②⑫⑩ 90点×100円</div>"], "review": "モデル1位のココナッツブラウンが1着、3位コガネノソラが2着、13位フェスティバルヒルが最下位14着。Σmax74・11項目エンジンの序列はそのまま結果に出た。決め手はヴーレヴーを相手に残したこと。AIは「巴賞組0-0-0-8」を根拠に3着候補からも外していたが、分母8の0勝データで完全排除したのが誤りだった。前走クラスの壁は「1着から外す」根拠であって「3着からも外す」根拠ではない（§26）。フォーメーションなら1着2着を当てながら3着で全滅していたところを、軸1頭マルチが救った（§27）。"}, {"race": "函館記念", "grade": "G3", "dv": "6/28 函館・芝2000m", "status": "不的中", "invest": 12000, "payout": 0, "lines": ["<div>1着 ②ファウストラーゼン(7人) / 2着 ⑩ケリフレッドアスク(9人) / 3着 ③ピースワンデュック(10人)</div>", "<div style=\"margin-top:4px;\">3連単 326,840円(大波乱) ／ ◎エコロディノス=<b style=\"color:#e77;\">9着</b></div>"], "review": "◎エコロディノスが9着に大敗。7-9-10番人気での3連単326,840円という人気薄決着を3連単6頭BOXで取れず。荒れ指数で「右回り苦手」として割り引いた3着ピースワンデュックが巻き返した点、人気薄の地力上位を軸の不振でまとめて取り逃した点が反省。軸の信頼度が低いハンデ重賞でBOX6頭は範囲不足。"}, {"race": "ラジオNIKKEI賞", "grade": "G3", "dv": "6/28 福島・芝1800m", "status": "不的中", "invest": 12000, "payout": 0, "lines": ["<div>1着 ⑬サノノグレーター(4人) / 2着 ⑧ディールメーカー(8人) / 3着 ⑤リッツパーティー(1人)</div>", "<div style=\"margin-top:4px;\">3連単 52,690円 ／ ◎クカイリモク=<b style=\"color:#e77;\">9着</b></div>"], "review": "◎クカイリモクが9着。1着サノノグレーター(前走皐月賞G1組・父グレイルロンサム系のパワー血統)を軸に推せなかったのが致命傷。3歳ハンデ戦では「前走クラスG1組」の格を最重視すべきだった。3着リッツパーティーは1番人気で軸候補だったが、ここを切ったのも痛恨。前走グレード上位を軽視した配点を見直す。"}, {"race": "しらさぎステークス", "grade": "G3", "dv": "6/21 阪神・稍重", "status": "不的中", "invest": 12600, "payout": 0, "lines": ["<div>1着 ⑩エルトンバローズ(7人) / 2着 ⑦キープカルム(6人) / 3着 ⑪エコロアルバ(1人)</div>", "<div style=\"margin-top:4px;\">3連単 90,760円 ／ ◎エコロアルバ=<b style=\"color:#7fd17f;\">3着(複勝圏)</b></div>"], "review": "◎エコロは一次情報(重G1・朝日杯FS4着/パワー型)で軸に格上げ→3着に好走で格上げ判断は正解。だが稍重に回復した馬場で1着エルトン・2着キープの先行勢が残り、相手7頭から漏れた。「重前提・前×道悪巧者」に寄せすぎ、地力ある先行馬を切ったのが反省。軸は当てたが相手で取りこぼし=春からの課題が再現。"}, {"race": "府中牝馬S", "grade": "G3", "dv": "6/21 東京・稍重", "status": "不的中", "invest": 12600, "payout": 0, "lines": ["<div>1着 ⑦セキトバイースト(5人) / 2着 ②ウイントワイライト(9人) / 3着 ④ミアネーロ(14人)</div>", "<div style=\"margin-top:4px;\">3連単 1,066,160円(大波乱) ／ ◎セキトバイースト=<b style=\"color:#7fd17f;\">1着的中</b></div>"], "review": "◎セキトバ1着は完璧(コガネ→セキトバへの軸変更が正解・道悪軸◎)。だが2着ウイント・3着ミアネーロは共に後方脚質。前残り重視で追込のエストゥ・パラディを相手から切った調整が完全に裏目=馬場は想定ほど前有利でなかった。軸的中でも相手の脚質を絞りすぎて大波乱を取り逃した。"}];
 
 function _rlFmt(n){ var neg=n<0; n=Math.abs(n); var t=String(n).replace(/\B(?=(\d{3})+(?!\d))/g,','); return (neg?'-':'')+t; }
