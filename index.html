@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260816-1700';
+  var CURRENT_VERSION = '20260816-1800';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1491,6 +1491,19 @@
     .sire-name, .data-name { font-size:13px; }
   }
   .badge-empty { font-size:11px; color:#6a7090; font-style:italic; }
+
+  /* ===== 収支レポート/軸トラッキング details 折りたたみ ===== */
+  .race-row, .jiku-row { margin-bottom:8px; }
+  .race-row > summary, .jiku-row > summary { list-style:none; outline:none; }
+  .race-row > summary::-webkit-details-marker, .jiku-row > summary::-webkit-details-marker { display:none; }
+  .race-row > summary { cursor:pointer; padding:10px 12px; background:var(--bg-soft,#f2f4f7); border-radius:8px; display:flex; gap:8px; align-items:center; font-size:13px; font-weight:600; color:var(--text,#333); }
+  .race-row[open] > summary { border-radius:8px 8px 0 0; }
+  .race-row .rr-d { color:var(--text-mute,#888); font-weight:600; }
+  .race-row .rr-n { font-weight:700; }
+  .race-row .rr-g { font-size:11px; color:var(--text-mute,#888); background:var(--bg-soft2,#e7ebf0); padding:1px 6px; border-radius:6px; }
+  .race-row .plus { margin-left:auto; color:#0F6E56; font-weight:800; }
+  .race-row .minus { margin-left:auto; color:#c0392b; font-weight:800; }
+  .jiku-row[open] > summary { border-bottom:1px solid rgba(0,0,0,0.06); }
 </style>
 </head>
 <body>
@@ -26916,7 +26929,9 @@ function _rlCard(e){
   h += '</div>';
   h += '<div style="margin-top:8px;padding:8px;background:#00000033;border-radius:6px;font-size:0.88em;color:#bbb;">💭'+e.review+'</div>';
   h += '</div></div>';
-  return h;
+  var _d=(e.dv||'').split(' ')[0]; var _shu=e.payout-e.invest;
+  var _sc=_shu>0?'plus':(_shu<0?'minus':''); var _sl=(_shu>0?'+':'')+_rlFmt(_shu);
+  return '<details class="race-row"><summary><span class="rr-d">'+_d+'</span><span class="rr-n">'+e.race+'</span><span class="rr-g">'+e.grade+'</span><span class="'+_sc+'">'+_sl+'</span></summary>'+h+'</details>';
 }
 function _rlTotals(){
   var inv=LEGACY_TOTALS.invest, pay=LEGACY_TOTALS.payout, races=LEGACY_TOTALS.races, hits=LEGACY_TOTALS.hits;
@@ -26931,17 +26946,24 @@ function renderResultsLog(){
   var hk=document.getElementById('header-kaishuritu'); if(hk) hk.textContent=t.recovery+'%';
   var c=document.getElementById('results-log-container'); if(!c) return;
   var names=LEGACY_TOTALS.legacyNames+'・'+RESULTS_LOG.map(function(e){return e.race;}).slice().reverse().join('・');
+  var combo=(typeof JIKU_TRACKING!=='undefined')?JIKU_TRACKING.filter(function(r){return r.comboHit;}).length:0;
+  var jtot=(typeof JIKU_TRACKING!=='undefined')?JIKU_TRACKING.length:0;
   var s='<div class="card" style="background:#E1F5EE;border:1px solid #639922">';
-  s+='<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">';
-  s+='<div><div style="font-size:13px;font-weight:500;color:#085041;margin-bottom:2px">2026年 通算収支</div>';
-  s+='<div style="font-size:11px;color:#3B6D11">'+t.races+'レース（'+names+'）</div></div>';
-  s+='<div style="text-align:right"><div style="font-size:24px;font-weight:800;color:#0F6E56">'+(t.profit>=0?'+':'')+_rlFmt(t.profit)+'円</div>';
-  s+='<div style="font-size:12px;color:#3B6D11">回収率 <strong>'+t.recovery+'%</strong> '+(t.profit>=0?'✅ 黒字':'🔻 赤字')+'</div></div></div>';
-  s+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">';
-  s+='<div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center"><div style="font-size:10px;color:var(--text-mute)">総投資</div><div style="font-size:14px;font-weight:700;color:var(--text)">'+_rlFmt(t.invest)+'円</div></div>';
-  s+='<div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center"><div style="font-size:10px;color:var(--text-mute)">総払戻</div><div style="font-size:14px;font-weight:700;color:#0F6E56">'+_rlFmt(t.payout)+'円</div></div>';
-  s+='<div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center"><div style="font-size:10px;color:var(--text-mute)">的中率（予想含む）</div><div style="font-size:14px;font-weight:700;color:#185FA5">'+t.hits+'/'+t.races+'</div><div style="font-size:9px;color:var(--text-mute)">※葵Sは予想的中・馬券購入なし</div></div></div></div>';
-  c.innerHTML = s + RESULTS_LOG.map(_rlCard).join('\n');
+  s+='<div style="font-size:13px;font-weight:500;color:#085041;margin-bottom:2px">2026年 通算収支</div>';
+  s+='<div style="font-size:11px;color:#3B6D11;margin-bottom:10px">'+t.races+'レース（'+names+'）</div>';
+  s+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">';
+  s+='<div style="background:#fff;border-radius:var(--border-radius-md);padding:10px 8px;text-align:center"><div style="font-size:26px;font-weight:800;color:'+(t.profit>=0?'#0F6E56':'#c0392b')+'">'+(t.profit>=0?'+':'')+_rlFmt(t.profit)+'円</div><div style="font-size:11px;color:var(--text-mute)">収支</div></div>';
+  s+='<div style="background:#fff;border-radius:var(--border-radius-md);padding:10px 8px;text-align:center"><div style="font-size:26px;font-weight:800;color:#0F6E56">'+t.recovery+'%</div><div style="font-size:11px;color:var(--text-mute)">回収率</div></div>';
+  s+='</div>';
+  s+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">';
+  s+='<div style="background:#fff;border-radius:var(--border-radius-md);padding:7px 4px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--text)">'+_rlFmt(t.invest)+'</div><div style="font-size:10px;color:var(--text-mute)">投資</div></div>';
+  s+='<div style="background:#fff;border-radius:var(--border-radius-md);padding:7px 4px;text-align:center"><div style="font-size:13px;font-weight:700;color:#0F6E56">'+_rlFmt(t.payout)+'</div><div style="font-size:10px;color:var(--text-mute)">払戻</div></div>';
+  s+='<div style="background:#fff;border-radius:var(--border-radius-md);padding:7px 4px;text-align:center"><div style="font-size:13px;font-weight:700;color:#185FA5">'+t.hits+'/'+t.races+'</div><div style="font-size:10px;color:var(--text-mute)">的中</div></div>';
+  s+='<div style="background:#fff;border-radius:var(--border-radius-md);padding:7px 4px;text-align:center"><div style="font-size:13px;font-weight:700;color:#185FA5">'+combo+'/'+jtot+'</div><div style="font-size:10px;color:var(--text-mute)">軸3着内</div></div>';
+  s+='</div>';
+  s+='<div style="font-size:9px;color:var(--text-mute);margin-top:6px;text-align:right">※軸3着内率は見送り含む全'+jtot+'戦が分母</div>';
+  s+='</div>';
+  c.innerHTML = s + RESULTS_LOG.filter(function(e){return e.status!=='見送り';}).map(_rlCard).join('\n');
 }
 if (typeof document !== 'undefined') { if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ try{renderResultsLog();}catch(_e){} }); else { try{renderResultsLog();}catch(_e){} } }
 
@@ -26984,47 +27006,29 @@ function renderJikuTracking() {
   JIKU_TRACKING.forEach(function(r) {
     var bg = r.comboHit ? 'var(--color-background-success)' : 'var(--color-background-secondary)';
     var borderColor = r.comboHit ? 'var(--color-border-success)' : 'var(--color-border-tertiary)';
-    html += '<div style="background:' + bg + ';border-left:3px solid ' + borderColor + ';border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:8px">';
-
-    // レース名・結果
-    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">';
-    html += '<span style="font-size:12px;font-weight:600;color:var(--color-text-primary)">' + r.race + '</span>';
-    html += '<span style="font-size:11px;color:var(--color-text-secondary);font-weight:500">' + (r.result || '') + '</span>';
-    html += '</div>';
-
-    // AI軸 vs スコア1位 の2列
+    html += '<details class="jiku-row" style="background:' + bg + ';border-left:3px solid ' + borderColor + ';border-radius:var(--border-radius-md);margin-bottom:8px">';
+    html += '<summary style="padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:12px">';
+    html += '<span style="font-weight:600;color:var(--color-text-primary)">' + r.race + '</span>';
+    html += '<span style="font-size:11px;color:var(--color-text-secondary)">' + (r.result || '') + '</span>';
+    html += '<span style="margin-left:auto;font-size:11px;color:' + (r.comboHit ? 'var(--color-text-success)' : 'var(--color-text-danger)') + '">' + (r.comboHit ? '✅' : '❌') + ' ' + (r.aiJiku || '') + '</span>';
+    html += '</summary>';
+    html += '<div style="padding:0 12px 10px">';
     html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">';
     var aiColor = r.aiHit ? 'var(--color-text-success)' : 'var(--color-text-danger)';
-    html += '<div style="font-size:10px">';
-    html += '<span style="color:var(--color-text-tertiary)">🤖 AI: </span>';
-    html += '<span style="color:' + aiColor + '">' + (r.aiHit ? '✅' : '❌') + ' ' + (r.aiJiku || '') + '</span>';
-    html += '</div>';
+    html += '<div style="font-size:10px"><span style="color:var(--color-text-tertiary)">🤖 AI: </span><span style="color:' + aiColor + '">' + (r.aiHit ? '✅' : '❌') + ' ' + (r.aiJiku || '') + '</span></div>';
     var scoreColor = r.scoreHit ? 'var(--color-text-success)' : 'var(--color-text-danger)';
     var isSame = r.aiJiku === r.scoreJiku;
-    html += '<div style="font-size:10px">';
-    html += '<span style="color:var(--color-text-tertiary)">📊 スコア: </span>';
-    if (isSame) {
-      html += '<span style="color:var(--color-text-tertiary)">同上</span>';
-    } else {
-      html += '<span style="color:' + scoreColor + '">' + (r.scoreHit ? '✅' : '❌') + ' ' + (r.scoreJiku || '') + '</span>';
-    }
+    html += '<div style="font-size:10px"><span style="color:var(--color-text-tertiary)">📊 スコア: </span>' + (isSame ? '<span style="color:var(--color-text-tertiary)">同上</span>' : '<span style="color:' + scoreColor + '">' + (r.scoreHit ? '✅' : '❌') + ' ' + (r.scoreJiku || '') + '</span>') + '</div>';
     html += '</div>';
-    html += '</div>';
-
-    // ノート
-    if (r.note) {
-      html += '<div style="font-size:10px;color:var(--color-text-secondary);line-height:1.5">' + r.note + '</div>';
-    }
-    // failReason
+    if (r.note) html += '<div style="font-size:10px;color:var(--color-text-secondary);line-height:1.5">' + r.note + '</div>';
     if (r.failReason && r.failReason.length > 0) {
       html += '<div style="margin-top:6px;padding:6px 8px;background:var(--color-background-warning);border-radius:var(--border-radius-md)">';
       html += '<div style="font-size:9px;color:var(--color-text-warning);font-weight:600;margin-bottom:3px">📝 振り返り</div>';
-      r.failReason.forEach(function(f) {
-        html += '<div style="font-size:9px;color:var(--color-text-secondary);margin-bottom:2px;line-height:1.4">• ' + f + '</div>';
-      });
+      r.failReason.forEach(function(f) { html += '<div style="font-size:9px;color:var(--color-text-secondary);margin-bottom:2px;line-height:1.4">• ' + f + '</div>'; });
       html += '</div>';
     }
     html += '</div>';
+    html += '</details>';
   });
 
   html += '</div>';
