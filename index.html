@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260816-1600';
+  var CURRENT_VERSION = '20260816-1700';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1744,162 +1744,8 @@
     <!-- ④ TAB: 収支レポート -->
     <div class="panel" id="tab-report">
 
-      <!-- サマリーカード -->
-      <div class="card" style="background:#E1F5EE;border:1px solid #639922">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-          <div>
-            <div style="font-size:13px;font-weight:500;color:#085041;margin-bottom:2px">2026年 通算収支</div>
-            <div style="font-size:11px;color:#3B6D11">23レース（皐月賞・青葉賞・フローラS・マイラーズC・天皇賞春・京都新聞杯・エプソムC・NHKマイルC・ヴィクトリアマイル・平安S・オークス・葵S※・日本ダービー・目黒記念・安田記念・函館スプリントS・宝塚記念・しらさぎS・府中牝馬S・函館記念・クイーンS・札幌記念）</div>
-          </div>
-          <div style="text-align:right">
-            <div style="font-size:24px;font-weight:800;color:#0F6E56">+417,620円</div>
-            <div style="font-size:12px;color:#3B6D11">回収率 <strong>174.6%</strong> ✅ 黒字</div>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">
-          <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">総投資</div>
-            <div style="font-size:14px;font-weight:700;color:var(--text)">559,600円</div>
-          </div>
-          <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">総払戻</div>
-            <div style="font-size:14px;font-weight:700;color:#0F6E56">977,220円</div>
-          </div>
-          <div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center">
-            <div style="font-size:10px;color:var(--text-mute)">的中率（予想含む）</div>
-            <div style="font-size:14px;font-weight:700;color:#185FA5">12/23</div>
-            <div style="font-size:9px;color:var(--text-mute)">※葵Sは予想的中・馬券購入なし</div>
-          </div>
-        </div>
-      </div>
+      <div id="results-log-container"></div>
 
-      
-        <!-- 札幌記念（結果サマリー・8/16・的中） -->
-        <div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <span style="font-weight:bold;font-size:1.05em;color:#fff;">札幌記念(G2) <span style="color:#999;font-size:0.85em;">8/16 札幌・芝2000m</span></span>
-            <span style="background:#7fd17f;color:#1f1f2e;padding:3px 10px;border-radius:6px;font-size:0.85em;">的中</span>
-          </div>
-          <div style="color:#ccc;font-size:0.9em;line-height:1.7;">
-            <div>1着 ⑮シェイクユアハート(3人) / 2着 ⑧サクラファレル(5人) / 3着 ⑭レディネス(11人)</div>
-            <div style="margin-top:4px;">3連単 ⑮→⑧→⑭ <b style="color:#7fd17f;">197,490円</b>(605人気) / ◎⑮シェイクユアハート(モデル1位pct71.5)=<b style="color:#7fd17f;">1着的中</b></div>
-            <div style="margin-top:4px;">買い目 3連単 軸1頭ながしマルチ 軸⑮・相手⑤⑥⑦⑧⑩⑬⑭⑯ 168点(8x7x3)×100円</div>
-            <div style="margin-top:6px;display:flex;gap:16px;">
-              <span>投資 <b>16,800円</b></span><span>払戻 <b style="color:#7fd17f;">197,490円</b></span><span>収支 <b style="color:#7fd17f;">+180,690円</b></span><span>回収率 <b style="color:#7fd17f;">1,175.5%</b></span>
-            </div>
-            <div style="margin-top:8px;padding:8px;background:#00000033;border-radius:6px;font-size:0.88em;color:#bbb;">
-              💭 モデル1位シェイクユアハートが1着。前走宝塚14着=G1系6着以下を最高評価する設計が的中。2着サクラファレル(モデル7位)・3着レディネス(モデル14位/前走非重賞0-0-0-13該当)は相手に追加した馬。最も強く推したホウオウビスケッツ(モデル3位)は10着、軸推奨ショウヘイ(モデル2位)は7着。堅く見えた1〜2番人気が飛び、モデルが人気を配点しない設計が生きた一戦。
-            </div>
-          </div>
-        </div>
-        <!-- レパードS（結果サマリー・8/9・見送り） -->
-        <div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <span style="font-weight:bold;font-size:1.05em;color:#fff;">レパードS(G3) <span style="color:#999;font-size:0.85em;">8/9 新潟・ダ1800m</span></span>
-            <span style="background:#7a2a2a;color:#fff;padding:3px 10px;border-radius:6px;font-size:0.85em;">見送り</span>
-          </div>
-          <div style="color:#ccc;font-size:0.9em;line-height:1.7;">
-            <div>1着 ④チェリヴェント(6人 20.8) / 2着 ⑪パイロマンサー(4人 5.9) / 3着 ⑫メルカントゥール(1人 2.7)</div>
-            <div style="margin-top:4px;">3連単 43,120円(145人気) ／ 3連複 3,980円 ／ 馬連 5,680円</div>
-            <div style="margin-top:4px;">◎パイロマンサー(モデル1位72.5/86・3人気)=<b style="color:#7fd17f;">2着</b>（軸は3着内）／ モデル3位メルカントゥール3着</div>
-            <div style="margin-top:6px;display:flex;gap:16px;">
-              <span>投資 <b>0円</b></span><span>払戻 <b>0円</b></span><span>収支 <b>0円</b></span>
-            </div>
-            <div style="margin-top:8px;padding:8px;background:#00000033;border-radius:6px;font-size:0.88em;color:#bbb;">
-              💭 ◎パイロマンサーが2着で軸は3着内（軸複勝的中）。だが1着チェリヴェント(モデル8位・6人気)を相手評価から外し馬券的中は困難だった。1番人気ショウナンバンライ(モデル最下位12位・7枠0-0-0-20の壁)は6着で消しは正解。堅軸2着でも相手抜けの構造は継続課題のため今回は馬券見送り（投資0円）。
-            </div>
-          </div>
-        </div>
-        <!-- クイーンS（結果サマリー・8/2・的中） -->
-        <div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <span style="font-weight:bold;font-size:1.05em;color:#fff;">クイーンS(G3) <span style="color:#999;font-size:0.85em;">8/2 札幌・芝1800m(右A)</span></span>
-            <span style="background:#7fd17f;color:#1f1f2e;padding:3px 10px;border-radius:6px;font-size:0.85em;">的中</span>
-          </div>
-          <div style="color:#ccc;font-size:0.9em;line-height:1.7;">
-            <div>第74回 北海道新聞杯クイーンステークス（GIII）／ 14頭 ／ 晴・良 ／ 勝ち時計 1:46.1</div>
-            <div style="margin-top:4px;">1着 ⑦ココナッツブラウン(牝6・55.0・北村友一／1人 2.9)　上がり<b style="color:#7fd17f;">34.1</b>＝メンバー最速／通過 11-11-10-4</div>
-            <div style="margin-top:4px;">2着 ⑪コガネノソラ(牝5・56.0・丹内祐次／3人 8.8)　上がり 34.4</div>
-            <div style="margin-top:4px;">3着 ⑭ヴーレヴー(牝4・55.0・横山典弘／4人 10.7)　通過 2-2-2-2</div>
-            <div style="margin-top:4px;">3連単 ⑦→⑪→⑭ <b style="color:#7fd17f;">22,210円</b>(49番人気) ／ ◎⑦ココナッツブラウン=<b style="color:#7fd17f;">1着的中</b></div>
-            <div style="margin-top:4px;">印 ◎⑦ココナッツブラウン(モデル1位 61/74)→1着 ／ ○⑫ボンドガール(2位 57.5)→<b style="color:#e77;">10着</b> ／ ▲⑪コガネノソラ(3位 54.0)→2着</div>
-            <div style="margin-top:4px;">買い目 3連単 軸1頭マルチ 軸⑦・相手⑨⑭⑪②⑫⑩ 90点×100円</div>
-            <div style="margin-top:6px;display:flex;gap:16px;">
-              <span>投資 <b>9,000円</b></span><span>払戻 <b style="color:#7fd17f;">22,210円</b></span><span>収支 <b style="color:#7fd17f;">+13,210円</b></span><span>回収率 <b style="color:#7fd17f;">246.8%</b></span>
-            </div>
-            <div style="margin-top:8px;padding:8px;background:#00000033;border-radius:6px;font-size:0.88em;color:#bbb;">
-              💭 モデル1位のココナッツブラウンが1着、3位コガネノソラが2着、13位フェスティバルヒルが最下位14着。Σmax74・11項目エンジンの序列はそのまま結果に出た。決め手はヴーレヴーを相手に残したこと。AIは「巴賞組0-0-0-8」を根拠に3着候補からも外していたが、分母8の0勝データで完全排除したのが誤りだった。前走クラスの壁は「1着から外す」根拠であって「3着からも外す」根拠ではない（§26）。フォーメーションなら1着2着を当てながら3着で全滅していたところを、軸1頭マルチが救った（§27）。
-            </div>
-          </div>
-        </div>
-        <!-- 函館記念（結果サマリー・6/28） -->
-        <div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <span style="font-weight:bold;font-size:1.05em;color:#fff;">函館記念(G3) <span style="color:#999;font-size:0.85em;">6/28 函館・芝2000m</span></span>
-            <span style="background:#7a2a2a;color:#fff;padding:3px 10px;border-radius:6px;font-size:0.85em;">不的中</span>
-          </div>
-          <div style="color:#ccc;font-size:0.9em;line-height:1.7;">
-            <div>1着 ②ファウストラーゼン(7人) / 2着 ⑩ケリフレッドアスク(9人) / 3着 ③ピースワンデュック(10人)</div>
-            <div style="margin-top:4px;">3連単 326,840円(大波乱) ／ ◎エコロディノス=<b style="color:#e77;">9着</b></div>
-            <div style="margin-top:6px;display:flex;gap:16px;">
-              <span>投資 <b>12,000円</b></span><span>払戻 <b style="color:#e77;">0円</b></span><span>収支 <b style="color:#e77;">-12,000円</b></span>
-            </div>
-            <div style="margin-top:8px;padding:8px;background:#00000033;border-radius:6px;font-size:0.88em;color:#bbb;">
-              💭 ◎エコロディノスが9着に大敗。7-9-10番人気での3連単326,840円という人気薄決着を3連単6頭BOXで取れず。荒れ指数で「右回り苦手」として割り引いた3着ピースワンデュックが巻き返した点、人気薄の地力上位を軸の不振でまとめて取り逃した点が反省。軸の信頼度が低いハンデ重賞でBOX6頭は範囲不足。
-            </div>
-          </div>
-        </div>
-        <!-- ラジオNIKKEI賞（結果サマリー・6/28） -->
-        <div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <span style="font-weight:bold;font-size:1.05em;color:#fff;">ラジオNIKKEI賞(G3) <span style="color:#999;font-size:0.85em;">6/28 福島・芝1800m</span></span>
-            <span style="background:#7a2a2a;color:#fff;padding:3px 10px;border-radius:6px;font-size:0.85em;">不的中</span>
-          </div>
-          <div style="color:#ccc;font-size:0.9em;line-height:1.7;">
-            <div>1着 ⑬サノノグレーター(4人) / 2着 ⑧ディールメーカー(8人) / 3着 ⑤リッツパーティー(1人)</div>
-            <div style="margin-top:4px;">3連単 52,690円 ／ ◎クカイリモク=<b style="color:#e77;">9着</b></div>
-            <div style="margin-top:6px;display:flex;gap:16px;">
-              <span>投資 <b>12,000円</b></span><span>払戻 <b style="color:#e77;">0円</b></span><span>収支 <b style="color:#e77;">-12,000円</b></span>
-            </div>
-            <div style="margin-top:8px;padding:8px;background:#00000033;border-radius:6px;font-size:0.88em;color:#bbb;">
-              💭 ◎クカイリモクが9着。1着サノノグレーター(前走皐月賞G1組・父グレイルロンサム系のパワー血統)を軸に推せなかったのが致命傷。3歳ハンデ戦では「前走クラスG1組」の格を最重視すべきだった。3着リッツパーティーは1番人気で軸候補だったが、ここを切ったのも痛恨。前走グレード上位を軽視した配点を見直す。
-            </div>
-          </div>
-        </div>
-        <!-- しらさぎステークス（結果サマリー・6/21） -->
-        <div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <span style="font-weight:bold;font-size:1.05em;color:#fff;">しらさぎステークス(G3) <span style="color:#999;font-size:0.85em;">6/21 阪神・稍重</span></span>
-            <span style="background:#7a2a2a;color:#fff;padding:3px 10px;border-radius:6px;font-size:0.85em;">不的中</span>
-          </div>
-          <div style="color:#ccc;font-size:0.9em;line-height:1.7;">
-            <div>1着 ⑩エルトンバローズ(7人) / 2着 ⑦キープカルム(6人) / 3着 ⑪エコロアルバ(1人)</div>
-            <div style="margin-top:4px;">3連単 90,760円 ／ ◎エコロアルバ=<b style="color:#7fd17f;">3着(複勝圏)</b></div>
-            <div style="margin-top:6px;display:flex;gap:16px;">
-              <span>投資 <b>12,600円</b></span><span>払戻 <b style="color:#e77;">0円</b></span><span>収支 <b style="color:#e77;">-12,600円</b></span>
-            </div>
-            <div style="margin-top:8px;padding:8px;background:#00000033;border-radius:6px;font-size:0.88em;color:#bbb;">
-              💭 ◎エコロは一次情報(重G1・朝日杯FS4着/パワー型)で軸に格上げ→3着に好走で格上げ判断は正解。だが稍重に回復した馬場で1着エルトン・2着キープの先行勢が残り、相手7頭から漏れた。「重前提・前×道悪巧者」に寄せすぎ、地力ある先行馬を切ったのが反省。軸は当てたが相手で取りこぼし=春からの課題が再現。
-            </div>
-          </div>
-        </div>
-        <!-- 府中牝馬S（結果サマリー・6/21） -->
-        <div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <span style="font-weight:bold;font-size:1.05em;color:#fff;">府中牝馬S(G3) <span style="color:#999;font-size:0.85em;">6/21 東京・稍重</span></span>
-            <span style="background:#7a2a2a;color:#fff;padding:3px 10px;border-radius:6px;font-size:0.85em;">不的中</span>
-          </div>
-          <div style="color:#ccc;font-size:0.9em;line-height:1.7;">
-            <div>1着 ⑦セキトバイースト(5人) / 2着 ②ウイントワイライト(9人) / 3着 ④ミアネーロ(14人)</div>
-            <div style="margin-top:4px;">3連単 1,066,160円(大波乱) ／ ◎セキトバイースト=<b style="color:#7fd17f;">1着的中</b></div>
-            <div style="margin-top:6px;display:flex;gap:16px;">
-              <span>投資 <b>12,600円</b></span><span>払戻 <b style="color:#e77;">0円</b></span><span>収支 <b style="color:#e77;">-12,600円</b></span>
-            </div>
-            <div style="margin-top:8px;padding:8px;background:#00000033;border-radius:6px;font-size:0.88em;color:#bbb;">
-              💭 ◎セキトバ1着は完璧(コガネ→セキトバへの軸変更が正解・道悪軸◎)。だが2着ウイント・3着ミアネーロは共に後方脚質。前残り重視で追込のエストゥ・パラディを相手から切った調整が完全に裏目=馬場は想定ほど前有利でなかった。軸的中でも相手の脚質を絞りすぎて大波乱を取り逃した。
-            </div>
-          </div>
-        </div>
 <!-- 宝塚記念（◎○▲完全1-2-3着的中だがトリガミ・収支マイナス） -->
       <div class="card" style="border:1.5px solid #639922">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
@@ -3142,7 +2988,7 @@ document.querySelectorAll('#contentTabs .tab').forEach(t => {
       var _rn = (window.currentRaceName || (typeof currentRace !== 'undefined' ? currentRace : ''));
       window.renderMaigoTab(_rn);
     }
-    if (t.dataset.target === 'tab-report') setTimeout(function(){ renderSeisekiGraph(); if (typeof renderJikuTracking === 'function') renderJikuTracking(); }, 50);
+    if (t.dataset.target === 'tab-report') setTimeout(function(){ renderSeisekiGraph(); if (typeof renderJikuTracking === 'function') renderJikuTracking(); if (typeof renderResultsLog === 'function') renderResultsLog(); }, 50);
   });
 });
 
@@ -27043,6 +26889,61 @@ var JIKU_TRACKING = [
     result: '1着', aiHit: true,  scoreHit: true,  comboHit: true,
     note: 'モデル1位(pct71.5)シェイクユアハートが1着✅ 前走宝塚記念14着=G1系6着以下を最高評価する設計が的中。3連単⑮→⑧→⑭ 197,490円(605人気)を軸1頭マルチ168点で的中し+180,690円(回収率1,175.5%)。2着サクラファレル(モデル7位)・3着レディネス(モデル14位/前走非重賞0-0-0-13該当)は相手に追加した馬。最も強く推したホウオウビスケッツ(モデル3位)は10着、軸推奨ショウヘイ(モデル2位)は7着。' }
 ];
+
+
+// ===== 収支レポート データ駆動化 (RESULTS_LOG + 自動集計) =====
+var LEGACY_TOTALS = {"invest": 484600, "payout": 757520, "races": 16, "hits": 10, "legacyNames": "皐月賞・青葉賞・フローラS・マイラーズC・天皇賞春・京都新聞杯・エプソムC・NHKマイルC・ヴィクトリアマイル・平安S・オークス・葵S※・日本ダービー・目黒記念・安田記念・函館スプリントS・宝塚記念"};
+var RESULTS_LOG = [{"race": "札幌記念", "grade": "G2", "dv": "8/16 札幌・芝2000m", "status": "的中", "invest": 16800, "payout": 197490, "lines": ["<div>1着 ⑮シェイクユアハート(3人) / 2着 ⑧サクラファレル(5人) / 3着 ⑭レディネス(11人)</div>", "<div style=\"margin-top:4px;\">3連単 ⑮→⑧→⑭ <b style=\"color:#7fd17f;\">197,490円</b>(605人気) / ◎⑮シェイクユアハート(モデル1位pct71.5)=<b style=\"color:#7fd17f;\">1着的中</b></div>", "<div style=\"margin-top:4px;\">買い目 3連単 軸1頭ながしマルチ 軸⑮・相手⑤⑥⑦⑧⑩⑬⑭⑯ 168点(8x7x3)×100円</div>"], "review": "モデル1位シェイクユアハートが1着。前走宝塚14着=G1系6着以下を最高評価する設計が的中。2着サクラファレル(モデル7位)・3着レディネス(モデル14位/前走非重賞0-0-0-13該当)は相手に追加した馬。最も強く推したホウオウビスケッツ(モデル3位)は10着、軸推奨ショウヘイ(モデル2位)は7着。堅く見えた1〜2番人気が飛び、モデルが人気を配点しない設計が生きた一戦。"}, {"race": "レパードS", "grade": "G3", "dv": "8/9 新潟・ダ1800m", "status": "見送り", "invest": 0, "payout": 0, "lines": ["<div>1着 ④チェリヴェント(6人 20.8) / 2着 ⑪パイロマンサー(4人 5.9) / 3着 ⑫メルカントゥール(1人 2.7)</div>", "<div style=\"margin-top:4px;\">3連単 43,120円(145人気) ／ 3連複 3,980円 ／ 馬連 5,680円</div>", "<div style=\"margin-top:4px;\">◎パイロマンサー(モデル1位72.5/86・3人気)=<b style=\"color:#7fd17f;\">2着</b>（軸は3着内）／ モデル3位メルカントゥール3着</div>"], "review": "◎パイロマンサーが2着で軸は3着内（軸複勝的中）。だが1着チェリヴェント(モデル8位・6人気)を相手評価から外し馬券的中は困難だった。1番人気ショウナンバンライ(モデル最下位12位・7枠0-0-0-20の壁)は6着で消しは正解。堅軸2着でも相手抜けの構造は継続課題のため今回は馬券見送り（投資0円）。"}, {"race": "クイーンS", "grade": "G3", "dv": "8/2 札幌・芝1800m(右A)", "status": "的中", "invest": 9000, "payout": 22210, "lines": ["<div>第74回 北海道新聞杯クイーンステークス（GIII）／ 14頭 ／ 晴・良 ／ 勝ち時計 1:46.1</div>", "<div style=\"margin-top:4px;\">1着 ⑦ココナッツブラウン(牝6・55.0・北村友一／1人 2.9) 上がり<b style=\"color:#7fd17f;\">34.1</b>＝メンバー最速／通過 11-11-10-4</div>", "<div style=\"margin-top:4px;\">2着 ⑪コガネノソラ(牝5・56.0・丹内祐次／3人 8.8) 上がり 34.4</div>", "<div style=\"margin-top:4px;\">3着 ⑭ヴーレヴー(牝4・55.0・横山典弘／4人 10.7) 通過 2-2-2-2</div>", "<div style=\"margin-top:4px;\">3連単 ⑦→⑪→⑭ <b style=\"color:#7fd17f;\">22,210円</b>(49番人気) ／ ◎⑦ココナッツブラウン=<b style=\"color:#7fd17f;\">1着的中</b></div>", "<div style=\"margin-top:4px;\">印 ◎⑦ココナッツブラウン(モデル1位 61/74)→1着 ／ ○⑫ボンドガール(2位 57.5)→<b style=\"color:#e77;\">10着</b> ／ ▲⑪コガネノソラ(3位 54.0)→2着</div>", "<div style=\"margin-top:4px;\">買い目 3連単 軸1頭マルチ 軸⑦・相手⑨⑭⑪②⑫⑩ 90点×100円</div>"], "review": "モデル1位のココナッツブラウンが1着、3位コガネノソラが2着、13位フェスティバルヒルが最下位14着。Σmax74・11項目エンジンの序列はそのまま結果に出た。決め手はヴーレヴーを相手に残したこと。AIは「巴賞組0-0-0-8」を根拠に3着候補からも外していたが、分母8の0勝データで完全排除したのが誤りだった。前走クラスの壁は「1着から外す」根拠であって「3着からも外す」根拠ではない（§26）。フォーメーションなら1着2着を当てながら3着で全滅していたところを、軸1頭マルチが救った（§27）。"}, {"race": "函館記念", "grade": "G3", "dv": "6/28 函館・芝2000m", "status": "不的中", "invest": 12000, "payout": 0, "lines": ["<div>1着 ②ファウストラーゼン(7人) / 2着 ⑩ケリフレッドアスク(9人) / 3着 ③ピースワンデュック(10人)</div>", "<div style=\"margin-top:4px;\">3連単 326,840円(大波乱) ／ ◎エコロディノス=<b style=\"color:#e77;\">9着</b></div>"], "review": "◎エコロディノスが9着に大敗。7-9-10番人気での3連単326,840円という人気薄決着を3連単6頭BOXで取れず。荒れ指数で「右回り苦手」として割り引いた3着ピースワンデュックが巻き返した点、人気薄の地力上位を軸の不振でまとめて取り逃した点が反省。軸の信頼度が低いハンデ重賞でBOX6頭は範囲不足。"}, {"race": "ラジオNIKKEI賞", "grade": "G3", "dv": "6/28 福島・芝1800m", "status": "不的中", "invest": 12000, "payout": 0, "lines": ["<div>1着 ⑬サノノグレーター(4人) / 2着 ⑧ディールメーカー(8人) / 3着 ⑤リッツパーティー(1人)</div>", "<div style=\"margin-top:4px;\">3連単 52,690円 ／ ◎クカイリモク=<b style=\"color:#e77;\">9着</b></div>"], "review": "◎クカイリモクが9着。1着サノノグレーター(前走皐月賞G1組・父グレイルロンサム系のパワー血統)を軸に推せなかったのが致命傷。3歳ハンデ戦では「前走クラスG1組」の格を最重視すべきだった。3着リッツパーティーは1番人気で軸候補だったが、ここを切ったのも痛恨。前走グレード上位を軽視した配点を見直す。"}, {"race": "しらさぎステークス", "grade": "G3", "dv": "6/21 阪神・稍重", "status": "不的中", "invest": 12600, "payout": 0, "lines": ["<div>1着 ⑩エルトンバローズ(7人) / 2着 ⑦キープカルム(6人) / 3着 ⑪エコロアルバ(1人)</div>", "<div style=\"margin-top:4px;\">3連単 90,760円 ／ ◎エコロアルバ=<b style=\"color:#7fd17f;\">3着(複勝圏)</b></div>"], "review": "◎エコロは一次情報(重G1・朝日杯FS4着/パワー型)で軸に格上げ→3着に好走で格上げ判断は正解。だが稍重に回復した馬場で1着エルトン・2着キープの先行勢が残り、相手7頭から漏れた。「重前提・前×道悪巧者」に寄せすぎ、地力ある先行馬を切ったのが反省。軸は当てたが相手で取りこぼし=春からの課題が再現。"}, {"race": "府中牝馬S", "grade": "G3", "dv": "6/21 東京・稍重", "status": "不的中", "invest": 12600, "payout": 0, "lines": ["<div>1着 ⑦セキトバイースト(5人) / 2着 ②ウイントワイライト(9人) / 3着 ④ミアネーロ(14人)</div>", "<div style=\"margin-top:4px;\">3連単 1,066,160円(大波乱) ／ ◎セキトバイースト=<b style=\"color:#7fd17f;\">1着的中</b></div>"], "review": "◎セキトバ1着は完璧(コガネ→セキトバへの軸変更が正解・道悪軸◎)。だが2着ウイント・3着ミアネーロは共に後方脚質。前残り重視で追込のエストゥ・パラディを相手から切った調整が完全に裏目=馬場は想定ほど前有利でなかった。軸的中でも相手の脚質を絞りすぎて大波乱を取り逃した。"}];
+
+function _rlFmt(n){ var neg=n<0; n=Math.abs(n); var t=String(n).replace(/\B(?=(\d{3})+(?!\d))/g,','); return (neg?'-':'')+t; }
+function _rlPct(pay,inv){ var a=(pay/inv*100).toFixed(1).split('.'); return _rlFmt(parseInt(a[0],10))+'.'+a[1]; }
+function _rlCard(e){
+  var badge = e.status==='的中' ? 'background:#7fd17f;color:#1f1f2e' : 'background:#7a2a2a;color:#fff';
+  var col = e.status==='的中' ? '#7fd17f' : (e.status==='不的中' ? '#e77' : '');
+  var cs = col ? ' style="color:'+col+'"' : '';
+  var shu = e.payout - e.invest;
+  var h = '<div style="background:linear-gradient(135deg,#2a2a3e,#1f1f2e);border:1px solid #444;border-radius:12px;padding:16px;margin-bottom:12px;">';
+  h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">';
+  h += '<span style="font-weight:bold;font-size:1.05em;color:#fff;">'+e.race+'('+e.grade+') <span style="color:#999;font-size:0.85em;">'+e.dv+'</span></span>';
+  h += '<span style="'+badge+';padding:3px 10px;border-radius:6px;font-size:0.85em;">'+e.status+'</span></div>';
+  h += '<div style="color:#ccc;font-size:0.9em;line-height:1.7;">';
+  h += e.lines.join('');
+  h += '<div style="margin-top:6px;display:flex;gap:16px;">';
+  h += '<span>投資 <b>'+_rlFmt(e.invest)+'円</b></span>';
+  h += '<span>払戻 <b'+cs+'>'+_rlFmt(e.payout)+'円</b></span>';
+  h += '<span>収支 <b'+cs+'>'+(shu>0?'+':'')+_rlFmt(shu)+'円</b></span>';
+  if(e.status==='的中') h += '<span>回収率 <b style="color:#7fd17f">'+_rlPct(e.payout,e.invest)+'%</b></span>';
+  h += '</div>';
+  h += '<div style="margin-top:8px;padding:8px;background:#00000033;border-radius:6px;font-size:0.88em;color:#bbb;">💭'+e.review+'</div>';
+  h += '</div></div>';
+  return h;
+}
+function _rlTotals(){
+  var inv=LEGACY_TOTALS.invest, pay=LEGACY_TOTALS.payout, races=LEGACY_TOTALS.races, hits=LEGACY_TOTALS.hits;
+  RESULTS_LOG.forEach(function(e){ inv+=e.invest; pay+=e.payout; races+=1; if(e.status==='的中') hits+=1; });
+  return {invest:inv, payout:pay, profit:pay-inv, recovery:_rlPct(pay,inv), races:races, hits:hits};
+}
+function renderResultsLog(){
+  var t=_rlTotals();
+  var hi=document.getElementById('header-invest'); if(hi) hi.textContent=_rlFmt(t.invest)+'円';
+  var hp=document.getElementById('header-payout'); if(hp) hp.textContent=_rlFmt(t.payout)+'円';
+  var hr=document.getElementById('header-rieki'); if(hr) hr.textContent=(t.profit>=0?'+':'')+_rlFmt(t.profit)+'円';
+  var hk=document.getElementById('header-kaishuritu'); if(hk) hk.textContent=t.recovery+'%';
+  var c=document.getElementById('results-log-container'); if(!c) return;
+  var names=LEGACY_TOTALS.legacyNames+'・'+RESULTS_LOG.map(function(e){return e.race;}).slice().reverse().join('・');
+  var s='<div class="card" style="background:#E1F5EE;border:1px solid #639922">';
+  s+='<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">';
+  s+='<div><div style="font-size:13px;font-weight:500;color:#085041;margin-bottom:2px">2026年 通算収支</div>';
+  s+='<div style="font-size:11px;color:#3B6D11">'+t.races+'レース（'+names+'）</div></div>';
+  s+='<div style="text-align:right"><div style="font-size:24px;font-weight:800;color:#0F6E56">'+(t.profit>=0?'+':'')+_rlFmt(t.profit)+'円</div>';
+  s+='<div style="font-size:12px;color:#3B6D11">回収率 <strong>'+t.recovery+'%</strong> '+(t.profit>=0?'✅ 黒字':'🔻 赤字')+'</div></div></div>';
+  s+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">';
+  s+='<div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center"><div style="font-size:10px;color:var(--text-mute)">総投資</div><div style="font-size:14px;font-weight:700;color:var(--text)">'+_rlFmt(t.invest)+'円</div></div>';
+  s+='<div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center"><div style="font-size:10px;color:var(--text-mute)">総払戻</div><div style="font-size:14px;font-weight:700;color:#0F6E56">'+_rlFmt(t.payout)+'円</div></div>';
+  s+='<div style="background:#fff;border-radius:var(--border-radius-md);padding:8px;text-align:center"><div style="font-size:10px;color:var(--text-mute)">的中率（予想含む）</div><div style="font-size:14px;font-weight:700;color:#185FA5">'+t.hits+'/'+t.races+'</div><div style="font-size:9px;color:var(--text-mute)">※葵Sは予想的中・馬券購入なし</div></div></div></div>';
+  c.innerHTML = s + RESULTS_LOG.map(_rlCard).join('\n');
+}
+if (typeof document !== 'undefined') { if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ try{renderResultsLog();}catch(_e){} }); else { try{renderResultsLog();}catch(_e){} } }
 
 function renderJikuTracking() {
   var container = document.getElementById('jiku-tracking-container');
