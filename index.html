@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260831-0845';
+  var CURRENT_VERSION = '20260831-0900';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -18926,16 +18926,44 @@ function renderPacePredict() {
   var horses = window.horses || (typeof HORSES !== 'undefined' ? HORSES : []);
   if (!horses.length) return;
 
-  // 前走4角通過順位ベースのペース判定（≤2 を逃げ馬扱い）
-  var sorted = horses.slice().sort(function(a,b){ return (a.prevCorner4||99) - (b.prevCorner4||99); });
-  var nigeCount = horses.filter(function(h){ return (h.prevCorner4||99) <= 2; }).length;
-  var pace = nigeCount >= 3 ? 'ハイペース' : nigeCount === 0 ? 'スローペース' : '平均ペース';
-  var paceColor = pace==='ハイペース' ? '#A32D2D' : pace==='スローペース' ? '#0F6E56' : '#185FA5';
-  var paceComment = pace==='ハイペース'
-    ? '逃げ馬多数で縦長展開。後方差し・追込に有利。先行馬は消耗リスク。'
-    : pace==='スローペース'
-    ? '単騎逃げでスロー濃厚。前有利の瞬発力勝負。後方待機は届かない可能性。'
-    : '平均ペース想定。先行・差しともにチャンスあり。末脚型が有利。';
+  // 4角位置の取得: 前走4角(prevCorner4) を第1優先、無ければ4角平均(c4avg) にフォールバック。
+  // 旧実装は prevCorner4 のみを見て、欠損時は (h.prevCorner4||99) が 99 になり
+  // nigeCount=0 → 無条件で「スローペース」と断定していた（新潟記念ロスターは c4avg しか持たない）。
+  // 過半数が欠損する場合は判定せず「判定不可」とし、どちらの基準を使ったかを明示する。
+  var _c4 = function(h){
+    if (h.prevCorner4 != null) return { v: Number(h.prevCorner4), src: 'prev' };
+    if (h.c4avg      != null) return { v: Number(h.c4avg),      src: 'avg'  };
+    return null;
+  };
+  var _known = horses.map(_c4).filter(function(x){ return x && !isNaN(x.v); });
+  var _usePrev = _known.filter(function(x){ return x.src==='prev'; }).length;
+  var _useAvg  = _known.filter(function(x){ return x.src==='avg';  }).length;
+  var paceBasis = (_known.length === 0) ? 'なし'
+                : (_usePrev >= _useAvg) ? '前走4角通過順' : '4角平均通過順';
+  var paceKnownRate = horses.length ? (_known.length / horses.length) : 0;
+
+  var sorted = horses.slice().sort(function(a,b){
+    var A=_c4(a), B=_c4(b);
+    return ((A&&!isNaN(A.v))?A.v:99) - ((B&&!isNaN(B.v))?B.v:99);
+  });
+
+  var pace, paceColor, paceComment;
+  if (paceKnownRate < 0.5) {
+    // データ過半数欠損 → 断定しない
+    pace = '判定不可';
+    paceColor = '#888';
+    paceComment = '4角通過順データ未投入のため展開予測は保留（' + _known.length + '/' + horses.length + '頭のみ判明）。';
+  } else {
+    var nigeCount = _known.filter(function(x){ return x.v <= 2; }).length;
+    pace = nigeCount >= 3 ? 'ハイペース' : nigeCount === 0 ? 'スローペース' : '平均ペース';
+    paceColor = pace==='ハイペース' ? '#A32D2D' : pace==='スローペース' ? '#0F6E56' : '#185FA5';
+    paceComment = (pace==='ハイペース'
+      ? '逃げ馬多数で縦長展開。後方差し・追込に有利。先行馬は消耗リスク。'
+      : pace==='スローペース'
+      ? '単騎逃げでスロー濃厚。前有利の瞬発力勝負。後方待機は届かない可能性。'
+      : '平均ペース想定。先行・差しともにチャンスあり。末脚型が有利。')
+      + '（判定基準: ' + paceBasis + ' / ' + _known.length + '/' + horses.length + '頭）';
+  }
 
   var html = '';
 
@@ -18948,13 +18976,13 @@ function renderPacePredict() {
           '</div>';
 
   // 想定隊列（前走4角順位順 / corner4 設定済みの馬のみ）
-  var hasCorner = sorted.some(function(h){ return h.prevCorner4; });
+  var hasCorner = sorted.some(function(h){ var x=_c4(h); return x && !isNaN(x.v); });
   if (hasCorner) {
     html += '<div style="margin-bottom:14px">';
     html += '<div style="font-size:11px;font-weight:600;color:var(--text-sub);margin-bottom:8px">' +
-            '📋 前走4角順位から予想する想定ポジション（前→後）</div>';
+            '📋 ' + paceBasis + 'から予想する想定ポジション（前→後）</div>';
     sorted.forEach(function(h){
-      if (!h.prevCorner4) return;
+      var _x=_c4(h); if (!_x || isNaN(_x.v)) return;
       var ps = calcPositionStyle(h);
       html += '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--border)">' +
               '<span style="font-size:10px;font-weight:600;color:'+ps.color+';min-width:74px">' + ps.style + '</span>' +
@@ -18969,11 +18997,15 @@ function renderPacePredict() {
 
   // 脚質別有利不利サマリー（4 カード）
   html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px">';
-  var groups = [
+  // 「上がり3F重視 ◎連対率70%」「東京コース慣れ ○加点対象」は全レース共通の固定値だったため削除。
+  // 開催場に関係なく「東京コース慣れ=加点対象」と表示され、どのエンジンにも該当項目が無く誤情報だった。
+  // ペース連動で意味を持つ2枚のみ残す。判定不可のときは断定を避ける。
+  var groups = (pace === '判定不可')
+    ? [ { label:'逃げ・先行', adv:'—', color:'#888' },
+        { label:'差し・追込', adv:'—', color:'#888' } ]
+    : [
     { label:'逃げ・先行',     adv: pace==='スローペース'?'◎最有利':pace==='ハイペース'?'×消耗注意':'○有利', color:'#EF9F27' },
-    { label:'差し・追込',     adv: pace==='ハイペース'?'◎最有利':pace==='スローペース'?'△届かない':'○有利', color:'#1D9E75' },
-    { label:'上がり3F重視',   adv:'◎連対率70%',  color:'#534AB7' },
-    { label:'東京コース慣れ', adv:'○加点対象',  color:'#185FA5' }
+    { label:'差し・追込',     adv: pace==='ハイペース'?'◎最有利':pace==='スローペース'?'△届かない':'○有利', color:'#1D9E75' }
   ];
   groups.forEach(function(g){
     html += '<div style="background:'+g.color+'15;border-radius:var(--border-radius-md);' +
