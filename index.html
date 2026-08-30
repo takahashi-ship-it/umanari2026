@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260831-0757';
+  var CURRENT_VERSION = '20260831-0830';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7813,13 +7813,17 @@ window.HORSES_BY_RACE = HORSES_BY_RACE;
  * ===================================================== */
 const RACE_META = {
   '新潟記念': {
+    // babaWet は実際の稍重にかかわらず false のまま。renderDoakuTrend(L14158)の道悪パネルは
+    // 函館/福島1800 の2分岐しか持たず、新潟外回り(直線658.7m)に誤った解説が出るため。
+    // 稍重だった事実は babaPrediction と paceNote に文章で記録する。
     babaWet:false, gradeLine:"G3", title:"新潟記念", date:"2026-08-30 (日)",
     venue:"新潟競馬場", surface:"芝2000m", age:"3歳上", distance:2000, direction:"left",
     weightType:"別定",
     isFinished: true, pageTitle:"JRA重賞予想 2026 | 新潟記念",
-    notice:"⚠ 骨格のみ開放。過去10年データ／RTF未着弾のため全ファクターが中立値＝スコアは未確定です。",
-    babaPrediction:{ status:"良馬場想定", icon:"☀️", color:"#1D9E75", comment:"新潟芝2000m外・直線658.7mの差し得コース" },
-    status: '終了', paceExpect:'', paceNote:'' },
+    notice:"",
+    resultBanner:'✅ 終了 | 1着：5ゾロアストロ 2着：3ロデオドライブ 3着：8ダノンシーマ | 3連単4,200円的中 | 投資12,600円・払戻4,200円・収支-8,400円',
+    babaPrediction:{ status:"稍重(実測)", icon:"🌧", color:"#378ADD", comment:"当日は雨で稍重。勝ち時計1:59.6・前半5F 1:00.6のスローで前残り決着" },
+    status: '終了', paceExpect:'S', paceNote:'当日は雨で稍重。前半5F 1:00.6のSペースとなり前有利。上がり性能上位2頭(バレエマスター+0.535が10着/ステレンボッシュ+0.467が11着)が総崩れで、max18の上がり配点は機能しなかった。道悪+Sペース時は上がり配点を下げる条件分岐が課題。' },
   '関屋記念': {
     babaWet:true, gradeLine:"G3", title:"関屋記念", date:"2026-07-26 (日)",
     venue:"新潟競馬場", surface:"芝1600m", age:"3歳上", distance:1600, direction:"left",
