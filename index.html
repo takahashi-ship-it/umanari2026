@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260831-1000';
+  var CURRENT_VERSION = '20260831-1100';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7821,7 +7821,7 @@ const RACE_META = {
     babaWet:false, actualBaba:'', gradeLine:"G2", grade:"G2", title:"紫苑S", date:"2026-09-06 (日)",
     venue:"中山", surface:"芝2000m", age:"3歳牝馬", distance:2000, direction:"right",
     weightType:"定量", isFinished:false, pageTitle:"JRA重賞予想 2026 | 紫苑S",
-    notice:"骨格のみ開放。過去10年データ／RTF未着弾のため全ファクターが中立値＝スコアは未確定です。",
+    notice:"配点構成を確定（12項目・Σmax=97）。過去10年データ／出馬表は未投入のため全ファクターが中立値＝スコアは未確定です。出馬表は9/4(金)確定後に投入します。",
     babaPrediction:{ status:"良馬場想定", icon:"☀️", color:"#1D9E75", comment:"中山芝2000m内回り・直線310m。秋華賞トライアル(上位3頭に優先出走権)" },
     status:'予想中', paceExpect:'', paceNote:'' },
   '新潟記念': {
@@ -22602,9 +22602,15 @@ function _getNKScoreStats(){
        §24によりOP以上のクラス別集計を用いる（生カウントは条件戦の滞在年数を
        測ってしまうため不可）。
      ・血統(新潟芝2000種牡馬)5 → 中山芝2000種牡馬5 に差し替え。
-     ・上がり性能18 / 脚質5 は項目としては引き継ぐが、中山内回りは先行有利で
-       新潟とは前提が逆。配点・符号は過去10年データ着弾後に確定する
+     ・4角先行力18 を新設（上がり性能18から移管）。中山内回り直線310mでは
+       4角6番手以内から勝ち馬8/10。過去走の4角通過順を頭数で正規化して評価する。
+     ・上がり性能 18→6。中山内回りでは新潟外回りの前提が崩れる
        （新潟記念では上がり18点が機能せず、agariOP上位2頭が10着・11着だった）。
+     ・脚質5 は符号反転。逃げ・先行を加点し追込を減点（新潟記念は逃げ減点）。
+     ・間隔 8→7。4ヶ月休み明けが最多勝ちパターンのため長期休養を減点しない。
+     ・枠・人気は配点しない（§6）。
+     → Σmax=97 / 12項目。ただし配点の「割り当て」を確定しただけで、各項目の
+       閾値は RACE_PAST_DATA['紫苑S'] 着弾後に決める。現状は全項目中立のまま。
 
    有効化手順:
      1. 紫苑S 過去10年データを集計し、各 pending() を実配点の add() に置換
@@ -22623,19 +22629,29 @@ function computeScoreBreakdownShionV1(h,_rawOnly){
   var v=function(x,u){ return (x===undefined||x===null||x==='') ? '不明' : (x+(u||'')); };
 
   h = h || {};
-  pending('上がり性能', 18,
-    (h.agariOPRuns==null ? 'OP以上の上がり差 未集計'
-      : 'OP以上'+h.agariOPRuns+'戦 実測'+h.agariOPRaw+'秒／収縮後'+h.agariOP)
-    + '（中山内回りは先行有利。配点は過去10年データで再検証）', 'horse');
-  pending('前走クラス', 12, v(h.prevClass), 'data');
+  // --- 配点確定（2026-08-31）: 4角先行力18 を新設し、上がり性能を18→6 に移管。Σmax=97 / 12項目 ---
+  // TODO(データ着弾後): 各 pending() を実配点の add() に置換し SHION_CALIBRATED=true にする。
+  //   閾値は紫苑S 2016-2025 の実測から決めること。下記の根拠は配点の割り当て理由であって
+  //   閾値そのものではない。RACE_PAST_DATA['紫苑S'] が未投入の間は全項目中立のまま。
+  pending('4角先行力', 18,
+    '過去走の4角通過順を頭数で正規化して評価（未取得）'
+    + '。中山内回り直線310m。4角6番手以内から勝ち馬8/10', 'horse');
+  pending('前走クラス', 12,
+    v(h.prevClass) + '（優駿牝馬(オークス)組を最上位に置く）', 'data');
   pending('重賞実績', 10,
     '重賞 '+v(h.jusyoRuns,'戦')+' / 連対 '+v(h.jusyoPlaced)+' / '+v(h.jusyoWins,'勝'), 'horse');
   pending('中山芝1800-2200実績', 10,
     (h.nakayama1822OP==null ? 'OP以上のクラス別集計 未取得'
       : 'OP以上'+h.nakayama1822OP.join('-'))
-    + '（中山内回り直線310m。§24によりOP以上に層別／生カウント不可）', 'horse');
-  pending('間隔', 8, v(h.gapDaysCompleted!=null?h.gapDaysCompleted:h.gapDays,'日'), 'data');
+    + '（§24によりOP以上に層別／生カウント不可）', 'horse');
   pending('前走着順', 7, (h.prevRank===99?'前走取消':v(h.prevRank,'着')), 'data');
+  pending('間隔', 7,
+    v(h.gapDaysCompleted!=null?h.gapDaysCompleted:h.gapDays,'日')
+    + '（4ヶ月休み明けが最多勝ちパターン。長期休養は減点しない）', 'data');
+  pending('上がり性能', 6,
+    (h.agariOPRuns==null ? 'OP以上の上がり差 未集計'
+      : 'OP以上'+h.agariOPRuns+'戦 実測'+h.agariOPRaw+'秒／収縮後'+h.agariOP)
+    + '（中山内回りで前提が崩れるため 18→6 に減。新潟記念では18点が機能しなかった）', 'horse');
   pending('騎手継続', 6,
     (h.jockeyContinue==null ? '前走騎手 未取得' : (h.jockeyContinue?'前走と同じ騎手':'乗り替わり'))
     + '（'+v(h.jockey)+'）', 'env');
@@ -22643,9 +22659,10 @@ function computeScoreBreakdownShionV1(h,_rawOnly){
     (h.m2000OP==null ? '未集計' : 'OP以上'+h.m2000OP.join('-')), 'horse');
   pending('前走距離', 5, v(h.prevDist), 'data');
   pending('脚質', 5,
-    v(h.runStyle)+'（4角平均 '+v(h.c4avg)+'）中山内回りは前有利。新潟記念の逃げ減点は流用しない', 'env');
+    v(h.runStyle)+'（4角平均 '+v(h.c4avg)+'）'
+    + '中山内回りは前有利＝逃げ・先行を加点し追込を減点（新潟記念とは符号が逆）', 'env');
   pending('血統(コース種牡馬)', 5,
-    v(h.sire)+'（中山芝2000mの種牡馬別成績 未取得）', 'horse');
+    v(h.sire)+'（中山芝2000mの種牡馬別成績表が未着弾のため中立のまま）', 'horse');
 
   var total=it.reduce(function(x,y){return x+y.value;},0);
   var max=it.reduce(function(x,y){return x+y.max;},0);
