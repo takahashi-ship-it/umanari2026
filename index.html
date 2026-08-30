@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260830-1700';
+  var CURRENT_VERSION = '20260831-0757';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7638,7 +7638,7 @@ function _sapporoShrink(v, max, conf){ var mid=max/2; return mid + (v-mid)*conf;
 function _sapporoPl(a){ var t=a[0]+a[1]+a[2]+a[3]; return t? (a[0]+a[1]+a[2])/t : null; }
 
 function computeScoreBreakdownSapporo(h, _rawOnly){
-  var it=[], add=function(k,v,mx,note){ it.push({key:k,value:v,max:mx,note:note||''}); };
+  var it=[], add=function(k,v,mx,note,grp){ it.push({key:k,value:v,max:mx,note:note||'',label:k,score:v,group:grp||'horse'}); };
   var pc=h.prevClass, pcv, pcn;
   if(h.prevDist && h.prevDist.indexOf('ダ')===0){ pcv=6; pcn='前走ダート=中立(傾向データが芝前走のみで構築のため予測力なし)'; }
   else if(pc==='G1'){ pcv=12; pcn='前走芝G1 4-7-7-27 複勝40.0%'; }
