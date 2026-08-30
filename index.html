@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260831-0930';
+  var CURRENT_VERSION = '20260831-1000';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2843,7 +2843,7 @@ const STATUS_BADGE = {
 };
 
 const TARGET_RACE_NAME = "オークス";
-const SUPPORTED_RACES = new Set(['新潟記念', '札幌記念', 'レパードS','クイーンS', "関屋記念", "函館2歳S", "天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S","ラジオNIKKEI賞","函館記念","北九州記念","七夕賞",]);
+const SUPPORTED_RACES = new Set(['紫苑S', '新潟記念', '札幌記念', 'レパードS','クイーンS', "関屋記念", "函館2歳S", "天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S","ラジオNIKKEI賞","函館記念","北九州記念","七夕賞",]);
 
 function getDefaultDisplayMonth() {
   // 直近の「予想中」(SUPPORTED && upcoming) レースの開催月を返す
@@ -7489,6 +7489,11 @@ HORSES_BY_RACE['札幌記念'] = [
   {"name": "シェイクユアハート", "sex": "牡", "age": 6, "carriedWeight": 58.0, "jockey": "古川吉", "stable": "栗東・宮", "odds": 5.4, "popEstimate": 3, "waku": 8, "umaban": 15, "runs": 30, "yoshibaAll": [1, 0, 0, 1], "yoshibaOP": [0, 0, 0, 0], "m2000All": [5, 7, 4, 4], "m2000OP": [2, 2, 0, 2], "sapporoTurf": [1, 0, 0, 1], "c4n": 8, "c4avg": 7.2, "c4in6": 4, "gRuns": 7, "gTop2": 3, "prevRace": "宝塚記念(GI)", "prevRank": 14, "prevClass": "G1", "prevDist": "芝2200", "prevPop": 11, "gapDays": 63, "rtfSrc": "sapporokinen_race.rtfd 全332走", "sire": "ハーツクライ", "sireLine": "Halo", "bloodSrc": "sapporokinen_blood.rtf 5代血統表", "oddsFixed": true},
   {"name": "ホウオウビスケッツ", "sex": "牡", "age": 6, "carriedWeight": 58.0, "jockey": "岩田康", "stable": "美浦・奥村武", "odds": 24.9, "popEstimate": 9, "waku": 8, "umaban": 16, "runs": 21, "yoshibaAll": [2, 0, 0, 1], "yoshibaOP": [2, 0, 0, 1], "m2000All": [2, 1, 1, 7], "m2000OP": [1, 1, 1, 7], "sapporoTurf": [0, 0, 0, 1], "c4n": 10, "c4avg": 1.7, "c4in6": 10, "gRuns": 17, "gTop2": 5, "prevRace": "川崎記念(JpnI)", "prevRank": 11, "prevClass": "G1", "prevDist": "ダ2100", "prevPop": 5, "gapDays": 130, "rtfSrc": "sapporokinen_race.rtfd 全332走", "sire": "マインドユアビスケッツ", "sireLine": "Deputy Minister", "bloodSrc": "sapporokinen_blood.rtf 5代血統表", "oddsFixed": true}
 ];
+
+// 紫苑S(2026-09-06 / 中山 芝2000m内 / G2 / 3歳牝馬 / 秋華賞トライアル)
+// 出馬表は9/4(金)確定。確定まで空ロスターで開放する。
+// (setCurrentRace はロスター未存在だと META 適用前に return するため、空配列で回避)
+HORSES_BY_RACE['紫苑S'] = [];
 ;
 
 
@@ -7812,6 +7817,13 @@ window.HORSES_BY_RACE = HORSES_BY_RACE;
  * 3.05) RACE METADATA (タイトル・コース等)
  * ===================================================== */
 const RACE_META = {
+  '紫苑S': {
+    babaWet:false, actualBaba:'', gradeLine:"G2", grade:"G2", title:"紫苑S", date:"2026-09-06 (日)",
+    venue:"中山", surface:"芝2000m", age:"3歳牝馬", distance:2000, direction:"right",
+    weightType:"定量", isFinished:false, pageTitle:"JRA重賞予想 2026 | 紫苑S",
+    notice:"骨格のみ開放。過去10年データ／RTF未着弾のため全ファクターが中立値＝スコアは未確定です。",
+    babaPrediction:{ status:"良馬場想定", icon:"☀️", color:"#1D9E75", comment:"中山芝2000m内回り・直線310m。秋華賞トライアル(上位3頭に優先出走権)" },
+    status:'予想中', paceExpect:'', paceNote:'' },
   '新潟記念': {
     // babaWet は実際の稍重にかかわらず false のまま。renderDoakuTrend(L14158)の道悪パネルは
     // 函館/福島1800 の2分岐しか持たず、新潟外回り(直線658.7m)に誤った解説が出るため。
@@ -22574,6 +22586,84 @@ function _getNKScoreStats(){
   return {mean:mean,sd:sd};
 }
 
+/* ============================================================================
+   紫苑S V1（骨格）  2026-09-06 / 中山 芝2000m(右・内) / 3歳牝馬 定量 / G2
+   秋華賞トライアル（上位3頭に優先出走権）
+
+   【この関数は現時点で全馬に同一スコアを返す】
+   過去10年データと各馬のRTFが未着弾のため、全ファクターを中立値(満点の半分)で
+   返す器として実装している。順位は付かない＝それが正しい状態。
+
+   新潟記念V2(Σmax=100)からの差分:
+     ・年齢8 を削除 → Σmax=92。全馬3歳のため序列に寄与せず、§25「実レンジ0の
+       項目は序列に寄与しない」に該当する。配点の再配分は行わない。
+     ・長直線コース実績10 → 中山芝1800-2200実績10 に差し替え。中山内回りは
+       直線310mでJRA最短級、新潟外回り658.7mとは真逆の適性を測る必要がある。
+       §24によりOP以上のクラス別集計を用いる（生カウントは条件戦の滞在年数を
+       測ってしまうため不可）。
+     ・血統(新潟芝2000種牡馬)5 → 中山芝2000種牡馬5 に差し替え。
+     ・上がり性能18 / 脚質5 は項目としては引き継ぐが、中山内回りは先行有利で
+       新潟とは前提が逆。配点・符号は過去10年データ着弾後に確定する
+       （新潟記念では上がり18点が機能せず、agariOP上位2頭が10着・11着だった）。
+
+   有効化手順:
+     1. 紫苑S 過去10年データを集計し、各 pending() を実配点の add() に置換
+     2. HORSES_BY_RACE['紫苑S'] に出馬表(9/4確定)を投入
+        （agariOP = agariOPRaw * agariOPRuns / (agariOPRuns + 4) の k=4 収縮）
+     3. SHION_CALIBRATED を true に
+============================================================================ */
+var SHION_CALIBRATED = false;   // 過去10年データ投入が済むまで false のまま
+
+function computeScoreBreakdownShionV1(h,_rawOnly){
+  // add() のシグネチャは computeScoreBreakdownNiigataKinenV2 と同一（新形式を作らない）
+  var it=[],add=function(k,v,mx,n,g){var sv=Math.round(v*10)/10;
+    it.push({key:k,value:sv,max:mx,note:n||'',label:k,score:sv,group:g||'data'});};
+  // 中立値=満点の半分。全馬一律なので順位には影響しない（データ着弾までの器）。
+  var pending=function(k,mx,n,g){ add(k, mx/2, mx, (n?n+' ／ ':'')+'⚠ 未投入につき中立値', g); };
+  var v=function(x,u){ return (x===undefined||x===null||x==='') ? '不明' : (x+(u||'')); };
+
+  h = h || {};
+  pending('上がり性能', 18,
+    (h.agariOPRuns==null ? 'OP以上の上がり差 未集計'
+      : 'OP以上'+h.agariOPRuns+'戦 実測'+h.agariOPRaw+'秒／収縮後'+h.agariOP)
+    + '（中山内回りは先行有利。配点は過去10年データで再検証）', 'horse');
+  pending('前走クラス', 12, v(h.prevClass), 'data');
+  pending('重賞実績', 10,
+    '重賞 '+v(h.jusyoRuns,'戦')+' / 連対 '+v(h.jusyoPlaced)+' / '+v(h.jusyoWins,'勝'), 'horse');
+  pending('中山芝1800-2200実績', 10,
+    (h.nakayama1822OP==null ? 'OP以上のクラス別集計 未取得'
+      : 'OP以上'+h.nakayama1822OP.join('-'))
+    + '（中山内回り直線310m。§24によりOP以上に層別／生カウント不可）', 'horse');
+  pending('間隔', 8, v(h.gapDaysCompleted!=null?h.gapDaysCompleted:h.gapDays,'日'), 'data');
+  pending('前走着順', 7, (h.prevRank===99?'前走取消':v(h.prevRank,'着')), 'data');
+  pending('騎手継続', 6,
+    (h.jockeyContinue==null ? '前走騎手 未取得' : (h.jockeyContinue?'前走と同じ騎手':'乗り替わり'))
+    + '（'+v(h.jockey)+'）', 'env');
+  pending('芝2000(OP以上)', 6,
+    (h.m2000OP==null ? '未集計' : 'OP以上'+h.m2000OP.join('-')), 'horse');
+  pending('前走距離', 5, v(h.prevDist), 'data');
+  pending('脚質', 5,
+    v(h.runStyle)+'（4角平均 '+v(h.c4avg)+'）中山内回りは前有利。新潟記念の逃げ減点は流用しない', 'env');
+  pending('血統(コース種牡馬)', 5,
+    v(h.sire)+'（中山芝2000mの種牡馬別成績 未取得）', 'horse');
+
+  var total=it.reduce(function(x,y){return x+y.value;},0);
+  var max=it.reduce(function(x,y){return x+y.max;},0);
+  var out={items:it,total:Math.round(total*10)/10,max:max,penalty:0};
+  if(_rawOnly) return out;
+  var st=_getShionScoreStats(), z=st.sd?(out.total-st.mean)/st.sd:0;
+  out.pct=Math.round((8+(79-8)/(1+Math.exp(-1.35*z)))*10)/10;
+  return out;
+}
+function _getShionScoreStats(){
+  var hs=(typeof HORSES_BY_RACE!=='undefined'&&HORSES_BY_RACE['紫苑S'])||[];
+  var v=hs.map(function(h){return computeScoreBreakdownShionV1(h,true).total;});
+  if(!v.length) return {mean:0,sd:1};
+  var mean=v.reduce(function(a,b){return a+b;},0)/v.length;
+  var sd=Math.sqrt(v.reduce(function(a,b){return a+(b-mean)*(b-mean);},0)/v.length)||1;
+  return {mean:mean,sd:sd};
+}
+
 /* ★V2 較正済みにより下記 V1 は使用されない(参考残置) ★
 ============================================================================
    新潟記念 V1（骨格）  2026-08-30 / 新潟 芝2000m(左・外・A) / 3歳上OP 別定 / 11頭
@@ -25883,6 +25973,8 @@ function computeScoreBreakdown(horse, raceName) {
   if (raceName === '函館2歳S') return computeScoreBreakdownHakodate2saiV1(horse, raceName);
   if(raceName==='関屋記念') return computeScoreBreakdownSekiyaV2(horse, raceName);
   if (raceName === '新潟記念') return computeScoreBreakdownNiigataKinenV2(horse);
+  if (raceName === '紫苑S' && horse && horse.isAvoided) return { total:0, max:92, pct:0, items:[], isAvoided:true, avoidReason: horse.avoidReason || '出走回避' };
+  if (raceName === '紫苑S') return computeScoreBreakdownShionV1(horse);
   // ★回避馬は強制的に0%
   if (horse && horse.isAvoided) {
     return {
