@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260831-1330';
+  var CURRENT_VERSION = '20260831-1400';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -14154,10 +14154,83 @@ RACE_PAST_DATA['紫苑S'] = {
       {rank:3, umaban:2, name:"フロンテアクイーン", sexAge:"牝3", pop:5, jockey:"蛯名正", kg:54.0, stable:"国枝栄", margin:"3.1/2", ag3f:36.2, bw:"456(+8)", pass:"5-6-9-8", sire:"メイショウサムソン", bms:"サンデーサイレンス", prev:"優駿牝馬", gap:"4ヶ月", prevPop:12, prevRank:6}
     ]}
   ],
+  pastResults: [
+    {year:2025,
+      first:{name:"ケリフレッドアスク",pop:7,prevRace:"1勝ク",prevPop:1,prevRank:4},
+      second:{name:"ジョスラン",pop:2,prevRace:"カーネーションC",prevPop:3,prevRank:1},
+      third:{name:"ダノンフェアレディ",pop:4,prevRace:"1勝ク",prevPop:2,prevRank:1}},
+    {year:2024,
+      first:{name:"クリスマスパレード",pop:5,prevRace:"関東オークス",prevPop:null,prevRank:9},
+      second:{name:"ミアネーロ",pop:3,prevRace:"優駿牝馬",prevPop:9,prevRank:14},
+      third:{name:"ボンドガール",pop:1,prevRace:"クイーンS",prevPop:2,prevRank:2}},
+    {year:2023,
+      first:{name:"モリアーナ",pop:4,prevRace:"NHKマイルC",prevPop:5,prevRank:6},
+      second:{name:"ヒップホップソウル",pop:2,prevRace:"優駿牝馬",prevPop:14,prevRank:6},
+      third:{name:"シランケド",pop:9,prevRace:"1勝ク",prevPop:6,prevRank:3}},
+    {year:2022,
+      first:{name:"スタニングローズ",pop:1,prevRace:"優駿牝馬",prevPop:10,prevRank:2},
+      second:{name:"サウンドビバーチェ",pop:2,prevRace:"優駿牝馬",prevPop:null,prevRank:"除"},
+      third:{name:"ライラック",pop:6,prevRace:"優駿牝馬",prevPop:12,prevRank:11}},
+    {year:2021,
+      first:{name:"ファインルージュ",pop:2,prevRace:"優駿牝馬",prevPop:4,prevRank:11},
+      second:{name:"スルーセブンシーズ",pop:4,prevRace:"優駿牝馬",prevPop:9,prevRank:9},
+      third:{name:"ミスフィガロ",pop:12,prevRace:"1勝ク",prevPop:3,prevRank:1}},
+    {year:2020,
+      first:{name:"マルターズディオサ",pop:5,prevRace:"優駿牝馬",prevPop:12,prevRank:10},
+      second:{name:"パラスアテナ",pop:10,prevRace:"ラジオNIKKEI賞",prevPop:1,prevRank:4},
+      third:{name:"シーズンズギフト",pop:3,prevRace:"NZT",prevPop:5,prevRank:2}},
+    {year:2019,
+      first:{name:"パッシングスルー",pop:2,prevRace:"1勝ク",prevPop:1,prevRank:1},
+      second:{name:"フェアリーポルカ",pop:6,prevRace:"優駿牝馬",prevPop:11,prevRank:16},
+      third:{name:"カレンブーケドール",pop:1,prevRace:"優駿牝馬",prevPop:12,prevRank:2}},
+    {year:2018,
+      first:{name:"ノームコア",pop:2,prevRace:"フローラS",prevPop:5,prevRank:3},
+      second:{name:"マウレア",pop:1,prevRace:"優駿牝馬",prevPop:6,prevRank:5},
+      third:{name:"ランドネ",pop:7,prevRace:"優駿牝馬",prevPop:10,prevRank:11}},
+    {year:2017,
+      first:{name:"ディアドラ",pop:1,prevRace:"HTB賞",prevPop:2,prevRank:1},
+      second:{name:"カリビアンゴールド",pop:6,prevRace:"かもめ島特別",prevPop:3,prevRank:2},
+      third:{name:"ポールヴァンドル",pop:4,prevRace:"かもめ島特別",prevPop:1,prevRank:1}},
+    {year:2016,
+      first:{name:"ビッシュ",pop:1,prevRace:"優駿牝馬",prevPop:5,prevRank:3},
+      second:{name:"ヴィブロス",pop:3,prevRace:"500万下",prevPop:3,prevRank:1},
+      third:{name:"フロンテアクイーン",pop:5,prevRace:"優駿牝馬",prevPop:12,prevRank:6}}
+  ],
   trends: {
     _src: "枠/人気/年齢/所属=一次資料(着別度数)。母数157。",
+    tables: [
+      {title:"枠順別（2016-2025・母数157）", col1:"枠", rows:[
+      {label:"1枠", rec:"1-3-1-11"},
+      {label:"2枠", rec:"0-1-1-15"},
+      {label:"3枠", rec:"0-0-0-17", highlight:true},
+      {label:"4枠", rec:"0-2-2-15"},
+      {label:"5枠", rec:"3-1-0-15"},
+      {label:"6枠", rec:"1-1-2-16"},
+      {label:"7枠", rec:"1-0-2-21"},
+      {label:"8枠", rec:"4-2-2-17", highlight:true}
+      ], note:"8枠4勝・複勝32.0%が最上位で7-8枠から5勝。3枠は0-0-0-17で3着内ゼロ。ただし枠は配点しない(§6)。内枠有利という中山内回りの通念と逆向きに出ている点は、各枠16-25頭の小標本であることに留意。"},
+
+      {title:"人気別（2016-2025・母数157）", col1:"人気", rows:[
+      {label:"1人気", rec:"3-1-2-4", highlight:true},
+      {label:"2人気", rec:"3-3-0-4", highlight:true},
+      {label:"3人気", rec:"0-2-1-7"},
+      {label:"4-6人気", rec:"3-3-4-19"},
+      {label:"7-9人気", rec:"1-0-2-27"},
+      {label:"10人気-", rec:"0-1-1-66"}
+      ], note:"配点しない(市場評価の混入防止)。1-2人気で10勝中6勝。複勝率は1人気60.0%・2人気60.0%で並ぶ。10人気以下は0-1-1-66(複勝2.9%)で、波乱決着は稀。"},
+
+      {title:"年齢別（2016-2025・母数157）", col1:"年齢", rows:[
+      {label:"3歳", rec:"10-10-10-127"}
+      ], note:"3歳牝馬限定戦のため全馬3歳。実レンジ0につき配点しない(§25)。ShionV1で年齢項目を削除した根拠。"},
+
+      {title:"所属別（2016-2025・母数157）", col1:"所属", rows:[
+      {label:"美浦", rec:"7-7-6-94"},
+      {label:"栗東", rec:"3-3-4-31"},
+      {label:"その他", rec:"0-0-0-2"}
+      ], note:"美浦7勝/栗東3勝だが母数比(美浦114/栗東41)を踏まえると勝率は美浦6.1%・栗東7.3%でほぼ差がなく、所属は配点しない。"}
+    ],
     waku: [
-      {label:"1枠", w:1, p:3, s:1, o:11, win:6.2, ex:25.0, pl:31.2},
+      {label:"1枠", w:1, p:3, s:1, o:11, win:6.3, ex:25.0, pl:31.3},
       {label:"2枠", w:0, p:1, s:1, o:15, win:0.0, ex:5.9, pl:11.8},
       {label:"3枠", w:0, p:0, s:0, o:17, win:0.0, ex:0.0, pl:0.0},
       {label:"4枠", w:0, p:2, s:2, o:15, win:0.0, ex:10.5, pl:21.1},
