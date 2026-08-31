@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260831-1200';
+  var CURRENT_VERSION = '20260831-1300';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7821,7 +7821,7 @@ const RACE_META = {
     babaWet:false, actualBaba:'', gradeLine:"G2", grade:"G2", title:"紫苑S", date:"2026-09-06 (日)",
     venue:"中山", surface:"芝2000m", age:"3歳牝馬", distance:2000, direction:"right",
     weightType:"定量", isFinished:false, pageTitle:"JRA重賞予想 2026 | 紫苑S",
-    notice:"配点構成を確定（12項目・Σmax=97）。過去10年データ／出馬表は未投入のため全ファクターが中立値＝スコアは未確定です。出馬表は9/4(金)確定後に投入します。",
+    notice:"過去10年データ較正済み（2016-2025）。出馬表は9/4(金)確定後に投入します。",
     babaPrediction:{ status:"良馬場想定", icon:"☀️", color:"#1D9E75", comment:"中山芝2000m内回り・直線310m。秋華賞トライアル(上位3頭に優先出走権)" },
     status:'予想中', paceExpect:'', paceNote:'' },
   '新潟記念': {
@@ -14098,6 +14098,95 @@ RACE_PAST_DATA['関屋記念'] = {
       {label:"6位以下", rec:"4-6-4-99"}
     ], note:"【注意】これは本番の結果であって予想材料ではない（DATA_RULES 4-2-4）。上がり1位は複勝53.8%と強いが、勝ち馬10頭のうち4頭は上がり6位以下。『上がり最速だけ探す』のは誤り。函館2歳Sで前走上がりの予測力ゼロを確認済みのため、前走上がりを配点項目にはしない。"}
   ]}
+};
+
+RACE_PAST_DATA['紫苑S'] = {
+  note: "2016-2025。中山芝2000m内回り・3歳牝馬定量。格は2016-2022=GIII、2023年以降=GII(秋華賞トライアル・上位3頭に優先出走権)。斤量は2016-2022が54.0kg、2023年以降が55.0kg。/ 一次資料はnetkeiba形式。results の枠列は全10年で枠上限8を超える値を含むため馬番と確定し umaban に格納した(勝ち馬の馬番→枠換算が trends.waku の勝ち数 1枠1/5枠3/6枠1/7枠1/8枠4=10勝 と一致することで裏取り済み)。/ trends母数=157。出走延べは158(13+13+17+12+18+18+15+16+18+18)で1頭少ないが、四表(枠/人気/年齢/所属)はいずれも157で内部整合している。",
+  results: [
+    {year:2025, date:"9/7", meeting:"4回中山2日目", cond:"晴 良", field:13, grade:"G2", rows:[
+      {rank:1, umaban:7, name:"ケリフレッドアスク", sexAge:"牝3", pop:7, jockey:"西塚洸", kg:55.0, stable:"藤原英", time:"1:59.1", ag3f:34.0, bw:"456(+4)", pass:"1-1-1-1", sire:"ドゥラメンテ", bms:"ディープインパクト", prev:"1勝ク", gap:"中3週", prevPop:1, prevRank:4},
+      {rank:2, umaban:5, name:"ジョスラン", sexAge:"牝3", pop:2, jockey:"Cルメール", kg:55.0, stable:"鹿戸雄", margin:"クビ", ag3f:33.6, bw:"470(+6)", pass:"5-5-4-5", sire:"エピファネイア", bms:"ハーツクライ", prev:"カーネーションC", gap:"4ヶ月", prevPop:3, prevRank:1},
+      {rank:3, umaban:9, name:"ダノンフェアレディ", sexAge:"牝3", pop:4, jockey:"戸崎圭", kg:55.0, stable:"橋口慎", margin:"1", ag3f:33.8, bw:"482(+10)", pass:"3-3-4-3", sire:"キズナ", bms:"El Corredor", prev:"1勝ク", gap:"中8週", prevPop:2, prevRank:1}
+    ]},
+    {year:2024, date:"9/7", meeting:"4回中山1日目", cond:"晴 良", field:13, grade:"G2", rows:[
+      {rank:1, umaban:6, name:"クリスマスパレード", sexAge:"牝3", pop:5, jockey:"石川裕", kg:55.0, stable:"加藤士", time:"1:56.6", ag3f:33.9, bw:"460(-2)", pass:"2-2-2-2", sire:"キタサンブラック", bms:"Blame", prev:"関東オークス", gap:"3ヶ月", prevPop:null, prevRank:9},
+      {rank:2, umaban:1, name:"ミアネーロ", sexAge:"牝3", pop:3, jockey:"津村明", kg:55.0, stable:"林徹", margin:"クビ", ag3f:33.0, bw:"480(+4)", pass:"8-9-8-8", sire:"ドゥラメンテ", bms:"Pulpit", prev:"優駿牝馬", gap:"4ヶ月", prevPop:9, prevRank:14},
+      {rank:3, umaban:11, name:"ボンドガール", sexAge:"牝3", pop:1, jockey:"武豊", kg:55.0, stable:"手塚貴", margin:"1.1/4", ag3f:33.0, bw:"448(-10)", pass:"11-11-11-10", sire:"ダイワメジャー", bms:"Tizway", prev:"クイーンS", gap:"中5週", prevPop:2, prevRank:2}
+    ]},
+    {year:2023, date:"9/9", meeting:"4回中山1日目", cond:"晴 稍重", field:17, grade:"G2", rows:[
+      {rank:1, umaban:2, name:"モリアーナ", sexAge:"牝3", pop:4, jockey:"横山典", kg:54.0, stable:"武藤善", time:"1:58.0", ag3f:34.3, bw:"474(+4)", pass:"16-15-15-14", sire:"エピファネイア", bms:"ダイワメジャー", prev:"NHKマイルC", gap:"4ヶ月", prevPop:5, prevRank:6},
+      {rank:2, umaban:3, name:"ヒップホップソウル", sexAge:"牝3", pop:2, jockey:"横山武", kg:54.0, stable:"木村哲", margin:"1/2", ag3f:35.9, bw:"490(0)", pass:"4-4-4-3", sire:"キタサンブラック", bms:"ファルブラヴ", prev:"優駿牝馬", gap:"4ヶ月", prevPop:14, prevRank:6},
+      {rank:3, umaban:13, name:"シランケド", sexAge:"牝3", pop:9, jockey:"国分恭", kg:54.0, stable:"牧浦充", margin:"1.1/4", ag3f:35.0, bw:"502(+2)", pass:"11-12-13-12", sire:"デクラレーションオブウォー", bms:"ディープインパクト", prev:"1勝ク", gap:"中2週", prevPop:6, prevRank:3}
+    ]},
+    {year:2022, date:"9/10", meeting:"4回中山1日目", cond:"晴 良", field:12, grade:"G3", rows:[
+      {rank:1, umaban:12, name:"スタニングローズ", sexAge:"牝3", pop:1, jockey:"坂井瑠", kg:54.0, stable:"高野友", time:"1:59.9", ag3f:35.0, bw:"488(+14)", pass:"3-3-2-2", sire:"キングカメハメハ", bms:"クロフネ", prev:"優駿牝馬", gap:"4ヶ月", prevPop:10, prevRank:2},
+      {rank:2, umaban:11, name:"サウンドビバーチェ", sexAge:"牝3", pop:2, jockey:"横山武", kg:54.0, stable:"高柳大", margin:"クビ", ag3f:35.1, bw:"488(+14)", pass:"1-1-1-1", sire:"ドゥラメンテ", bms:"Johan Cruyff", prev:"優駿牝馬", gap:"4ヶ月", prevPop:null, prevRank:"除"},
+      {rank:3, umaban:8, name:"ライラック", sexAge:"牝3", pop:6, jockey:"戸崎圭", kg:54.0, stable:"相沢郁", margin:"クビ", ag3f:34.6, bw:"434(+8)", pass:"8-8-10-6", sire:"オルフェーヴル", bms:"キングカメハメハ", prev:"優駿牝馬", gap:"4ヶ月", prevPop:12, prevRank:11}
+    ]},
+    {year:2021, date:"9/11", meeting:"4回中山1日目", cond:"晴 良", field:18, grade:"G3", rows:[
+      {rank:1, umaban:11, name:"ファインルージュ", sexAge:"牝3", pop:2, jockey:"福永祐", kg:54.0, stable:"岩戸孝", time:"1:58.2", ag3f:34.2, bw:"496(+2)", pass:"6-6-6-5", sire:"キズナ", bms:"ボストンハーバー", prev:"優駿牝馬", gap:"4ヶ月", prevPop:4, prevRank:11},
+      {rank:2, umaban:1, name:"スルーセブンシーズ", sexAge:"牝3", pop:4, jockey:"大野拓", kg:54.0, stable:"尾関知", margin:"1.3/4", ag3f:34.3, bw:"430(+2)", pass:"9-9-9-10", sire:"ドリームジャーニー", bms:"クロフネ", prev:"優駿牝馬", gap:"4ヶ月", prevPop:9, prevRank:9},
+      {rank:3, umaban:3, name:"ミスフィガロ", sexAge:"牝3", pop:12, jockey:"津村明", kg:54.0, stable:"友道康", margin:"ハナ", ag3f:33.9, bw:"416(+8)", pass:"11-11-12-12", sire:"ディープインパクト", bms:"キングカメハメハ", prev:"1勝ク", gap:"中4週", prevPop:3, prevRank:1}
+    ]},
+    {year:2020, date:"9/12", meeting:"4回中山1日目", cond:"曇 稍重", field:18, grade:"G3", rows:[
+      {rank:1, umaban:10, name:"マルターズディオサ", sexAge:"牝3", pop:5, jockey:"田辺裕", kg:54.0, stable:"手塚貴", time:"2:02.1", ag3f:35.8, bw:"446(+12)", pass:"2-2-2-1", sire:"キズナ", bms:"Grand Slam", prev:"優駿牝馬", gap:"4ヶ月", prevPop:12, prevRank:10},
+      {rank:2, umaban:18, name:"パラスアテナ", sexAge:"牝3", pop:10, jockey:"武豊", kg:54.0, stable:"高柳瑞", margin:"1.1/4", ag3f:35.6, bw:"452(0)", pass:"8-8-6-4", sire:"ルーラーシップ", bms:"スペシャルウィーク", prev:"ラジオNIKKEI賞", gap:"中9週", prevPop:1, prevRank:4},
+      {rank:3, umaban:16, name:"シーズンズギフト", sexAge:"牝3", pop:3, jockey:"Cルメール", kg:54.0, stable:"黒岩陽", margin:"クビ", ag3f:35.8, bw:"480(+8)", pass:"4-4-4-4", sire:"エピファネイア", bms:"ゼンノロブロイ", prev:"NZT", gap:"5ヶ月", prevPop:5, prevRank:2}
+    ]},
+    {year:2019, date:"9/7", meeting:"4回中山1日目", cond:"晴 良", field:15, grade:"G3", rows:[
+      {rank:1, umaban:15, name:"パッシングスルー", sexAge:"牝3", pop:2, jockey:"戸崎圭", kg:54.0, stable:"黒岩陽", time:"1:58.3", ag3f:33.8, bw:"476(+8)", pass:"3-3-3-3", sire:"ルーラーシップ", bms:"クロフネ", prev:"1勝ク", gap:"中8週", prevPop:1, prevRank:1},
+      {rank:2, umaban:6, name:"フェアリーポルカ", sexAge:"牝3", pop:6, jockey:"三浦皇", kg:54.0, stable:"西村真", margin:"ハナ", ag3f:33.7, bw:"490(+16)", pass:"3-4-4-4", sire:"ルーラーシップ", bms:"アグネスタキオン", prev:"優駿牝馬", gap:"4ヶ月", prevPop:11, prevRank:16},
+      {rank:3, umaban:14, name:"カレンブーケドール", sexAge:"牝3", pop:1, jockey:"津村明", kg:54.0, stable:"国枝栄", margin:"1/2", ag3f:34.0, bw:"464(+4)", pass:"2-2-2-2", sire:"ディープインパクト", bms:"Scat Daddy", prev:"優駿牝馬", gap:"4ヶ月", prevPop:12, prevRank:2}
+    ]},
+    {year:2018, date:"9/8", meeting:"4回中山1日目", cond:"晴 良", field:16, grade:"G3", rows:[
+      {rank:1, umaban:14, name:"ノームコア", sexAge:"牝3", pop:2, jockey:"Cルメール", kg:54.0, stable:"萩原清", time:"1:58.0", ag3f:33.6, bw:"456(0)", pass:"5-4-6-5", sire:"ハービンジャー", bms:"クロフネ", prev:"フローラS", gap:"5ヶ月", prevPop:5, prevRank:3},
+      {rank:2, umaban:1, name:"マウレア", sexAge:"牝3", pop:1, jockey:"武豊", kg:54.0, stable:"手塚貴", margin:"3", ag3f:34.0, bw:"440(+2)", pass:"5-6-8-7", sire:"ディープインパクト", bms:"Storm Cat", prev:"優駿牝馬", gap:"4ヶ月", prevPop:6, prevRank:5},
+      {rank:3, umaban:8, name:"ランドネ", sexAge:"牝3", pop:7, jockey:"吉田隼", kg:54.0, stable:"中竹和", margin:"1/2", ag3f:34.8, bw:"508(+2)", pass:"1-1-1-1", sire:"Blame", bms:"Indy", prev:"優駿牝馬", gap:"4ヶ月", prevPop:10, prevRank:11}
+    ]},
+    {year:2017, date:"9/9", meeting:"4回中山1日目", cond:"晴 良", field:18, grade:"G3", rows:[
+      {rank:1, umaban:16, name:"ディアドラ", sexAge:"牝3", pop:1, jockey:"岩田康", kg:54.0, stable:"橋田満", time:"1:59.8", ag3f:33.8, bw:"478(+12)", pass:"12-11-10-11", sire:"ハービンジャー", bms:"スペシャルウィーク", prev:"HTB賞", gap:"中3週", prevPop:2, prevRank:1},
+      {rank:2, umaban:11, name:"カリビアンゴールド", sexAge:"牝3", pop:6, jockey:"田中勝", kg:54.0, stable:"小島太", margin:"ハナ", ag3f:34.0, bw:"454(+4)", pass:"5-5-6-5", sire:"ステイゴールド", bms:"Cape Cross", prev:"かもめ島特別", gap:"中8週", prevPop:3, prevRank:2},
+      {rank:3, umaban:7, name:"ポールヴァンドル", sexAge:"牝3", pop:4, jockey:"三浦皇", kg:54.0, stable:"上原博", margin:"ハナ", ag3f:33.7, bw:"528(-6)", pass:"10-10-12-11", sire:"ダイワメジャー", bms:"Fasliyev", prev:"かもめ島特別", gap:"中8週", prevPop:1, prevRank:1}
+    ]},
+    {year:2016, date:"9/10", meeting:"4回中山1日目", cond:"晴 良", field:18, grade:"G3", rows:[
+      {rank:1, umaban:18, name:"ビッシュ", sexAge:"牝3", pop:1, jockey:"戸崎圭", kg:54.0, stable:"鹿戸雄", time:"1:59.7", ag3f:35.3, bw:"420(+4)", pass:"14-13-6-2", sire:"ディープインパクト", bms:"Acatenango", prev:"優駿牝馬", gap:"4ヶ月", prevPop:5, prevRank:3},
+      {rank:2, umaban:9, name:"ヴィブロス", sexAge:"牝3", pop:3, jockey:"福永祐", kg:54.0, stable:"友道康", margin:"2.1/2", ag3f:35.5, bw:"414(0)", pass:"12-9-12-11", sire:"ディープインパクト", bms:"Machiavellian", prev:"500万下", gap:"中6週", prevPop:3, prevRank:1},
+      {rank:3, umaban:2, name:"フロンテアクイーン", sexAge:"牝3", pop:5, jockey:"蛯名正", kg:54.0, stable:"国枝栄", margin:"3.1/2", ag3f:36.2, bw:"456(+8)", pass:"5-6-9-8", sire:"メイショウサムソン", bms:"サンデーサイレンス", prev:"優駿牝馬", gap:"4ヶ月", prevPop:12, prevRank:6}
+    ]}
+  ],
+  trends: {
+    _src: "枠/人気/年齢/所属=一次資料(着別度数)。母数157。",
+    waku: [
+      {label:"1枠", w:1, p:3, s:1, o:11, win:6.2, ex:25.0, pl:31.2},
+      {label:"2枠", w:0, p:1, s:1, o:15, win:0.0, ex:5.9, pl:11.8},
+      {label:"3枠", w:0, p:0, s:0, o:17, win:0.0, ex:0.0, pl:0.0},
+      {label:"4枠", w:0, p:2, s:2, o:15, win:0.0, ex:10.5, pl:21.1},
+      {label:"5枠", w:3, p:1, s:0, o:15, win:15.8, ex:21.1, pl:21.1},
+      {label:"6枠", w:1, p:1, s:2, o:16, win:5.0, ex:10.0, pl:20.0},
+      {label:"7枠", w:1, p:0, s:2, o:21, win:4.2, ex:4.2, pl:12.5},
+      {label:"8枠", w:4, p:2, s:2, o:17, win:16.0, ex:24.0, pl:32.0}
+    ],
+    wakuNote: "8枠4勝・16.0%が最上位で7-8枠から5勝。3枠は0-0-0-17で3着内ゼロ。ただし配点はしない(§6)。内枠有利という中山内回りの通念と逆向きに出ている点は、母数157・各枠16-25頭の小標本であることに留意。",
+    pop: [
+      {label:"1人気", w:3, p:1, s:2, o:4, win:30.0, ex:40.0, pl:60.0},
+      {label:"2人気", w:3, p:3, s:0, o:4, win:30.0, ex:60.0, pl:60.0},
+      {label:"3人気", w:0, p:2, s:1, o:7, win:0.0, ex:20.0, pl:30.0},
+      {label:"4-6人気", w:3, p:3, s:4, o:19, win:10.3, ex:20.7, pl:34.5},
+      {label:"7-9人気", w:1, p:0, s:2, o:27, win:3.3, ex:3.3, pl:10.0},
+      {label:"10人気-", w:0, p:1, s:1, o:66, win:0.0, ex:1.5, pl:2.9}
+    ],
+    popNote: "配点しない(市場評価の混入防止)。1-2人気で10勝中6勝。複勝率は1人気60.0%・2人気60.0%で並ぶ。10人気以下は0-1-1-66(複勝2.9%)。",
+    age: [
+      {label:"3歳", w:10, p:10, s:10, o:127, win:6.4, ex:12.7, pl:19.1}
+    ],
+    ageNote: "3歳牝馬限定戦のため全馬3歳。実レンジ0につき配点しない(§25)。ShionV1で年齢項目を削除した根拠。",
+    belong: [
+      {label:"美浦", w:7, p:7, s:6, o:94, win:6.1, ex:12.3, pl:17.5},
+      {label:"栗東", w:3, p:3, s:4, o:31, win:7.3, ex:14.6, pl:24.4},
+      {label:"その他", w:0, p:0, s:0, o:2, win:0.0, ex:0.0, pl:0.0}
+    ],
+    belongNote: "美浦7勝/栗東3勝だが母数比(美浦114/栗東41)を踏まえると勝率は美浦6.1%・栗東7.3%でほぼ差がなく、所属は配点しない。"
+  }
 };
 function renderKinkaGolden(race, horses){
   /* KINKA_GOLDEN_V1 */
