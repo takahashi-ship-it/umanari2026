@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260831-1300';
+  var CURRENT_VERSION = '20260831-1330';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7845,8 +7845,8 @@ const RACE_META = {
     venue:"新潟競馬場", surface:"芝1600m", age:"3歳上", distance:1600, direction:"left",
     isFinished:true, status:'見送り', pageTitle:"JRA重賞予想 2026 | 関屋記念",
     notice:"",
-    resultBanner:'⚠ 見送り（馬券未購入） | 1着：3アンパドゥ(1人気) 2着：10クランフォード(8人気) 3着：1ファーヴェント(6人気) | 3連単34,830円 | 投資0円・払戻0円',
-    babaPrediction:{ status:"不良(実測)", icon:"🌧", color:"#378ADD", comment:"雨・馬場不良。ペースM、上位3頭の4角通過は12-11/1-1/3-3で前残り。人気馬が総崩れ" }, paceExpect:'S', paceNote:'SekiyaV2の本命アンパドゥが勝利。道悪未経験を理由に当日降格させたが勝った（§21の事例）。2人気ダノンセンチュリー11着・4人気シリウスコルト10着・5人気ランスオブカオス13着' },
+    resultBanner:'⚠ 見送り（馬券未購入） | 1着：3アンパドゥ(1人気・4角12番手から差し切り5馬身) 2着：10クランフォード(8人気・逃げ) 3着：1ファーヴェント(6人気・3番手) | 3連単34,830円 | 投資0円・払戻0円',
+    babaPrediction:{ status:"不良(実測)", icon:"🌧", color:"#378ADD", comment:"雨・馬場不良。ペースM。勝ち馬は4角12番手から5馬身差で差し切り、2-3着は逃げ・先行が粘る二極化決着。2人気11着・4人気10着・5人気13着と人気馬は総崩れ" }, paceExpect:'S', paceNote:'SekiyaV2の本命アンパドゥが勝利。道悪未経験を理由に当日降格させたが勝った（§21の事例）。2人気ダノンセンチュリー11着・4人気シリウスコルト10着・5人気ランスオブカオス13着' },
   '函館2歳S': {
     babaWet:true, gradeLine:"G3", title:"函館2歳S", date:"2026-07-19 (日)",
     venue:"函館競馬場", surface:"芝1200m", age:"2歳", distance:1200, direction:"right",
