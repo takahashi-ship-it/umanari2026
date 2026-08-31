@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260831-1100';
+  var CURRENT_VERSION = '20260831-1200';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7837,11 +7837,16 @@ const RACE_META = {
     babaPrediction:{ status:"稍重(実測)", icon:"🌧", color:"#378ADD", comment:"当日は雨で稍重。勝ち時計1:59.6・前半5F 1:00.6のスローで前残り決着" },
     status: '終了', paceExpect:'S', paceNote:'当日は雨で稍重。前半5F 1:00.6のSペースとなり前有利。上がり性能上位2頭(バレエマスター+0.535が10着/ステレンボッシュ+0.467が11着)が総崩れで、max18の上がり配点は機能しなかった。道悪+Sペース時は上がり配点を下げる条件分岐が課題。' },
   '関屋記念': {
-    babaWet:true, gradeLine:"G3", title:"関屋記念", date:"2026-07-26 (日)",
+    // babaWet は true のまま維持する。当日は実際に不良で、SekiyaV2 の道悪適性(max8)を
+    // 含めて予想を出している。false にすると Σmax 115→107 となり14頭全馬のスコアが
+    // 変わって当時の予想記録が書き換わるため。新潟に福島1800の道悪解説が出ていた件は
+    // renderDoakuTrend 側を開催場で出し分ける形に修正済み。
+    babaWet:true, actualBaba:'不良', gradeLine:"G3", title:"関屋記念", date:"2026-07-26 (日)",
     venue:"新潟競馬場", surface:"芝1600m", age:"3歳上", distance:1600, direction:"left",
-    isFinished:false, pageTitle:"JRA重賞予想 2026 | 関屋記念",
-    notice:"⚠ 出走馬・枠順確定前の暫定開放。ロスターは確定後に投入。",
-    babaPrediction:{ status:"良馬場想定", icon:"☀️", color:"#1D9E75", comment:"新潟芝1600m外・直線658mの差し得コース" }, paceExpect:'S', paceNote:'当初は良馬場10年データからH想定だったが、土曜新潟の同一条件(芝1600外・稍重)実測で逃げ切り決着・1番人気の後方待機馬は4着で届かず。道悪では前が止まらないためS(前残り)想定に修正。当日さらに悪化(重〜不良)見込みで先行有利を継続' },
+    isFinished:true, status:'見送り', pageTitle:"JRA重賞予想 2026 | 関屋記念",
+    notice:"",
+    resultBanner:'⚠ 見送り（馬券未購入） | 1着：3アンパドゥ(1人気) 2着：10クランフォード(8人気) 3着：1ファーヴェント(6人気) | 3連単34,830円 | 投資0円・払戻0円',
+    babaPrediction:{ status:"不良(実測)", icon:"🌧", color:"#378ADD", comment:"雨・馬場不良。ペースM、上位3頭の4角通過は12-11/1-1/3-3で前残り。人気馬が総崩れ" }, paceExpect:'S', paceNote:'SekiyaV2の本命アンパドゥが勝利。道悪未経験を理由に当日降格させたが勝った（§21の事例）。2人気ダノンセンチュリー11着・4人気シリウスコルト10着・5人気ランスオブカオス13着' },
   '函館2歳S': {
     babaWet:true, gradeLine:"G3", title:"函館2歳S", date:"2026-07-19 (日)",
     venue:"函館競馬場", surface:"芝1200m", age:"2歳", distance:1200, direction:"right",
@@ -14174,14 +14179,22 @@ function renderPrevGradeTrend(race, horses){
 function renderDoakuTrend(race, horses){
   var meta=(typeof RACE_META!=='undefined'&&RACE_META[race])?RACE_META[race]:{};
   if(!meta.babaWet) return '';
-  var isHak=(race.indexOf('函館')!==-1);
+  // 開催場ごとに出し分ける。旧実装は「函館か、それ以外＝福島1800」の2分岐しかなく、
+  // 新潟(外回り・直線658.7m)の関屋記念に「直線が短く前で運べる馬が強い」という
+  // 福島1800の解説が出ていた。集計のない開催場は方向を断定せず、脚質分類のみ出す。
+  var _dv = meta.venue || '';
+  var isHak=(race.indexOf('函館')!==-1 || _dv.indexOf('函館')!==-1);
+  var isFuk=(_dv.indexOf('福島')!==-1);
   var trendTitle, trendDesc;
   if(isHak){
     trendTitle='🌧️ 道悪傾向（過去10年・稍重以上4年）';
     trendDesc='函館の道悪は<b>「前残り」と「後方一気」の二極</b>。中団が手薄になりやすい。2着3着に超人気薄(14人気/13人気)が突入し、斤量57kg級が好走。';
-  } else {
+  } else if(isFuk){
     trendTitle='🌧️ 道悪傾向（過去10年・稍重以上3年）';
     trendDesc='福島1800の道悪は<b>「前残り優勢」</b>。直線が短く前で運べる馬が強い。人気薄の逃げ先行が残る(5〜9番人気で4角3番手以内が1-5-2-6)。';
+  } else {
+    trendTitle='🌧️ 道悪傾向（'+(_dv||'当該コース')+'・集計未整備）';
+    trendDesc='当日は道悪想定。<b>このコースの道悪傾向は未集計のため方向は断定しない</b>。下の脚質分類は参考値。';
   }
   var senzan=[], kouhou=[];
   for(var i=0;i<horses.length;i++){ var h=horses[i]; if(h.isAvoided) continue;
