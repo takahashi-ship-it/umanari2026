@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260831-1427';
+  var CURRENT_VERSION = '20260831-1600';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7821,7 +7821,7 @@ const RACE_META = {
     babaWet:false, actualBaba:'', gradeLine:"G2", grade:"G2", title:"紫苑S", date:"2026-09-06 (日)",
     venue:"中山", surface:"芝2000m", age:"3歳牝馬", distance:2000, direction:"right",
     weightType:"定量", isFinished:false, pageTitle:"JRA重賞予想 2026 | 紫苑S",
-    notice:"過去10年データ較正済み（2016-2025）。出馬表は9/4(金)確定後に投入します。",
+    notice:"12項目中6項目・53/97点を較正済み。残り44点（重賞実績・中山芝1800-2200実績・間隔・騎手継続・芝2000(OP以上)・血統(コース種牡馬)）は着別度数／RTF全競走成績の着弾待ちで中立値。出馬表は9/4(金)確定後に投入します。",
     babaPrediction:{ status:"良馬場想定", icon:"☀️", color:"#1D9E75", comment:"中山芝2000m内回り・直線310m。秋華賞トライアル(上位3頭に優先出走権)" },
     status:'予想中', paceExpect:'', paceNote:'' },
   '新潟記念': {
@@ -22763,7 +22763,7 @@ function _getNKScoreStats(){
         （agariOP = agariOPRaw * agariOPRuns / (agariOPRuns + 4) の k=4 収縮）
      3. SHION_CALIBRATED を true に
 ============================================================================ */
-var SHION_CALIBRATED = false;   // 過去10年データ投入が済むまで false のまま
+var SHION_CALIBRATED = 'partial';   // 部分較正。残り項目は着別度数の着弾待ちで中立値
 
 function computeScoreBreakdownShionV1(h,_rawOnly){
   // add() のシグネチャは computeScoreBreakdownNiigataKinenV2 と同一（新形式を作らない）
@@ -22774,38 +22774,87 @@ function computeScoreBreakdownShionV1(h,_rawOnly){
   var v=function(x,u){ return (x===undefined||x===null||x==='') ? '不明' : (x+(u||'')); };
 
   h = h || {};
-  // --- 配点確定（2026-08-31）: 4角先行力18 を新設し、上がり性能を18→6 に移管。Σmax=97 / 12項目 ---
-  // TODO(データ着弾後): 各 pending() を実配点の add() に置換し SHION_CALIBRATED=true にする。
-  //   閾値は紫苑S 2016-2025 の実測から決めること。下記の根拠は配点の割り当て理由であって
-  //   閾値そのものではない。RACE_PAST_DATA['紫苑S'] が未投入の間は全項目中立のまま。
-  pending('4角先行力', 18,
-    '過去走の4角通過順を頭数で正規化して評価（未取得）'
-    + '。中山内回り直線310m。4角6番手以内から勝ち馬8/10', 'horse');
-  pending('前走クラス', 12,
-    v(h.prevClass) + '（優駿牝馬(オークス)組を最上位に置く）', 'data');
+  // ==== 較正済み6項目（RACE_PAST_DATA['紫苑S'].trends 母数158 / 全体複勝率 30/158=19.0%）====
+
+  // [1] 4角先行力 18 ─ 連続量。位置率(4角通過順÷頭数)を走数で信頼度収縮(k=4)。
+  //     加点はこの項目に集約し、脚質5とは二重計上しない。
+  //     参照は posRatio（無ければ c4avg/c4field）。runStyle は読まない。
+  var pos = (h.posRatio!=null) ? Number(h.posRatio)
+          : (h.c4avg!=null && h.c4field) ? Number(h.c4avg)/Number(h.c4field) : null;
+  var c4n = Number(h.c4n)||0, c4raw;
+  if(pos==null)       c4raw=9;
+  else if(pos<=0.10)  c4raw=15;  // 逃げ相当 1-1-1-8  (n=11) 複勝27.3%
+  else if(pos<=0.32)  c4raw=18;  // 先行相当 4-3-3-21 (n=31) 複勝32.3% ← 上限
+  else if(pos<=0.50)  c4raw=11;  // 中団前   3-6-5-52 (n=66) 複勝21.2%
+  else if(pos<=0.66)  c4raw=9;   // 中団後 ＝全体基準19.0%付近＝中立
+  else if(pos<=0.75)  c4raw=5;
+  else                c4raw=2;   // 後方相当 1-0-1-45 (n=47) 複勝4.3%
+  var conf=(pos==null)?0:(c4n/(c4n+4));
+  add('4角先行力', 9+(c4raw-9)*conf, 18,
+    (pos==null?'位置率 未取得＝中立':'位置率'+(Math.round(pos*100)/100)+'（'+c4n+'走・信頼度'+(Math.round(conf*100)/100)+'）')
+    +' 先行32.3%/逃げ27.3%/中団21.2%/後方4.3%（母数158）', 'horse');
+
+  // [2] 前走クラス 12 ─ 前走レース別に一本化。距離・場所の情報は本項目に吸収する。
+  var pr=String(h.prevRace||''), pc=String(h.prevClass||''), pcv, pcn;
+  if(/優駿牝馬/.test(pr)||(/オークス/.test(pr)&&!/関東オークス/.test(pr))){ pcv=12; pcn='優駿牝馬(オークス)組 4-6-4-24 (n=38) 複勝36.8% ← 最上位'; }
+  else if(/フローラS|関東オークス|NHKマイルC|クイーンS|NZT|ニュージーランドT|ラジオNIKKEI賞/.test(pr)){ pcv=10; pcn='その他重賞組 計n=17 複勝35.3%'; }
+  else if(/2勝|1000万/.test(pc)||/2勝|1000万/.test(pr)){ pcv=6; pcn='前走2勝クラス 1-1-1-15 (n=18) 複勝16.7%'; }
+  else if(/地方/.test(pr)||/地方/.test(pc)){ pcv=6; pcn='地方交流 1-0-0-4 (n=5)'; }
+  else if(/1勝|500万/.test(pc)||/1勝|500万/.test(pr)){ pcv=4; pcn='前走1勝クラス 2-2-3-55 (n=62) 複勝11.3%'; }
+  else if(/未勝利/.test(pc)||/未勝利/.test(pr)){ pcv=2; pcn='前走未勝利 0-0-0-7 (n=7)。§26により消しには使わない'; }
+  else if(/3勝|1600万|OP|オープン|\(L\)/.test(pc)){ pcv=3; pcn='前走3勝/OP 0-0-0-9 (n=9)。§26により消しには使わない'; }
+  else { pcv=3; pcn='その他 0-0-0-56 (n=56)'; }
+  add('前走クラス', pcv, 12, '前走'+v(h.prevRace)+'／'+pcn, 'data');
+
   pending('重賞実績', 10,
     '重賞 '+v(h.jusyoRuns,'戦')+' / 連対 '+v(h.jusyoPlaced)+' / '+v(h.jusyoWins,'勝'), 'horse');
   pending('中山芝1800-2200実績', 10,
-    (h.nakayama1822OP==null ? 'OP以上のクラス別集計 未取得'
-      : 'OP以上'+h.nakayama1822OP.join('-'))
+    (h.nakayama1822OP==null ? 'OP以上のクラス別集計 未取得' : 'OP以上'+h.nakayama1822OP.join('-'))
     + '（§24によりOP以上に層別／生カウント不可）', 'horse');
-  pending('前走着順', 7, (h.prevRank===99?'前走取消':v(h.prevRank,'着')), 'data');
+
+  // [3] 前走着順 7 ─ 前走1着を減点、2〜4着を加点。6着以下は減点しない。
+  var prk=h.prevRank, prv, prn;
+  if(prk==null||prk===99||prk==='除'){ prv=3.5; prn='取消/除外/未取得＝中立'; }
+  else if(prk===1){ prv=2;   prn='前走1着 2-2-3-53 (n=60) 複勝11.7% ← 最低クラス'; }
+  else if(prk===2){ prv=7;   prn='前走2着 1-1-3-9 (n=14) 複勝35.7% ← 最上位'; }
+  else if(prk===3||prk===4){ prv=6; prn='前走'+prk+'着 (n=10) 複勝30.0%'; }
+  else if(prk===5){ prv=3.5; prn='前走5着 0-1-0-7 (n=8) 複勝12.5%。小標本のため中立'; }
+  else { prv=3.5; prn='前走'+prk+'着 ＝中立（6-10着18.8%/11着以下20.8%。減点しない）'; }
+  add('前走着順', prv, 7, prn, 'data');
+
   pending('間隔', 7,
     v(h.gapDaysCompleted!=null?h.gapDaysCompleted:h.gapDays,'日')
-    + '（4ヶ月休み明けが最多勝ちパターン。長期休養は減点しない）', 'data');
-  pending('上がり性能', 6,
-    (h.agariOPRuns==null ? 'OP以上の上がり差 未集計'
-      : 'OP以上'+h.agariOPRuns+'戦 実測'+h.agariOPRaw+'秒／収縮後'+h.agariOP)
-    + '（中山内回りで前提が崩れるため 18→6 に減。新潟記念では18点が機能しなかった）', 'horse');
+    + '（4ヶ月休み明けが勝ち馬10頭中6頭で最多。ただし間隔別の着別度数＝母数158側の分布が未着弾のため閾値を引けず中立のまま。長期休養は減点しない）', 'data');
+
+  // [4] 上がり性能 6 ─ 配点確定・閾値待ち（データ待ちではない）。
+  //     当日上がり3F順位の表は事後データで§23の循環論法にあたるため配点根拠に使わない。
+  //     出走馬の過去走の上がり指標(agariOP・k=4収縮)から引く。RTF着弾後は閾値のみ調整し配点は変えない。
+  var ag=(h.agariOP!=null)?Number(h.agariOP):null, agv, agn;
+  if(ag==null){ agv=3; agn='OP以上の上がり差 未取得＝中立'; }
+  else { agv=(ag>=0.30)?6:(ag>=0.15)?5:(ag>=0.05)?4:(ag>=-0.05)?3:1;
+    agn='agariOP'+(ag>=0?'+':'')+ag+(h.agariOPRuns!=null?'（OP以上'+h.agariOPRuns+'走・k=4収縮）':''); }
+  add('上がり性能', agv, 6, agn+'。※配点確定・閾値待ち（RTF着弾後に閾値のみ調整／配点は変更しない）', 'horse');
+
   pending('騎手継続', 6,
     (h.jockeyContinue==null ? '前走騎手 未取得' : (h.jockeyContinue?'前走と同じ騎手':'乗り替わり'))
     + '（'+v(h.jockey)+'）', 'env');
   pending('芝2000(OP以上)', 6,
     (h.m2000OP==null ? '未集計' : 'OP以上'+h.m2000OP.join('-')), 'horse');
-  pending('前走距離', 5, v(h.prevDist), 'data');
-  pending('脚質', 5,
-    v(h.runStyle)+'（4角平均 '+v(h.c4avg)+'）'
-    + '中山内回りは前有利＝逃げ・先行を加点し追込を減点（新潟記念とは符号が逆）', 'env');
+
+  // [5] 前走距離 5 ─ 「前走1800m」の壁。短縮/延長の加点は前走クラス12に吸収済みで行わない。
+  var pd=parseInt(String(h.prevDist||'').replace(/[^0-9]/g,''),10), pdv, pdn;
+  if(pd===1800){ pdv=1; pdn='前走1800m 0-3-4-52 (n=59) 複勝11.9%・10年0勝。1着づけ方向の減点のみで§29により3着づけからは外さない'; }
+  else if(!pd){ pdv=5; pdn='前走距離 未取得＝減点なし'; }
+  else { pdv=5; pdn='前走'+pd+'m ＝減点なし（短縮/延長の加点は行わない）'; }
+  add('前走距離', pdv, 5, pdn, 'data');
+
+  // [6] 脚質 5 ─ 後方脚質のみ減点する壁。加点しない。
+  //     参照は runStyle（4角先行力は posRatio/c4avg を読む＝同一フィールドの二重計上を避ける）
+  var rs=String(h.runStyle||''), sv, sn;
+  if(/後方|追込/.test(rs)){ sv=1; sn='後方脚質 1-0-1-45 (n=47) 複勝4.3%。中山芝2000m全体でも追込5%で整合'; }
+  else { sv=5; sn=(rs||'脚質未取得')+' ＝減点なし（この項目では加点しない）'; }
+  add('脚質', sv, 5, sn, 'env');
+
   pending('血統(コース種牡馬)', 5,
     v(h.sire)+'（中山芝2000mの種牡馬別成績表が未着弾のため中立のまま）', 'horse');
 
