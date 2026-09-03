@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260903-0800';
+  var CURRENT_VERSION = '20260903-0830';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7494,17 +7494,17 @@ HORSES_BY_RACE['札幌記念'] = [
 // 出馬表は9/4(金)確定。確定まで空ロスターで開放する。
 // (setCurrentRace はロスター未存在だと META 適用前に return するため、空配列で回避)
 HORSES_BY_RACE['紫苑S'] = [
-  {"name":"ドリームコア","carriedWeight":55,"posRatio":0.364,"c4n":6,"runStyle":"中団","agariOP":0.25,"agN":6,"prevRace":"優駿牝馬(GI)","prevGrade":"G1","prevRank":2,"prevDist":2400,"prevPop":3,"prevJockey":"ルメール","gapDays":105,"gradeBest":"G12","turf2000OPBest":0,"runs":6,"sire":"キズナ","bms":"ハービンジャー"},
-  {"name":"ジッピーチューン","carriedWeight":55,"posRatio":0.444,"c4n":4,"runStyle":"中団","agariOP":0.35,"agN":4,"prevRace":"桜花賞(GI)","prevGrade":"G1","prevRank":3,"prevDist":1600,"prevPop":12,"prevJockey":"北村友一","gapDays":147,"gradeBest":"G13","turf2000OPBest":0,"runs":4,"sire":"ロードカナロア","bms":"City Zip"},
-  {"name":"リアライズルミナス","carriedWeight":55,"posRatio":0.298,"c4n":7,"runStyle":"先行","agariOP":0.229,"agN":7,"prevRace":"燕特別(1勝クラス)","prevGrade":"1勝","prevRank":3,"prevDist":2200,"prevPop":1,"prevJockey":"津村明秀","gapDays":36,"gradeBest":"G14","turf2000OPBest":3,"runs":7,"sire":"シルバーステート","bms":"ルーラーシップ"},
-  {"name":"マスターソアラ","carriedWeight":55,"posRatio":0.509,"c4n":2,"runStyle":"中団","agariOP":0.4,"agN":2,"prevRace":"デイリー杯クイーンC(GIII)","prevGrade":"G3","prevRank":4,"prevDist":1600,"prevPop":4,"prevJockey":"横山武史","gapDays":204,"gradeBest":"G34","turf2000OPBest":0,"runs":2,"sire":"シスキン","bms":"ダイワメジャー"},
-  {"name":"ファムクラジューズ","carriedWeight":55,"posRatio":0.373,"c4n":5,"runStyle":"中団","agariOP":-0.1,"agN":5,"prevRace":"サンスポ賞フローラS(GII)","prevGrade":"G2","prevRank":10,"prevDist":2000,"prevPop":5,"prevJockey":"横山武史","gapDays":133,"gradeBest":"G210","turf2000OPBest":10,"runs":5,"sire":"ベンバトル","bms":"ディープインパクト"},
-  {"name":"アストリル","carriedWeight":55,"posRatio":0.374,"c4n":8,"runStyle":"中団","agariOP":0.15,"agN":8,"prevRace":"かもめ島特別(2勝クラス)","prevGrade":"2勝","prevRank":2,"prevDist":1800,"prevPop":2,"prevJockey":"丹内祐次","gapDays":49,"gradeBest":"","turf2000OPBest":0,"runs":8,"sire":"デクラレーションオブウォー","bms":"ハービンジャー"},
-  {"name":"ロングトールサリー","carriedWeight":55,"posRatio":0.247,"c4n":6,"runStyle":"先行","agariOP":-0.1,"agN":6,"prevRace":"筑紫特別(1勝クラス)","prevGrade":"1勝","prevRank":3,"prevDist":1800,"prevPop":2,"prevJockey":"西村淳也","gapDays":49,"gradeBest":"G111","turf2000OPBest":0,"runs":7,"sire":"キタサンブラック","bms":"Global Hunter"},
-  {"name":"サムシングスイート","carriedWeight":55,"posRatio":0.494,"c4n":7,"runStyle":"中団","agariOP":0.343,"agN":7,"prevRace":"3歳以上1勝クラス","prevGrade":"1勝","prevRank":1,"prevDist":2000,"prevPop":2,"prevJockey":"団野大成","gapDays":36,"gradeBest":"","turf2000OPBest":0,"runs":8,"sire":"サートゥルナーリア","bms":"ヴィクトワールピサ"},
-  {"name":"ベンヴェヌータ","carriedWeight":55,"posRatio":0.148,"c4n":2,"runStyle":"逃げ","agariOP":0.05,"agN":2,"prevRace":"ミモザ賞(1勝クラス)","prevGrade":"1勝","prevRank":1,"prevDist":2000,"prevPop":3,"prevJockey":"石橋脩","gapDays":161,"gradeBest":"","turf2000OPBest":0,"runs":2,"sire":"ロゴタイプ","bms":"タートルボウル"},
-  {"name":"ナイスプレーアスク","carriedWeight":55,"posRatio":0.244,"c4n":7,"runStyle":"先行","agariOP":-0.157,"agN":7,"prevRace":"3歳以上1勝クラス","prevGrade":"1勝","prevRank":1,"prevDist":1800,"prevPop":3,"prevJockey":"横山和生","gapDays":57,"gradeBest":"","turf2000OPBest":0,"runs":7,"sire":"アドマイヤマーズ","bms":"ディープインパクト"},
-  {"name":"ジワタネホ","carriedWeight":55,"posRatio":0.391,"c4n":4,"runStyle":"中団","agariOP":-0.2,"agN":4,"prevRace":"3歳未勝利","prevGrade":"未勝利","prevRank":1,"prevDist":2000,"prevPop":2,"prevJockey":"三浦皇成","gapDays":36,"gradeBest":"","turf2000OPBest":0,"runs":4,"sire":"サートゥルナーリア","bms":"ディープインパクト"}
+  {"name":"ドリームコア","carriedWeight":55,"posRatio":0.364,"c4n":6,"runStyle":"中団","agariOP":0.25,"agN":6,"prevRace":"優駿牝馬(GI)","prevGrade":"G1","prevRank":2,"prevDist":2400,"prevPop":3,"prevJockey":"ルメール","gapDays":105,"gradeBest":"G12","turf2000OPBest":0,"runs":6,"sire":"キズナ","bms":"ハービンジャー","rightN":2,"rightFuku":50},
+  {"name":"ジッピーチューン","carriedWeight":55,"posRatio":0.444,"c4n":4,"runStyle":"中団","agariOP":0.35,"agN":4,"prevRace":"桜花賞(GI)","prevGrade":"G1","prevRank":3,"prevDist":1600,"prevPop":12,"prevJockey":"北村友一","gapDays":147,"gradeBest":"G13","turf2000OPBest":0,"runs":4,"sire":"ロードカナロア","bms":"City Zip","rightN":2,"rightFuku":100},
+  {"name":"リアライズルミナス","carriedWeight":55,"posRatio":0.298,"c4n":7,"runStyle":"先行","agariOP":0.229,"agN":7,"prevRace":"燕特別(1勝クラス)","prevGrade":"1勝","prevRank":3,"prevDist":2200,"prevPop":1,"prevJockey":"津村明秀","gapDays":36,"gradeBest":"G14","turf2000OPBest":3,"runs":7,"sire":"シルバーステート","bms":"ルーラーシップ","rightN":4,"rightFuku":50},
+  {"name":"マスターソアラ","carriedWeight":55,"posRatio":0.509,"c4n":2,"runStyle":"中団","agariOP":0.4,"agN":2,"prevRace":"デイリー杯クイーンC(GIII)","prevGrade":"G3","prevRank":4,"prevDist":1600,"prevPop":4,"prevJockey":"横山武史","gapDays":204,"gradeBest":"G34","turf2000OPBest":0,"runs":2,"sire":"シスキン","bms":"ダイワメジャー","rightN":0,"rightFuku":null},
+  {"name":"ファムクラジューズ","carriedWeight":55,"posRatio":0.373,"c4n":5,"runStyle":"中団","agariOP":-0.1,"agN":5,"prevRace":"サンスポ賞フローラS(GII)","prevGrade":"G2","prevRank":10,"prevDist":2000,"prevPop":5,"prevJockey":"横山武史","gapDays":133,"gradeBest":"G210","turf2000OPBest":10,"runs":5,"sire":"ベンバトル","bms":"ディープインパクト","rightN":0,"rightFuku":null},
+  {"name":"アストリル","carriedWeight":55,"posRatio":0.374,"c4n":8,"runStyle":"中団","agariOP":0.15,"agN":8,"prevRace":"かもめ島特別(2勝クラス)","prevGrade":"2勝","prevRank":2,"prevDist":1800,"prevPop":2,"prevJockey":"丹内祐次","gapDays":49,"gradeBest":"","turf2000OPBest":0,"runs":8,"sire":"デクラレーションオブウォー","bms":"ハービンジャー","rightN":5,"rightFuku":100},
+  {"name":"ロングトールサリー","carriedWeight":55,"posRatio":0.247,"c4n":6,"runStyle":"先行","agariOP":-0.1,"agN":6,"prevRace":"筑紫特別(1勝クラス)","prevGrade":"1勝","prevRank":3,"prevDist":1800,"prevPop":2,"prevJockey":"西村淳也","gapDays":49,"gradeBest":"G111","turf2000OPBest":0,"runs":7,"sire":"キタサンブラック","bms":"Global Hunter","rightN":4,"rightFuku":75},
+  {"name":"サムシングスイート","carriedWeight":55,"posRatio":0.494,"c4n":7,"runStyle":"中団","agariOP":0.343,"agN":7,"prevRace":"3歳以上1勝クラス","prevGrade":"1勝","prevRank":1,"prevDist":2000,"prevPop":2,"prevJockey":"団野大成","gapDays":36,"gradeBest":"","turf2000OPBest":0,"runs":8,"sire":"サートゥルナーリア","bms":"ヴィクトワールピサ","rightN":3,"rightFuku":66.7},
+  {"name":"ベンヴェヌータ","carriedWeight":55,"posRatio":0.148,"c4n":2,"runStyle":"逃げ","agariOP":0.05,"agN":2,"prevRace":"ミモザ賞(1勝クラス)","prevGrade":"1勝","prevRank":1,"prevDist":2000,"prevPop":3,"prevJockey":"石橋脩","gapDays":161,"gradeBest":"","turf2000OPBest":0,"runs":2,"sire":"ロゴタイプ","bms":"タートルボウル","rightN":2,"rightFuku":100},
+  {"name":"ナイスプレーアスク","carriedWeight":55,"posRatio":0.244,"c4n":7,"runStyle":"先行","agariOP":-0.157,"agN":7,"prevRace":"3歳以上1勝クラス","prevGrade":"1勝","prevRank":1,"prevDist":1800,"prevPop":3,"prevJockey":"横山和生","gapDays":57,"gradeBest":"","turf2000OPBest":0,"runs":7,"sire":"アドマイヤマーズ","bms":"ディープインパクト","rightN":6,"rightFuku":50},
+  {"name":"ジワタネホ","carriedWeight":55,"posRatio":0.391,"c4n":4,"runStyle":"中団","agariOP":-0.2,"agN":4,"prevRace":"3歳未勝利","prevGrade":"未勝利","prevRank":1,"prevDist":2000,"prevPop":2,"prevJockey":"三浦皇成","gapDays":36,"gradeBest":"","turf2000OPBest":0,"runs":4,"sire":"サートゥルナーリア","bms":"ディープインパクト","rightN":1,"rightFuku":0}
 ];
 ;
 
@@ -22766,7 +22766,7 @@ function _getNKScoreStats(){
      ・脚質5 は符号反転。逃げ・先行を加点し追込を減点（新潟記念は逃げ減点）。
      ・間隔 8→7。4ヶ月休み明けが最多勝ちパターンのため長期休養を減点しない。
      ・枠・人気は配点しない（§6）。
-     → 当初 Σmax=97 / 12項目 → 出馬表投入時に分散不足3項目を削除し Σmax=77 / 9項目。ただし配点の「割り当て」を確定しただけで、各項目の
+     → 当初 Σmax=97 / 12項目 → 出馬表投入時に分散不足3項目を削除し Σmax=77 / 9項目 → 右回り実績10を追加し Σmax=87 / 10項目。ただし配点の「割り当て」を確定しただけで、各項目の
        閾値は RACE_PAST_DATA['紫苑S'] 着弾後に決める。現状は全項目中立のまま。
 
    有効化手順:
@@ -22778,7 +22778,7 @@ function _getNKScoreStats(){
 var SHION_CALIBRATED = 'partial';   // 部分較正。残り項目は着別度数の着弾待ちで中立値
 
 function computeScoreBreakdownShionV1(h,_rawOnly){
-  // 紫苑S ShionV1 / Σmax=77 / 9項目
+  // 紫苑S ShionV1 / Σmax=77 / 9項目 → 右回り実績10を追加し Σmax=87 / 10項目
   // 削除3項目とその理由（復活させないこと）:
   //   中山芝1800-2200実績10 → 出走11頭のOP以上該当0件。生カウントで測ると
   //     「中山に何回使われたか」を測ることになり§24違反。分散ゼロにつき削除。
@@ -22808,6 +22808,16 @@ function computeScoreBreakdownShionV1(h,_rawOnly){
   else if(pg==='1勝'){ c12=12*11.3/36.8; c12n='前走1勝クラス 2-2-3-55 複勝11.3%(n=62)'; }
   else { c12=12*11.3/36.8/2; c12n='前走未勝利 0-0-0-7。分母7の0勝は排除に使わない(§26)'; }
   add('前走クラス', c12, 12, c12n, 'data');
+
+  // 2b) 右回り実績10 : 生カウントの複勝率をk=4収縮。未経験は中立5(§28)
+  //   ※ §24の但し書き: クラス層別していないため「適性」ではなく「どこで走ってきたか」を
+  //      測っている可能性がある。OP以上の右回りは11頭で3走のみ。社長判断で採用。
+  var rn=h0.rightN||0, rf=h0.rightFuku;
+  var r10, r10n;
+  if(!rn || rf===null || rf===undefined){ r10=5.0; r10n='右回り未経験。未経験は減点しない(§28)'; }
+  else { r10 = 5 + (10*rf/100 - 5)*rn/(rn+4);
+         r10n='右回り'+rn+'走 複勝率'+rf+'%／k=4収縮（クラス層別なしの生カウント）'; }
+  add('右回り実績', r10, 10, r10n, 'horse');
 
   // 3) 重賞実績10 : 加点のみ。未経験は中立5(§28 未経験は減点しない)
   var gb=h0.gradeBest||'', j10=5.0, j10n='重賞未出走のため中立(§28)';
