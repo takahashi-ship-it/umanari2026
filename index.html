@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260906-1900';
+  var CURRENT_VERSION = '20260906-2000';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2691,7 +2691,7 @@
 
 <script>
 /* 終了レースのリスト（カレンダー初回レンダリング前に定義必須） */
-var FINISHED_RACES = ['札幌記念', 'レパードS', 'クイーンS','関屋記念', '函館2歳S', '七夕賞', '函館記念','ラジオNIKKEI賞','しらさぎステークス','府中牝馬S','天皇賞（春）', '京都新聞杯', 'エプソムC', 'NHKマイルC', '新潟大賞典', 'ヴィクトリアマイル', '平安ステークス', 'オークス', '葵ステークス', '日本ダービー', '目黒記念', '安田記念', '函館スプリントS', '宝塚記念', '北九州記念'];
+var FINISHED_RACES = ['紫苑S', '新潟記念', '札幌記念', 'レパードS', 'クイーンS','関屋記念', '函館2歳S', '七夕賞', '函館記念','ラジオNIKKEI賞','しらさぎステークス','府中牝馬S','天皇賞（春）', '京都新聞杯', 'エプソムC', 'NHKマイルC', '新潟大賞典', 'ヴィクトリアマイル', '平安ステークス', 'オークス', '葵ステークス', '日本ダービー', '目黒記念', '安田記念', '函館スプリントS', '宝塚記念', '北九州記念'];
 
 /* =====================================================
  * 1) RACE CALENDAR
@@ -2792,7 +2792,7 @@ const RACES = [
   // 9月
   {date:"2026-09-05", name:"京成杯オータムH",         grade:"G3", venue:"中山", surface:"芝1600m", status:"upcoming"},
   {date:"2026-09-05", name:"札幌2歳S",                grade:"G3", venue:"札幌", surface:"芝1800m", status:"upcoming"},
-  {date:"2026-09-06", name:"紫苑S",                   grade:"G2", venue:"中山", surface:"芝2000m", status:"upcoming"},
+  {date:"2026-09-06", name:"紫苑S",                   grade:"G2", venue:"中山", surface:"芝2000m", status:"done"},
   {date:"2026-09-06", name:"セントウルS",             grade:"G2", venue:"阪神", surface:"芝1200m", status:"upcoming"},
   {date:"2026-09-13", name:"セントライト記念",        grade:"G2", venue:"中山", surface:"芝2200m", status:"upcoming"},
   {date:"2026-09-13", name:"ローズS",                 grade:"G2", venue:"阪神", surface:"芝2000m", status:"upcoming"},
@@ -26275,7 +26275,7 @@ function computeScoreBreakdown(horse, raceName) {
   if (raceName === '函館2歳S') return computeScoreBreakdownHakodate2saiV1(horse, raceName);
   if(raceName==='関屋記念') return computeScoreBreakdownSekiyaV2(horse, raceName);
   if (raceName === '新潟記念') return computeScoreBreakdownNiigataKinenV2(horse);
-  if (raceName === '紫苑S' && horse && horse.isAvoided) return { total:0, max:92, pct:0, items:[], isAvoided:true, avoidReason: horse.avoidReason || '出走回避' };
+  if (raceName === '紫苑S' && horse && horse.isAvoided) return { total:0, max:87, pct:0, items:[], isAvoided:true, avoidReason: horse.avoidReason || '出走回避' };
   if (raceName === '紫苑S') return computeScoreBreakdownShionV1(horse);
   // ★回避馬は強制的に0%
   if (horse && horse.isAvoided) {
