@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260907-2000';
+  var CURRENT_VERSION = '20260907-2100';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2843,7 +2843,7 @@ const STATUS_BADGE = {
 };
 
 const TARGET_RACE_NAME = "オークス";
-const SUPPORTED_RACES = new Set(['セントライト記念', '紫苑S', '新潟記念', '札幌記念', 'レパードS','クイーンS', "関屋記念", "函館2歳S", "天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S","ラジオNIKKEI賞","函館記念","北九州記念","七夕賞",]);
+const SUPPORTED_RACES = new Set(['ローズS', 'セントライト記念', '紫苑S', '新潟記念', '札幌記念', 'レパードS','クイーンS', "関屋記念", "函館2歳S", "天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S","ラジオNIKKEI賞","函館記念","北九州記念","七夕賞",]);
 
 function getDefaultDisplayMonth() {
   // 直近の「予想中」(SUPPORTED && upcoming) レースの開催月を返す
@@ -7528,19 +7528,19 @@ HORSES_BY_RACE['セントライト記念'] = [
 ];
 
 HORSES_BY_RACE['ローズS'] = [
-  {"name":"アンジュドジョワ","carriedWeight":55,"posRatio":null,"c4n":null,"runStyle":null,"agariOP":null,"agN":null,"prevRace":null,"prevGrade":null,"prevRank":null,"prevDist":null,"prevPop":null,"prevJockey":null,"gapDays":null,"gradeBest":null,"turf2000OPBest":null,"runs":null,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"","odds":10.2,"pop":6,"popEstimate":6,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null},
-  {"name":"アンディムジーク","carriedWeight":55,"posRatio":null,"c4n":null,"runStyle":null,"agariOP":null,"agN":null,"prevRace":null,"prevGrade":null,"prevRank":null,"prevDist":null,"prevPop":null,"prevJockey":null,"gapDays":null,"gradeBest":null,"turf2000OPBest":null,"runs":null,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"古川吉","odds":70.7,"pop":12,"popEstimate":12,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null},
-  {"name":"イクシード","carriedWeight":55,"posRatio":null,"c4n":null,"runStyle":null,"agariOP":null,"agN":null,"prevRace":null,"prevGrade":null,"prevRank":null,"prevDist":null,"prevPop":null,"prevJockey":null,"gapDays":null,"gradeBest":null,"turf2000OPBest":null,"runs":null,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"","odds":6.3,"pop":4,"popEstimate":4,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null},
-  {"name":"エンネ","carriedWeight":55,"posRatio":null,"c4n":null,"runStyle":null,"agariOP":null,"agN":null,"prevRace":null,"prevGrade":null,"prevRank":null,"prevDist":null,"prevPop":null,"prevJockey":null,"gapDays":null,"gradeBest":null,"turf2000OPBest":null,"runs":null,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"坂井","odds":5.3,"pop":3,"popEstimate":3,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null},
-  {"name":"オモイヲノセテ","carriedWeight":55,"posRatio":null,"c4n":null,"runStyle":null,"agariOP":null,"agN":null,"prevRace":null,"prevGrade":null,"prevRank":null,"prevDist":null,"prevPop":null,"prevJockey":null,"gapDays":null,"gradeBest":null,"turf2000OPBest":null,"runs":null,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"","odds":93.5,"pop":13,"popEstimate":13,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null},
-  {"name":"スウィートハピネス","carriedWeight":55,"posRatio":null,"c4n":null,"runStyle":null,"agariOP":null,"agN":null,"prevRace":null,"prevGrade":null,"prevRank":null,"prevDist":null,"prevPop":null,"prevJockey":null,"gapDays":null,"gradeBest":null,"turf2000OPBest":null,"runs":null,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"佐々木","odds":8.1,"pop":5,"popEstimate":5,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null},
-  {"name":"スマートプリエール","carriedWeight":55,"posRatio":null,"c4n":null,"runStyle":null,"agariOP":null,"agN":null,"prevRace":null,"prevGrade":null,"prevRank":null,"prevDist":null,"prevPop":null,"prevJockey":null,"gapDays":null,"gradeBest":null,"turf2000OPBest":null,"runs":null,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"田山","odds":22.6,"pop":9,"popEstimate":9,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null},
-  {"name":"タイセイボーグ","carriedWeight":55,"posRatio":null,"c4n":null,"runStyle":null,"agariOP":null,"agN":null,"prevRace":null,"prevGrade":null,"prevRank":null,"prevDist":null,"prevPop":null,"prevJockey":null,"gapDays":null,"gradeBest":null,"turf2000OPBest":null,"runs":null,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"西村淳","odds":5.1,"pop":2,"popEstimate":2,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null},
-  {"name":"ナムラコスモス","carriedWeight":55,"posRatio":null,"c4n":null,"runStyle":null,"agariOP":null,"agN":null,"prevRace":null,"prevGrade":null,"prevRank":null,"prevDist":null,"prevPop":null,"prevJockey":null,"gapDays":null,"gradeBest":null,"turf2000OPBest":null,"runs":null,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"田口","odds":27.2,"pop":10,"popEstimate":10,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null},
-  {"name":"ファストフォワード","carriedWeight":55,"posRatio":null,"c4n":null,"runStyle":null,"agariOP":null,"agN":null,"prevRace":null,"prevGrade":null,"prevRank":null,"prevDist":null,"prevPop":null,"prevJockey":null,"gapDays":null,"gradeBest":null,"turf2000OPBest":null,"runs":null,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"小崎","odds":60.9,"pop":11,"popEstimate":11,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null},
-  {"name":"ミリタリータトゥー","carriedWeight":55,"posRatio":null,"c4n":null,"runStyle":null,"agariOP":null,"agN":null,"prevRace":null,"prevGrade":null,"prevRank":null,"prevDist":null,"prevPop":null,"prevJockey":null,"gapDays":null,"gradeBest":null,"turf2000OPBest":null,"runs":null,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"西塚","odds":15.7,"pop":8,"popEstimate":8,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null},
-  {"name":"モンローウォーク","carriedWeight":55,"posRatio":null,"c4n":null,"runStyle":null,"agariOP":null,"agN":null,"prevRace":null,"prevGrade":null,"prevRank":null,"prevDist":null,"prevPop":null,"prevJockey":null,"gapDays":null,"gradeBest":null,"turf2000OPBest":null,"runs":null,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"戸崎圭","odds":4.3,"pop":1,"popEstimate":1,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null},
-  {"name":"レイクラシック","carriedWeight":55,"posRatio":null,"c4n":null,"runStyle":null,"agariOP":null,"agN":null,"prevRace":null,"prevGrade":null,"prevRank":null,"prevDist":null,"prevPop":null,"prevJockey":null,"gapDays":null,"gradeBest":null,"turf2000OPBest":null,"runs":null,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"吉村","odds":13.9,"pop":7,"popEstimate":7,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null}
+  {"name":"アンジュドジョワ","carriedWeight":55,"posRatio":0.585,"c4n":null,"runStyle":"中団","agariOP":null,"agN":null,"prevRace":"優駿牝馬","prevGrade":"GI","prevRank":9,"prevDist":"芝2400","prevPop":7,"prevJockey":null,"gapDays":112,"gradeBest":null,"turf2000OPBest":null,"runs":3,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"","odds":10.2,"pop":6,"popEstimate":6,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null,"prevVenue":"東京","agariBest":34.1,"wins":2,"hikonkanPts":5,"hikonkanRec":"1-0-0-0"},
+  {"name":"アンディムジーク","carriedWeight":55,"posRatio":0.556,"c4n":null,"runStyle":"中団","agariOP":null,"agN":null,"prevRace":"3歳以上1勝クラス","prevGrade":"1勝","prevRank":1,"prevDist":"芝2000","prevPop":6,"prevJockey":null,"gapDays":29,"gradeBest":null,"turf2000OPBest":null,"runs":9,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"古川吉","odds":70.7,"pop":12,"popEstimate":12,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null,"prevVenue":"札幌","agariBest":32.9,"wins":2,"hikonkanPts":0,"hikonkanRec":"0-0-0-2"},
+  {"name":"イクシード","carriedWeight":55,"posRatio":0.505,"c4n":null,"runStyle":"中団","agariOP":null,"agN":null,"prevRace":"カーネーションカップ","prevGrade":"1勝","prevRank":1,"prevDist":"芝1800","prevPop":1,"prevJockey":null,"gapDays":113,"gradeBest":null,"turf2000OPBest":null,"runs":3,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"","odds":6.3,"pop":4,"popEstimate":4,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null,"prevVenue":"東京","agariBest":33.4,"wins":2,"hikonkanPts":6,"hikonkanRec":"1-0-1-0"},
+  {"name":"エンネ","carriedWeight":55,"posRatio":0.742,"c4n":null,"runStyle":"後方","agariOP":null,"agN":null,"prevRace":"優駿牝馬","prevGrade":"GI","prevRank":7,"prevDist":"芝2400","prevPop":4,"prevJockey":null,"gapDays":112,"gradeBest":null,"turf2000OPBest":null,"runs":3,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"坂井","odds":5.3,"pop":3,"popEstimate":3,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null,"prevVenue":"東京","agariBest":32.8,"wins":1,"hikonkanPts":5,"hikonkanRec":"1-0-0-0"},
+  {"name":"オモイヲノセテ","carriedWeight":55,"posRatio":0.601,"c4n":null,"runStyle":"中団","agariOP":null,"agN":null,"prevRace":"3歳以上1勝クラス","prevGrade":"1勝","prevRank":5,"prevDist":"芝2000","prevPop":10,"prevJockey":null,"gapDays":21,"gradeBest":null,"turf2000OPBest":null,"runs":5,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"","odds":93.5,"pop":13,"popEstimate":13,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null,"prevVenue":"中京","agariBest":33.7,"wins":1,"hikonkanPts":5,"hikonkanRec":"0-0-0-0"},
+  {"name":"スウィートハピネス","carriedWeight":55,"posRatio":0.612,"c4n":null,"runStyle":"中団","agariOP":null,"agN":null,"prevRace":"優駿牝馬","prevGrade":"GI","prevRank":5,"prevDist":"芝2400","prevPop":11,"prevJockey":null,"gapDays":112,"gradeBest":null,"turf2000OPBest":null,"runs":6,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"佐々木","odds":8.1,"pop":5,"popEstimate":5,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null,"prevVenue":"東京","agariBest":34.1,"wins":2,"hikonkanPts":5,"hikonkanRec":"0-0-0-0"},
+  {"name":"スマートプリエール","carriedWeight":55,"posRatio":0.548,"c4n":null,"runStyle":"中団","agariOP":null,"agN":null,"prevRace":"優駿牝馬","prevGrade":"GI","prevRank":15,"prevDist":"芝2400","prevPop":8,"prevJockey":null,"gapDays":112,"gradeBest":null,"turf2000OPBest":null,"runs":8,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"田山","odds":22.6,"pop":9,"popEstimate":9,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null,"prevVenue":"東京","agariBest":33.5,"wins":2,"hikonkanPts":5,"hikonkanRec":"2-0-2-1"},
+  {"name":"タイセイボーグ","carriedWeight":55,"posRatio":0.492,"c4n":null,"runStyle":"中団","agariOP":null,"agN":null,"prevRace":"チューリップ賞","prevGrade":"GII","prevRank":1,"prevDist":"芝1600","prevPop":2,"prevJockey":null,"gapDays":196,"gradeBest":null,"turf2000OPBest":null,"runs":6,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"西村淳","odds":5.1,"pop":2,"popEstimate":2,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null,"prevVenue":"阪神","agariBest":33.1,"wins":2,"hikonkanPts":6,"hikonkanRec":"1-1-0-0"},
+  {"name":"ナムラコスモス","carriedWeight":55,"posRatio":0.366,"c4n":null,"runStyle":"先行","agariOP":null,"agN":null,"prevRace":"中京記念","prevGrade":"GIII","prevRank":15,"prevDist":"芝1600","prevPop":3,"prevJockey":null,"gapDays":28,"gradeBest":null,"turf2000OPBest":null,"runs":8,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"田口","odds":27.2,"pop":10,"popEstimate":10,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null,"prevVenue":"中京","agariBest":33.5,"wins":2,"hikonkanPts":6,"hikonkanRec":"1-1-0-0"},
+  {"name":"ファストフォワード","carriedWeight":55,"posRatio":0.379,"c4n":null,"runStyle":"先行","agariOP":null,"agN":null,"prevRace":"五頭連峰特別","prevGrade":"1勝","prevRank":1,"prevDist":"芝1800","prevPop":9,"prevJockey":null,"gapDays":42,"gradeBest":null,"turf2000OPBest":null,"runs":7,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"小崎","odds":60.9,"pop":11,"popEstimate":11,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null,"prevVenue":"新潟","agariBest":33.3,"wins":2,"hikonkanPts":1,"hikonkanRec":"2-0-0-3"},
+  {"name":"ミリタリータトゥー","carriedWeight":55,"posRatio":0.523,"c4n":null,"runStyle":"中団","agariOP":null,"agN":null,"prevRace":"3歳以上1勝クラス","prevGrade":"1勝","prevRank":1,"prevDist":"芝1800","prevPop":2,"prevJockey":null,"gapDays":63,"gradeBest":null,"turf2000OPBest":null,"runs":2,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"西塚","odds":15.7,"pop":8,"popEstimate":8,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null,"prevVenue":"小倉","agariBest":34.4,"wins":2,"hikonkanPts":6,"hikonkanRec":"2-0-0-0"},
+  {"name":"モンローウォーク","carriedWeight":55,"posRatio":0.318,"c4n":null,"runStyle":"先行","agariOP":null,"agN":null,"prevRace":"かもめ島特別","prevGrade":"2勝","prevRank":1,"prevDist":"芝1800","prevPop":1,"prevJockey":null,"gapDays":56,"gradeBest":null,"turf2000OPBest":null,"runs":3,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"戸崎圭","odds":4.3,"pop":1,"popEstimate":1,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null,"prevVenue":"函館","agariBest":33.9,"wins":3,"hikonkanPts":6,"hikonkanRec":"2-0-0-0"},
+  {"name":"レイクラシック","carriedWeight":55,"posRatio":0.522,"c4n":null,"runStyle":"中団","agariOP":null,"agN":null,"prevRace":"3歳以上1勝クラス","prevGrade":"1勝","prevRank":1,"prevDist":"芝2000","prevPop":1,"prevJockey":null,"gapDays":36,"gradeBest":null,"turf2000OPBest":null,"runs":6,"sire":null,"bms":null,"rightN":null,"rightFuku":null,"waku":null,"umaban":null,"jockey":"吉村","odds":13.9,"pop":7,"popEstimate":7,"jockeyCont":null,"sex":"牝","age":3,"fukushoLow":null,"fukushoHigh":null,"prevVenue":"中京","agariBest":33.3,"wins":2,"hikonkanPts":5,"hikonkanRec":"0-1-0-0"}
 ];
 
 ;
@@ -7866,6 +7866,15 @@ window.HORSES_BY_RACE = HORSES_BY_RACE;
  * 3.05) RACE METADATA (タイトル・コース等)
  * ===================================================== */
 const RACE_META = {
+  'ローズS': {
+    babaWet:false, actualBaba:'', gradeLine:"G2", grade:"G2", title:"ローズS",
+    date:"2026-09-13 (日)", venue:"阪神", surface:"芝1800m", age:"3歳牝", distance:1800,
+    direction:"right", weightType:"馬齢", isFinished:false, status:'予想中',
+    pageTitle:"JRA重賞予想 2026 | ローズステークス",
+    notice:"秋華賞トライアル。3着以内に秋華賞の優先出走権。阪神芝1800mは外回り（直線473m・急坂）。今年はAコース使用。過去10年のうち4年(2020,21,22,24)は中京芝2000mでの代替開催のため、コース依存データは阪神6年分しかない。",
+    paceExpect:'ミドル', paceNote:'阪神6年はハイ1・ミドル3・スロー2でばらつく。セントライト記念(10年中9年スロー)と違い一定しない。2025年はハイ(-1.4)でテン3F34.0。',
+    babaPrediction:{}
+  },
   'セントライト記念': {
     babaWet:false, actualBaba:'', gradeLine:"G2", grade:"G2", title:"セントライト記念",
     date:"2026-09-13 (日)", venue:"中山", surface:"芝2200m", age:"3歳", distance:2200,
@@ -14383,7 +14392,7 @@ RACE_PAST_DATA['ローズS'] = {
       {title:"前走場所（うまスクエア・阪神10年分・母数156）", col1:"前走場所", rows:[{label:"東京", rec:"7-5-3-49"}, {label:"小倉", rec:"0-4-2-22"}, {label:"中京", rec:"1-0-2-7"}, {label:"札幌", rec:"1-0-2-13"}, {label:"新潟", rec:"0-1-1-8"}, {label:"阪神", rec:"1-0-0-8"}, {label:"函館", rec:"0-0-0-7"}, {label:"中山", rec:"0-0-0-3"}, {label:"京都", rec:"0-0-0-2"}, {label:"福島", rec:"0-0-0-1"}, {label:"地方", rec:"0-0-0-6"}], note:"東京23.4%（オークス組が中心）。函館0-0-0-7・中山0-0-0-3・地方0-0-0-6は母数が小さく§29により壁にはしない。"},
       {title:"通算勝利数（JRA公式・2016-2025・母数159）", col1:"通算勝利", rows:[{label:"3勝以上", rec:"3-1-1-18"}, {label:"2勝", rec:"7-7-7-76"}, {label:"1勝以下", rec:"0-2-2-35"}], note:"3勝以上21.3%と2勝21.5%(収縮後)にほとんど差がない。1勝以下だけが11.1%と落ちる。JRA公式も「2勝馬が穴をあける」と明記。"},
       {title:"騎手継続（JRA公式・2016-2025・母数159）", col1:"騎手", rows:[{label:"前走と同じ騎手", rec:"8-4-6-70"}, {label:"乗り替わり", rec:"2-6-4-59"}], note:"20.4%対17.0%(収縮後)で差は3.4ポイントしかなく配点する価値がない。紫苑Sの騎手継続と同じく項目化しない。なお川田騎手は過去10年5-0-1-3だが、2026年は同日のセントライト記念に騎乗するためローズSには騎乗しない（同日・別場のため両立不可）。"},
-      {title:"人気（JRA公式・2016-2025・母数159）", col1:"人気", rows:[{label:"1番人気", rec:"4-1-1-4"}, {label:"2番人気", rec:"1-2-1-6"}, {label:"3番人気", rec:"1-0-1-8"}, {label:"4番人気", rec:"1-0-0-9"}, {label:"5番人気", rec:"1-0-1-8"}, {label:"6-9番人気", rec:"2-4-2-32"}, {label:"10番人気以下", rec:"0-3-4-62"}], note:"1番人気48.2%→2番人気34.0%→3番人気19.7%(収縮後)の「崖型」。3番人気19.7% < 5番人気19.7% = 6-9番人気19.9%で単調性がない。JRA公式は3着以内30頭のうち15頭が6番人気以下と明記。10番人気以下も0-3-4-62で7頭が3着内（セントライト記念の0-0-0-50とは異なる）。★エンジン未実装のため配点はまだ存在しない。配点する場合はエンジン投入と同時にこのnoteを更新すること。なおうまスクエアにも別窓の人気表(1番人気5-2-0-3)があるが集計窓が違うため混ぜない。"}
+      {title:"人気（JRA公式・2016-2025・母数159）", col1:"人気", rows:[{label:"1番人気", rec:"4-1-1-4"}, {label:"2番人気", rec:"1-2-1-6"}, {label:"3番人気", rec:"1-0-1-8"}, {label:"4番人気", rec:"1-0-0-9"}, {label:"5番人気", rec:"1-0-1-8"}, {label:"6-9番人気", rec:"2-4-2-32"}, {label:"10番人気以下", rec:"0-3-4-62"}], note:"1番人気48.2%→2番人気34.0%→3番人気19.7%(収縮後)の「崖型」。3番人気19.7% < 5番人気19.7% = 6-9番人気19.9%で単調性がない。JRA公式は3着以内30頭のうち15頭が6番人気以下と明記。10番人気以下も0-3-4-62で7頭が3着内（セントライト記念の0-0-0-50とは異なる）。RoseSV1で人気8点（8-6-3-2-3-3-2）を配点している。3番人気以下に無理な順序をつけず、10番人気以下も0点にしない。★確定オッズで変動するため発走前に再計算が必要。なおうまスクエアにも別窓の人気表(1番人気5-2-0-3)があるが集計窓が違うため混ぜない。"}
     ]
   },
   pastResults: [
@@ -23278,6 +23287,146 @@ function computeScoreBreakdownStLiteV1(h,_rawOnly){
   return out;
 }
 
+// ========== ローズS（阪神芝1800m外・秋華賞トライアル）==========
+// Σmax=90 / 11項目。セントライト記念(StLiteV1)とは構造が逆なので流用禁止。
+//  ・前走GIを一括りにしてはならない。GI全体は22.0%だが★オークス5着以内だけが54.7%(収縮後)、
+//    GI残りは2-1-1-38で9.5%。セントライト記念のダービー組(着順不問47.1%)とは逆。
+//  ・脚質はフラット(逃げ27.1/中団19.5/後方18.1/先行17.4)。セントライト記念は33ポイント差。4点に留める。
+//  ・人気は「崖型」。1番人気48.2%→2番人気34.0%→3番人気19.7%で、3番人気以下は横一線(単調でない)。
+//    セントライト記念の断層型12点は流用不可。
+// §43対応: 最大配点は馬場非依存の前走レース格14。上がり12は最大配点にしない。
+//  上がりを12点まで許容した理由: 新潟記念・紫苑Sの失敗は「符号が馬場で反転する指標」を最大配点に
+//  置いたこと。阪神芝1800m外(直線473m)の瞬発力要求は馬場で向きが反転せず、重馬場だった2016年も
+//  上がり1位のシンハライトが勝っている。3F6位以下は0-2-1-101(2.9%)で母数104。
+// 出典: JRA公式(2016-2025・母数159) / うまスクエア(中京4年除く阪神10年分・母数156)
+function _getRoseSScoreStats(){
+  var xs=[], hs=(typeof HORSES_BY_RACE!=='undefined'&&HORSES_BY_RACE['ローズS'])||[];
+  for(var i=0;i<hs.length;i++){ xs.push(computeScoreBreakdownRoseSV1(hs[i],true).total); }
+  if(!xs.length) return {mean:0,sd:0};
+  var m=xs.reduce(function(a,b){return a+b;},0)/xs.length;
+  var v=xs.reduce(function(a,b){return a+(b-m)*(b-m);},0)/xs.length;
+  return {mean:m, sd:Math.sqrt(v)};
+}
+function computeScoreBreakdownRoseSV1(h,_rawOnly){
+  var h0=h||{};
+  var it=[], add=function(k,v,mx,note,grp){
+    v=Math.round(v*10)/10;
+    it.push({key:k,value:v,max:mx,note:note||'',label:k,score:v,group:grp||'horse'});
+  };
+  var G=h0.prevGrade||'', R=h0.prevRace||'', rk=h0.prevRank, pp=h0.prevPop;
+  var isHi=(G==='GI'||G==='GII'||G==='GIII'||G==='OP'||G==='OP(L)'||G==='3勝');
+  var oaks=(R.indexOf('優駿牝馬')>=0);
+  var dm=/(\d{3,4})/.exec(h0.prevDist||''), pd=dm?parseInt(dm[1],10):null;
+
+  // ① 前走レース格×着順 14
+  var g=2,gn='前走クラス不明→最低帯';
+  if(oaks&&rk&&rk<=5){g=14;gn='★前走オークス5着以内 5-0-3-4 収縮54.7%（最大配点の根拠）';}
+  else if(oaks){g=2;gn='前走オークス6着以下（GI残り 2-1-1-38 収縮9.5%）';}
+  else if(G==='GI'){g=2;gn='オークス以外のGI（GI残り 2-1-1-38 収縮9.5%）';}
+  else if(G==='2勝'){g=6;gn='前走2勝クラス 0-3-3-18 収縮24.1%';}
+  else if(G==='1勝'){g=5;gn='前走1勝クラス 3-5-3-46 収縮19.3%';}
+  else if(G==='GII'||G==='GIII'){g=3;gn='前走GII・GIII 0-1-0-11 収縮11.0%';}
+  else if(G==='OP'||G==='OP(L)'||G==='3勝'){g=3;gn='前走OP特別・3勝クラス（母数5・収縮11%前後）';}
+  else if(G==='未勝利'){g=2;gn='前走未勝利 0-0-0-5 収縮8.4%';}
+  add('前走レース格×着順',g,14,gn,'race');
+
+  // ② 上がり性能 12【条件を揃えた自己ベスト上り】
+  //    セントライト記念では全条件混在の生ベストを使い比較になっていなかった反省から、
+  //    芝1600-2000mに限定して算出した値を使う（ダート・極端な距離を除外）。
+  //    3F順位そのものはレース後にしか確定しないため事前指標としては代用（未較正）。
+  var ab=h0.agariBest, av=6, an='上り実績データ未取得→中立';
+  if(ab!=null){ av=(ab<=33.0)?12:(ab<=33.4)?9:(ab<=33.7)?6:(ab<=34.0)?3:1;
+    an='芝1600-2000m限定の自己ベスト上り '+ab+'（3F1位80%/6位以下2.9%・母数104。刻みは未較正）'; }
+  add('上がり性能',av,12,an,'agari');
+
+  // ③ 前走着順×クラス 10（うまスクエア阪神10年分・同級/下級で層別）
+  var pr,prn;
+  if(!rk){pr=5;prn='前走着順データ未取得→中立';}
+  else if(isHi){
+    if(rk===1){pr=10;prn='同級1着 4-1-0-7 収縮35%台';}
+    else if(rk<=5){pr=6;prn='同級2-5着（2着0-1-0-4/3着1-0-0-2/4着0-0-1-3/5着1-0-1-2）';}
+    else if(rk<=9){pr=0;prn='★同級6-9着 0-0-0-20（母数20で3着内ゼロ）';}
+    else {pr=2;prn='同級10着以下 1-2-0-26 収縮10.3%';}
+  } else {
+    if(rk===1){pr=6;prn='下級1着 3-5-3-35 収縮23.9%（3着以内馬の半数以上が前走1着）';}
+    else if(rk<=4){pr=4;prn='下級2-4着（2着0-1-1-5/3着0-0-1-5/4着0-0-2-3）';}
+    else {pr=1;prn='下級5着以下（5着0-0-0-5/6-9着0-0-1-5/10着以下0-0-0-6）';}
+  }
+  add('前走着順×クラス',pr,10,prn,'race');
+
+  // ④ 壁: 前走条件戦かつ前走5番人気以下 10
+  var w=(!isHi&&pp&&pp>=5)?0:10;
+  add('前走人気×クラス',w,10,w?'壁に該当せず（前走4番人気以内は9-8-9-60 収縮29.8%）':'★壁 前走条件戦かつ前走5番人気以下 0-0-0-19（母数19で3着内ゼロ）','race');
+
+  // ⑤ キャリア 8
+  var rn=h0.runs||0, cv,cn;
+  if(!rn){cv=5;cn='通算出走数データ未取得→中立';}
+  else if(rn===5){cv=8;cn='5戦 5-3-0-20（10年で5勝と最多）';}
+  else if(rn===6){cv=7;cn='6戦 2-4-3-26';}
+  else if(rn===2||rn===3){cv=6;cn=rn+'戦（'+(rn===2?'0-0-1-0':'1-2-0-6')+'）';}
+  else if(rn===7){cv=4;cn='7戦 1-0-3-20';}
+  else if(rn===4){cv=2;cn='4戦 1-0-0-13';}
+  else {cv=1;cn='★8戦以上 0-1-3-41（母数45・勝ち馬なし）';}
+  add('キャリア',cv,8,cn,'career');
+
+  // ⑥ 前走距離 8
+  var dv,dn2;
+  if(pd===null){dv=5;dn2='前走距離データ未取得→中立';}
+  else if(pd>1800){dv=8;dn2='距離短縮 8-7-4-59 収縮24.4%（オークス2400mからが中心）';}
+  else if(pd===1800){dv=6;dn2='同距離1800m 1-2-4-34 収縮17.1%';}
+  else {dv=3;dn2='距離延長 1-1-2-33 収縮10.8%';}
+  add('前走距離',dv,8,dn2,'dist');
+
+  // ⑦ 人気 8【崖型】1番人気だけが突出し2番人気で3割減、3番人気以下は横一線。
+  //    3番人気19.7% < 5番人気19.7% = 6-9番人気19.9% で単調性がないため無理に順序をつけない。
+  //    10番人気以下も0-3-4-62で7頭が3着内（セントライト記念の0-0-0-50とは異なる）ので0点にしない。
+  //    ★確定オッズで変動する。更新時は HORSES_BY_RACE の pop を差し替えるだけでよい。
+  var pn=h0.pop, pv2, pnn;
+  if(!pn){pv2=3;pnn='人気データ未取得→中立';}
+  else if(pn===1){pv2=8;pnn='1番人気 4-1-1-4 収縮48.2%';}
+  else if(pn===2){pv2=6;pnn='2番人気 1-2-1-6 収縮34.0%';}
+  else if(pn===3){pv2=3;pnn='3番人気 1-0-1-8 収縮19.7%';}
+  else if(pn===4){pv2=2;pnn='4番人気 1-0-0-9 収縮12.5%';}
+  else if(pn===5){pv2=3;pnn='5番人気 1-0-1-8 収縮19.7%';}
+  else if(pn<=9){pv2=3;pnn='6-9番人気 2-4-2-32 収縮19.9%';}
+  else {pv2=2;pnn='10番人気以下 0-3-4-62 収縮10.6%（7頭が3着内）';}
+  add('人気',pv2,8,pnn+'【確定オッズで変動】','pop');
+
+  // ⑧ 前走場所 6
+  var pv=h0.prevVenue||'', vm={'東京':[6,'東京 7-5-3-49 収縮23.4%（オークス組が中心）'],
+    '小倉':[5,'小倉 0-4-2-22'],'中京':[5,'中京 1-0-2-7'],'札幌':[5,'札幌 1-0-2-13'],
+    '新潟':[4,'新潟 0-1-1-8'],'阪神':[3,'阪神 1-0-0-8'],'函館':[1,'函館 0-0-0-7（§29により壁にしない）'],
+    '中山':[1,'中山 0-0-0-3'],'京都':[1,'京都 0-0-0-2'],'福島':[1,'福島 0-0-0-1']}[pv]
+    ||[2, pv?(pv+'（母数が小さい）'):'前走場所データ未取得→中立'];
+  add('前走場所',vm[0],6,vm[1],'race');
+
+  // ⑨ 非根幹適性 6【未較正・本レース限定】
+  //    過去10年の着別度数は存在しない。出走13頭の非根幹距離成績のみを母集団とし、
+  //    13頭全体の複勝率76.0%を収縮先に k=4 収縮した相対配点。他レースへ持ち越し不可。
+  var hp=(h0.hikonkanPts!=null)?h0.hikonkanPts:3;
+  add('非根幹適性',hp,6,(h0.hikonkanRec?('非根幹距離実績 '+h0.hikonkanRec):'非根幹データ未取得→中立')
+    +'【本レース出走13頭のみが母集団・未較正・持ち越し不可】','dist');
+
+  // ⑩ 通算勝利数 4（3勝以上21.3%と2勝21.5%に差がなく、1勝以下11.1%だけが落ちる）
+  var wn=h0.wins, wv=(wn==null)?3:(wn>=2?4:2);
+  add('通算勝利数',wv,4,(wn==null)?'勝利数データ未取得→中立':(wn>=2?'2勝以上（3勝以上21.3%と2勝21.5%に差なし）':'1勝以下 0-2-2-35 収縮11.1%'),'career');
+
+  // ⑪ 脚質 4（フラット。セントライト記念の12点を流用してはならない）
+  var rs=h0.runStyle, sp={'逃げ':[4,'逃げ 0-2-1-7 収縮27.1%（母数10）'],'中団':[3,'中団 5-4-5-58 収縮19.5%'],
+    '後方':[3,'後方 2-3-2-32 収縮18.1%'],'先行':[2,'先行 3-1-2-29 収縮17.4%']}[rs]||[3,'脚質データ未取得→中立'];
+  add('脚質',sp[0],4,sp[1]+'【4項目の差が10ポイント以内でフラット】','style');
+
+  var total=0; for(var i=0;i<it.length;i++) total+=it[i].score;
+  total=Math.round(total*10)/10;
+  var max=it.reduce(function(x,y){return x+y.max;},0);
+  var out={items:it,total:total,max:max,penalty:0};
+  if(_rawOnly) return out;
+  var st=_getRoseSScoreStats(), z=st.sd?(out.total-st.mean)/st.sd:0;
+  out.pct=Math.round((8+(79-8)/(1+Math.exp(-1.35*z)))*10)/10;
+  return out;
+}
+
+
 function _getShionScoreStats(){
   var hs=(typeof HORSES_BY_RACE!=='undefined'&&HORSES_BY_RACE['紫苑S'])||[];
   var v=hs.map(function(h){return computeScoreBreakdownShionV1(h,true).total;});
@@ -26597,7 +26746,8 @@ function computeScoreBreakdown(horse, raceName) {
   if(raceName==='関屋記念') return computeScoreBreakdownSekiyaV2(horse, raceName);
   if (raceName === '新潟記念') return computeScoreBreakdownNiigataKinenV2(horse);
   if (raceName === '紫苑S' && horse && horse.isAvoided) return { total:0, max:87, pct:0, items:[], isAvoided:true, avoidReason: horse.avoidReason || '出走回避' };
-  if (raceName === 'セントライト記念') return computeScoreBreakdownStLiteV1(horse);
+  if (raceName === 'ローズS') return computeScoreBreakdownRoseSV1(horse);
+    if (raceName === 'セントライト記念') return computeScoreBreakdownStLiteV1(horse);
     if (raceName === '紫苑S') return computeScoreBreakdownShionV1(horse);
   // ★回避馬は強制的に0%
   if (horse && horse.isAvoided) {
