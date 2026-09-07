@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260907-1000';
+  var CURRENT_VERSION = '20260907-1400';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2843,7 +2843,7 @@ const STATUS_BADGE = {
 };
 
 const TARGET_RACE_NAME = "オークス";
-const SUPPORTED_RACES = new Set(['紫苑S', '新潟記念', '札幌記念', 'レパードS','クイーンS', "関屋記念", "函館2歳S", "天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S","ラジオNIKKEI賞","函館記念","北九州記念","七夕賞",]);
+const SUPPORTED_RACES = new Set(['セントライト記念', '紫苑S', '新潟記念', '札幌記念', 'レパードS','クイーンS', "関屋記念", "函館2歳S", "天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S","ラジオNIKKEI賞","函館記念","北九州記念","七夕賞",]);
 
 function getDefaultDisplayMonth() {
   // 直近の「予想中」(SUPPORTED && upcoming) レースの開催月を返す
@@ -23027,6 +23027,113 @@ function computeScoreBreakdownShionV1(h,_rawOnly){
   out.pct=Math.round((8+(79-8)/(1+Math.exp(-1.35*z)))*10)/10;
   return out;
 }
+
+// ========== セントライト記念（中山芝2200m外・菊花賞トライアル）==========
+// Σmax=82（枠順確定後に枠4点を追加して86）
+// §43対応: 最大配点を馬場非依存の「前走レース格14」に置き、脚質は12点上限を厳守。
+//          新潟記念(上がり18)・紫苑S(4角先行力18)と2連続で最大配点が逆方向に働いたため、
+//          最大配点を1項目に集中させる構造自体を薄めている。
+// 交絡補正: 前走着順・前走距離は「同級/下級」で層別。生の表を使うとダービー大敗組の
+//           数字を条件戦大敗組に適用してしまう（前走10着以下30.8%は同級組の数字）。
+// 出典: JRA公式データ分析 / うまスクエア / SPAIA（3ソース照合・母数140・prior 21.4%・k=4収縮）
+function _getStLiteScoreStats(){
+  var xs=[], hs=(typeof HORSES_BY_RACE!=='undefined'&&HORSES_BY_RACE['セントライト記念'])||[];
+  for(var i=0;i<hs.length;i++){ xs.push(computeScoreBreakdownStLiteV1(hs[i],true).total); }
+  if(!xs.length) return {mean:0,sd:0};
+  var m=xs.reduce(function(a,b){return a+b;},0)/xs.length;
+  var v=xs.reduce(function(a,b){return a+(b-m)*(b-m);},0)/xs.length;
+  return {mean:m, sd:Math.sqrt(v)};
+}
+function computeScoreBreakdownStLiteV1(h,_rawOnly){
+  var h0=h||{};
+  var it=[], add=function(k,v,mx,note,grp){
+    v=Math.round(v*10)/10;
+    it.push({key:k,value:v,max:mx,note:note||'',label:k,score:v,group:grp||'horse'});
+  };
+  var G=h0.prevGrade||'', R=h0.prevRace||'', rk=h0.prevRank, pp=h0.prevPop;
+  var isHi=(G==='GI'||G==='GII'||G==='GIII'||G==='OP'||G==='OP(L)');
+  var dm=/(\d{3,4})/.exec(h0.prevDist||''), pd=dm?parseInt(dm[1],10):null;
+
+  // ① 前走レース格 14（母数140・3ソース一致）
+  var g=1,gn='未勝利またはクラス不明（1勝クラス以下に固定）';
+  if(R.indexOf('東京優駿')>=0){g=14;gn='日本ダービー 5-6-5-18 収縮44.4%';}
+  else if(R.indexOf('ラジオNIKKEI')>=0){g=10;gn='ラジオNIKKEI賞 3-1-1-10 収縮30.8%';}
+  else if(G==='GI'){g=6;gn='その他GI 0-0-1-5 収縮18.6%';}
+  else if(G==='GIII'){g=8;gn='GIII（ラジオNIKKEI賞以外）— 過去10年のGIII組は全てラジオNIKKEI賞のため実測値なし。ラジオN(10)とOP特別(6)の中間に暫定配置【未実測】';}
+  else if(G==='OP'||G==='OP(L)'){g=6;gn='OP特別 0-0-1-4 収縮20.6%';}
+  else if(G==='2勝'){g=4;gn='2勝クラス 1-3-0-26 収縮14.3%';}
+  else if(G==='GII'){g=3;gn='GII 0-0-0-5 収縮9.5%（母数5・§29により壁にはしない）';}
+  else if(G==='1勝'){g=3;gn='1勝クラス 1-0-2-37 収縮8.8%';}
+  add('前走レース格',g,14,gn,'race');
+
+  // ② 脚質 12（§43: 上限12厳守。18点に戻してはならない）
+  var rs=h0.runStyle, sp={'先行':[12,'先行 3-6-5-20 収縮39.1%'],'中団':[7,'中団 4-4-4-41 収縮22.6%'],
+    '逃げ':[4,'逃げ 1-0-0-10 収縮12.4%'],'後方':[2,'後方 1-0-1-38 収縮6.5%']}[rs]||[7,'脚質データ未取得→中団扱いで中立'];
+  add('脚質',sp[0],12,sp[1],'style');
+
+  // ③ 前走着順×クラス 12（同級67/下級73で層別）
+  var pr=1,prn='下級2着以下 1-0-0-30 収縮5.5%';
+  if(isHi){ if(rk&&rk<=9){pr=12;prn='同級（重賞/OP）9着以内 収縮30%台';}
+            else if(rk){pr=11;prn='同級10着以下 4-2-2-17 収縮32.0%（着順不問・§21地力ガード）';}
+            else {pr=7;prn='同級だが前走着順データ未取得→中立';} }
+  else if(rk===1){pr=5;prn='下級1着 1-3-2-36 収縮14.3%';}
+  else if(!rk){pr=4;prn='前走着順データ未取得→中立';}
+  add('前走着順×クラス',pr,12,prn,'race');
+
+  // ④ 壁: 前走条件戦かつ前走2番人気以下 8
+  var w=(!isHi&&pp&&pp>=2)?0:8;
+  add('前走人気×クラス',w,8,w?'壁に該当せず':'★壁 前走条件戦かつ2人気以下 0-1-0-42 収縮2.3%（母数43）','race');
+
+  // ⑤ 前走距離 8（クラス層別。全体表の「短縮30%」はダービー組の交絡）
+  var dv=6,dn='同級・非同距離（前走レース格で加点済み・二重計上回避）';
+  if(pd===null){dv=4;dn='前走距離データ未取得→中立';}
+  else if(pd===2200){dv=2;dn='同距離2200m 0-0-0-11 収縮5.7%';}
+  else if(!isHi){ if(pd<2200){dv=8;dn='下級・距離延長 2-2-1-36 収縮13.0%';}
+                  else {dv=7;dn='下級・距離短縮 0-1-1-19 収縮11.4%';} }
+  add('前走距離',dv,8,dn,'dist');
+
+  // ⑥ 上がり性能 8【未較正】着別度数なし。3F順位は結果論のため生の上り最速値で代用。
+  //    刻みは恣意。社長判断により採用(2026/09/07)。レース間で持ち越さない。
+  var ab=h0.agariBest, av=4, an='上り実績データ未取得→中立';
+  if(ab!=null){ av=(ab<=33.0)?8:(ab<=33.4)?6:(ab<=33.9)?4:(ab<=34.5)?2:1;
+    an='自己ベスト上り '+ab+'【未較正・刻みは恣意・条件跨ぎの比較】'; }
+  add('上がり性能',av,8,an,'agari');
+
+  // ⑦ 前走場所 7（母数140）
+  var pv=h0.prevVenue||'', vm={'東京':[7,'東京 5-7-7-33 収縮35.5%'],'中山':[6,'中山 0-0-2-3 収縮31.7%(n=5)'],
+    '福島':[5,'福島 4-1-1-20 収縮22.9%'],'函館':[4,'函館 0-1-0-5 収縮18.6%'],
+    '小倉':[3,'小倉 1-0-0-7 収縮15.5%'],'札幌':[2,'札幌 0-1-0-10 収縮12.4%'],
+    '新潟':[1,'新潟 0-0-0-22 収縮3.3%（§29により壁にせず減点に留める）']}[pv]
+    ||[2, pv?(pv+'（過去10年の母数が小さい場所）'):'前走場所データ未取得→中立'];
+  add('前走場所',vm[0],7,vm[1],'race');
+
+  // ⑧ キャリア×前走 7（§26: 出典間で境界1頭の不一致あり→減額）
+  var rn=h0.runs||0, cv,cn;
+  if(!rn){cv=4;cn='通算出走数データ未取得→中立';}
+  else if(rn<=6){cv=7;cn='6戦以下 8-6-10-48 収縮32.7%';}
+  else if(R.indexOf('東京優駿')>=0){cv=6;cn='7戦以上×前走ダービー 2-2-0-9 収縮28.6%';}
+  else {cv=1;cn='7戦以上×ダービー以外 0-2-0-53 収縮4.8%';}
+  add('キャリア×前走',cv,7,cn+(rn?'【JRA公式とうまスクエアで境界1頭の不一致あり・§26で減額】':''),'career');
+
+  // ⑨ 非根幹適性 6【未較正・本レース限定】
+  //    過去10年の着別度数は存在しない。出走17頭の非根幹距離(400の倍数でない)成績のみを
+  //    母集団とし、17頭全体の複勝率58.3%を収縮先に k=4 収縮した相対配点。
+  //    レース間で持ち越せない。社長判断により採用(2026/09/07)。
+  var hp=(h0.hikonkanPts!=null)?h0.hikonkanPts:3;
+  add('非根幹適性',hp,6,
+    (h0.hikonkanRec?('非根幹距離実績 '+h0.hikonkanRec):'非根幹データ未取得→中立')
+    +'【本レース出走馬のみが母集団・未較正・他レースへ持ち越し不可】','dist');
+
+  var total=0; for(var i=0;i<it.length;i++) total+=it[i].score;
+  total=Math.round(total*10)/10;
+  var max=it.reduce(function(x,y){return x+y.max;},0);
+  var out={items:it,total:total,max:max,penalty:0};
+  if(_rawOnly) return out;
+  var st=_getStLiteScoreStats(), z=st.sd?(out.total-st.mean)/st.sd:0;
+  out.pct=Math.round((8+(79-8)/(1+Math.exp(-1.35*z)))*10)/10;
+  return out;
+}
+
 function _getShionScoreStats(){
   var hs=(typeof HORSES_BY_RACE!=='undefined'&&HORSES_BY_RACE['紫苑S'])||[];
   var v=hs.map(function(h){return computeScoreBreakdownShionV1(h,true).total;});
@@ -26346,7 +26453,8 @@ function computeScoreBreakdown(horse, raceName) {
   if(raceName==='関屋記念') return computeScoreBreakdownSekiyaV2(horse, raceName);
   if (raceName === '新潟記念') return computeScoreBreakdownNiigataKinenV2(horse);
   if (raceName === '紫苑S' && horse && horse.isAvoided) return { total:0, max:87, pct:0, items:[], isAvoided:true, avoidReason: horse.avoidReason || '出走回避' };
-  if (raceName === '紫苑S') return computeScoreBreakdownShionV1(horse);
+  if (raceName === 'セントライト記念') return computeScoreBreakdownStLiteV1(horse);
+    if (raceName === '紫苑S') return computeScoreBreakdownShionV1(horse);
   // ★回避馬は強制的に0%
   if (horse && horse.isAvoided) {
     return {
