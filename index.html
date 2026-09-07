@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260906-2200';
+  var CURRENT_VERSION = '20260907-1000';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -14281,6 +14281,39 @@ RACE_PAST_DATA['紫苑S'] = {
     belongNote: "美浦7勝/栗東3勝だが母数比(美浦115/栗東41)を踏まえると勝率は美浦6.1%・栗東7.3%でほぼ差がなく、所属は配点しない。"
   }
 };
+
+RACE_PAST_DATA['セントライト記念'] = {
+  source: "出典:JRA公式データ分析・うまスクエア・SPAIA（3ソース照合）",
+  sampleSize: 140,
+  venue: '中山', course: '芝2200m(外)', years: '2016-2025',
+  trends: {
+    tables: [
+      {title:"前走レース別（2016-2025・母数140）", col1:"前走", rows:[{label:"日本ダービー", rec:"5-6-5-18"}, {label:"ラジオNIKKEI賞", rec:"3-1-1-10"}, {label:"その他のGI", rec:"0-0-1-5"}, {label:"オープン特別(L含む)", rec:"0-0-1-4"}, {label:"2勝クラス", rec:"1-3-0-26"}, {label:"1勝クラス", rec:"1-0-2-37"}, {label:"上記以外", rec:"0-0-0-10"}], note:"最大配点の根拠。ダービー組は3着内率47.1%で最上位、ラジオNIKKEI賞33.3%が続く。3ソース完全一致。"},
+      {title:"前走クラス別（2016-2025・母数138＋地方2）", col1:"前走クラス", rows:[{label:"GI", rec:"5-6-6-23"}, {label:"GII", rec:"0-0-0-5"}, {label:"GIII", rec:"3-1-1-10"}, {label:"OP(L)", rec:"0-0-1-2"}, {label:"OP(非L)", rec:"0-0-0-2"}, {label:"3勝", rec:"0-0-0-1"}, {label:"2勝", rec:"1-3-0-26"}, {label:"1勝", rec:"1-0-2-37"}, {label:"未勝利", rec:"0-0-0-2"}], note:"GII組が0-0-0-5。合計138は前走地方2頭が中央クラスにマップできず落ちるため（JRA公式の「上記以外10」に内包）。"},
+      {title:"脚質別（2016-2025・母数140）", col1:"脚質", rows:[{label:"逃げ", rec:"1-0-0-10"}, {label:"先行", rec:"3-6-5-20"}, {label:"中団", rec:"4-4-4-41"}, {label:"後方", rec:"1-0-1-38"}, {label:"マクリ", rec:"1-0-0-1"}], note:"先行が3着内率41.2%で最良、逃げ9.1%・後方5.0%は壊滅の単峰型。過去10年中9年がスロー（唯一の例外は重馬場の2019年ミドル）。§43により配点は12点上限とする。"},
+      {title:"前走着順別（2016-2025・母数140）", col1:"前走着順", rows:[{label:"1着", rec:"2-4-3-36"}, {label:"2着", rec:"0-1-1-18"}, {label:"3着", rec:"3-1-0-12"}, {label:"4着", rec:"0-0-0-4"}, {label:"5着", rec:"0-1-0-7"}, {label:"6-9着", rec:"1-1-4-15"}, {label:"10着以下", rec:"4-2-2-18"}], note:"前走10着以下が3着内率30.8%で1着より高い。ダービー組16頭のうち7頭が2桁着順から3着内。前走着順を単純減点にしてはならない（§21 地力ガード）。"},
+      {title:"前走距離別（2016-2025・母数140）", col1:"前走距離", rows:[{label:"同距離(2200m)", rec:"0-0-0-11"}, {label:"距離延長", rec:"5-3-4-57"}, {label:"距離短縮", rec:"5-7-6-42"}, {label:"1600m", rec:"0-0-0-2"}, {label:"1700m", rec:"0-0-0-2"}, {label:"1800m", rec:"4-1-1-18"}, {label:"2000m", rec:"1-2-3-35"}, {label:"2400m", rec:"5-7-6-34"}, {label:"2600m", rec:"0-0-0-8"}], note:"同距離2200mが0-0-0-11。2400m組が3着内率34.6%、1800m組が25.0%。上3行(増減)と下6行(実距離)は別軸のため合計は140にならない。"},
+      {title:"前走場所別（2016-2025・母数140）", col1:"前走場所", rows:[{label:"東京", rec:"5-7-7-33"}, {label:"福島", rec:"4-1-1-20"}, {label:"中山", rec:"0-0-2-3"}, {label:"小倉", rec:"1-0-0-7"}, {label:"札幌", rec:"0-1-0-10"}, {label:"函館", rec:"0-1-0-5"}, {label:"新潟", rec:"0-0-0-22"}, {label:"中京", rec:"0-0-0-3"}, {label:"京都", rec:"0-0-0-3"}, {label:"阪神", rec:"0-0-0-2"}, {label:"地方", rec:"0-0-0-2"}], note:"新潟が0-0-0-22。§29により30サンプル未満のため絶対の壁とはせず減点材料に留める。"},
+      {title:"前走人気×クラス（2016-2025）", col1:"条件", rows:[{label:"前走条件戦かつ前走2人気以下", rec:"0-1-0-42"}, {label:"前走1人気", rec:"4-4-3-27"}, {label:"前走6-9人気", rec:"3-3-2-22"}, {label:"前走10人気以下", rec:"0-0-2-20"}], note:"前走条件戦かつ前走2番人気以下は43頭で3着内率2.3%。母数43・馬場非依存のため壁として採用（§22）。行同士は排他でないため合計は140にならない。"},
+      {title:"枠順別（2016-2025・母数140）", col1:"枠", rows:[{label:"1枠", rec:"1-1-2-7"}, {label:"2枠", rec:"1-0-2-11"}, {label:"3枠", rec:"3-0-0-13"}, {label:"4枠", rec:"2-1-2-12"}, {label:"5枠", rec:"2-3-0-15"}, {label:"6枠", rec:"1-0-3-16"}, {label:"7枠", rec:"0-3-1-17"}, {label:"8枠", rec:"0-2-0-19"}], note:"7-8枠から勝ち馬なし。ただし各年の出走頭数が12〜18頭と変動するため、17頭立ての今年にそのまま当てられない（紫苑Sの3枠0-0-0-17と同型の罠）。配点は薄くする。"},
+      {title:"通算出走数別（2016-2025・母数140）", col1:"キャリア", rows:[{label:"6戦以下", rec:"8-6-10-48"}, {label:"7戦以上", rec:"2-4-0-62"}], note:"【出典不一致】JRA公式は6戦以下8-6-10-48だが、うまスクエアの戦数別を合算すると7-6-10-48となり境界で1頭ズレる（当該レースを含むか否かの定義差と思われる）。§26により配点は低く抑える。"},
+      {title:"人気別（2016-2025・母数140）", col1:"人気", rows:[{label:"1番人気", rec:"3-6-0-1"}, {label:"2番人気", rec:"3-2-3-2"}, {label:"3番人気", rec:"1-0-5-4"}, {label:"4番人気", rec:"2-0-0-8"}, {label:"5番人気", rec:"0-0-1-9"}, {label:"6-9番人気", rec:"1-2-1-36"}, {label:"10番人気以下", rec:"0-0-0-50"}], note:"1番人気が3着内率90%。ただし人気はスコアに加点しない（§23 循環論法の回避）。§36の重なり判定と§38のトリガミ検査にのみ使用。"}
+    ]
+  },
+  results: [
+      {year:2025, baba:"良", pace:"スロー(+2.0)", horses:[{rank:1, name:"ミュージアムマイル", pop:1, prevRace:"東京優駿", prevGrade:"GI", prevPop:2, prevRank:6}, {rank:2, name:"ヤマニンブークリエ", pop:8, prevRace:"町田特別", prevGrade:"2勝", prevPop:2, prevRank:1}, {rank:3, name:"レッドバンデ", pop:2, prevRace:"稲城特別", prevGrade:"1勝", prevPop:1, prevRank:1}]},
+      {year:2024, baba:"良", pace:"スロー(+1.6)", horses:[{rank:1, name:"アーバンシック", pop:2, prevRace:"東京優駿", prevGrade:"GI", prevPop:4, prevRank:11}, {rank:2, name:"コスモキュランダ", pop:1, prevRace:"東京優駿", prevGrade:"GI", prevPop:6, prevRank:6}, {rank:3, name:"エコロヴァルツ", pop:3, prevRace:"東京優駿", prevGrade:"GI", prevPop:17, prevRank:8}]},
+      {year:2023, baba:"良", pace:"スロー(+1.3)", horses:[{rank:1, name:"レーベンスティール", pop:2, prevRace:"ラジオNIKKEI賞", prevGrade:"GIII", prevPop:1, prevRank:3}, {rank:2, name:"ソールオリエンス", pop:1, prevRace:"東京優駿", prevGrade:"GI", prevPop:1, prevRank:2}, {rank:3, name:"シャザーン", pop:3, prevRace:"東京優駿", prevGrade:"GI", prevPop:5, prevRank:9}]},
+      {year:2022, baba:"稍重", pace:"スロー(+1.1)", horses:[{rank:1, name:"ガイアフォース", pop:3, prevRace:"国東特別", prevGrade:"1勝", prevPop:1, prevRank:1}, {rank:2, name:"アスクビクターモア", pop:1, prevRace:"東京優駿", prevGrade:"GI", prevPop:7, prevRank:3}, {rank:3, name:"ローシャムパーク", pop:2, prevRace:"山藤賞", prevGrade:"1勝", prevPop:1, prevRank:1}]},
+      {year:2021, baba:"良", pace:"スロー(+0.9)", horses:[{rank:1, name:"アサマノイタズラ", pop:9, prevRace:"ラジオNIKKEI賞", prevGrade:"GIII", prevPop:5, prevRank:12}, {rank:2, name:"ソーヴァリアント", pop:2, prevRace:"藻岩山特別", prevGrade:"2勝", prevPop:1, prevRank:1}, {rank:3, name:"オーソクレース", pop:5, prevRace:"ホープフルS", prevGrade:"GI", prevPop:3, prevRank:2}]},
+      {year:2020, baba:"良", pace:"スロー(+2.2)", horses:[{rank:1, name:"バビット", pop:4, prevRace:"ラジオNIKKEI賞", prevGrade:"GIII", prevPop:8, prevRank:1}, {rank:2, name:"サトノフラッグ", pop:1, prevRace:"東京優駿", prevGrade:"GI", prevPop:4, prevRank:11}, {rank:3, name:"ガロアクリーク", pop:2, prevRace:"東京優駿", prevGrade:"GI", prevPop:7, prevRank:6}]},
+      {year:2019, baba:"重", pace:"ミドル(0)", horses:[{rank:1, name:"リオンリオン", pop:1, prevRace:"東京優駿", prevGrade:"GI", prevPop:6, prevRank:15}, {rank:2, name:"サトノルークス", pop:8, prevRace:"東京優駿", prevGrade:"GI", prevPop:8, prevRank:17}, {rank:3, name:"ザダル", pop:3, prevRace:"プリンシパルS", prevGrade:"OP(L)", prevPop:5, prevRank:1}]},
+      {year:2018, baba:"良", pace:"スロー(+1.7)", horses:[{rank:1, name:"ジェネラーレウーノ", pop:4, prevRace:"東京優駿", prevGrade:"GI", prevPop:8, prevRank:16}, {rank:2, name:"レイエンダ", pop:1, prevRace:"松前特別", prevGrade:"2勝", prevPop:1, prevRank:1}, {rank:3, name:"グレイル", pop:6, prevRace:"東京優駿", prevGrade:"GI", prevPop:9, prevRank:14}]},
+      {year:2017, baba:"良", pace:"スロー(+3.7)", horses:[{rank:1, name:"ミッキースワロー", pop:2, prevRace:"いわき特別", prevGrade:"2勝", prevPop:1, prevRank:3}, {rank:2, name:"アルアイン", pop:1, prevRace:"東京優駿", prevGrade:"GI", prevPop:4, prevRank:5}, {rank:3, name:"サトノクロニクル", pop:3, prevRace:"ラジオNIKKEI賞", prevGrade:"GIII", prevPop:1, prevRank:6}]},
+      {year:2016, baba:"良", pace:"スロー(+1.4)", horses:[{rank:1, name:"ディーマジェスティ", pop:1, prevRace:"東京優駿", prevGrade:"GI", prevPop:1, prevRank:3}, {rank:2, name:"ゼーヴィント", pop:2, prevRace:"ラジオNIKKEI賞", prevGrade:"GIII", prevPop:1, prevRank:1}, {rank:3, name:"プロディガルサン", pop:3, prevRace:"東京優駿", prevGrade:"GI", prevPop:11, prevRank:10}]}
+  ]
+};
+
 function renderKinkaShion(race, horses){
   // KINKA_SHION_V1 : 紫苑S 金塊データ（可視化のみ・スコアには一切加点しない）
   if(race !== '紫苑S') return '';
