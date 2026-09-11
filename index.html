@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260911-2000';
+  var CURRENT_VERSION = '20260911-2100';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -23298,13 +23298,19 @@ function computeScoreBreakdownStLiteV1(h,_rawOnly){
   else if(nk==='3着内'){nv=4;nn='中山で3着以内あり（勝ちはなし）';}
   else {nv=2;nn='中山出走あるが3着以内なし';}
   add('中山実績',nv,6,nn+'（'+(h0.nakayamaRec||'-')+'）【RTF自前算出・着別度数なし・未較正】','course');
+  // ★未較正項目（過去10年の着別度数で裏付けできない）。項目は残すが較正済みスコアを別に出す。
+  var UNCAL={'上がり性能':1,'非根幹適性':1,'中山実績':1};
+  var totalCal=0, maxCal=0;
+  for(var ci=0;ci<it.length;ci++){ it[ci].uncalibrated=!!UNCAL[it[ci].key];
+    if(!it[ci].uncalibrated){ totalCal+=it[ci].score; maxCal+=it[ci].max; } }
+  totalCal=Math.round(totalCal*10)/10;
 
 
 
   var total=0; for(var i=0;i<it.length;i++) total+=it[i].score;
   total=Math.round(total*10)/10;
   var max=it.reduce(function(x,y){return x+y.max;},0);
-  var out={items:it,total:total,max:max,penalty:0};
+  var out={items:it,total:total,max:max,penalty:0,totalCal:totalCal,maxCal:maxCal};
   if(_rawOnly) return out;
   var st=_getStLiteScoreStats(), z=st.sd?(out.total-st.mean)/st.sd:0;
   out.pct=Math.round((8+(79-8)/(1+Math.exp(-1.35*z)))*10)/10;
@@ -23439,11 +23445,17 @@ function computeScoreBreakdownRoseSV1(h,_rawOnly){
   var rs=h0.runStyle, sp={'逃げ':[4,'逃げ 0-2-1-7 収縮27.1%（母数10）'],'中団':[3,'中団 5-4-5-58 収縮19.5%'],
     '後方':[3,'後方 2-3-2-32 収縮18.1%'],'先行':[2,'先行 3-1-2-29 収縮17.4%']}[rs]||[3,'脚質データ未取得→中立'];
   add('脚質',sp[0],4,sp[1]+'【4項目の差が10ポイント以内でフラット】','style');
+  // ★未較正項目（過去10年の着別度数で裏付けできない）。項目は残すが較正済みスコアを別に出す。
+  var UNCAL={'上がり性能':1,'非根幹適性':1};
+  var totalCal=0, maxCal=0;
+  for(var ci=0;ci<it.length;ci++){ it[ci].uncalibrated=!!UNCAL[it[ci].key];
+    if(!it[ci].uncalibrated){ totalCal+=it[ci].score; maxCal+=it[ci].max; } }
+  totalCal=Math.round(totalCal*10)/10;
 
   var total=0; for(var i=0;i<it.length;i++) total+=it[i].score;
   total=Math.round(total*10)/10;
   var max=it.reduce(function(x,y){return x+y.max;},0);
-  var out={items:it,total:total,max:max,penalty:0};
+  var out={items:it,total:total,max:max,penalty:0,totalCal:totalCal,maxCal:maxCal};
   if(_rawOnly) return out;
   var st=_getRoseSScoreStats(), z=st.sd?(out.total-st.mean)/st.sd:0;
   out.pct=Math.round((8+(79-8)/(1+Math.exp(-1.35*z)))*10)/10;
