@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260914-1051-kobe2';
+  var CURRENT_VERSION = '20260914-1100-kobe3';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -14322,6 +14322,71 @@ RACE_PAST_DATA['紫苑S'] = {
     ],
     belongNote: "美浦7勝/栗東3勝だが母数比(美浦115/栗東41)を踏まえると勝率は美浦6.1%・栗東7.3%でほぼ差がなく、所属は配点しない。"
   }
+};
+
+RACE_PAST_DATA['神戸新聞杯'] = {
+  source: "出典:チェックメイト系(着別度数=中京4年を除く2012-2025の阪神10年・延べ134頭)／JRA公式データ分析(2016-2025・中京4年含む129頭)／SPAIA(阪神施行限定)の3ソース照合",
+  sampleSize: 134,
+  venue: '阪神', course: '芝2400m(外)', years: '2016-2025（1〜3着馬）／着別度数は阪神10年分',
+  note: '過去10年のうち2020,2021,2022,2024の4年は中京芝2200mでの代替開催。1〜3着馬の年表は中京4年を含む2016-2025だが、着別度数は中京を除いた阪神10年分(2012-2025)で延べ134頭。出典間で数字が食い違う場合はこの差が原因。',
+  trends: {
+    tables: [
+    ]
+  },
+  pastResults: [
+    {year:2025, venue:"阪神芝2400", baba:"良", pace:"スロー(+4.8)", sanrentan:1690,
+     first :{"name":"エリキング","pop":2,"prevRace":"東京優駿","prevClass":"GI","prevPop":8,"prevRank":5,"last3fRank":1},
+     second:{"name":"ショウヘイ","pop":1,"prevRace":"東京優駿","prevClass":"GI","prevPop":6,"prevRank":3,"last3fRank":3},
+     third :{"name":"ジョバンニ","pop":3,"prevRace":"東京優駿","prevClass":"GI","prevPop":7,"prevRank":8,"last3fRank":6}},
+    {year:2024, venue:"中京芝2200", baba:"稍重", pace:"ミドル(+0.2)", sanrentan:33790,
+     first :{"name":"メイショウタバル","pop":2,"prevRace":"東京優駿","prevClass":"GI","prevPop":null,"prevRank":null,"last3fRank":7},
+     second:{"name":"ジューンテイク","pop":3,"prevRace":"東京優駿","prevClass":"GI","prevPop":14,"prevRank":10,"last3fRank":3},
+     third :{"name":"ショウナンラプンタ","pop":4,"prevRace":"東京優駿","prevClass":"GI","prevPop":12,"prevRank":15,"last3fRank":2}},
+    {year:2023, venue:"阪神芝2400", baba:"良", pace:"スロー(+4.1)", sanrentan:34690,
+     first :{"name":"サトノグランツ","pop":3,"prevRace":"東京優駿","prevClass":"GI","prevPop":7,"prevRank":11,"last3fRank":2},
+     second:{"name":"サヴォーナ","pop":10,"prevRace":"信夫山特別","prevClass":"2勝","prevPop":1,"prevRank":1,"last3fRank":5},
+     third :{"name":"ファントムシーフ","pop":2,"prevRace":"東京優駿","prevClass":"GI","prevPop":3,"prevRank":8,"last3fRank":8}},
+    {year:2022, venue:"中京芝2200", baba:"良", pace:"スロー(+1.4)", sanrentan:453670,
+     first :{"name":"ジャスティンパレス","pop":5,"prevRace":"東京優駿","prevClass":"GI","prevPop":10,"prevRank":9,"last3fRank":2},
+     second:{"name":"ヤマニンゼスト","pop":12,"prevRace":"藻岩山特別","prevClass":"2勝","prevPop":3,"prevRank":6,"last3fRank":3},
+     third :{"name":"ボルドグフーシュ","pop":4,"prevRace":"一宮特別","prevClass":"2勝","prevPop":1,"prevRank":1,"last3fRank":1}},
+    {year:2021, venue:"中京芝2200", baba:"不良", pace:"スロー(+2.4)", sanrentan:89330,
+     first :{"name":"ステラヴェローチェ","pop":2,"prevRace":"東京優駿","prevClass":"GI","prevPop":9,"prevRank":3,"last3fRank":1},
+     second:{"name":"レッドジェネシス","pop":5,"prevRace":"東京優駿","prevClass":"GI","prevPop":13,"prevRank":11,"last3fRank":2},
+     third :{"name":"モンテディオ","pop":8,"prevRace":"ルスツ特別","prevClass":"1勝","prevPop":2,"prevRank":1,"last3fRank":6}},
+    {year:2020, venue:"中京芝2200", baba:"良", pace:"ミドル(-0.4)", sanrentan:37180,
+     first :{"name":"コントレイル","pop":1,"prevRace":"東京優駿","prevClass":"GI","prevPop":1,"prevRank":1,"last3fRank":2},
+     second:{"name":"ヴェルトライゼンデ","pop":3,"prevRace":"東京優駿","prevClass":"GI","prevPop":10,"prevRank":3,"last3fRank":1},
+     third :{"name":"ロバートソンキー","pop":14,"prevRace":"1勝クラス","prevClass":"1勝","prevPop":1,"prevRank":2,"last3fRank":3}},
+    {year:2019, venue:"阪神芝2400", baba:"良", pace:"スロー(+7.0)", sanrentan:700,
+     first :{"name":"サートゥルナーリア","pop":1,"prevRace":"東京優駿","prevClass":"GI","prevPop":1,"prevRank":4,"last3fRank":1},
+     second:{"name":"ヴェロックス","pop":2,"prevRace":"東京優駿","prevClass":"GI","prevPop":2,"prevRank":3,"last3fRank":3},
+     third :{"name":"ワールドプレミア","pop":3,"prevRace":"若葉S","prevClass":"OP(L)","prevPop":2,"prevRank":2,"last3fRank":1}},
+    {year:2018, venue:"阪神芝2400", baba:"良", pace:"スロー(+3.2)", sanrentan:10650,
+     first :{"name":"ワグネリアン","pop":2,"prevRace":"東京優駿","prevClass":"GI","prevPop":5,"prevRank":1,"last3fRank":2},
+     second:{"name":"エタリオウ","pop":3,"prevRace":"東京優駿","prevClass":"GI","prevPop":13,"prevRank":4,"last3fRank":1},
+     third :{"name":"メイショウテッコン","pop":6,"prevRace":"ラジオNIKKEI賞","prevClass":"GIII","prevPop":2,"prevRank":1,"last3fRank":4}},
+    {year:2017, venue:"阪神芝2400", baba:"良", pace:"スロー(+2.8)", sanrentan:3180,
+     first :{"name":"レイデオロ","pop":1,"prevRace":"東京優駿","prevClass":"GI","prevPop":2,"prevRank":1,"last3fRank":2},
+     second:{"name":"キセキ","pop":2,"prevRace":"信濃川特別","prevClass":"1000万","prevPop":1,"prevRank":1,"last3fRank":1},
+     third :{"name":"サトノアーサー","pop":3,"prevRace":"東京優駿","prevClass":"GI","prevPop":5,"prevRank":10,"last3fRank":3}},
+    {year:2016, venue:"阪神芝2400", baba:"良", pace:"スロー(+2.5)", sanrentan:8010,
+     first :{"name":"サトノダイヤモンド","pop":1,"prevRace":"東京優駿","prevClass":"GI","prevPop":2,"prevRank":2,"last3fRank":2},
+     second:{"name":"ミッキーロケット","pop":6,"prevRace":"HTB賞","prevClass":"1000万","prevPop":1,"prevRank":1,"last3fRank":1},
+     third :{"name":"レッドエルディスト","pop":4,"prevRace":"東京優駿","prevClass":"GI","prevPop":8,"prevRank":9,"last3fRank":3}}
+  ],
+  results: [
+      {year:2025, venue:"阪神芝2400", baba:"良", pace:"スロー(+4.8)", sanrentan:1690, horses:[{"rank":1,"name":"エリキング","pop":2,"prevRace":"東京優駿","prevGrade":"GI","prevPop":8,"prevRank":5,"last3fRank":1}, {"rank":2,"name":"ショウヘイ","pop":1,"prevRace":"東京優駿","prevGrade":"GI","prevPop":6,"prevRank":3,"last3fRank":3}, {"rank":3,"name":"ジョバンニ","pop":3,"prevRace":"東京優駿","prevGrade":"GI","prevPop":7,"prevRank":8,"last3fRank":6}]},
+      {year:2024, venue:"中京芝2200", baba:"稍重", pace:"ミドル(+0.2)", sanrentan:33790, horses:[{"rank":1,"name":"メイショウタバル","pop":2,"prevRace":"東京優駿","prevGrade":"GI","prevPop":null,"prevRank":null,"last3fRank":7}, {"rank":2,"name":"ジューンテイク","pop":3,"prevRace":"東京優駿","prevGrade":"GI","prevPop":14,"prevRank":10,"last3fRank":3}, {"rank":3,"name":"ショウナンラプンタ","pop":4,"prevRace":"東京優駿","prevGrade":"GI","prevPop":12,"prevRank":15,"last3fRank":2}]},
+      {year:2023, venue:"阪神芝2400", baba:"良", pace:"スロー(+4.1)", sanrentan:34690, horses:[{"rank":1,"name":"サトノグランツ","pop":3,"prevRace":"東京優駿","prevGrade":"GI","prevPop":7,"prevRank":11,"last3fRank":2}, {"rank":2,"name":"サヴォーナ","pop":10,"prevRace":"信夫山特別","prevGrade":"2勝","prevPop":1,"prevRank":1,"last3fRank":5}, {"rank":3,"name":"ファントムシーフ","pop":2,"prevRace":"東京優駿","prevGrade":"GI","prevPop":3,"prevRank":8,"last3fRank":8}]},
+      {year:2022, venue:"中京芝2200", baba:"良", pace:"スロー(+1.4)", sanrentan:453670, horses:[{"rank":1,"name":"ジャスティンパレス","pop":5,"prevRace":"東京優駿","prevGrade":"GI","prevPop":10,"prevRank":9,"last3fRank":2}, {"rank":2,"name":"ヤマニンゼスト","pop":12,"prevRace":"藻岩山特別","prevGrade":"2勝","prevPop":3,"prevRank":6,"last3fRank":3}, {"rank":3,"name":"ボルドグフーシュ","pop":4,"prevRace":"一宮特別","prevGrade":"2勝","prevPop":1,"prevRank":1,"last3fRank":1}]},
+      {year:2021, venue:"中京芝2200", baba:"不良", pace:"スロー(+2.4)", sanrentan:89330, horses:[{"rank":1,"name":"ステラヴェローチェ","pop":2,"prevRace":"東京優駿","prevGrade":"GI","prevPop":9,"prevRank":3,"last3fRank":1}, {"rank":2,"name":"レッドジェネシス","pop":5,"prevRace":"東京優駿","prevGrade":"GI","prevPop":13,"prevRank":11,"last3fRank":2}, {"rank":3,"name":"モンテディオ","pop":8,"prevRace":"ルスツ特別","prevGrade":"1勝","prevPop":2,"prevRank":1,"last3fRank":6}]},
+      {year:2020, venue:"中京芝2200", baba:"良", pace:"ミドル(-0.4)", sanrentan:37180, horses:[{"rank":1,"name":"コントレイル","pop":1,"prevRace":"東京優駿","prevGrade":"GI","prevPop":1,"prevRank":1,"last3fRank":2}, {"rank":2,"name":"ヴェルトライゼンデ","pop":3,"prevRace":"東京優駿","prevGrade":"GI","prevPop":10,"prevRank":3,"last3fRank":1}, {"rank":3,"name":"ロバートソンキー","pop":14,"prevRace":"1勝クラス","prevGrade":"1勝","prevPop":1,"prevRank":2,"last3fRank":3}]},
+      {year:2019, venue:"阪神芝2400", baba:"良", pace:"スロー(+7.0)", sanrentan:700, horses:[{"rank":1,"name":"サートゥルナーリア","pop":1,"prevRace":"東京優駿","prevGrade":"GI","prevPop":1,"prevRank":4,"last3fRank":1}, {"rank":2,"name":"ヴェロックス","pop":2,"prevRace":"東京優駿","prevGrade":"GI","prevPop":2,"prevRank":3,"last3fRank":3}, {"rank":3,"name":"ワールドプレミア","pop":3,"prevRace":"若葉S","prevGrade":"OP(L)","prevPop":2,"prevRank":2,"last3fRank":1}]},
+      {year:2018, venue:"阪神芝2400", baba:"良", pace:"スロー(+3.2)", sanrentan:10650, horses:[{"rank":1,"name":"ワグネリアン","pop":2,"prevRace":"東京優駿","prevGrade":"GI","prevPop":5,"prevRank":1,"last3fRank":2}, {"rank":2,"name":"エタリオウ","pop":3,"prevRace":"東京優駿","prevGrade":"GI","prevPop":13,"prevRank":4,"last3fRank":1}, {"rank":3,"name":"メイショウテッコン","pop":6,"prevRace":"ラジオNIKKEI賞","prevGrade":"GIII","prevPop":2,"prevRank":1,"last3fRank":4}]},
+      {year:2017, venue:"阪神芝2400", baba:"良", pace:"スロー(+2.8)", sanrentan:3180, horses:[{"rank":1,"name":"レイデオロ","pop":1,"prevRace":"東京優駿","prevGrade":"GI","prevPop":2,"prevRank":1,"last3fRank":2}, {"rank":2,"name":"キセキ","pop":2,"prevRace":"信濃川特別","prevGrade":"1000万","prevPop":1,"prevRank":1,"last3fRank":1}, {"rank":3,"name":"サトノアーサー","pop":3,"prevRace":"東京優駿","prevGrade":"GI","prevPop":5,"prevRank":10,"last3fRank":3}]},
+      {year:2016, venue:"阪神芝2400", baba:"良", pace:"スロー(+2.5)", sanrentan:8010, horses:[{"rank":1,"name":"サトノダイヤモンド","pop":1,"prevRace":"東京優駿","prevGrade":"GI","prevPop":2,"prevRank":2,"last3fRank":2}, {"rank":2,"name":"ミッキーロケット","pop":6,"prevRace":"HTB賞","prevGrade":"1000万","prevPop":1,"prevRank":1,"last3fRank":1}, {"rank":3,"name":"レッドエルディスト","pop":4,"prevRace":"東京優駿","prevGrade":"GI","prevPop":8,"prevRank":9,"last3fRank":3}]}
+  ]
 };
 
 RACE_PAST_DATA['セントライト記念'] = {
