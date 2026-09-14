@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260914-1131-kobe4';
+  var CURRENT_VERSION = '20260914-1208-kobe5';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -23279,6 +23279,183 @@ function computeScoreBreakdownShionV1(h,_rawOnly){
 // 交絡補正: 前走着順・前走距離は「同級/下級」で層別。生の表を使うとダービー大敗組の
 //           数字を条件戦大敗組に適用してしまう（前走10着以下30.8%は同級組の数字）。
 // 出典: JRA公式データ分析 / うまスクエア / SPAIA（3ソース照合・母数140・prior 21.4%・k=4収縮）
+function _getKobeScoreStats(){
+  var xs=[], hs=(typeof HORSES_BY_RACE!=='undefined'&&HORSES_BY_RACE['神戸新聞杯'])||[];
+  for(var i=0;i<hs.length;i++){ xs.push(computeScoreBreakdownKobeV1(hs[i],true).total); }
+  if(!xs.length) return {mean:0,sd:0};
+  var m=xs.reduce(function(a,b){return a+b;},0)/xs.length;
+  var v=xs.reduce(function(a,b){return a+(b-m)*(b-m);},0)/xs.length;
+  return {mean:m, sd:Math.sqrt(v)};
+}
+function _kobeAgariRank(h0){
+  var hs=(typeof HORSES_BY_RACE!=='undefined'&&HORSES_BY_RACE['神戸新聞杯'])||[];
+  var v=[]; for(var i=0;i<hs.length;i++){ if(hs[i].agariMean!=null) v.push(hs[i].agariMean); }
+  if(h0.agariMean==null||!v.length) return null;
+  v.sort(function(a,b){return a-b;});
+  for(var j=0;j<v.length;j++){ if(v[j]>=h0.agariMean) return j+1; }
+  return v.length;
+}
+function computeScoreBreakdownKobeV1(h,_rawOnly){
+  var h0=h||{};
+  var it=[], add=function(k,v,mx,note,grp){
+    v=Math.round(v*10)/10;
+    it.push({key:k,value:v,max:mx,note:note||'',label:k,score:v,group:grp||'horse'});
+  };
+  var G=h0.prevGrade||'', R=h0.prevRace||'', pp=h0.prevPop, rel=h0.prevClassRel||'';
+  var dm=/(\d{3,4})/.exec(h0.prevDist||''), pd=dm?parseInt(dm[1],10):null;
+
+  // ① 前走レース格 18（阪神10年・母数134）
+  var g,gn;
+  if(R.indexOf('東京優駿')>=0){g=18;gn='日本ダービー 9-5-4-26（3着内40.9%）— 30頭中21頭がここから';}
+  else if(G==='GI'){g=11;gn='ダービー以外のGI。前走GI全体は9-5-5-28(40.4%)だが大半がダービー。母数薄く中間に配置';}
+  else if(G==='GIII'){g=7;gn='GIII 0-1-1-5（28.6%）母数7';}
+  else if(G==='OP(L)'){g=7;gn='OP(L) 0-0-1-1 母数2。OP(非L)とGIIIの間に暫定【母数2・実質未実測】';}
+  else if(G==='GII'){g=6;gn='GII 0-0-0-4。母数4で判断不能のためGIII並に据置（壁にしない）';}
+  else if(G==='OP'){g=6;gn='OP(非L) 0-0-1-5（16.7%）';}
+  else if(G==='3勝'){g=6;gn='3勝クラス 1-0-0-4（20.0%）母数5';}
+  else if(G==='2勝'){g=4;gn='2勝クラス 0-4-2-32（15.8%）勝ちゼロ。旧1000万を含む';}
+  else if(G==='1勝'){g=0;gn='【壁】1勝クラス 0-0-0-22。勝ち・連対・3着すべてゼロ';}
+  else {g=0;gn='未勝利 0-0-0-1／クラス不明';}
+  add('前走レース格',g,18,gn,'horse');
+
+  // ② 上がり性能 16（事前推定＝芝限定・直近6走の上がり平均）
+  var ar=_kobeAgariRank(h0), av, an;
+  if(ar==null){av=3;an='上がりデータなし→中立';}
+  else if(ar===1){av=16;an='出走馬中1位（当日上がり1位は3-5-2-1・複勝90.9%）';}
+  else if(ar===2){av=14;an='出走馬中2位（当日上がり2位は6-1-1-2・複勝80.0%）';}
+  else if(ar===3){av=10;an='出走馬中3位（当日3位は1-3-2-5・複勝54.5%）';}
+  else if(ar===4){av=7;an='出走馬中4位（当日4〜5位は0-1-3-17・複勝19.0%）';}
+  else if(ar===5){av=5;an='出走馬中5位（同上）';}
+  else if(ar<=8){av=3;an='出走馬中'+ar+'位（当日6位以下は0-0-2-79・複勝2.5%）';}
+  else {av=1;an='出走馬中'+ar+'位（当日6位以下は0-0-2-79・複勝2.5%）';}
+  if(h0.agN!=null && h0.agN<=2 && av>8){ an='【芝'+h0.agN+'走のみ・標本薄につき8点で頭打ち】'+an; av=8; }
+  add('上がり性能',av,16,an+'（芝限定直近6走平均 '+(h0.agariMean!=null?h0.agariMean:'-')+'秒／agN='+(h0.agN!=null?h0.agN:'-')+'）【事前推定・当日順位の着別度数は事後データ(§23)】','env');
+
+  // ③ 人気 14（阪神10年・母数134）
+  var P=h0.pop!=null?h0.pop:h0.popEstimate, pv, pn;
+  var isFinal=(h0.pop!=null);
+  if(P==null){pv=3;pn='人気不明→中立';}
+  else if(P===1){pv=14;pn='1番人気 6-2-0-2（3着内80.0%・6勝）';}
+  else if(P===2){pv=12;pn='2番人気 2-2-3-3（70.0%）';}
+  else if(P===3){pv=10;pn='3番人気 2-1-3-4（60.0%）';}
+  else if(P<=5){pv=2;pn='4〜5番人気 0-0-1-19（5.0%）— 6〜10番人気より低い非単調な谷';}
+  else if(P<=10){pv=4;pn='6〜10番人気 0-5-3-40（16.7%）— 勝ちはゼロ、2・3着のみ';}
+  else {pv=0;pn='【壁】11番人気以下 0-0-0-36。単勝100倍以上も0-0-0-36でほぼ同一集団';}
+  add('人気',pv,14,pn+(isFinal?'【確定オッズ】':'【★前売オッズ。締切直前に必ず取り直すこと】'),'env');
+
+  // ④ JRA重賞勝ち経験 12（JRA公式・母数129）
+  var jv,jn;
+  if(h0.jushoWin){jv=12;jn='JRA重賞勝ちあり 9-3-2-16（勝率30.0%・3着内46.7%）：'+(h0.jushoList||'-');}
+  else {jv=4;jn='JRA重賞勝ちなし 1-7-8-83（勝率1.0%・3着内16.2%）';}
+  add('重賞勝ち経験',jv,12,jn+'※「重賞勝ち×3番人気以内」は9-2-1-4(75.0%)だが人気項目との二重計上を避けここでは加算しない','horse');
+
+  // ⑤ 前走距離 8（阪神10年・母数134）
+  var dv,dn;
+  if(pd==null){dv=2;dn='前走距離不明→中立寄り';}
+  else if(pd===2400){dv=8;dn='前走2400m（同距離）9-5-4-30（37.5%）';}
+  else if(pd===2000){dv=4;dn='前走2000m 1-2-3-27（18.2%）';}
+  else if(pd===2200){dv=3;dn='前走2200m 0-0-1-8（11.1%）';}
+  else if(pd===1800){dv=3;dn='前走1800m 0-1-2-19（13.6%）';}
+  else if(pd>=2500){dv=2;dn='前走2500m以上（2600mは0-1-0-18・5.3%）距離短縮は全体に低調';}
+  else {dv=1;dn='前走1600m以下 母数3で実績ほぼなし';}
+  add('前走距離',dv,8,dn,'horse');
+
+  // ⑥ キャリア 8（阪神10年・母数134／§26により配点は抑制）
+  var rn=h0.runs, cv, cn;
+  if(rn==null){cv=3;cn='キャリア不明→中立';}
+  else if(rn>=10){cv=0;cn='【壁】10戦以上 0-0-0-23';}
+  else if(rn===5){cv=8;cn='5戦 4-2-3-7（56.3%）最良層';}
+  else if(rn===6){cv=6;cn='6戦 3-2-2-16（30.4%）';}
+  else if(rn===7){cv=6;cn='7戦 2-3-4-20（31.0%）';}
+  else if(rn===9){cv=5;cn='9戦 1-2-0-10（23.1%）';}
+  else if(rn===4){cv=4;cn='4戦 0-0-1-4（20.0%）母数5';}
+  else if(rn===8){cv=2;cn='8戦 0-1-0-20（4.8%）明確な谷';}
+  else {cv=3;cn=rn+'戦 母数4以下で判断不能→中立（未経験を減点しない・§26）';}
+  add('キャリア',cv,8,cn+'【出典が当該レースを含む定義か不明・§26により配点抑制】','horse');
+
+  // ⑦ 前走着差 8（阪神10年・母数133）
+  var mg=h0.prevMargin, rk=h0.prevRank, mv, mn;
+  if(mg==null){mv=4;mn='前走着差不明→中立';}
+  else if(rk===1){
+    var wm=Math.abs(mg);
+    if(wm>=0.1&&wm<=0.2){mv=8;mn='0.1〜0.2秒差で勝利 3-2-1-14（30.0%）';}
+    else if(wm===0){mv=5;mn='0.0秒差（ハナ〜同着）で勝利 0-1-0-12（7.7%）';}
+    else {mv=5;mn='0.3秒差以上で勝利 1-1-0-9（18.2%）';}
+  }
+  else if(mg<=0.0){mv=8;mn='0.0秒差で敗戦 1-0-2-5（37.5%）';}
+  else if(mg<=0.2){mv=6;mn='0.1〜0.2秒差負け 2-1-0-11（21.4%）';}
+  else if(mg<=0.5){mv=6;mn='0.3〜0.5秒差負け 1-2-3-17（26.1%）';}
+  else if(mg<=0.9){mv=7;mn='0.6〜0.9秒差負け 2-2-4-18（30.8%）';}
+  else if(mg<=1.9){mv=2;mn='1.0〜1.9秒差負け 0-1-0-8（11.1%）。1.0秒以上負けは通算0-1-0-16＝母数17で3着内1頭（5.9%）';}
+  else {mv=0;mn='2.0秒以上負け 0-0-0-8';}
+  add('前走着差',mv,8,mn+'（着順そのものは減点しない＝§21 地力ガード。前走10着以下でも1-1-1-20で13.0%あり）','horse');
+
+  // ⑧ 前走人気×クラス 6（阪神10年・母数133）
+  var qv,qn;
+  if(pp==null){qv=3;qn='前走人気不明→中立';}
+  else if(rel==='同級'){
+    if(pp===1){qv=5;qn='同級1番人気 1-0-0-3（25.0%）※母数4のため平滑化';}
+    else if(pp===2){qv=6;qn='同級2番人気 3-2-3-2（80.0%）最良';}
+    else if(pp===3){qv=5;qn='同級3番人気 2-0-1-3（50.0%）';}
+    else if(pp<=5){qv=4;qn='同級4〜5番人気 1-0-1-4（33.3%）母数6';}
+    else if(pp<=9){qv=4;qn='同級6〜9番人気 2-2-2-12（33.3%）';}
+    else {qv=3;qn='同級10番人気以下 0-2-1-20（13.0%）';}
+  } else {
+    if(pp===1){qv=3;qn='下級1番人気 0-3-1-18（18.2%）勝ちなし';}
+    else if(pp===2){qv=0;qn='【壁】下級2番人気 0-0-0-13（母数13・§29基準未満のため減点扱い）';}
+    else if(pp===3){qv=2;qn='下級3番人気 0-0-1-8（11.1%）';}
+    else if(pp===4){qv=2;qn='下級4番人気 0-1-0-3（25.0%）母数4';}
+    else if(pp===5){qv=2;qn='下級5番人気 1-0-0-9（10.0%）※唯一の勝ち例';}
+    else {qv=1;qn='下級6番人気以下 0-0-0-8';}
+  }
+  add('前走人気×クラス',qv,6,qn+'（同級計9-6-8-44=34.3% / 下級計1-4-2-59=10.6%・格差3.2倍）','horse');
+
+  // ⑨ 脚質 4（阪神10年・母数134・壁なし）
+  var pr=h0.posRatio, sv, sn;
+  if(pr==null){sv=2;sn='位置取りデータなし→中立';}
+  else if(pr<0.20){sv=4;sn='逃げ 1-0-2-7（30.0%）';}
+  else if(pr<=0.35){sv=3;sn='先行 3-3-2-29（21.6%）';}
+  else if(pr<=0.65){sv=4;sn='中団 4-4-4-34（26.1%）1着シェア40%で最多。★中団を減点しない';}
+  else {sv=2;sn='後方 1-3-2-34（15.0%）';}
+  add('脚質',sv,4,sn+'（事前位置率 '+(pr!=null?pr:'-')+'／SD '+(h0.posSD!=null?h0.posSD:'-')+'）【§5-A検証で中団バンドの的中率は35.1%だが、本コースは脚質自体が着順を決めないため配点を薄くして無害化】','env');
+
+  // ⑩ 枠 4（阪神10年・母数134）
+  var wk=h0.waku, wv, wn;
+  if(wk==null){wv=2;wn='枠順未確定→全頭中立（9/19確定後に有効化）';}
+  else if(wk===5){wv=4;wn='5枠 3-3-2-9（47.1%）最良';}
+  else if(wk===3){wv=4;wn='3枠 3-1-0-12（25.0%）3勝';}
+  else if(wk===8){wv=4;wn='8枠 3-1-1-15（25.0%）3勝';}
+  else if(wk===2){wv=3;wn='2枠 0-1-3-11（26.7%）勝ちなし';}
+  else if(wk===4){wv=2;wn='4枠 1-2-0-14（17.6%）';}
+  else if(wk===6){wv=2;wn='6枠 0-1-2-14（17.6%）勝ちなし';}
+  else if(wk===1){wv=1;wn='1枠 0-0-1-11（8.3%）';}
+  else {wv=1;wn='7枠 0-1-1-18（10.0%）最低';}
+  add('枠',wv,4,wn+'【各年8〜15頭立てが混在・今年14頭。§29の罠に注意し配点は薄く】','waku');
+
+  // ⑪ 東西 2（阪神10年・母数134）
+  var bv,bn;
+  if(h0.belt==='美浦'){bv=1;bn='関東馬 1-0-0-10（母数11・3着内9.1%）。唯一の該当は2017レイデオロ(1番人気1着)。母数11は壁ではない（§21）';}
+  else {bv=2;bn='関西馬 9-10-10-94（3着内23.6%）';}
+  add('東西',bv,2,bn,'env');
+
+  // ★未較正項目：上がり性能のみ。着別度数が示すのは「当日の上がり順位」＝事後データ(§23)であり、
+  //   配点に使う事前推定(agariMean)の着順に対する着別度数は存在しない。事前推定の予測力は
+  //   当日の上がり順に対して66.4%(95%CI 54.3-76.9)。§5-B検証(20260913)。
+  var UNCAL={'上がり性能':1};
+  var totalCal=0, maxCal=0;
+  for(var ci=0;ci<it.length;ci++){ it[ci].uncalibrated=!!UNCAL[it[ci].key];
+    if(!it[ci].uncalibrated){ totalCal+=it[ci].score; maxCal+=it[ci].max; } }
+  totalCal=Math.round(totalCal*10)/10;
+
+  var total=0; for(var i=0;i<it.length;i++) total+=it[i].score;
+  total=Math.round(total*10)/10;
+  var max=it.reduce(function(x,y){return x+y.max;},0);
+  var out={items:it,total:total,max:max,penalty:0,totalCal:totalCal,maxCal:maxCal};
+  if(_rawOnly) return out;
+  var st=_getKobeScoreStats(), z=st.sd?(out.total-st.mean)/st.sd:0;
+  out.pct=Math.round((8+(79-8)/(1+Math.exp(-1.35*z)))*10)/10;
+  return out;
+}
 function _getStLiteScoreStats(){
   var xs=[], hs=(typeof HORSES_BY_RACE!=='undefined'&&HORSES_BY_RACE['セントライト記念'])||[];
   for(var i=0;i<hs.length;i++){ xs.push(computeScoreBreakdownStLiteV1(hs[i],true).total); }
@@ -26909,6 +27086,7 @@ function computeScoreBreakdown(horse, raceName) {
   if(raceName==='関屋記念') return computeScoreBreakdownSekiyaV2(horse, raceName);
   if (raceName === '新潟記念') return computeScoreBreakdownNiigataKinenV2(horse);
   if (raceName === '紫苑S' && horse && horse.isAvoided) return { total:0, max:87, pct:0, items:[], isAvoided:true, avoidReason: horse.avoidReason || '出走回避' };
+  if (raceName === '神戸新聞杯') return computeScoreBreakdownKobeV1(horse);
   if (raceName === 'ローズS') return computeScoreBreakdownRoseSV1(horse);
     if (raceName === 'セントライト記念') return computeScoreBreakdownStLiteV1(horse);
     if (raceName === '紫苑S') return computeScoreBreakdownShionV1(horse);
