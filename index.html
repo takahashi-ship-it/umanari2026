@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260913-2000';
+  var CURRENT_VERSION = '20260914-1033-kobe1';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2843,7 +2843,7 @@ const STATUS_BADGE = {
 };
 
 const TARGET_RACE_NAME = "オークス";
-const SUPPORTED_RACES = new Set(['ローズS', 'セントライト記念', '紫苑S', '新潟記念', '札幌記念', 'レパードS','クイーンS', "関屋記念", "函館2歳S", "天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S","ラジオNIKKEI賞","函館記念","北九州記念","七夕賞",]);
+const SUPPORTED_RACES = new Set(['神戸新聞杯', 'ローズS', 'セントライト記念', '紫苑S', '新潟記念', '札幌記念', 'レパードS','クイーンS', "関屋記念", "函館2歳S", "天皇賞（春）", "NHKマイルC", "ヴィクトリアマイル", "新潟大賞典", "京都新聞杯", "エプソムC", "オークス", "平安ステークス", "日本ダービー", "葵ステークス", "目黒記念", "安田記念", "宝塚記念", "函館スプリントS","しらさぎステークス","府中牝馬S","ラジオNIKKEI賞","函館記念","北九州記念","七夕賞",]);
 
 function getDefaultDisplayMonth() {
   // 直近の「予想中」(SUPPORTED && upcoming) レースの開催月を返す
@@ -7864,6 +7864,15 @@ window.HORSES_BY_RACE = HORSES_BY_RACE;
  * 3.05) RACE METADATA (タイトル・コース等)
  * ===================================================== */
 const RACE_META = {
+  '神戸新聞杯': {
+    babaWet:false, gradeLine:"G2", grade:"G2", title:"神戸新聞杯",
+    date:"2026-09-21 (月・祝)", venue:"阪神", surface:"芝2400m", age:"3歳", distance:2400,
+    direction:"right", weightType:"馬齢", isFinished:false, status:'予想中',
+    pageTitle:"JRA重賞予想 2026 | 神戸新聞杯",
+    notice:"菊花賞トライアル。3着以内に菊花賞の優先出走権。阪神芝2400mは外回り（直線473.6m・急坂）。過去10年のうち4年(2020,21,22,24)は中京芝2200mでの代替開催のため、コース依存データは阪神6年分しかない。着別度数の集計は中京4年を除く2012-2025の阪神10年分（延べ134頭）。",
+    paceExpect:'スロー', paceNote:'阪神開催6年は全年スロー（+2.5〜+7.0）。上がり3Fは32.3〜34.6。上位3頭18頭のうち12頭がレース上がり3Fより速く、平均-0.26秒。上がり順位別は1位3-5-2-1、2位6-1-1-2に対し6位以下0-0-2-79（複勝2.5%）で上がり勝負の型。一方で4角位置は阪神6年の上位3頭で逃先7・中団5・後方6と分散し、脚質別も逃げ30.0%/先行21.6%/中団26.1%/後方15.0%と壁なし。脚質配点は薄くし、中団を減点しないこと。',
+    babaPrediction:{}
+  },
   'ローズS': {
     babaWet:false, actualBaba:'良', weather:'晴', gradeLine:"G2", grade:"G2", title:"ローズS",
     date:"2026-09-13 (日)", venue:"阪神", surface:"芝1800m", age:"3歳牝", distance:1800,
