@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260915-1658-blood3';
+  var CURRENT_VERSION = '20260915-1715-kobe7';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -23445,6 +23445,36 @@ function computeScoreBreakdownOkaV1(h,_rawOnly){
   out.pct=Math.round((8+(79-8)/(1+Math.exp(-1.35*z)))*10)/10;
   return out;
 }
+function _sireStats(race){
+  var d=(typeof RACE_PAST_DATA!=='undefined')&&RACE_PAST_DATA[race];
+  if(!d||!d.trends||!d.trends.tables) return null;
+  var t=null, T=d.trends.tables;
+  for(var i=0;i<T.length;i++){ if(T[i].title.indexOf('種牡馬別')===0){ t=T[i]; break; } }
+  if(!t) return null;
+  var M={}, tn=0, tw=0, tt=0;
+  for(var j=0;j<t.rows.length;j++){
+    var p=t.rows[j].rec.split('-');
+    var a=parseInt(p[0],10),b=parseInt(p[1],10),c=parseInt(p[2],10),e=parseInt(p[3],10);
+    var n=a+b+c+e;
+    M[t.rows[j].label]={n:n,w:a,t3:a+b+c};
+    tn+=n; tw+=a; tt+=a+b+c;
+  }
+  if(!tn) return null;
+  return {map:M, base:tt/tn, basew:tw/tn, total:tn};
+}
+function _bloodScore(h0,race){
+  var S=_sireStats(race);
+  if(!S) return [2,'種牡馬別データが読めない→中立'];
+  var s=h0.sire;
+  if(!s||!S.map[s]) return [2,'父'+(s||'不明')+' は上位10位圏外→中立。圏外は「成績が悪い」のか「産駒の出走が少ない」のかを判別できないため減点しない（§21）。上位10位は当該コースへの産駒供給が多い種牡馬のランキングでもあり、少数精鋭の種牡馬は載らない'];
+  var m=S.map[s];
+  var shr=(m.t3+4*S.base)/(m.n+4);
+  var r=shr/S.base, wr=m.w/m.n;
+  var v = r>=1.30?4:(r>=1.10?3:2);
+  var note='父'+s+' '+m.n+'走 複勝'+(100*m.t3/m.n).toFixed(1)+'%（k=4で平均へ収縮後'+(100*shr).toFixed(1)+'%）／コース平均'+(100*S.base).toFixed(1)+'%の'+r.toFixed(2)+'倍';
+  if(v===4 && wr<S.basew*0.7){ v=3; note+=' ※勝率'+(100*wr).toFixed(1)+'%がコース平均'+(100*S.basew).toFixed(1)+'%の0.7倍未満のため1段下げ（複勝率と勝率が逆行する種牡馬の補正）'; }
+  return [v,note];
+}
 function _getKobeScoreStats(){
   var xs=[], hs=(typeof HORSES_BY_RACE!=='undefined'&&HORSES_BY_RACE['神戸新聞杯'])||[];
   for(var i=0;i<hs.length;i++){ xs.push(computeScoreBreakdownKobeV1(hs[i],true).total); }
@@ -23528,16 +23558,16 @@ function computeScoreBreakdownKobeV1(h,_rawOnly){
 
   // ⑥ キャリア 6（阪神10年・母数134／§26により配点は抑制／v2で8→6）
   var rn=h0.runs, cv, cn;
-  if(rn==null){cv=2;cn='キャリア不明→中立';}
+  if(rn==null){cv=1;cn='キャリア不明→中立';}
   else if(rn>=10){cv=0;cn='【壁】10戦以上 0-0-0-23';}
-  else if(rn===5){cv=6;cn='5戦 4-2-3-7（56.3%）最良層';}
-  else if(rn===6){cv=5;cn='6戦 3-2-2-16（30.4%）';}
-  else if(rn===7){cv=5;cn='7戦 2-3-4-20（31.0%）';}
-  else if(rn===9){cv=4;cn='9戦 1-2-0-10（23.1%）';}
-  else if(rn===4){cv=3;cn='4戦 0-0-1-4（20.0%）母数5';}
-  else if(rn===8){cv=2;cn='8戦 0-1-0-20（4.8%）明確な谷';}
-  else {cv=2;cn=rn+'戦 母数4以下で判断不能→中立（未経験を減点しない・§26）';}
-  add('キャリア',cv,6,cn+'【出典が当該レースを含む定義か不明・§26により配点抑制。v2で8→6点】','horse');
+  else if(rn===5){cv=4;cn='5戦 4-2-3-7（56.3%）最良層';}
+  else if(rn===6){cv=4;cn='6戦 3-2-2-16（30.4%）';}
+  else if(rn===7){cv=4;cn='7戦 2-3-4-20（31.0%）';}
+  else if(rn===9){cv=3;cn='9戦 1-2-0-10（23.1%）';}
+  else if(rn===4){cv=2;cn='4戦 0-0-1-4（20.0%）母数5';}
+  else if(rn===8){cv=1;cn='8戦 0-1-0-20（4.8%）明確な谷';}
+  else {cv=1;cn=rn+'戦 母数4以下で判断不能→中立（未経験を減点しない・§26）';}
+  add('キャリア',cv,4,cn+'【出典が当該レースを含む定義か不明・§26により配点抑制。v2で8→6点、v3で6→4点。血統4点の捻出元として選んだのは、この項目のnote自身が定義不明を認めており根拠が最も弱いため】','horse');
 
   // ⑦ 前走着差 8（阪神10年・母数133）
   var mg=h0.prevMargin, rk=h0.prevRank, mv, mn;
@@ -23612,16 +23642,14 @@ function computeScoreBreakdownKobeV1(h,_rawOnly){
   else {av2=4;an2='芝2300m以上の経験はあるが3着内なし→中立';}
   add('距離適性',av2,6,an2+'（自己最長 '+(md!==null?md+'m':'-')+'）【未較正：本レースの着別度数ではなく785サンプル62頭の自前検証(20260915)。自己最長距離を超える出走は着順率 +0.125、95%CI[+0.050,+0.206]で14頭立て約1.7着分の悪化。コース・距離の4検定中もっとも効果量が大きい。なお「経験ありで3着内なし」と「未経験」に差はないため経験の有無そのものは減点しない(§21)。★コース適性は阪神芝2400mの経験が14頭中1頭しかなく順位を動かさないため神戸新聞杯には設けない】','horse');
 
-  // ⑪ 東西 2（阪神10年・母数134）
-  var bv,bn;
-  if(h0.belt==='美浦'){bv=1;bn='関東馬 1-0-0-10（母数11・3着内9.1%）。唯一の該当は2017レイデオロ(1番人気1着)。母数11は壁ではない（§21）';}
-  else {bv=2;bn='関西馬 9-10-10-94（3着内23.6%）';}
-  add('東西',bv,2,bn,'env');
+  // ⑪ 血統 4【未較正・v3で新設。東西2点の廃止＋キャリア6→4で捻出】
+  var _b=_bloodScore(h0,'神戸新聞杯');
+  add('血統',_b[0],4,_b[1]+'【未較正：本レースの過去10年134頭ではなく「阪神芝2400mで行われた全レース(未勝利・条件戦を含む)・2024/01/01以降」165走の種牡馬別成績。上位10位のみの切り取りで圏外の意味が判別できないため加点専用とし減点はしない。分母が9〜29走と幅があるためk=4で平均へ収縮。★v3で東西2点(関東馬1-0-0-10・母数11で唯一の該当が2017レイデオロ＝1番人気1着。壁でも傾向でもなかった)を廃止し、キャリアを6→4に縮小して4点を捻出した】','blood');
 
   // ★未較正項目：上がり性能のみ。着別度数が示すのは「当日の上がり順位」＝事後データ(§23)であり、
   //   配点に使う事前推定(agariMean)の着順に対する着別度数は存在しない。事前推定の予測力は
   //   当日の上がり順に対して66.4%(95%CI 54.3-76.9)。§5-B検証(20260913)。
-  var UNCAL={'上がり性能':1,'距離適性':1};
+  var UNCAL={'上がり性能':1,'距離適性':1,'血統':1};
   var totalCal=0, maxCal=0;
   for(var ci=0;ci<it.length;ci++){ it[ci].uncalibrated=!!UNCAL[it[ci].key];
     if(!it[ci].uncalibrated){ totalCal+=it[ci].score; maxCal+=it[ci].max; } }
