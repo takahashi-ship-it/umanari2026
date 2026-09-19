@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260919-1120-stale11';
+  var CURRENT_VERSION = '20260919-1801-okawet';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -23418,6 +23418,30 @@ function computeScoreBreakdownOkaV1(h,_rawOnly){
   else if(h0.atLeastDistTop3===1){dv=5;dn='芝2100m以上で3着内1回';}
   else {dv=4;dn='芝2100m以上の経験はあるが3着内なし→中立';}
   add('距離適性',dv,6,dn+'（自己最長 '+(h0.maxDist!=null?h0.maxDist:'-')+'m）【未較正：785サンプル62頭の自前検証(20260915)。自己最長距離を超える出走は着順率 +0.125、95%CI[+0.050,+0.206]で約1.6着分の悪化。コース・距離の4検定中もっとも効果量が大きい。なお「経験ありで3着内なし」と「未経験」に差はないため、経験の有無そのものは減点しない】','horse');
+  // ⑭ 道悪適性 4【未較正・v5で新設。当日の馬場が稍重以上のときだけ発火】
+  var _mb=(typeof RACE_META!=='undefined'&&RACE_META['オールカマー']&&RACE_META['オールカマー'].actualBaba)||'';
+  var _isWet=(_mb==='稍重'||_mb==='稍'||_mb==='重'||_mb==='不良'||_mb==='不');
+  var wv,wn2;
+  if(!_isWet){
+    wv=2; wn2=(_mb? '当日の馬場は「'+_mb+'」＝良馬場のため発火しない':'当日の馬場が未入力（RACE_META.actualBaba が空）のため発火しない')+'→全頭中立';
+  } else {
+    var _rh=h0.raceHistory||[], _wn=0, _wt3=0, _a=0,_b=0,_c=0;
+    for(var wi=0;wi<_rh.length;wi++){
+      var _r=_rh[wi];
+      if(_r.kind!=='平地'||_r.surface!=='芝'||!_r.rank) continue;
+      if(_r.baba!=='稍'&&_r.baba!=='稍重'&&_r.baba!=='重'&&_r.baba!=='不良'&&_r.baba!=='不') continue;
+      _wn++;
+      if(_r.rank===1)_a++; else if(_r.rank===2)_b++; else if(_r.rank===3)_c++;
+      if(_r.rank<=3)_wt3++;
+    }
+    var _rec=_a+'-'+_b+'-'+_c+'-'+(_wn-_a-_b-_c);
+    if(_wn<3){wv=2;wn2='芝の道悪が'+_wn+'走（'+_rec+'）で母数不足→中立。3走未満では判断しない';}
+    else if(_wt3>=2){wv=4;wn2='芝の道悪'+_wn+'走で3着内'+_wt3+'回（'+_rec+'）';}
+    else if(_wt3===1){wv=3;wn2='芝の道悪'+_wn+'走で3着内1回（'+_rec+'）';}
+    else {wv=2;wn2='芝の道悪'+_wn+'走で3着内なし（'+_rec+'）→中立。★減点しない';}
+  }
+  add('道悪適性',wv,4,wn2+'【未較正：132サンプル45頭で検証したが、道悪の個体適性に予測力は見つからなかった（道悪複勝率が良を上回る馬 vs 下回る馬で差+0.003、95%CI[-0.111,+0.112]）。ただしこの検定は各馬n=2以上の比率による二値分類で分類自体がノイズを含むため、「効果がない」ことの証明にはならない（検出力不足）。同じ理由で「道悪3走以上で3着内ゼロ」が有意に見えた検定はn=6のうち5件が1頭の寄与だったため採用していない。★当日の馬場が稍重以上のときだけ発火する。RACE_META.actualBaba が空、または良馬場なら全13頭が中立2点で順位に影響しない。★加点専用で減点はしない。レガレイラ0-0-0-3・パンジャ0-0-0-3はFisher片側でp=0.122/0.087と有意でなく、785サンプルの検定Cでも「経験ありで3着内なし」と「未経験」に差がなかったため、中立に置く。これはnoticeに記した運用方針「外すのではなく紐に足す」をエンジンで実装したもの。★3走未満は判断しない（エセルフリーダは道悪1走1勝だが中立）。★集計規約：JRA平地の芝のみ。海外・障害・ダートは除外。★レース後に13頭の点と着順を必ず記録し、来年以降の較正母数にすること】','env');
+
   // ⑬ 調教 4【未較正・v3で新設。Σmaxは100→104に拡張（既存項目を削らない）】
   var _cd=null, _why='';
   if(!h0.chokyoCourse||!h0.chokyoPrevCourse||h0.chokyoLast1F==null||h0.chokyoPrevLast1F==null){
@@ -23447,7 +23471,7 @@ function computeScoreBreakdownOkaV1(h,_rawOnly){
   else if(mg<=1.9){mv=3;mn='前走1.0〜1.9秒差負け 2-3-1-28（17.6%）';}
   else {mv=0;mn='前走2.0秒以上負け 0-0-1-15（6.3%）';}
   add('前走着差',mv,4,mn+'（前走着順そのものは減点しない＝§21。前走10着以下でも3-0-1-35で3勝ある）','horse');
-  var UNCAL={'コース適性':1,'上がり性能':1,'距離適性':1,'血統':1,'調教':1};
+  var UNCAL={'コース適性':1,'上がり性能':1,'距離適性':1,'血統':1,'調教':1,'道悪適性':1};
   var totalCal=0, maxCal=0;
   for(var ci=0;ci<it.length;ci++){ it[ci].uncalibrated=!!UNCAL[it[ci].key];
     if(!it[ci].uncalibrated){ totalCal+=it[ci].score; maxCal+=it[ci].max; } }
