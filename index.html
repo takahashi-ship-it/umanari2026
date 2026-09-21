@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260921-1643-betbadge';
+  var CURRENT_VERSION = '20260921-1707-sprinters-meta';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7894,6 +7894,13 @@ window.HORSES_BY_RACE = HORSES_BY_RACE;
  * 3.05) RACE METADATA (タイトル・コース等)
  * ===================================================== */
 const RACE_META = {
+  'スプリンターズS': {
+    babaWet:false, actualBaba:'', gradeLine:"G1", grade:"G1", title:"スプリンターズステークス",
+    date:"2026-09-27 (日)", venue:"中山", surface:"芝1200m", age:"3歳以上", distance:1200,
+    direction:"right", weightType:"定量", isFinished:false,
+    pageTitle:"JRA重賞予想 2026 | スプリンターズステークス",
+    notice:"", paceExpect:'', paceNote:''
+  },
   'オールカマー': {
     babaWet:false, actualBaba:'重', gradeLine:"G2", grade:"G2", title:"産経賞オールカマー",
     date:"2026-09-20 (日)", venue:"中山", surface:"芝2200m", age:"3歳以上", distance:2200,
