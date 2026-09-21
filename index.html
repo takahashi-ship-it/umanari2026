@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260921-1635-kobecombo';
+  var CURRENT_VERSION = '20260921-1643-betbadge';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -28805,9 +28805,15 @@ function renderJikuTracking() {
   // 説明文
   html += '<div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:12px;line-height:1.5">';
   html += '⚡複合的中 = AI推奨またはスコア1位のどちらかが3着以内に来た場合';
+  html += '<br>馬券 ○＝的中／×＝不的中（収支記録のあるレースのみ表示）';
   html += '</div>';
 
   // ── レース別一覧 ──
+  // 馬券結果（RESULTS_LOG の status）をレース名で引く。的中/不的中 以外は表示しない
+  var _betByRace = {};
+  (typeof RESULTS_LOG !== 'undefined' ? RESULTS_LOG : []).forEach(function(d) {
+    if (d && d.race && !(d.race in _betByRace)) _betByRace[d.race] = d.status;
+  });
   JIKU_TRACKING.forEach(function(r) {
     var bg = r.comboHit ? 'var(--color-background-success)' : 'var(--color-background-secondary)';
     var borderColor = r.comboHit ? 'var(--color-border-success)' : 'var(--color-border-tertiary)';
@@ -28816,6 +28822,9 @@ function renderJikuTracking() {
     html += '<span style="font-weight:600;color:var(--color-text-primary)">' + r.race + '</span>';
     html += '<span style="font-size:11px;color:var(--color-text-secondary)">' + (r.result || '') + '</span>';
     html += '<span style="margin-left:auto;font-size:11px;color:' + (r.comboHit ? 'var(--color-text-success)' : 'var(--color-text-danger)') + '">' + (r.comboHit ? '✅' : '❌') + ' ' + (r.aiJiku || '') + '</span>';
+    var _bs = _betByRace[r.race];
+    if (_bs === '的中') html += '<span style="font-size:10px;color:var(--color-text-success);margin-left:6px">馬券○</span>';
+    else if (_bs === '不的中') html += '<span style="font-size:10px;color:var(--color-text-danger);margin-left:6px">馬券×</span>';
     html += '</summary>';
     html += '<div style="padding:0 12px 10px">';
     html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">';
