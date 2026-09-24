@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260921-1822-sprinters-pastdata';
+  var CURRENT_VERSION = '20260924-1503-jikucheck-horses';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -14596,6 +14596,67 @@ RACE_PAST_DATA['ローズS'] = {
 };
 
 
+function renderJikuCheck(race, horses){
+  // JIKU_SPRINTERS_V1 : 軸候補チェック（可視化のみ・スコアには一切加点しない）
+  if(race !== 'スプリンターズS') return '';
+  var hs = horses || [];
+  if(!hs.length) return '';
+  function esc(x){ return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  var RIGHT = {'中山':1,'阪神':1,'京都':1,'小倉':1,'札幌':1,'函館':1,'福島':1};
+  function isG(r){ return r.grade==='GI'||r.grade==='GII'||r.grade==='GIII'; }
+  function c1(h){ var rh=h.raceHistory||[], c=0;
+    for(var i=0;i<rh.length;i++){ var r=rh[i];
+      if(r.kind!=='平地'||r.surface!=='芝'||r.distance!==1200) continue;
+      if(r.course==='新潟'&&r.distance===1000) continue;
+      if(typeof r.corner4==='number'&&r.corner4<=3) c++; }
+    return c; }
+  function c2(h){ var rh=h.raceHistory||[], c=0;
+    for(var i=0;i<rh.length;i++){ var r=rh[i];
+      if(r.kind!=='平地'||r.surface!=='芝') continue;
+      if(!(r.distance<=1400)||!RIGHT[r.course]||!isG(r)) continue;
+      if(typeof r.rank==='number'&&r.rank<=3) c++; }
+    return c; }
+  function c3(h){ var rh=h.raceHistory||[], c=0, n=0;
+    for(var i=0;i<rh.length&&n<6;i++){ var r=rh[i]; if(typeof r.rank!=='number') continue; n++; if(r.rank>=10) c++; }
+    return c; }
+  function wet(h){ var rh=h.raceHistory||[], n=0, t=0;
+    for(var i=0;i<rh.length;i++){ var r=rh[i];
+      if(r.kind!=='平地'||r.surface!=='芝') continue;
+      if(r.baba!=='稍'&&r.baba!=='重'&&r.baba!=='不') continue;
+      n++; if(r.rank<=3) t++; }
+    var tier = (n>=3) ? (t/n>=0.5 ? 3 : (t/n>=0.25 ? 1 : -2)) : 0;
+    return {n:n, t:t, tier:tier}; }
+  var rows=[];
+  for(var i=0;i<hs.length;i++){ var h=hs[i];
+    var a=c1(h), b=c2(h), d=c3(h), w=wet(h);
+    rows.push({name:h.name, umaban:h.umaban, a:a, b:b, d:d, w:w, cnt:(a>0?1:0)+(b>0?1:0)+(d<=2?1:0)}); }
+  rows.sort(function(x,y){ return (y.cnt-x.cnt) || (y.w.tier-x.w.tier) || ((x.umaban||99)-(y.umaban||99)); });
+  var html='<div class="section" style="margin-bottom:18px">';
+  html+='<div style="background:rgba(37,99,235,0.06);border:1px solid #2563EB;border-radius:12px;padding:14px">';
+  html+='<div style="font-size:16px;font-weight:700;color:#1D4ED8;margin-bottom:2px">🎯 軸候補チェック｜3条件</div>';
+  html+='<div style="font-size:11px;color:var(--text-sub);margin-bottom:10px">枠順確定前に定義を固定した絞り込み条件。<b>スコアには一切加点しない</b>（可視化のみ）。金塊データとは別物。</div>';
+  html+='<ul style="font-size:11px;color:var(--text-sub);margin:0 0 10px 18px;padding:0;line-height:1.7">';
+  html+='<li>①芝1200mで4角3番手以内の実績（過去10年の4角位置率0.25以下バンドは3着内率33.3%／傾向検定 p=0.0008）</li>';
+  html+='<li>②右回り(中山阪神京都小倉札幌函館福島)の芝1400m以下の重賞で3着以内</li>';
+  html+='<li>③直近6走で二桁着順が2回以下【未検証の条件。過去10年では前走10着以下から2勝(2024ルガル・2022ジャンダルム)が出ている】</li>';
+  html+='</ul>';
+  html+='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:rgba(37,99,235,0.08)">';
+  html+='<th style="padding:5px 6px;text-align:left">馬</th><th>①1200先行</th><th>②右回り重賞</th><th>③安定</th><th>該当数</th><th>道悪</th></tr></thead><tbody>';
+  for(var k=0;k<rows.length;k++){ var x=rows[k];
+    var wl = x.w.n>=3 ? (x.w.tier===3?'◎ '+x.w.t+'/'+x.w.n:(x.w.tier===1?'○ '+x.w.t+'/'+x.w.n:'△ 0/'+x.w.n)) : ('— '+x.w.n+'走');
+    html+='<tr style="border-top:1px solid var(--border)">';
+    html+='<td style="padding:5px 6px;font-weight:600">'+(x.umaban?esc(x.umaban)+' ':'')+esc(x.name)+'</td>';
+    html+='<td style="text-align:center">'+(x.a>0?'○<span style="color:var(--text-sub);font-size:10px">('+x.a+')</span>':'×')+'</td>';
+    html+='<td style="text-align:center">'+(x.b>0?'○<span style="color:var(--text-sub);font-size:10px">('+x.b+')</span>':'×')+'</td>';
+    html+='<td style="text-align:center">'+(x.d<=2?'○<span style="color:var(--text-sub);font-size:10px">(二桁'+x.d+')</span>':'×<span style="color:var(--text-sub);font-size:10px">(二桁'+x.d+')</span>')+'</td>';
+    html+='<td style="text-align:center;font-weight:700">'+x.cnt+'/3</td>';
+    html+='<td style="text-align:center">'+wl+'</td></tr>'; }
+  html+='</tbody></table></div>';
+  html+='<div style="font-size:11px;color:var(--text-sub);margin-top:10px;line-height:1.7">道悪欄はJRA芝の稍重以上の成績。◎=3走以上で3着内率50%以上／○=25〜49%／△=3走以上で3着内なし／—=2走以下で判断不能。<b>馬場が稍重以上と確定した場合のみ</b>、エンジン側で小配点（◎+3／○+1／△−2／—0）として発動する。良馬場なら全頭0点。未検証項目のため配点は小さく、レース後に相関を測って残すか削るかを決める。</div>';
+  html+='</div></div>';
+  return html;
+}
+
 function renderKinkaShion(race, horses){
   // KINKA_SHION_V1 : 紫苑S 金塊データ（可視化のみ・スコアには一切加点しない）
   if(race !== '紫苑S') return '';
@@ -16237,6 +16298,7 @@ function renderPastData() {
       // コース特性（最優先表示）
       if (data.himitsuData4 && typeof renderHimitsuData4==='function') html += renderHimitsuData4(data.himitsuData4);
       if (typeof renderKinkaShion==='function') html += renderKinkaShion(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
+      if (typeof renderJikuCheck==='function') html += renderJikuCheck(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
       html += renderTetsubanJirai(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
       html += renderDoakuTrend(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
       html += renderPrevGradeTrend(currentRace, (window.horses&&window.horses.length)?window.horses:(HORSES_BY_RACE[currentRace]||[]));
