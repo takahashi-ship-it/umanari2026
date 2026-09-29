@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260929-1055-human-jiku';
+  var CURRENT_VERSION = '20260929-1057-mainichi-meta';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7913,6 +7913,13 @@ window.HORSES_BY_RACE = HORSES_BY_RACE;
  * 3.05) RACE METADATA (タイトル・コース等)
  * ===================================================== */
 const RACE_META = {
+  '毎日王冠': {
+    babaWet:false, actualBaba:'', gradeLine:"G2", grade:"G2", title:"毎日王冠",
+    date:"2026-10-04 (日)", time:"15:45", venue:"東京", surface:"芝1800m", age:"3歳以上", distance:1800,
+    direction:"left", weightType:"別定", isFinished:false,
+    pageTitle:"JRA重賞予想 2026 | 毎日王冠",
+    notice:"", paceExpect:'', paceNote:''
+  },
   'スプリンターズS': {
     babaWet:true, actualBaba:'稍重', gradeLine:"G1", grade:"G1", title:"スプリンターズステークス",
     date:"2026-09-27 (日)", venue:"中山", surface:"芝1200m", age:"3歳以上", distance:1200,
