@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260929-1057-mainichi-meta';
+  var CURRENT_VERSION = '20260929-1105-sprinters-finished';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -2691,7 +2691,7 @@
 
 <script>
 /* 終了レースのリスト（カレンダー初回レンダリング前に定義必須） */
-var FINISHED_RACES = ['神戸新聞杯', 'オールカマー', 'セントライト記念', 'ローズS', '紫苑S', '新潟記念', '札幌記念', 'レパードS', 'クイーンS','関屋記念', '函館2歳S', '七夕賞', '函館記念','ラジオNIKKEI賞','しらさぎステークス','府中牝馬S','天皇賞（春）', '京都新聞杯', 'エプソムC', 'NHKマイルC', '新潟大賞典', 'ヴィクトリアマイル', '平安ステークス', 'オークス', '葵ステークス', '日本ダービー', '目黒記念', '安田記念', '函館スプリントS', '宝塚記念', '北九州記念'];
+var FINISHED_RACES = ['スプリンターズS', '神戸新聞杯', 'オールカマー', 'セントライト記念', 'ローズS', '紫苑S', '新潟記念', '札幌記念', 'レパードS', 'クイーンS','関屋記念', '函館2歳S', '七夕賞', '函館記念','ラジオNIKKEI賞','しらさぎステークス','府中牝馬S','天皇賞（春）', '京都新聞杯', 'エプソムC', 'NHKマイルC', '新潟大賞典', 'ヴィクトリアマイル', '平安ステークス', 'オークス', '葵ステークス', '日本ダービー', '目黒記念', '安田記念', '函館スプリントS', '宝塚記念', '北九州記念'];
 
 /* =====================================================
  * 1) RACE CALENDAR
@@ -7923,9 +7923,10 @@ const RACE_META = {
   'スプリンターズS': {
     babaWet:true, actualBaba:'稍重', gradeLine:"G1", grade:"G1", title:"スプリンターズステークス",
     date:"2026-09-27 (日)", venue:"中山", surface:"芝1200m", age:"3歳以上", distance:1200,
-    direction:"right", weightType:"定量", isFinished:false,
+    direction:"right", weightType:"定量", isFinished:true, status:'不的中', resultBanner:'❌ 不的中 | 1着：16ピューロマジック(9人気) 2着：6ワールズエンド(5人気) 3着：5サウンドモリアーナ(11人気) | 3連単462,120円 | 投資6,000円・払戻0円・収支-6,000円',
     pageTitle:"JRA重賞予想 2026 | スプリンターズステークス",
-    notice:"", paceExpect:'', paceNote:''
+    notice:"", paceExpect:'', paceNote:'【回顧2026】稍重。前3F33.6、勝ち時計1:09.2は過去10年で最も遅い。1〜3着はいずれも4角3番手以内。優勝馬が4角3番手以内なのは6年連続。',
+    babaPrediction:{ status:"稍重(実測)", icon:"🌧", color:"#378ADD", comment:"稍重。前3F33.6、勝ち時計1:09.2は過去10年で最も遅い。1〜3着はいずれも4角3番手以内。" }
   },
   'オールカマー': {
     babaWet:false, actualBaba:'重', gradeLine:"G2", grade:"G2", title:"産経賞オールカマー",
