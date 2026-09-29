@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20260928-1425-sprinters-result';
+  var CURRENT_VERSION = '20260929-1055-human-jiku';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -28889,6 +28889,8 @@ var JIKU_TRACKING = [
     note: 'スコア◎エコロアルバ3着で軸馬3着内的中。一次情報(朝日杯FS・重G1で4着/父モズアスコット=パワー型/3歳53kg斤量恩恵)で道悪軸に格上げした判断は複勝圏で正解。但し相手を「重前提・前×道悪巧者」7頭に絞り、1着エルトン(7人・先行)・2着キープ(6人・先行)を切ったため買い目は不的中(稍重で前残り)。' },
   { race: '府中牝馬S', aiJiku: 'ヴァルキリーバース', scoreJiku: 'ヴァルキリーバース',
     result: '着外(スコア軸)', aiHit: false, scoreHit: false, comboHit: false,
+    humanJiku: ['セキトバイースト'], humanJikuHits: [true], humanHit: true,
+    humanNote: '道悪を見てモデル軸ヴァルキリーバース(1人気)からセキトバイースト(5人気・昨年覇者・道悪実績)へ差し替え。単独軸で1着のため軸の上書きは成立。ただし相手から後方脚質を切ったため馬券は不的中',
     note: 'スコア1位の自動軸ヴァルキリーバース(1人)は着外でscoreHit:false。但し道悪を見て軸を手動でセキトバイースト(5人・昨年覇者・道悪実績)に変更→セキトバ1着で実推奨軸は的中。2着ウイント・3着ミアネーロは共に追込で、前残り重視で後方脚質を相手から切ったため買い目は不的中(3連単106万の大波乱)。' },
   { race: '函館記念', aiJiku: 'エコロディノス', scoreJiku: 'エコロディノス',
     result: '9着', aiHit: false, scoreHit: false, comboHit: false,
@@ -28924,6 +28926,9 @@ var JIKU_TRACKING = [
   { race:'オールカマー', date:'2026-09-20', grade:'G2', course:'中山芝2200m',
     aiJiku:'レガレイラ', scoreJiku:'レガレイラ',
     aiPop:1, result:'4着', aiHit:false, scoreHit:false, comboHit:false,
+    humanJiku: [], humanHit: null,
+    humanCut: ['レガレイラ'], humanCutHit: true,
+    humanNote: '軸を立てず5頭BOX。モデル1位・較正済1位のレガレイラを道悪0-0-0-3を根拠に切り、4着だったため除外判断は成立。軸の上書きはしていないので humanHit は集計対象外(null)',
     note:'5頭BOXのため軸は立てていないが、全体1位レガレイラ=4着として記録。較正済1位はレガレイラ63とヴーレヴー63の同点で、ヴーレヴーは3着に入っている（scoreJikuはaiJikuと同じレガレイラを採用し、控えめに記録した）。1着は9人気メイショウゲキリン(最終44.5倍)。重・ミドルでレース上がり3F37.1は過去10年の34.0〜35.6を1.5秒以上下回る最遅、前5F62.4に対しラスト6F74.5でラップが落ちず前が残った。実測4角位置率r=+0.666に対し事前posRatioはr=-0.075でほぼ無相関。' },
   { race:'神戸新聞杯', date:'2026-09-21', grade:'G2', course:'阪神芝2400m外',
     aiJiku:'ロブチェン', scoreJiku:'ロブチェン',
@@ -28932,6 +28937,8 @@ var JIKU_TRACKING = [
   { race:'スプリンターズS', date:'2026-09-27', grade:'G1', course:'中山芝1200m外',
     aiJiku:'フリッカージャブ', scoreJiku:'フリッカージャブ',
     aiPop:3, result:'12着', aiHit:false, scoreHit:false, comboHit:false,
+    humanJiku: ['サウンドモリアーナ','ジューンブレア'], humanJikuHits: [true,false], humanHit: false,
+    humanNote: '3連単の軸2頭ながしマルチ。モデル1位フリッカージャブと2位パンジャタワーをともに相手に降格し、モデル11位ジューンブレアを軸に昇格。サウンドモリアーナ(モデル3位)は3着に入ったがジューンブレア8着で軸2頭マルチの成立条件を満たさず不的中。単独軸なら462,120円的中だった',
     note:'モデル1位・較正済1位がともにフリッカージャブ(86.5/100・65.5/70)で一致したが12着。4角2番手を取れており位置取りの失敗ではない。1〜3着は⑯ピューロマジック(9人気)・⑥ワールズエンド(5人気)・⑤サウンドモリアーナ(11人気)で、モデル3位のサウンドモリアーナのみ拾えた。買い目は3連単軸2頭マルチ(軸④⑤)で、⑤は3着に入ったが④ジューンブレアが8着で不的中。⑤の単独軸なら462,120円的中だった。総合r=-0.028・較正済r=-0.021・人気r=-0.001で全滅。' }
 ];
 
@@ -29065,11 +29072,26 @@ function renderJikuTracking() {
   var comboHits = JIKU_TRACKING.filter(function(r){ return r.comboHit; }).length;
   var total     = JIKU_TRACKING.length;
 
+  // 👤 人間の上書き（軸の差し替え／除外判断）。humanHit は実際に買った形の成立条件で判定済みの値を読む
+  var hJ = JIKU_TRACKING.filter(function(r){ return r.humanHit === true || r.humanHit === false; });
+  var hJhits = hJ.filter(function(r){ return r.humanHit; }).length;
+  var hC = JIKU_TRACKING.filter(function(r){ return r.humanCutHit === true || r.humanCutHit === false; });
+  var hChits = hC.filter(function(r){ return r.humanCutHit; }).length;
+  var humanTot  = hJ.length + hC.length;
+  var humanHits = hJhits + hChits;
+  var hHorses = 0, hHorsesHit = 0;
+  JIKU_TRACKING.forEach(function(r){
+    if (r.humanJikuHits && r.humanJikuHits.length) {
+      hHorses += r.humanJikuHits.length;
+      r.humanJikuHits.forEach(function(b){ if (b) hHorsesHit++; });
+    }
+  });
+
   var html = '<div class="card" style="margin-top:12px">';
   html += '<div class="ct">🎯 軸馬3着内率トラッキング</div>';
 
-  // ── サマリー2列（AI推奨軸馬は削除・買い目AI予想削除に伴い・2026-05-30）──
-  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">';
+  // ── サマリー3列（AI推奨軸馬の枠に 👤人間の上書き を入れた・2026-09-29）──
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">';
   // スコア1位
   html += '<div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 8px;text-align:center">';
   html += '<div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px">📊 スコア1位（軸馬）</div>';
@@ -29084,12 +29106,21 @@ function renderJikuTracking() {
   html += '<div style="font-size:20px;font-weight:700;color:' + comboColor + '">' + comboHits + '<span style="font-size:12px;color:var(--color-text-tertiary)">/' + total + '</span></div>';
   html += '<div style="font-size:11px;color:' + comboColor + ';font-weight:600">' + comboPct + '%</div>';
   html += '</div>';
+  // 👤 人間の上書き
+  var humanPct = humanTot ? Math.round(humanHits/humanTot*100) : 0;
+  html += '<div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 8px;text-align:center">';
+  html += '<div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px">👤 人間の上書き</div>';
+  html += '<div style="font-size:20px;font-weight:600;color:var(--color-text-primary)">' + humanHits + '<span style="font-size:12px;color:var(--color-text-tertiary)">/' + humanTot + '</span></div>';
+  html += '<div style="font-size:11px;color:var(--color-text-secondary)">' + humanPct + '%</div>';
+  html += '<div style="font-size:9px;color:var(--color-text-tertiary);margin-top:2px">軸' + hJhits + '/' + hJ.length + '・除外' + hChits + '/' + hC.length + '</div>';
+  html += '</div>';
   html += '</div>';
 
   // 説明文
   html += '<div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:12px;line-height:1.5">';
   html += '⚡複合的中 = AI推奨またはスコア1位のどちらかが3着以内に来た場合';
   html += '<br>馬券 ○＝的中／×＝不的中（収支記録のあるレースのみ表示）';
+  html += '<br>👤人間の上書き = 軸の差し替えと、モデル上位を切った除外判断の合算。軸の差し替えは、買い目の型で軸に求められる条件（単独軸＝その1頭が3着内／軸2頭マルチ＝2頭とも3着内）を満たしたか。馬券の的中は RESULTS_LOG 側で判定。軸に指名した馬の頭数ベースでは ' + hHorsesHit + '/' + hHorses + '頭が3着内';
   html += '</div>';
 
   // ── レース別一覧 ──
