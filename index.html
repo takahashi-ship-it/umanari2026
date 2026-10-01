@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20261001-2040-adj-top3';
+  var CURRENT_VERSION = '20261001-2050-dist-overseas';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -23535,6 +23535,13 @@ function _kyotoAdj(rows){
   var rate=(t+0.75)/(n+3);
   return {n:n, t3:t, rate:rate, v:Math.min(5,Math.max(0,(rate-0.25)*20))};
 }
+// 距離の項目の母集団：上の母集団に海外の芝・平地（着順が数字）を加える。競馬場の項目はJRAのみのまま。
+function _kyotoPoolDist(h0,pool){
+  var out=pool.slice(), rh=h0.raceHistory||[];
+  for(var i=0;i<rh.length;i++){ var r=rh[i];
+    if(r.kind==='海外'&&r.surface==='芝'&&r.rank!=null) out.push(r); }
+  return out;
+}
 // 前走＝取消・除外を除いた最新の1走（海外・障害・競走中止は前走として採用する）
 function _kyotoPrev(h0){
   var rh=h0.raceHistory||[];
@@ -23617,13 +23624,14 @@ function computeScoreBreakdownKyotoV1(h,_rawOnly){
     +'【未較正：芝・距離2400m以上・グレード表記あり（海外を含む）で2着以内が1回以上。加点専用で、本レースの着別度数では裏付けていない】','horse');
   // ⑨ 芝2400m実績 5【未較正・加点専用】
   var kpool=_kyotoPool(h0);
-  var _d24=[]; for(var _j9=0;_j9<kpool.length;_j9++){ if(kpool[_j9].distance===2400) _d24.push(kpool[_j9]); }
+  var _p24=_kyotoPoolDist(h0,kpool);
+  var _d24=[]; for(var _j9=0;_j9<_p24.length;_j9++){ if(_p24[_j9].distance===2400) _d24.push(_p24[_j9]); }
   var a24=_kyotoAdj(_d24);
-  add('芝2400m実績',a24.v,5,'JRAの芝2400mで'+a24.t3+'/'+a24.n+'走が3着内。重賞平均25%の成績3戦分（3着内0.75回）を加えて補正すると'+'('+a24.t3+'+0.75)÷('+a24.n+'+3)＝'+(a24.rate*100).toFixed(1)+'%'+'【未較正：(補正3着内率−0.25)×20を0以上5以下に収めた加点専用。母集団はJRAの芝・平地で着順が数字の走（取消・除外・競走中止・新潟直線1000mを除き、海外は含めない）。本レースの着別度数では裏付けていない】','horse');
+  add('芝2400m実績',a24.v,5,'芝2400m（JRA＋海外）で'+a24.t3+'/'+a24.n+'走が3着内。重賞平均25%の成績3戦分（3着内0.75回）を加えて補正すると'+'('+a24.t3+'+0.75)÷('+a24.n+'+3)＝'+(a24.rate*100).toFixed(1)+'%'+'【未較正：(補正3着内率−0.25)×20を0以上5以下に収めた加点専用。距離の項目は海外の芝を含む／競馬場の項目はJRAのみ。母集団はJRAの芝・平地（取消・除外・競走中止・新潟直線1000mを除く）に海外の芝・平地を加えた、着順が数字の走。本レースの着別度数では裏付けていない】','horse');
   // ⑩ 京都実績 5【未較正・加点専用】
   var _ky=[]; for(var _j10=0;_j10<kpool.length;_j10++){ if(kpool[_j10].course==='京都') _ky.push(kpool[_j10]); }
   var aky=_kyotoAdj(_ky);
-  add('京都実績',aky.v,5,'京都の芝（平地）で'+aky.t3+'/'+aky.n+'走が3着内。重賞平均25%の成績3戦分（3着内0.75回）を加えて補正すると'+'('+aky.t3+'+0.75)÷('+aky.n+'+3)＝'+(aky.rate*100).toFixed(1)+'%'+'【未較正：(補正3着内率−0.25)×20を0以上5以下に収めた加点専用。母集団はJRAの芝・平地で着順が数字の走（取消・除外・競走中止・新潟直線1000mを除き、海外は含めない）。本レースの着別度数では裏付けていない】','horse');
+  add('京都実績',aky.v,5,'京都の芝（平地）で'+aky.t3+'/'+aky.n+'走が3着内。重賞平均25%の成績3戦分（3着内0.75回）を加えて補正すると'+'('+aky.t3+'+0.75)÷('+aky.n+'+3)＝'+(aky.rate*100).toFixed(1)+'%'+'【未較正：(補正3着内率−0.25)×20を0以上5以下に収めた加点専用。距離の項目は海外の芝を含む／競馬場の項目はJRAのみ。母集団はJRAの当該競馬場の芝・平地で着順が数字の走（取消・除外・競走中止を除き、海外は含めない）。本レースの着別度数では裏付けていない】','horse');
   var UNCAL={'2400m以上の重賞で連対':1,'芝2400m実績':1,'京都実績':1};
   var totalCal=0, maxCal=0;
   for(var ci=0;ci<it.length;ci++){ it[ci].uncalibrated=!!UNCAL[it[ci].key];
@@ -23682,6 +23690,13 @@ function _mainichiAdj(rows){
   for(var i=0;i<n;i++){ if(rows[i].rank<=3) t++; }
   var rate=(t+0.75)/(n+3);
   return {n:n, t3:t, rate:rate, v:Math.min(5,Math.max(0,(rate-0.25)*20))};
+}
+// 距離の項目の母集団：上の母集団に海外の芝・平地（着順が数字）を加える。競馬場の項目はJRAのみのまま。
+function _mainichiPoolDist(h0,pool){
+  var out=pool.slice(), rh=h0.raceHistory||[];
+  for(var i=0;i<rh.length;i++){ var r=rh[i];
+    if(r.kind==='海外'&&r.surface==='芝'&&r.rank!=null) out.push(r); }
+  return out;
 }
 function _mainichiGap(rows,fn){
   var a=[],b=[];
@@ -23749,13 +23764,14 @@ function computeScoreBreakdownMainichiV1(h,_rawOnly){
       : '非根幹'+hk.inN+'走で3着内率'+hk.inP.toFixed(1)+'%、根幹'+hk.outN+'走で'+hk.outP.toFixed(1)+'%。差'+(hk.d>=0?'+':'')+hk.d.toFixed(1)+'pt')
     +'【未較正：距離を400で割った余りが0でない距離を非根幹とする（本レースの1800mは非根幹）。母集団と閾値は東京巧者と同じ。加点専用】','horse');
   // ⑧ 芝1800m実績 5【未較正・加点専用】
-  var _d18=[]; for(var _i8=0;_i8<pool.length;_i8++){ if(pool[_i8].distance===1800) _d18.push(pool[_i8]); }
+  var _p18=_mainichiPoolDist(h0,pool);
+  var _d18=[]; for(var _i8=0;_i8<_p18.length;_i8++){ if(_p18[_i8].distance===1800) _d18.push(_p18[_i8]); }
   var a18=_mainichiAdj(_d18);
-  add('芝1800m実績',a18.v,5,'JRAの芝1800mで'+a18.t3+'/'+a18.n+'走が3着内。重賞平均25%の成績3戦分（3着内0.75回）を加えて補正すると'+'('+a18.t3+'+0.75)÷('+a18.n+'+3)＝'+(a18.rate*100).toFixed(1)+'%'+'【未較正：(補正3着内率−0.25)×20を0以上5以下に収めた加点専用。母集団はJRAの芝・平地で着順が数字の走（取消・除外・競走中止・新潟直線1000mを除き、海外は含めない）。本レースの着別度数では裏付けていない】','horse');
+  add('芝1800m実績',a18.v,5,'芝1800m（JRA＋海外）で'+a18.t3+'/'+a18.n+'走が3着内。重賞平均25%の成績3戦分（3着内0.75回）を加えて補正すると'+'('+a18.t3+'+0.75)÷('+a18.n+'+3)＝'+(a18.rate*100).toFixed(1)+'%'+'【未較正：(補正3着内率−0.25)×20を0以上5以下に収めた加点専用。距離の項目は海外の芝を含む／競馬場の項目はJRAのみ。母集団はJRAの芝・平地（取消・除外・競走中止・新潟直線1000mを除く）に海外の芝・平地を加えた、着順が数字の走。本レースの着別度数では裏付けていない】','horse');
   // ⑨ 東京実績 5【未較正・加点専用】
   var _tk2=[]; for(var _i9=0;_i9<pool.length;_i9++){ if(pool[_i9].course==='東京') _tk2.push(pool[_i9]); }
   var atk=_mainichiAdj(_tk2);
-  add('東京実績',atk.v,5,'東京の芝（平地）で'+atk.t3+'/'+atk.n+'走が3着内。重賞平均25%の成績3戦分（3着内0.75回）を加えて補正すると'+'('+atk.t3+'+0.75)÷('+atk.n+'+3)＝'+(atk.rate*100).toFixed(1)+'%'+'【未較正：(補正3着内率−0.25)×20を0以上5以下に収めた加点専用。母集団はJRAの芝・平地で着順が数字の走（取消・除外・競走中止・新潟直線1000mを除き、海外は含めない）。本レースの着別度数では裏付けていない】','horse');
+  add('東京実績',atk.v,5,'東京の芝（平地）で'+atk.t3+'/'+atk.n+'走が3着内。重賞平均25%の成績3戦分（3着内0.75回）を加えて補正すると'+'('+atk.t3+'+0.75)÷('+atk.n+'+3)＝'+(atk.rate*100).toFixed(1)+'%'+'【未較正：(補正3着内率−0.25)×20を0以上5以下に収めた加点専用。距離の項目は海外の芝を含む／競馬場の項目はJRAのみ。母集団はJRAの当該競馬場の芝・平地で着順が数字の走（取消・除外・競走中止を除き、海外は含めない）。本レースの着別度数では裏付けていない】','horse');
   var UNCAL={'東京巧者':1,'非根幹巧者':1,'芝1800m実績':1,'東京実績':1};
   var totalCal=0, maxCal=0;
   for(var ci=0;ci<it.length;ci++){ it[ci].uncalibrated=!!UNCAL[it[ci].key];
