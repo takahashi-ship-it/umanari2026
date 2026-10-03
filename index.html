@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20261003-2109-odds-1003';
+  var CURRENT_VERSION = '20261003-2112-discount';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -23491,7 +23491,7 @@ function computeScoreBreakdownShionV1(h,_rawOnly){
 //   種牡馬…コース全体の成績で本レースの着別度数ではない
 // 較正: 6項目すべて本レースの過去10年の着別度数由来＝較正済。道悪適性のみ uncalibrated:true とし totalCal/maxCal から除く（常に95点満点の尺度）。
 // ========== 京都大賞典（京都芝2400m外・GII・別定）==========
-// KYOTO_V1 / Σmax=82（較正済 totalCal/maxCal=67。2400m以上の重賞で連対5・芝2400m実績5・京都実績5は uncalibrated）
+// KYOTO_V1 / Σmax=82（較正済 totalCal/maxCal=67。2400m以上の重賞で連対5・芝2400m実績5・京都実績5・8歳以上の割引−5は uncalibrated。割引はmax0のためΣmaxは増えない）
 // 過去データ: tools/kyoto_past/kyoto_past_2016_2025.tsv（全141頭・完走139）／配当 kyoto_payouts_2016_2025.tsv
 // 出走馬:     tools/kyoto_past/kyoto_runners_history.tsv のうち出走18頭376走（登録21頭からナムラエイハブ・
 //             ブレイヴロッカー・ラスカンブレスの3頭が除外）／予想オッズ kyoto_entries_odds_1001.tsv
@@ -23632,7 +23632,12 @@ function computeScoreBreakdownKyotoV1(h,_rawOnly){
   var _ky=[]; for(var _j10=0;_j10<kpool.length;_j10++){ if(kpool[_j10].course==='京都') _ky.push(kpool[_j10]); }
   var aky=_kyotoAdj(_ky);
   add('京都実績',aky.v,5,'京都の芝（平地）で'+aky.t3+'/'+aky.n+'走が3着内。重賞平均25%の成績3戦分（3着内0.75回）を加えて補正すると'+'('+aky.t3+'+0.75)÷('+aky.n+'+3)＝'+(aky.rate*100).toFixed(1)+'%'+'【未較正：(補正3着内率−0.25)×20を0以上5以下に収めた加点専用。距離の項目は海外の芝を含む／競馬場の項目はJRAのみ。母集団はJRAの当該競馬場の芝・平地で着順が数字の走（取消・除外・競走中止を除き、海外は含めない）。本レースの着別度数では裏付けていない】','horse');
-  var UNCAL={'2400m以上の重賞で連対':1,'芝2400m実績':1,'京都実績':1};
+  // ⑪ 8歳以上の割引 −5【未較正・減点専用】
+  var _old=(h0.age!=null&&h0.age>=8);
+  add('8歳以上の割引',_old?-5:0,0,
+    (_old?h0.age+'歳（8歳以上）→−5':(h0.age||'?')+'歳→割引なし')
+    +'。2014年以降の京都開催の京都大賞典10回で8歳以上は0-0-0-13（ケシウマ）'+'【母数30未満のゼロ実績による割引。§29『母数30未満のゼロ実績を壁として扱わない』の例外として、人間の判断で追加（2026-10-03）。レース後に効果を測定】','horse');
+  var UNCAL={'2400m以上の重賞で連対':1,'芝2400m実績':1,'京都実績':1,'8歳以上の割引':1};
   var totalCal=0, maxCal=0;
   for(var ci=0;ci<it.length;ci++){ it[ci].uncalibrated=!!UNCAL[it[ci].key];
     if(!it[ci].uncalibrated){ totalCal+=it[ci].score; maxCal+=it[ci].max; } }
@@ -23647,7 +23652,7 @@ function computeScoreBreakdownKyotoV1(h,_rawOnly){
   return out;
 }
 // ========== 毎日王冠（東京芝1800m外・GII・別定）==========
-// MAINICHI_V1 / Σmax=90（較正済 totalCal/maxCal=70。東京巧者5・非根幹巧者5・芝1800m実績5・東京実績5は uncalibrated）
+// MAINICHI_V1 / Σmax=90（較正済 totalCal/maxCal=70。東京巧者5・非根幹巧者5・芝1800m実績5・東京実績5・前走重賞以外の割引−5は uncalibrated。割引はmax0のためΣmaxは増えない）
 // 出典: netkeiba 過去10年の全着順118頭を tools/mainichi_past/results_2016_2025.tsv に保存し自動集計。
 //       出走馬の競走成績は tools/mainichi_past/runners_history.tsv（18頭275走）。
 // 測定の要点（2026-09-29時点）:
@@ -23772,7 +23777,12 @@ function computeScoreBreakdownMainichiV1(h,_rawOnly){
   var _tk2=[]; for(var _i9=0;_i9<pool.length;_i9++){ if(pool[_i9].course==='東京') _tk2.push(pool[_i9]); }
   var atk=_mainichiAdj(_tk2);
   add('東京実績',atk.v,5,'東京の芝（平地）で'+atk.t3+'/'+atk.n+'走が3着内。重賞平均25%の成績3戦分（3着内0.75回）を加えて補正すると'+'('+atk.t3+'+0.75)÷('+atk.n+'+3)＝'+(atk.rate*100).toFixed(1)+'%'+'【未較正：(補正3着内率−0.25)×20を0以上5以下に収めた加点専用。距離の項目は海外の芝を含む／競馬場の項目はJRAのみ。母集団はJRAの当該競馬場の芝・平地で着順が数字の走（取消・除外・競走中止を除き、海外は含めない）。本レースの着別度数では裏付けていない】','horse');
-  var UNCAL={'東京巧者':1,'非根幹巧者':1,'芝1800m実績':1,'東京実績':1};
+  // ⑩ 前走重賞以外の割引 −5【未較正・減点専用】
+  var _jus=!!(p&&p.kind==='平地'&&_MAINICHI_JRA[p.course]&&(p.grade==='GI'||p.grade==='GII'||p.grade==='GIII'));
+  add('前走重賞以外の割引',_jus?0:-5,0,
+    (_jus?'前走はJRAの重賞（'+p.grade+'）→割引なし':'前走がJRAの重賞（G1・G2・G3）でない'+(p?'（'+pl+'）':'（前走なし）')+'→−5')
+    +'。過去10年の毎日王冠で前走オープン特別以下は0-0-0-13（ケシウマ）'+'【母数30未満のゼロ実績による割引。§29『母数30未満のゼロ実績を壁として扱わない』の例外として、人間の判断で追加（2026-10-03）。レース後に効果を測定】','horse');
+  var UNCAL={'東京巧者':1,'非根幹巧者':1,'芝1800m実績':1,'東京実績':1,'前走重賞以外の割引':1};
   var totalCal=0, maxCal=0;
   for(var ci=0;ci<it.length;ci++){ it[ci].uncalibrated=!!UNCAL[it[ci].key];
     if(!it[ci].uncalibrated){ totalCal+=it[ci].score; maxCal+=it[ci].max; } }
