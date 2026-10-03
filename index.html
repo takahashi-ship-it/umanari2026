@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20261003-2112-discount';
+  var CURRENT_VERSION = '20261003-2119-discount-fix';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -23778,10 +23778,21 @@ function computeScoreBreakdownMainichiV1(h,_rawOnly){
   var atk=_mainichiAdj(_tk2);
   add('東京実績',atk.v,5,'東京の芝（平地）で'+atk.t3+'/'+atk.n+'走が3着内。重賞平均25%の成績3戦分（3着内0.75回）を加えて補正すると'+'('+atk.t3+'+0.75)÷('+atk.n+'+3)＝'+(atk.rate*100).toFixed(1)+'%'+'【未較正：(補正3着内率−0.25)×20を0以上5以下に収めた加点専用。距離の項目は海外の芝を含む／競馬場の項目はJRAのみ。母集団はJRAの当該競馬場の芝・平地で着順が数字の走（取消・除外・競走中止を除き、海外は含めない）。本レースの着別度数では裏付けていない】','horse');
   // ⑩ 前走重賞以外の割引 −5【未較正・減点専用】
-  var _jus=!!(p&&p.kind==='平地'&&_MAINICHI_JRA[p.course]&&(p.grade==='GI'||p.grade==='GII'||p.grade==='GIII'));
-  add('前走重賞以外の割引',_jus?0:-5,0,
-    (_jus?'前走はJRAの重賞（'+p.grade+'）→割引なし':'前走がJRAの重賞（G1・G2・G3）でない'+(p?'（'+pl+'）':'（前走なし）')+'→−5')
-    +'。過去10年の毎日王冠で前走オープン特別以下は0-0-0-13（ケシウマ）'+'【母数30未満のゼロ実績による割引。§29『母数30未満のゼロ実績を壁として扱わない』の例外として、人間の判断で追加（2026-10-03）。レース後に効果を測定】','horse');
+  // 割引するのはJRAのオープン特別・リステッド・条件戦（3勝クラス以下）を使ってきた馬だけ。
+  // JRAの重賞（G1・G2・G3）、海外のグレード戦、地方の交流重賞（JpnI〜III）は割引しない。
+  // 地方は raceHistory に Jpn の格が入らないことがあるため、判定できなければ中立（0）にする。
+  var _gJ=!!(p&&(p.grade==='GI'||p.grade==='GII'||p.grade==='GIII'));
+  var _gN=!!(p&&/Jpn\s?I{1,3}/.test((p.grade||'')+' '+(p.raceName||'')));
+  var _dv,_dn;
+  if(!p){ _dv=0; _dn='前走が取れないため判定できず中立（割引なし）'; }
+  else if(p.kind==='障害'){ _dv=0; _dn='前走が障害戦のため判定対象外→中立（割引なし）'; }
+  else if(p.kind==='海外'){ _dv=0;
+    _dn=_gJ?('前走は海外のグレード戦（'+p.grade+'・'+pl+'）→割引なし'):('前走は海外（'+p.course+'）だが格が判定できず中立（割引なし）'); }
+  else if(!_MAINICHI_JRA[p.course]){ _dv=0;
+    _dn=_gN?('前走は地方の交流重賞（'+pl+'）→割引なし'):('前走は地方（'+p.course+'）で格が判定できず中立（割引なし）'); }
+  else if(_gJ){ _dv=0; _dn='前走はJRAの重賞（'+p.grade+'・'+pl+'）→割引なし'; }
+  else { _dv=-5; _dn='前走はJRAのオープン特別・リステッド・条件戦（3勝クラス以下）（'+pl+'）→−5'; }
+  add('前走重賞以外の割引',_dv,0,_dn+'。過去10年の毎日王冠で前走オープン特別以下は0-0-0-13（ケシウマ）'+'【母数30未満のゼロ実績による割引。§29『母数30未満のゼロ実績を壁として扱わない』の例外として、人間の判断で追加（2026-10-03）。レース後に効果を測定】','horse');
   var UNCAL={'東京巧者':1,'非根幹巧者':1,'芝1800m実績':1,'東京実績':1,'前走重賞以外の割引':1};
   var totalCal=0, maxCal=0;
   for(var ci=0;ci<it.length;ci++){ it[ci].uncalibrated=!!UNCAL[it[ci].key];
