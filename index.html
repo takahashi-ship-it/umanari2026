@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20261004-1921-result-1004';
+  var CURRENT_VERSION = '20261004-2322-ireland-meta';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7954,6 +7954,13 @@ window.HORSES_BY_RACE = HORSES_BY_RACE;
  * 3.05) RACE METADATA (タイトル・コース等)
  * ===================================================== */
 const RACE_META = {
+  'アイルランドT': {
+    babaWet:false, actualBaba:'', gradeLine:"G2", grade:"G2", title:"アイルランドトロフィー",
+    date:"2026-10-11 (日)", time:"15:45", venue:"東京", surface:"芝1800m", age:"3歳以上牝馬", distance:1800,
+    direction:"left", weightType:"別定", isFinished:false,
+    pageTitle:"JRA重賞予想 2026 | アイルランドトロフィー",
+    notice:"★過去10年データを tools/ireland_past/ に保存したのみ（府中牝馬S 2016〜2024年＋アイルランドT 2025年の139頭。2025年6月の府中牝馬Sは開催時期が違うため除外）。過去データ表・出走馬・エンジン（配点）はいずれも未投入。2023年の人気はJRA公式に合わせて修正済み（ディヴィーナ1番人気・プレサージュリフト2番人気。同オッズ4.7倍でnetkeiba結果ページが逆だった）。中止1頭（2023ストーリア）・取消1頭（2019ソウルスターリング）は rank に『中止』『取消』が入っている。コースは東京 芝1800m・左・Aコース、3歳以上オープン牝馬・別定、フルゲート18頭。", paceExpect:'', paceNote:''
+  },
   '毎日王冠': {
     babaWet:false, actualBaba:'良', gradeLine:"G2", grade:"G2", title:"毎日王冠",
     date:"2026-10-04 (日)", time:"15:45", venue:"東京", surface:"芝1800m", age:"3歳以上", distance:1800,
