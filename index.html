@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20261005-1203-ireland-roster';
+  var CURRENT_VERSION = '20261005-1237-ireland-v1';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -23520,6 +23520,120 @@ function computeScoreBreakdownShionV1(h,_rawOnly){
 //   前走クラス・前走海外…母数14/11で未確立（前走GI p=0.027、海外0-0-0-11 p=0.221）
 //   種牡馬…コース全体の成績で本レースの着別度数ではない
 // 較正: 6項目すべて本レースの過去10年の着別度数由来＝較正済。道悪適性のみ uncalibrated:true とし totalCal/maxCal から除く（常に95点満点の尺度）。
+// ========== アイルランドトロフィー（東京芝1800m・GII・3歳上オープン牝馬・別定）==========
+// IRELAND_V1 / Σmax=105（較正済 totalCal/maxCal=65。4つの補正3着内率（各10点）は uncalibrated）
+// 過去データ: tools/ireland_past/ireland_past_2016_2025.tsv（府中牝馬S 2016〜2024＋アイルランドT 2025・139頭）
+//             配当 ireland_payouts_2016_2025.tsv（119件）
+// 出走馬:     tools/ireland_past/ireland_entries_career_20261011.tsv（18頭237走）
+//             出馬表・予想オッズ ireland_entries_odds_20261005.tsv（特別登録時点）
+// 較正済(65点)の内訳と出典:
+//   当日人気20 / 年齢10 … 自前の過去10年データ（139頭）
+//   前走着順20 / 前走人気15 … JRA公式データ分析
+// 未較正(各10点・加点専用)は出走馬の競走成績から算出した個体指標で、本レースの着別度数では裏付けていない。
+//   補正3着内率＝（3着内数+0.75）÷（走数+3）、点数＝min(10, max(0, (補正率−0.25)×40))
+//   毎日王冠・京都大賞典の各最大5点の式（×20）とは係数が違う。IrelandV1 専用。
+function _getIrelandScoreStats(){
+  var xs=[], hs=(typeof HORSES_BY_RACE!=='undefined'&&HORSES_BY_RACE['アイルランドT'])||[];
+  for(var i=0;i<hs.length;i++){ xs.push(computeScoreBreakdownIrelandV1(hs[i],true).total); }
+  if(!xs.length) return {mean:0,sd:0};
+  var m=xs.reduce(function(a,b){return a+b;},0)/xs.length;
+  var v=xs.reduce(function(a,b){return a+(b-m)*(b-m);},0)/xs.length;
+  return {mean:m, sd:Math.sqrt(v)};
+}
+var _IRELAND_JRA={'札幌':1,'函館':1,'福島':1,'新潟':1,'東京':1,'中山':1,'中京':1,'京都':1,'阪神':1,'小倉':1};
+// 前走＝直近の走（取消・除外を除く。ダートも含む）
+function _irelandPrev(h0){
+  var rh=h0.raceHistory||[];
+  for(var i=0;i<rh.length;i++){ if(rh[i].kind!=='取消'&&rh[i].kind!=='除外') return rh[i]; }
+  return null;
+}
+// 母集団：JRAの平地で着順が数字の走（取消・除外・競走中止・新潟直線1000mを除く）。芝/ダの別は各項目で絞る
+function _irelandPool(h0){
+  var rh=h0.raceHistory||[], out=[];
+  for(var i=0;i<rh.length;i++){ var r=rh[i];
+    if(r.kind!=='平地') continue;
+    if(!_IRELAND_JRA[r.course]) continue;
+    if(r.rank==null) continue;
+    if(r.course==='新潟'&&r.distance===1000) continue;
+    out.push(r); }
+  return out;
+}
+// 補正3着内率。重賞平均25%の成績3戦分（3着内0.75回）を加えて少走数を補正する。走数0なら 0.75÷3＝0.25 で0点
+function _irelandAdj(rows){
+  var n=rows.length, t=0;
+  for(var i=0;i<n;i++){ if(rows[i].rank<=3) t++; }
+  var rate=(t+0.75)/(n+3);
+  return {n:n, t3:t, rate:rate, v:Math.min(10,Math.max(0,(rate-0.25)*40))};
+}
+function computeScoreBreakdownIrelandV1(h,_rawOnly){
+  var h0=h||{};
+  var it=[], add=function(k,v,mx,note,grp){
+    v=Math.round(v*10)/10;
+    it.push({key:k,value:v,max:mx,note:note||'',label:k,score:v,group:grp||'horse'});
+  };
+  // ① 当日人気 20【自前10年データ】
+  var P=(h0.pop!=null)?h0.pop:h0.popEstimate, isFinal=(h0.pop!=null), pv, pn;
+  if(P==null){ pv=0; pn='人気が取れない→0'; }
+  else if(P<=2){ pv=20; pn=P+'番人気（1〜2番人気）'; }
+  else if(P<=5){ pv=11; pn=P+'番人気（3〜5番人気）'; }
+  else if(P<=9){ pv=6;  pn=P+'番人気（6〜9番人気）'; }
+  else { pv=2; pn=P+'番人気（10番人気以下）'; }
+  add('当日人気',pv,20,pn+'【出典:自前の過去10年データ（府中牝馬S 2016〜2024＋アイルランドT 2025・139頭）】'
+    +(isFinal?'【確定オッズ】':'【★予想オッズ・確定前。当日朝に確定値で取り直すこと（§13）】'),'env');
+  var p=_irelandPrev(h0);
+  var pl=p?(p.course+(p.surface||'')+(p.distance||'')+' '+(p.raceName||'')+(p.grade?'('+p.grade+')':'')
+        +' '+(p.rank==null?'（着順なし）':p.rank+'着')):'なし';
+  var src='【出典:JRA公式データ分析】';
+  // ② 前走着順 20
+  var rv,rn;
+  if(!p||p.rank==null){ rv=0; rn='前走の着順が取れない→0'; }
+  else if(p.rank<=2){ rv=20; rn='前走'+p.rank+'着（1〜2着）'; }
+  else if(p.rank<=9){ rv=8;  rn='前走'+p.rank+'着（3〜9着）'; }
+  else { rv=0; rn='前走'+p.rank+'着（10着以下は0）'; }
+  add('前走着順',rv,20,rn+'。前走＝'+pl+'【直近の走。取消・除外は除き、ダートも含む】'+src,'horse');
+  // ③ 前走人気 15
+  var qv,qn;
+  if(!p||p.pop==null){ qv=0; qn='前走に人気が無い→0'; }
+  else if(p.pop<=3){ qv=15; qn='前走'+p.pop+'番人気（1〜3番人気）'; }
+  else if(p.pop<=5){ qv=2;  qn='前走'+p.pop+'番人気（4〜5番人気）'; }
+  else { qv=0; qn='前走'+p.pop+'番人気（6番人気以下は0）'; }
+  add('前走人気',qv,15,qn+src,'horse');
+  // ④ 年齢 10【自前10年データ】
+  var av,an;
+  if(h0.age===4){ av=10; an='4歳'; }
+  else if(h0.age===6){ av=4; an='6歳'; }
+  else { av=0; an=(h0.age||'?')+'歳（4歳と6歳のみ加点）'; }
+  add('年齢',av,10,an+'【出典:自前の過去10年データ。別定戦のため年齢と斤量差は分離できていない】','horse');
+  // ⑤〜⑧ 補正3着内率 各10点【未較正・加点専用】
+  var pool=_irelandPool(h0);
+  var SRC=('【未較正：補正3着内率＝（3着内数+0.75）÷（走数+3）で、重賞平均25%の成績3戦分を加えて補正。'
+   +'点数＝(補正率−0.25)×40 を0以上10以下に収めた加点専用（未経験は0点）。'
+   +'母集団はJRAの平地で着順が数字の走（取消・除外・競走中止・新潟直線1000mを除く）。'
+   +'本レースの着別度数では裏付けていない】');
+  var pick=function(fn){ var o=[]; for(var i=0;i<pool.length;i++){ if(fn(pool[i])) o.push(pool[i]); } return o; };
+  var defs=[['東京芝','東京の芝（平地）',function(r){return r.surface==='芝'&&r.course==='東京';}],
+            ['芝1800m','芝1800m（平地）',function(r){return r.surface==='芝'&&r.distance===1800;}],
+            ['東京芝1800m','東京の芝1800m（平地）',function(r){return r.surface==='芝'&&r.course==='東京'&&r.distance===1800;}],
+            ['重賞','JRAの重賞（GI・GII・GIII／芝ダ問わず）',function(r){return r.grade==='GI'||r.grade==='GII'||r.grade==='GIII';}]];
+  for(var di=0;di<defs.length;di++){
+    var a=_irelandAdj(pick(defs[di][2]));
+    add(defs[di][0],a.v,10,defs[di][1]+'で'+a.t3+'/'+a.n+'走が3着内。補正すると('+a.t3+'+0.75)÷('+a.n+'+3)＝'
+      +(a.rate*100).toFixed(1)+'%'+SRC,'horse');
+  }
+  var UNCAL={'東京芝':1,'芝1800m':1,'東京芝1800m':1,'重賞':1};
+  var totalCal=0, maxCal=0;
+  for(var ci=0;ci<it.length;ci++){ it[ci].uncalibrated=!!UNCAL[it[ci].key];
+    if(!it[ci].uncalibrated){ totalCal+=it[ci].score; maxCal+=it[ci].max; } }
+  totalCal=Math.round(totalCal*10)/10;
+  var total=0; for(var i2=0;i2<it.length;i2++){ total+=it[i2].value; }
+  total=Math.round(total*10)/10;
+  var max=it.reduce(function(x,y){return x+y.max;},0);
+  var out={items:it, total:total, max:max, penalty:0, totalCal:totalCal, maxCal:maxCal};
+  if(_rawOnly) return out;
+  var st=_getIrelandScoreStats(), z=st.sd?(out.total-st.mean)/st.sd:0;
+  out.pct=Math.round((8+(79-8)/(1+Math.exp(-1.35*z)))*10)/10;
+  return out;
+}
 // ========== 京都大賞典（京都芝2400m外・GII・別定）==========
 // KYOTO_V1 / Σmax=82（較正済 totalCal/maxCal=67。2400m以上の重賞で連対5・芝2400m実績5・京都実績5・8歳以上の割引−5は uncalibrated。割引はmax0のためΣmaxは増えない）
 // 過去データ: tools/kyoto_past/kyoto_past_2016_2025.tsv（全141頭・完走139）／配当 kyoto_payouts_2016_2025.tsv
@@ -28026,6 +28140,7 @@ function computeScoreBreakdown(horse, raceName) {
   if(raceName==='関屋記念') return computeScoreBreakdownSekiyaV2(horse, raceName);
   if (raceName === '新潟記念') return computeScoreBreakdownNiigataKinenV2(horse);
   if (raceName === '紫苑S' && horse && horse.isAvoided) return { total:0, max:87, pct:0, items:[], isAvoided:true, avoidReason: horse.avoidReason || '出走回避' };
+  if (raceName === 'アイルランドT') return computeScoreBreakdownIrelandV1(horse);
   if (raceName === '京都大賞典') return computeScoreBreakdownKyotoV1(horse);
   if (raceName === '毎日王冠') return computeScoreBreakdownMainichiV1(horse);
   if (raceName === 'スプリンターズS') return computeScoreBreakdownSprintersV5(horse);
