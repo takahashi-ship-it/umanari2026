@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20261005-1257-ireland-past';
+  var CURRENT_VERSION = '20261006-1048-swan-meta';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7975,6 +7975,13 @@ window.HORSES_BY_RACE = HORSES_BY_RACE;
  * 3.05) RACE METADATA (タイトル・コース等)
  * ===================================================== */
 const RACE_META = {
+  'スワンS': {
+    babaWet:false, actualBaba:'', gradeLine:"G2", grade:"G2", title:"MBS賞スワンステークス",
+    date:"2026-10-12 (月・祝)", time:"15:45", venue:"京都", surface:"芝1400m", age:"3歳以上", distance:1400,
+    direction:"right", weightType:"別定", isFinished:false,
+    pageTitle:"JRA重賞予想 2026 | MBS賞スワンステークス",
+    notice:"★RACE_META のみ登録。過去データ表・出走馬・エンジン（配点）はいずれも未投入。コースは京都 芝1400m・右・外回り（surface には距離のみを入れ、外回りは direction と本注記で表す。京都大賞典と同じ方式）。3歳以上オープン・別定・国際・指定。発走15:45。", paceExpect:'', paceNote:''
+  },
   'アイルランドT': {
     babaWet:false, actualBaba:'', gradeLine:"G2", grade:"G2", title:"アイルランドトロフィー",
     date:"2026-10-11 (日)", time:"15:45", venue:"東京", surface:"芝1800m", age:"3歳以上牝馬", distance:1800,
