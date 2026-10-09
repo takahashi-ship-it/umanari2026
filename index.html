@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20261009-1117-ireland-waku';
+  var CURRENT_VERSION = '20261009-1347-saudi-meta';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -7994,6 +7994,13 @@ window.HORSES_BY_RACE = HORSES_BY_RACE;
  * 3.05) RACE METADATA (タイトル・コース等)
  * ===================================================== */
 const RACE_META = {
+  'サウジアラビアロイヤルC': {
+    babaWet:false, actualBaba:'', gradeLine:"G3", grade:"G3", title:"サウジアラビアロイヤルカップ",
+    date:"2026-10-10 (土)", time:"15:45", venue:"東京", surface:"芝1600m", age:"2歳", distance:1600,
+    direction:"left", weightType:"馬齢", isFinished:false,
+    pageTitle:"JRA重賞予想 2026 | サウジアラビアロイヤルカップ",
+    notice:"★RACE_META のみ登録。過去データ表・出走馬・エンジン（配点）はいずれも未投入。コースは東京 芝1600m・左・Aコース（surface には距離のみを入れ、コース区分は direction と本注記で表す。京都大賞典と同じ方式）。2歳オープン・馬齢・国際・特指で出走11頭。発走15:45。", paceExpect:'', paceNote:''
+  },
   'スワンS': {
     babaWet:false, actualBaba:'', gradeLine:"G2", grade:"G2", title:"MBS賞スワンステークス",
     date:"2026-10-12 (月・祝)", time:"15:45", venue:"京都", surface:"芝1400m", age:"3歳以上", distance:1400,
