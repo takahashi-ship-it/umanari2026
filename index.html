@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20261012-1646-remove-deadcode';
+  var CURRENT_VERSION = '20261012-1653-remove-deadcss';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -998,183 +998,7 @@
   .summary-item.profit .value { color: var(--green); }
   .summary-item.hit    .value { color: var(--navy); }
 
-  /* RACE RESULT CARDS */
-  .result-card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px 18px;
-    margin-bottom: 12px;
-    border-left: 5px solid var(--red);
-  }
-  .result-card.hit { border-left-color: var(--gold); background: var(--gold-bg); }
-  .result-card-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-  .result-card-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--navy);
-  }
-  .result-card-sub {
-    font-size: 11px;
-    color: var(--text-sub);
-    font-weight: 600;
-  }
-  .result-status {
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 999px;
-    color: #fff;
-  }
-  .result-status.miss { background: #c0392b; }
-  .result-status.hit  { background: var(--gold); }
-
-  .result-buy {
-    background: var(--bg-soft);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 12.5px;
-    margin-bottom: 10px;
-  }
-  .result-buy .buy-label {
-    color: var(--text-sub);
-    font-size: 11px;
-    font-weight: 600;
-    margin-right: 6px;
-  }
-
-  .result-numbers {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-  .result-num {
-    background: var(--bg-soft);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 8px 6px;
-    text-align: center;
-  }
-  .result-num .rn-label {
-    font-size: 10px;
-    color: var(--text-sub);
-    margin-bottom: 2px;
-    font-weight: 600;
-  }
-  .result-num .rn-val {
-    font-size: 14px;
-    font-weight: 800;
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    color: var(--navy);
-  }
-  .result-num.profit .rn-val { color: var(--green); }
-  .result-num.loss .rn-val { color: var(--red); }
-  .result-num.gold .rn-val { color: var(--gold); }
-
-  .result-toggle {
-    width: 100%;
-    background: var(--navy);
-    color: #fff;
-    border: none;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 12.5px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: inherit;
-  }
-  .result-toggle:hover { background: var(--navy-soft); }
-  .result-toggle.open { background: var(--gold); }
-
-  .result-detail {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease;
-    opacity: 0;
-    margin-top: 0;
-  }
-  .result-detail.open {
-    max-height: 1000px;
-    opacity: 1;
-    margin-top: 12px;
-  }
-  .result-detail-inner {
-    background: var(--bg-soft);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 14px;
-  }
-  .placing-list {
-    list-style: none;
-    margin-bottom: 12px;
-  }
-  .placing-list li {
-    padding: 7px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 12.5px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .placing-list li:last-child { border-bottom: none; }
-  .placing-pos {
-    width: 30px;
-    height: 24px;
-    background: var(--navy);
-    color: #fff;
-    border-radius: 4px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-  .placing-pos.pos-1 { background: var(--gold); }
-  .placing-pos.pos-2 { background: #94a3b8; }
-  .placing-pos.pos-3 { background: #b87333; }
-  .placing-pos.pos-cancel { background: #c0392b; }
-  .placing-name { font-weight: 700; color: var(--navy); }
-  .placing-meta { color: var(--text-sub); font-size: 11.5px; }
-  .payout-row {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 8px 12px;
-    font-size: 12.5px;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-  }
-  .payout-row .pay-label {
-    color: var(--text-sub);
-    font-weight: 600;
-  }
-  .payout-row .pay-val {
-    color: var(--gold);
-    font-weight: 800;
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  }
-  .reason-box {
-    background: var(--bg);
-    border-left: 3px solid var(--gold);
-    border-radius: 6px;
-    padding: 10px 12px;
-    font-size: 12.5px;
-    color: var(--text-sub);
-    line-height: 1.6;
-  }
-  .reason-box strong { color: var(--navy); }
+  /* 2026-10-12 削除：参照0件の死にCSS（.result-card 系。renderResults と共に廃止） */
 
   /* MISC */
   .pending-banner {
@@ -1231,7 +1055,7 @@
     .section { padding: 14px; }
     .criteria-grid { grid-template-columns: 1fr; }
     .summary-grid { grid-template-columns: 1fr 1fr; }
-    .result-numbers { grid-template-columns: 1fr 1fr; }
+    /* 2026-10-12 削除：参照0件の死にCSS（.result-numbers） */
     .roi-banner .roi-value { font-size: 32px; }
     .race-list { grid-template-columns: 1fr; }
     .score-detail { grid-template-columns: repeat(2, 1fr); }
@@ -19877,19 +19701,7 @@ function setManualMark(horseName, mark) {
 }
 
 /* ==== 機能5: 年間収支グラフ ==== */
-const SEISEKI_DATA = [
-  { race:'皐月賞',       date:'4/19', invest:55000, payout:200550, grade:'G1' },
-  { race:'青葉賞',       date:'4/25', invest:4800,  payout:0,      grade:'G2' },
-  { race:'フローラS',    date:'4/26', invest:9000,  payout:0,      grade:'G2' },
-  { race:'マイラーズC',  date:'4/26', invest:9000,  payout:70140,  grade:'G2' },
-  { race:'天皇賞春',     date:'5/3',  invest:63000, payout:0,      grade:'G1' },
-  { race:'京都新聞杯',   date:'5/9',  invest:16800, payout:74860,  grade:'G2' },
-  { race:'エプソムC',    date:'5/9',  invest:16800, payout:0,      grade:'G3' },
-  { race:'NHKマイルC', date:'5/10', invest:42000, payout:52300,  grade:'G1' },
-  { race:'ヴィクトリアマイル', date:'5/17', invest:46800, payout:11010,  grade:'G1' },
-  { race:'平安S',         date:'5/23', invest:6000,  payout:0,      grade:'G3' },
-  { race:'オークス',       date:'5/24', invest:16800, payout:0,      grade:'G1' }
-];
+// 2026-10-12 削除：参照0件の死にデータ（SEISEKI_DATA・ハードコードの成績11件）
 
 // 2026-10-12 削除：コンテナ（#seiseki-graph / #resultCards）が存在せず未描画。
 // ハードコードの古い成績が残ると上書き事故の元になるため（renderSeisekiGraph とその data 配列）。
