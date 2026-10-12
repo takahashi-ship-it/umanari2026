@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20261012-1616-swan-result';
+  var CURRENT_VERSION = '20261012-1638-header-jiku-fix';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -1605,7 +1605,7 @@
         padding:6px 16px;
       ">
         <span style="font-size:11px;color:#666;font-weight:500">2026年通算回収率</span>
-        <span id="header-kaishuritu" style="font-size:20px;font-weight:800;color:#0F6E56;letter-spacing:.02em">174.6%</span>
+        <span id="header-kaishuritu" style="font-size:20px;font-weight:800;color:#0F6E56;letter-spacing:.02em">—</span>
         <span id="header-badge" style="font-size:10px;background:#0F6E56;color:#fff;
                      padding:2px 6px;border-radius:9px;font-weight:600">黒字</span>
       </div>
@@ -1618,11 +1618,11 @@
         font-size:11px;
         color:#888;
       ">
-        <span>投資 <strong id="header-invest" style="color:#333">559,600円</strong></span>
+        <span>投資 <strong id="header-invest" style="color:#333">—</strong></span>
         <span style="color:#ccc">→</span>
-        <span>払戻 <strong id="header-payout" style="color:#0F6E56">977,220円</strong></span>
+        <span>払戻 <strong id="header-payout" style="color:#0F6E56">—</strong></span>
         <span style="color:#ccc">|</span>
-        <span><strong id="header-rieki" style="color:#0F6E56">+417,620円</strong></span>
+        <span><strong id="header-rieki" style="color:#0F6E56">—</strong></span>
       </div>
     </div>
   </div>
@@ -19748,6 +19748,8 @@ function renderOddsTab() {
   html += '</div>';
   container.innerHTML = html;
 }
+// renderResultsLog と同じく読み込み時にも描画する。収支レポートタブを開くまで空だったのを解消（2026-10-12）
+if (typeof document !== 'undefined') { if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ try{renderJikuTracking();}catch(_e){} }); else { try{renderJikuTracking();}catch(_e){} } }
 
 /* ==== 機能1: 展開予想パネル ==== */
 function renderPacePredict() {
@@ -29957,6 +29959,11 @@ function renderResultsLog(){
   var hp=document.getElementById('header-payout'); if(hp) hp.textContent=_rlFmt(t.payout)+'円';
   var hr=document.getElementById('header-rieki'); if(hr) hr.textContent=(t.profit>=0?'+':'')+_rlFmt(t.profit)+'円';
   var hk=document.getElementById('header-kaishuritu'); if(hk) hk.textContent=t.recovery+'%';
+  // 黒字/赤字バッジ。旧 updateHeaderStats() のハードコード15件集計を廃止し、_rlTotals() の収支で判定する（2026-10-12）
+  var hb=document.getElementById('header-badge');
+  if(hb){ var _kuro=(t.profit>=0);
+    hb.textContent=_kuro?'黒字':'赤字';
+    hb.style.background=_kuro?'#0F6E56':'#A32D2D'; }
   var c=document.getElementById('results-log-container'); if(!c) return;
   var names=LEGACY_TOTALS.legacyNames+'・'+RESULTS_LOG.map(function(e){return e.race;}).slice().reverse().join('・');
   var combo=(typeof JIKU_TRACKING!=='undefined')?JIKU_TRACKING.filter(function(r){return r.comboHit;}).length:0;
@@ -29983,6 +29990,7 @@ if (typeof document !== 'undefined') { if (document.readyState === 'loading') do
 function renderJikuTracking() {
   var container = document.getElementById('jiku-tracking-container');
   if (!container) return;
+  container.innerHTML = '';   // DOMContentLoaded とタブ切替の二重呼び出しで重ならないよう先に空にする（2026-10-12）
 
   var aiHits    = JIKU_TRACKING.filter(function(r){ return r.aiHit; }).length;
   var scoreHits = JIKU_TRACKING.filter(function(r){ return r.scoreHit; }).length;
@@ -30050,7 +30058,8 @@ function renderJikuTracking() {
   (typeof RESULTS_LOG !== 'undefined' ? RESULTS_LOG : []).forEach(function(d) {
     if (d && d.race && !(d.race in _betByRace)) _betByRace[d.race] = d.status;
   });
-  JIKU_TRACKING.forEach(function(r) {
+  // 表示は新しい順。JIKU_TRACKING 自体は日付の昇順のまま保ち、slice() のコピーを反転して描画する（2026-10-12）
+  JIKU_TRACKING.slice().reverse().forEach(function(r) {
     var bg = r.comboHit ? 'var(--color-background-success)' : 'var(--color-background-secondary)';
     var borderColor = r.comboHit ? 'var(--color-border-success)' : 'var(--color-border-tertiary)';
     html += '<details class="jiku-row" style="background:' + bg + ';border-left:3px solid ' + borderColor + ';border-radius:var(--border-radius-md);margin-bottom:8px">';
@@ -30287,53 +30296,9 @@ renderResults();
  *  保存してリロードで信頼度・順位が自動再計算されます。
  * ===================================================== */
 
-function updateHeaderStats() {
-  const seisekiData = [
-    { invest: 55000, payout: 200550, name: '皐月賞' },
-    { invest: 4800,  payout: 0,      name: '青葉賞' },
-    { invest: 9000,  payout: 0,      name: 'フローラS' },
-    { invest: 9000,  payout: 70140,  name: 'マイラーズC' },
-    { invest: 63000, payout: 0,      name: '天皇賞春' },
-    { invest: 16800, payout: 74860,  name: '京都新聞杯' },
-    { invest: 16800, payout: 0,      name: 'エプソムC' },
-    { invest: 42000, payout: 52300,  name: 'NHKマイルC' },
-    { invest: 46800, payout: 11010,  name: 'ヴィクトリアマイル' },
-    { invest: 6000,  payout: 0,      name: '平安ステークス' },
-    { invest: 16800, payout: 0,      name: 'オークス' },
-    { invest: 0,     payout: 0,      name: '葵ステークス' },
-    { invest: 45000, payout: 235250, name: '日本ダービー' },
-    { invest: 12600, payout: 4410,   name: '目黒記念' },
-    { invest: 56400, payout: 48600,  name: '安田記念' }
-  ];
-
-  const totalInvest = seisekiData.reduce((s,r) => s + r.invest, 0);
-  const totalPayout = seisekiData.reduce((s,r) => s + r.payout, 0);
-  const kaishuritu = Math.round(totalPayout / totalInvest * 100);
-  const rieki = totalPayout - totalInvest;
-
-  const el = document.getElementById('header-kaishuritu');
-  if (el) el.textContent = kaishuritu + '%';
-
-  const elInvest = document.getElementById('header-invest');
-  if (elInvest) elInvest.textContent = totalInvest.toLocaleString() + '円';
-
-  const elPayout = document.getElementById('header-payout');
-  if (elPayout) elPayout.textContent = totalPayout.toLocaleString() + '円';
-
-  const elRieki = document.getElementById('header-rieki');
-  if (elRieki) {
-    elRieki.textContent = (rieki >= 0 ? '+' : '') + rieki.toLocaleString() + '円';
-    elRieki.style.color = rieki >= 0 ? '#0F6E56' : '#A32D2D';
-  }
-
-  const badge = document.getElementById('header-badge');
-  if (badge) {
-    badge.textContent = kaishuritu >= 100 ? '黒字' : '赤字';
-    badge.style.background = kaishuritu >= 100 ? '#0F6E56' : '#A32D2D';
-  }
-}
-
-document.addEventListener('DOMContentLoaded', updateHeaderStats);
+// updateHeaderStats() は削除（2026-10-12）。ハードコードした seisekiData 15件（最後=安田記念 6/7）で
+// renderResultsLog() の集計を DOMContentLoaded の後勝ちで上書きしていたため、ヘッダの収支表示を
+// _rlTotals()（LEGACY_TOTALS + RESULTS_LOG の自動集計）1本に統一した。黒字/赤字バッジは renderResultsLog() に移設。
 
 // ===== カスタムフォーメーション グローバルハンドラ =====
 window.updateCustomFormation = function() {
