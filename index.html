@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20261012-1638-header-jiku-fix';
+  var CURRENT_VERSION = '20261012-1646-remove-deadcode';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -3001,7 +3001,7 @@ document.querySelectorAll('#contentTabs .tab').forEach(t => {
       var _rn = (window.currentRaceName || (typeof currentRace !== 'undefined' ? currentRace : ''));
       window.renderMaigoTab(_rn);
     }
-    if (t.dataset.target === 'tab-report') setTimeout(function(){ renderSeisekiGraph(); if (typeof renderJikuTracking === 'function') renderJikuTracking(); if (typeof renderResultsLog === 'function') renderResultsLog(); }, 50);
+    if (t.dataset.target === 'tab-report') setTimeout(function(){ if (typeof renderJikuTracking === 'function') renderJikuTracking(); if (typeof renderResultsLog === 'function') renderResultsLog(); }, 50);
   });
 });
 
@@ -19280,7 +19280,7 @@ window.horses = HORSES;
 window.currentRaceName = currentRace;
 renderShutsubaTable();
 renderPacePredict();
-renderSeisekiGraph();
+// 2026-10-12 削除：renderSeisekiGraph() の呼び出し（関数ごと廃止。#seiseki-graph が存在せず未描画だった）。
 
 function initOddsGrid() {
   var grid = document.getElementById('odds-input-grid');
@@ -19891,134 +19891,8 @@ const SEISEKI_DATA = [
   { race:'オークス',       date:'5/24', invest:16800, payout:0,      grade:'G1' }
 ];
 
-function renderSeisekiGraph() {
-  var div = document.getElementById('seiseki-graph');
-  if (!div) { console.warn('[renderSeisekiGraph] seiseki-graph div not found'); return; }
-
-  var data = [
-    { race:'皐月賞',           date:'4/19', invest:55000, payout:200550, grade:'G1', hit:true  },
-    { race:'青葉賞',           date:'4/25', invest:4800,  payout:0,      grade:'G2', hit:false },
-    { race:'フローラS',        date:'4/26', invest:9000,  payout:0,      grade:'G2', hit:false },
-    { race:'マイラーズC',      date:'4/26', invest:9000,  payout:70140,  grade:'G2', hit:true  },
-    { race:'天皇賞春',         date:'5/3',  invest:63000, payout:0,      grade:'G1', hit:false },
-    { race:'京都新聞杯',       date:'5/9',  invest:16800, payout:74860,  grade:'G2', hit:true  },
-    { race:'エプソムC',        date:'5/9',  invest:16800, payout:0,      grade:'G3', hit:false },
-    { race:'NHKマイルC',       date:'5/10', invest:42000, payout:52300,  grade:'G1', hit:true  },
-    { race:'ヴィクトリアマイル', date:'5/17', invest:46800, payout:11010,  grade:'G1', hit:true  },
-    { race:'平安S',             date:'5/23', invest:6000,  payout:0,      grade:'G3', hit:false },
-    { race:'オークス',           date:'5/24', invest:16800, payout:0,      grade:'G1', hit:false },
-    { race:'葵ステークス',       date:'5/30', invest:0,     payout:0,      grade:'G3', hit:true  },
-    { race:'日本ダービー',       date:'5/31', invest:45000, payout:235250, grade:'G1', hit:true  },
-    { race:'目黒記念',           date:'5/31', invest:12600, payout:4410,   grade:'G2', hit:true  },
-    { race:'安田記念',           date:'6/7',  invest:56400, payout:48600,  grade:'G1', hit:true  }
-  ];
-
-  var totalInvest = data.reduce(function(s,r){ return s + r.invest; }, 0);
-  var totalPayout = data.reduce(function(s,r){ return s + r.payout; }, 0);
-  var totalProfit = totalPayout - totalInvest;
-  var kaishuritu  = totalInvest > 0 ? Math.round(totalPayout / totalInvest * 100) : 0;
-
-  // 累積収支
-  var cum = 0;
-  var cumData = data.map(function(r){ cum += (r.payout - r.invest); return cum; });
-
-  var html = '';
-
-  // KPI（4枚）
-  html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px">';
-  [
-    { label:'総投資額', value:totalInvest.toLocaleString()+'円', color:'#1a1a1a' },
-    { label:'総払戻額', value:totalPayout.toLocaleString()+'円', color:'#0F6E56' },
-    { label:'純利益',   value:(totalProfit>=0?'+':'')+totalProfit.toLocaleString()+'円', color:totalProfit>=0?'#0F6E56':'#A32D2D' },
-    { label:'回収率',   value:kaishuritu+'%', color:kaishuritu>=100?'#0F6E56':'#A32D2D' }
-  ].forEach(function(k){
-    html += '<div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;text-align:center">' +
-            '<div style="font-size:10px;color:#888;margin-bottom:3px">'+k.label+'</div>' +
-            '<div style="font-size:18px;font-weight:700;color:'+k.color+'">'+k.value+'</div>' +
-            '</div>';
-  });
-  html += '</div>';
-
-  // ── レース別棒グラフ ──
-  html += '<div style="margin-bottom:14px">';
-  html += '<div style="font-size:11px;font-weight:500;color:#555;margin-bottom:8px">レース別収支</div>';
-  var maxAbs = Math.max.apply(null, data.map(function(r){ return Math.abs(r.payout - r.invest); })) || 1;
-  data.forEach(function(r){
-    var profit = r.payout - r.invest;
-    var color  = r.hit ? '#1D9E75' : '#E24B4A';
-    var barPct = Math.round(Math.abs(profit) / maxAbs * 100);
-
-    html += '<div style="margin-bottom:8px">';
-    html += '<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px">';
-    html += '<span style="font-weight:500;color:#1a1a1a">' + r.date + ' ' + r.race + '</span>';
-    html += '<span style="font-weight:700;color:'+color+'">' + (profit>=0?'+':'') + profit.toLocaleString() + '円</span>';
-    html += '</div>';
-    html += '<div style="height:10px;background:#e5e5e5;border-radius:5px;overflow:hidden">';
-    html += '<div style="height:100%;width:'+barPct+'%;background:'+color+';border-radius:5px;transition:width .6s ease"></div>';
-    html += '</div>';
-    html += '</div>';
-  });
-  html += '</div>';
-
-  // ── 累積収支 SVG ──
-  html += '<div style="margin-bottom:6px">';
-  html += '<div style="font-size:11px;font-weight:500;color:#555;margin-bottom:6px">累積収支推移</div>';
-
-  var W = 300, H = 115, PL = 40, PR = 16, PT = 16, PB = 36;
-  var iW = W - PL - PR, iH = H - PT - PB;
-  var n = cumData.length;
-  var minV = Math.min(0, Math.min.apply(null, cumData));
-  var maxV = Math.max(0, Math.max.apply(null, cumData));
-  var range = (maxV - minV) || 1;
-
-  function tx(i){ return PL + (i / (n-1 || 1)) * iW; }
-  function ty(v){ return PT + iH - ((v - minV) / range) * iH; }
-
-  var zeroY = ty(0);
-  var pts   = cumData.map(function(v,i){ return tx(i) + ',' + ty(v); }).join(' ');
-  var area  = PL + ',' + (PT + iH) + ' ' + pts + ' ' + tx(n-1) + ',' + (PT + iH);
-  var finalColor = cumData[cumData.length - 1] >= 0 ? '#1D9E75' : '#E24B4A';
-
-  html += '<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" '
-       + 'style="width:100%;border-radius:8px;background:#f8f8f8">';
-
-  // ゼロライン
-  html += '<line x1="'+PL+'" y1="'+zeroY+'" x2="'+(W-PR)+'" y2="'+zeroY
-       + '" stroke="#ccc" stroke-dasharray="3,2" stroke-width="1"/>';
-
-  // エリア
-  html += '<polygon points="'+area+'" fill="'+finalColor+'" opacity="0.12"/>';
-
-  // ライン
-  html += '<polyline points="'+pts+'" fill="none" stroke="'+finalColor
-       + '" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
-
-  // データ点 + ラベル
-  cumData.forEach(function(v,i){
-    var cx = tx(i), cy = ty(v);
-    var pc = v >= 0 ? '#1D9E75' : '#E24B4A';
-    var kv = Math.round(v/1000);
-    var lbl = (v>=0?'+':'') + kv + 'k';
-    html += '<circle cx="'+cx+'" cy="'+cy+'" r="4" fill="'+pc+'"/>';
-    var anchor = i === 0 ? 'start' : i === n-1 ? 'end' : 'middle';
-    html += '<text x="'+cx+'" y="'+(cy-8)+'" text-anchor="'+anchor
-         + '" font-size="9" fill="'+pc+'" font-weight="600">'+lbl+'</text>';
-  });
-
-  // X軸ラベル（日付・レース名を2行表示）
-  data.forEach(function(r,i){
-    var anchor = i === 0 ? 'start' : i === n-1 ? 'end' : 'middle';
-    html += '<text x="'+tx(i)+'" y="'+(H-16)+'" text-anchor="'+anchor
-         + '" font-size="8" fill="#888">'+r.date+'</text>';
-    html += '<text x="'+tx(i)+'" y="'+(H-5)+'" text-anchor="'+anchor
-         + '" font-size="8" fill="#666" font-weight="500">'+r.race+'</text>';
-  });
-
-  html += '</svg>';
-  html += '</div>';
-
-  div.innerHTML = html;
-}
+// 2026-10-12 削除：コンテナ（#seiseki-graph / #resultCards）が存在せず未描画。
+// ハードコードの古い成績が残ると上書き事故の元になるため（renderSeisekiGraph とその data 配列）。
 
 /* ==== 機能6: 投資額シミュレーター ==== */
 function renderSimulator() {
@@ -30124,84 +29998,8 @@ function sw(t) {
 /* =====================================================
  * 4) SETTLEMENT REPORT - RACE RESULT CARDS
  * ===================================================== */
-const RESULTS = [
-  {
-    raceTitle: "皐月賞",
-    raceSub: "4/19・中山・芝2000m・G1",
-    bet: "3連単1着固定（軸4番ロブチェン・相手1,5,6,7,8,9,12,14,15,17,18 / 110点・各500円）",
-    invest: 55000,
-    payout: 200550,
-    hit: true,
-    placings: [
-      { pos: "1着", name: "ロブチェン",         meta: "松山弘平・1番人気・コースレコード1:56.5" },
-      { pos: "2着", name: "リアライズシリウス", meta: "4番人気" },
-      { pos: "3着", name: "ライヒスアドラー",   meta: "9番人気" }
-    ],
-    payoutDetail: { label: "3連単払戻", val: "¥40,110 × 5 = ¥200,550", note: "(99番人気)" },
-    reason: "<strong>軸ロブチェン（1番人気）が逃げ切りコースレコードV！</strong>9番人気ライヒスアドラー3着で高配当的中。1着固定の判断が完璧にハマった一戦。"
-  },
-  {
-    raceTitle: "青葉賞",
-    raceSub: "4/25・東京・芝2400m・G2",
-    bet: "3連単2頭軸マルチ（軸4番×15番・相手5,6,7,8,10,11,12,13）",
-    invest: 4800,
-    payout: 0,
-    hit: false,
-    placings: [
-      { pos: "1着",  name: "ゴーイントゥスカイ", meta: "武豊・4番人気" },
-      { pos: "2着",  name: "タイダルロック",     meta: "3番人気" },
-      { pos: "3着",  name: "ブラックオリンピア", meta: "1番人気" },
-      { pos: "中止", name: "ノーブルサヴェージ", meta: "D.レーン・故障競走中止", cancel: true }
-    ],
-    payoutDetail: { label: "3連単払戻", val: "¥17,700", note: "(43番人気)" },
-    reason: "<strong>軸の15番（ノーブルサヴェージ）が故障で競走中止</strong>のため不成立。3連単2頭軸マルチは軸2頭が共に3着以内に入る必要があり、片方が中止した時点で全点不的中。"
-  },
-  {
-    raceTitle: "フローラステークス",
-    raceSub: "4/26・東京・芝2000m・G2",
-    bet: "3連単1頭軸マルチ（軸2番・相手3,5,7,10,11,12）",
-    invest: 9000,
-    payout: 0,
-    hit: false,
-    placings: [
-      { pos: "1着", name: "ラフターラインズ",   meta: "D.レーン・1番人気" },
-      { pos: "2着", name: "エンネ",             meta: "M.ディー・3番人気" },
-      { pos: "3着", name: "リアライズルミナス", meta: "松山弘平・5番人気" }
-    ],
-    payoutDetail: { label: "3連単払戻", val: "¥7,920", note: "" },
-    reason: "<strong>軸のラベルセーヌ（2番）が5着</strong>で軸不在。消しにしたエンネ（7枠・該当枠複勝率4%でデータ通り消し）が2着に激走したのは想定外。データ通りの消し判断自体は正しいが、軸の見立てを誤った。"
-  },
-  {
-    raceTitle: "マイラーズカップ",
-    raceSub: "4/26・京都・芝1600m・G2",
-    bet: "3連単1頭軸マルチ（軸9番・相手1,2,5,7,10,18）",
-    invest: 9000,
-    payout: 70140,
-    hit: true,
-    placings: [
-      { pos: "1着", name: "アドマイヤズーム", meta: "武豊・1番人気" },
-      { pos: "2着", name: "ドラゴンブースト", meta: "丹内祐次・9番人気" },
-      { pos: "3着", name: "ベラジオボンド",   meta: "北村友一・5番人気" }
-    ],
-    payoutDetail: { label: "3連単払戻", val: "¥70,140", note: "" },
-    reason: "<strong>1番人気複勝率88% × 調教S × 中28週の十分な間隔</strong>という鉄板条件で軸を9番アドマイヤズームに設定。相手に9番人気ドラゴンブーストを入れた判断が大きく寄与し、3連単70,140円的中。データ重視の選定が完全にハマった一戦。"
-  },
-  {
-    raceTitle: "天皇賞（春）",
-    raceSub: "5/3・京都・芝3200m・G1",
-    bet: "3連単1頭軸マルチ（軸3番アドマイヤテラ・相手1,4,7,8,11,12,14 / 126点・各500円）",
-    invest: 63000,
-    payout: 0,
-    hit: false,
-    placings: [
-      { pos: "1着", name: "クロワデュノール",   meta: "北村友一・1番人気・写真判定" },
-      { pos: "2着", name: "ヴェルテンベルク",   meta: "松若風馬・12番人気（相手未含）" },
-      { pos: "3着", name: "アドマイヤテラ",     meta: "武豊・2番人気（軸馬）" }
-    ],
-    payoutDetail: { label: "3連単払戻", val: "¥70,630", note: "(158番人気)" },
-    reason: "<strong>軸アドマイヤテラは3着に粘ったが、2着のヴェルテンベルク（15番）が相手に含まれていなかった。</strong>15番を相手に入れていれば70,630円×5=353,150円の的中だった。最大穴の12番人気を切ったのが致命傷。"
-  }
-];
+// 2026-10-12 削除：コンテナ（#seiseki-graph / #resultCards）が存在せず未描画。
+// ハードコードの古い成績が残ると上書き事故の元になるため（静的 RESULTS 配列）。
 
 function toggleResult(id) {
   var el = document.getElementById('result-' + id);
@@ -30216,70 +30014,8 @@ function toggleResult(id) {
   }
 }
 
-function renderResults() {
-  const root = document.getElementById('resultCards');
-  if (!root) return;
-  root.innerHTML = '';
-  RESULTS.forEach((r, i) => {
-    const profit = r.payout - r.invest;
-    const roi = r.invest > 0 ? Math.round((r.payout / r.invest) * 100) : 0;
-    const card = document.createElement('div');
-    card.className = 'result-card' + (r.hit ? ' hit' : '');
-    card.innerHTML = `
-      <div class="result-card-head">
-        <div>
-          <div class="result-card-title">${r.raceTitle}</div>
-          <div class="result-card-sub">${r.raceSub}</div>
-        </div>
-        <span class="result-status ${r.hit ? 'hit' : 'miss'}">${r.hit ? '的中' : '不的中'}</span>
-      </div>
-
-      <div class="result-buy">
-        <span class="buy-label">買い方</span>${r.bet}
-      </div>
-
-      <div class="result-numbers">
-        <div class="result-num"><div class="rn-label">投資額</div><div class="rn-val">¥${r.invest.toLocaleString()}</div></div>
-        <div class="result-num ${r.hit ? 'gold' : ''}"><div class="rn-label">払戻</div><div class="rn-val">¥${r.payout.toLocaleString()}</div></div>
-        <div class="result-num ${profit >= 0 ? 'profit' : 'loss'}"><div class="rn-label">収支</div><div class="rn-val">${profit >= 0 ? '+' : ''}¥${profit.toLocaleString()}</div></div>
-        <div class="result-num ${r.hit ? 'gold' : ''}"><div class="rn-label">回収率</div><div class="rn-val">${roi}%</div></div>
-      </div>
-
-      <button class="result-toggle" data-idx="${i}">結果を見る ▼</button>
-
-      <div class="result-detail" id="detail-${i}">
-        <div class="result-detail-inner">
-          <ul class="placing-list">
-            ${r.placings.map(p => `
-              <li>
-                <span class="placing-pos ${p.cancel ? 'pos-cancel' : 'pos-' + (p.pos.startsWith('1') ? '1' : p.pos.startsWith('2') ? '2' : p.pos.startsWith('3') ? '3' : '')}">${p.pos}</span>
-                <span class="placing-name">${p.name}</span>
-                <span class="placing-meta">${p.meta}</span>
-              </li>`).join('')}
-          </ul>
-          <div class="payout-row">
-            <span class="pay-label">${r.payoutDetail.label} ${r.payoutDetail.note}</span>
-            <span class="pay-val">${r.payoutDetail.val}</span>
-          </div>
-          <div class="reason-box">${r.reason}</div>
-        </div>
-      </div>
-    `;
-    root.appendChild(card);
-  });
-
-  // toggle handlers
-  document.querySelectorAll('.result-toggle').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const idx = btn.dataset.idx;
-      const detail = document.getElementById(`detail-${idx}`);
-      const open = detail.classList.toggle('open');
-      btn.classList.toggle('open', open);
-      btn.textContent = open ? '結果を閉じる ▲' : '結果を見る ▼';
-    });
-  });
-}
-renderResults();
+// 2026-10-12 削除：コンテナ（#seiseki-graph / #resultCards）が存在せず未描画。
+// ハードコードの古い成績が残ると上書き事故の元になるため（renderResults とその呼び出し）。
 
 /* =====================================================
  *  枠順確定後（4/30）の更新ガイド
