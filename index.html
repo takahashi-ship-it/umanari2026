@@ -10,7 +10,7 @@
 <script>
 (function() {
   // バージョンキー（HTMLが更新されるたびに変更）
-  var CURRENT_VERSION = '20261014-0958-fuji-rtfd';
+  var CURRENT_VERSION = '20261014-1012-fuji-engine';
   var savedVersion = localStorage.getItem('app_version');
 
   if (savedVersion !== CURRENT_VERSION) {
@@ -23319,6 +23319,212 @@ function computeScoreBreakdownShionV1(h,_rawOnly){
 //   前走クラス・前走海外…母数14/11で未確立（前走GI p=0.027、海外0-0-0-11 p=0.221）
 //   種牡馬…コース全体の成績で本レースの着別度数ではない
 // 較正: 6項目すべて本レースの過去10年の着別度数由来＝較正済。道悪適性のみ uncalibrated:true とし totalCal/maxCal から除く（常に95点満点の尺度）。
+// ========== 富士S（東京芝1600m・GII・3歳以上・別定）==========
+// FUJI_V1 / Σmax=140（較正済 totalCal/maxCal=75。4つの補正3着内率（各10点）＋追い切り15・陣営コメント10は uncalibrated）
+// 追い切り15点は _FUJI_USE_WORK で切り替える。false にすると項目ごと外れて Σmax=125 になる。
+// 過去データ: RACE_PAST_DATA['富士S']（results 150行・races 10・top3 30。10年149頭／GII昇格後6年87頭）
+// 出走馬:     HORSES_BY_RACE['富士S']（14頭・raceHistory 190走／着順が数字187・中止1・取消1・除外1・海外3）
+// 較正済(75点)の内訳と出典:
+//   当日人気20 / 年齢10 / 枠5 … 過去10年の results（RACE_PAST_DATA['富士S']・母数149）
+//     人気は1〜3番人気で16/30（53.3%）・4〜6番人気10/30（33.3%）に対し7番人気以下が4/89（4.5%）。
+//     年齢は4歳10/35（28.6%）が最高で、3歳6/28（21.4%）・5歳10/46（21.7%）・6歳3/26（11.5%）・7歳以上1/14（7.1%）。
+//     枠は4枠6/17（35.3%）・7枠8/22（36.4%）・8枠6/23（26.1%）が高く、1〜3枠は4/48（8.3%）。
+//   前走の格12 / 前走の距離10 / 前走着順8 / 前走人気5 … TURFに吹く風（2016〜2025年）
+//   実績による斤量の加増5 … results から年ごとの基準斤量で再集計（加増なし14/111・+1kg 9/26・+2kg以上7/12）
+//   当日人気の階段（1〜4番20／5〜6番8／7〜11番3／12番以下0）は確定オッズを見る前（2026-10-14）に決めた。
+// 未較正(加点専用)は補正3着内率4項目と、人間の判断による追い切り・陣営コメント。
+//   補正3着内率＝（3着内数+0.75）÷（走数+3）、点数＝min(10, max(0,(補正率−0.25)×40))。IrelandV1・SwanV1・ShukaV1 と同じ式。
+//   母集団は着順が数字の走（中止・取消・除外を除く）。競馬場・重賞の項目はJRAのみ、距離の項目だけ海外の芝を含める（±50mを同距離）。
+// 入れていない項目とその理由:
+//   性別 … 今年の14頭に牝馬がいない（過去10年では牝6/15＝40.0%と高いが今年は使えない）
+//   所属 … 栗東18/84＝21.4%・美浦12/60＝20.0%で差が小さい
+//   脚質 … 過去10年の逃げは0/10だが、出走前に逃げる馬を判定できない
+//   4角位置 … 1〜2番手が3-0-0-22と極端で母数も25頭と少なく、帯の切り方で数字が動きすぎる
+var _FUJI_USE_WORK = true;   // アギョウの追い切り評価が出なければ false にする（Σmax 125）
+var _FUJI_WORK={'S':15,'A':10,'B':0};
+var _FUJI_COMMENT={'◎':10,'○':0,'△':0};
+// age が未投入の間に使う推定年齢。出馬表で確定させる（note に「推定」と出す）
+var _FUJI_EST_AGE={'アドマイヤズーム':4,'アンパドゥ':5,'ウォーターリヒト':5,'エコロアルバ':3,'エンペラーズソード':4,
+ 'キープカルム':5,'シュガークン':5,'シンフォーエバー':4,'デビットバローズ':7,'トロヴァトーレ':5,
+ 'ファンダム':4,'ファーヴェント':5,'マジックサンズ':4,'ミトノオルフェ':4};
+var _FUJI_JRA={'札幌':1,'函館':1,'福島':1,'新潟':1,'東京':1,'中山':1,'中京':1,'京都':1,'阪神':1,'小倉':1};
+var _FUJI_GN={'GI':1,'GII':2,'GIII':3};
+// 前走＝着順が数字の直近の走（中止・取消・除外を除く）。海外の走が前走になる馬は今年いない
+function _fujiPrev(h0){
+  var rh=h0.raceHistory||[];
+  for(var i=0;i<rh.length;i++){
+    var r=rh[i];
+    if(r.kind==='取消'||r.kind==='除外'||r.kind==='中止') continue;
+    if(r.rank==null) continue;
+    return r; }
+  return null;
+}
+// 母集団：着順が数字の走。競馬場・重賞はJRAのみ、距離だけ海外の芝を含める（±50mを同距離）
+function _fujiNum(h0){
+  var rh=h0.raceHistory||[], out=[];
+  for(var i=0;i<rh.length;i++){ if(rh[i].rank!=null) out.push(rh[i]); }
+  return out;
+}
+function _fujiAdj(rows){
+  var n=rows.length, t=0;
+  for(var i=0;i<n;i++){ if(rows[i].rank<=3) t++; }
+  var rate=(t+0.75)/(n+3);
+  return {n:n, t3:t, rate:rate, v:Math.min(10,Math.max(0,(rate-0.25)*40))};
+}
+function _getFujiScoreStats(){
+  var xs=[], hs=(typeof HORSES_BY_RACE!=='undefined'&&HORSES_BY_RACE['富士S'])||[];
+  for(var i=0;i<hs.length;i++){ xs.push(computeScoreBreakdownFujiV1(hs[i],true).total); }
+  if(!xs.length) return {mean:0,sd:0};
+  var m=xs.reduce(function(a,b){return a+b;},0)/xs.length;
+  var v=xs.reduce(function(a,b){return a+(b-m)*(b-m);},0)/xs.length;
+  return {mean:m, sd:Math.sqrt(v)};
+}
+function computeScoreBreakdownFujiV1(h,_rawOnly){
+  var h0=h||{};
+  var it=[], add=function(k,v,mx,note,grp){
+    v=Math.round(v*10)/10;
+    it.push({key:k,value:v,max:mx,note:note||'',label:k,score:v,group:grp||'horse'});
+  };
+  var SRCR='【出典:過去10年の results（RACE_PAST_DATA[\'富士S\']・母数149。出走除外1頭を除く）】';
+  var SRCT='【出典:TURFに吹く風（2016〜2025年）】';
+  // ① 当日人気 20
+  var P=(h0.pop!=null)?h0.pop:h0.popEstimate, isFinal=(h0.pop!=null), pv, pn;
+  if(P==null){ pv=0; pn='人気が取れない→0'; }
+  else if(P<=4){ pv=20; pn=P+'番人気（1〜4番人気）'; }
+  else if(P<=6){ pv=8;  pn=P+'番人気（5〜6番人気）'; }
+  else if(P<=11){ pv=3; pn=P+'番人気（7〜11番人気）'; }
+  else { pv=0; pn=P+'番人気（12番人気以下は0）'; }
+  add('当日人気',pv,20,pn+'【1〜4番20／5〜6番8／7〜11番3／12番以下0】'+SRCR
+    +'【1〜3番人気16/30＝53.3%・4〜6番人気10/30＝33.3%に対し7番人気以下は4/89＝4.5%】'
+    +'【この階段は確定オッズを見る前（2026-10-14）に決めた】'
+    +(isFinal?'【確定オッズ】':'【★予想オッズ・確定前。当日朝に確定値で取り直すこと（§13）】'),'env');
+  var p=_fujiPrev(h0), isG=!!(p&&_FUJI_GN[p.grade]);
+  var pl=p?(p.course+(p.surface||'')+(p.distance||'')+' '+(p.raceName||'')+(p.grade?'('+p.grade+')':'')
+        +' '+(p.pop==null?'人気なし':p.pop+'番人気')+p.rank+'着'):'なし';
+  var PN='。前走＝'+pl+'【前走＝着順が数字の直近の走（中止・取消・除外を除く）。今年は海外の走が前走になる馬はいない】';
+  // ② 前走の格 12
+  var gv,gn;
+  if(!p){ gv=0; gn='前走が取れない→0'; }
+  else if(p.grade==='GI'||p.grade==='GII'){ gv=12; gn='前走は'+p.grade; }
+  else if(p.grade==='GIII'){ gv=5; gn='前走はGIII'; }
+  else { gv=0; gn='前走は重賞以外（L・OP・3勝クラス以下）→0'; }
+  add('前走の格',gv,12,gn+PN+'【GI・GII 12／GIII 5／それ以外0】'+SRCT,'horse');
+  // ③ 前走の距離 10
+  var dv,dn;
+  if(!p){ dv=0; dn='前走が取れない→0'; }
+  else if(p.surface==='芝'&&p.distance===1600){ dv=10; dn='前走は芝1600m（同距離）'; }
+  else if(p.distance>=1700){ dv=3; dn='前走は'+p.surface+p.distance+'m（1700m以上）'; }
+  else { dv=0; dn='前走は'+p.surface+p.distance+'m（1500m以下は0）'; }
+  add('前走の距離',dv,10,dn+PN+'【芝1600m 10／1700m以上3／1500m以下0】'+SRCT,'horse');
+  // ④ 前走着順 8（前走が重賞のときだけ）
+  var rv,rn;
+  if(!p){ rv=0; rn='前走が取れない→0'; }
+  else if(!isG){ rv=0; rn='前走が重賞ではない→0（この項目は前走が重賞のときだけ効く）'; }
+  else if(p.rank<=4){ rv=8; rn='前走は'+p.grade+'で'+p.rank+'着（1〜4着）'; }
+  else { rv=2; rn='前走は'+p.grade+'で'+p.rank+'着（5着以下）'; }
+  add('前走着順',rv,8,rn+PN+'【前走が重賞のときだけ 1〜4着8／5着以下2。重賞以外は0】'+SRCT,'horse');
+  // ⑤ 前走人気 5（前走が重賞のときだけ）
+  var qv,qn;
+  if(!p||p.pop==null){ qv=0; qn='前走の人気が取れない→0'; }
+  else if(!isG){ qv=0; qn='前走が重賞ではない→0（この項目は前走が重賞のときだけ効く）'; }
+  else if(p.pop<=9){ qv=5; qn='前走は'+p.grade+'で'+p.pop+'番人気（9番人気以内）'; }
+  else { qv=0; qn='前走は'+p.grade+'で'+p.pop+'番人気（10番人気以下は0）'; }
+  add('前走人気',qv,5,qn+PN+'【前走が重賞のときだけ 9番人気以内5／10番人気以下0。重賞以外は0】'+SRCT,'horse');
+  // ⑥ 年齢 10
+  var age=h0.age, estimated=false;
+  if(age==null){ age=_FUJI_EST_AGE[h0.name]; estimated=(age!=null); }
+  var av,an;
+  if(age==null){ av=0; an='年齢が取れない→0'; }
+  else if(age===4){ av=10; an='4歳'; }
+  else if(age===3||age===5){ av=7; an=age+'歳'; }
+  else if(age===6){ av=3; an='6歳'; }
+  else { av=1; an=age+'歳（7歳以上）'; }
+  add('年齢',av,10,an+(estimated?'【★推定（出馬表で確定）。ロスターの age が未投入のため _FUJI_EST_AGE の推定年齢を使っている】':'')
+    +'【4歳10／3歳・5歳7／6歳3／7歳以上1】'+SRCR
+    +'【4歳10/35＝28.6%が最高。3歳6/28＝21.4%・5歳10/46＝21.7%・6歳3/26＝11.5%・7歳以上1/14＝7.1%】','horse');
+  // ⑦ 実績による斤量の加増 5
+  var cw=h0.carriedWeight, base=null, wv=0, wn;
+  if(cw==null||age==null){ wn='斤量または年齢が取れない→0'; }
+  else {
+    base=(age<=3?55:57)-((h0.sex==='牝')?2:0);
+    if(cw>base){ wv=5; wn='斤量'+cw+'kg（基準'+base+'kgより+'+(Math.round((cw-base)*10)/10)+'kg）'; }
+    else { wn='斤量'+cw+'kg（基準'+base+'kg・加増なし→0）'; }
+  }
+  add('斤量の加増',wv,5,wn
+    +'【基準斤量は2023年以降の条件で 古馬牡57kg・3歳牡55kg、牝馬は−2kg。基準より重ければ5】'
+    +'【results から年ごとの基準斤量で再集計: 加増なし14/111＝12.6%・+1kg 9/26＝34.6%・+2kg以上7/12＝58.3%】'
+    +'【今年は14頭中アドマイヤズーム（58kg）だけが該当】'
+    +(estimated?'【年齢が推定値のため基準斤量も暫定。出馬表で確定させる】':''),'horse');
+  // ⑧ 枠 5
+  var wk=h0.waku, kv, kn;
+  if(wk==null){ kv=0; kn='枠未確定→全頭0点（枠順確定後に反映）'; }
+  else if(wk>=4){ kv=5; kn=wk+'枠（4〜8枠）'; }
+  else { kv=0; kn=wk+'枠（1〜3枠は0）'; }
+  add('枠',kv,5,kn+'【4〜8枠5／1〜3枠0】'+SRCR
+    +'【4枠6/17＝35.3%・7枠8/22＝36.4%・8枠6/23＝26.1%に対し1〜3枠は4/48＝8.3%】','env');
+  // ⑨〜⑫ 補正3着内率 各10点【未較正・加点専用】
+  var num=_fujiNum(h0);
+  var jra=[], ovsTurf=[];
+  for(var i3=0;i3<num.length;i3++){
+    var r3=num[i3];
+    if(r3.kind==='平地'&&_FUJI_JRA[r3.course]) jra.push(r3);
+    else if(r3.kind==='海外'&&r3.surface==='芝'&&Math.abs(r3.distance-1600)<=50) ovsTurf.push(r3);
+  }
+  var ADJ=('【未較正：補正3着内率＝（3着内数+0.75）÷（走数+3）で、重賞平均25%の成績3戦分を加えて補正。'
+   +'点数＝(補正率−0.25)×40 を0以上10以下に収めた加点専用（未経験は0点）。'
+   +'母集団は着順が数字の走（中止・取消・除外を除く）。競馬場・重賞の項目はJRAのみで、'
+   +'距離の項目だけ海外の芝を含める（±50mを同距離）。本レースの着別度数では裏付けていない。'
+   +'IrelandV1・SwanV1・ShukaV1 と同じ式】');
+  var defs=[['東京芝','東京の芝（JRA平地）',function(){ var o=[];
+              for(var i=0;i<jra.length;i++){ if(jra[i].surface==='芝'&&jra[i].course==='東京') o.push(jra[i]); } return o; }],
+            ['芝1600m','芝1600m（JRA平地＋海外の芝±50m）',function(){ var o=[];
+              for(var i=0;i<jra.length;i++){ if(jra[i].surface==='芝'&&jra[i].distance===1600) o.push(jra[i]); }
+              return o.concat(ovsTurf); }],
+            ['東京芝1600m','東京の芝1600m（JRA平地）',function(){ var o=[];
+              for(var i=0;i<jra.length;i++){ if(jra[i].surface==='芝'&&jra[i].course==='東京'&&jra[i].distance===1600) o.push(jra[i]); } return o; }],
+            ['重賞','JRAの重賞の芝（GI・GII・GIII）',function(){ var o=[];
+              for(var i=0;i<jra.length;i++){ if(_FUJI_GN[jra[i].grade]&&jra[i].surface==='芝') o.push(jra[i]); } return o; }]];
+  for(var di=0;di<defs.length;di++){
+    var rows=defs[di][2]();
+    var a=_fujiAdj(rows);
+    add(defs[di][0],a.v,10,defs[di][1]+'で'+a.t3+'/'+a.n+'走が3着内。補正すると('+a.t3+'+0.75)÷('+a.n+'+3)＝'
+      +(a.rate*100).toFixed(1)+'%'+ADJ,'horse');
+  }
+  // ⑬ 追い切り 15【未較正・加点専用／フラグで切替】
+  if(_FUJI_USE_WORK){
+    var wg=h0.workGrade, ww=(wg==null?undefined:_FUJI_WORK[wg]), wn2;
+    if(wg==null){ ww=0; wn2='追い切り評価が未投入→全頭0点'; }
+    else if(ww===undefined){ ww=0; wn2='追い切り評価なし→0（'+wg+' は換算表に無い）'; }
+    else { wn2='追い切り評価'+wg+'（S15／A10／B0）'; }
+    add('追い切り評価',ww,15,wn2
+      +'【出典:アギョウ（agyo-keiba.com）単独。×・評価なしは0点】'
+      +'【人間の判断による分類。アギョウはサウジ・アイルランド・スワンの3レース通算で S/A 19頭中6頭が3着内（31.6%）・B以下14頭が0/14で、'
+      +'3レース連続で2群の分離が最もきれいだった情報源。採点は確定値キー workGrade だけを読む】'
+      +'【アギョウの評価が出ない場合は _FUJI_USE_WORK=false にして項目ごと外す（Σmax 125）】','horse');
+  }
+  // ⑭ 陣営コメント 10【未較正・加点専用】
+  var cg=h0.commentGrade, cv2=(cg==null?undefined:_FUJI_COMMENT[cg]), cn2;
+  if(cg==null){ cv2=0; cn2='陣営コメントが未投入→全頭0点'; }
+  else if(cv2===undefined){ cv2=0; cn2='陣営コメントの分類なし→0（'+cg+' は配点表に無い）'; }
+  else { cn2='陣営コメント'+cg+'（◎10／○0／△0）'; }
+  add('陣営コメント',cv2,10,cn2
+    +'【出典:競馬の魅力（keibanomiryoku.com）。◎○△の分類はチャットのClaudeの読み】'
+    +'【人間の判断による分類。3レース通算では ◎16頭中6頭が3着内（37.5%）に対し ○16頭12.5%・△13頭7.7%で'
+    +'○と△の差がほとんど無かったため、◎だけに10点を置き ○・△は0点にしている。採点は確定値キー commentGrade だけを読む】','horse');
+  var UNCAL={'東京芝':1,'芝1600m':1,'東京芝1600m':1,'重賞':1,'追い切り評価':1,'陣営コメント':1};
+  var totalCal=0, maxCal=0;
+  for(var ci=0;ci<it.length;ci++){ it[ci].uncalibrated=!!UNCAL[it[ci].key];
+    if(!it[ci].uncalibrated){ totalCal+=it[ci].score; maxCal+=it[ci].max; } }
+  totalCal=Math.round(totalCal*10)/10;
+  var total=0; for(var i2=0;i2<it.length;i2++){ total+=it[i2].value; }
+  total=Math.round(total*10)/10;
+  var max=it.reduce(function(x,y){return x+y.max;},0);
+  var out={items:it, total:total, max:max, penalty:0, totalCal:totalCal, maxCal:maxCal};
+  if(_rawOnly) return out;
+  var st=_getFujiScoreStats(), z=st.sd?(out.total-st.mean)/st.sd:0;
+  out.pct=Math.round((8+(79-8)/(1+Math.exp(-1.35*z)))*10)/10;
+  return out;
+}
 // ========== 秋華賞（京都芝2000m内回り・GI・3歳牝馬・馬齢）==========
 // SHUKA_V1 / Σmax=130（較正済 totalCal/maxCal=75。3つの補正3着内率（各10点）＋追い切り15・陣営コメント10は uncalibrated）
 // 追い切り15点は _SHUKA_USE_WORK で切り替える。false にすると項目ごと外れて Σmax=115 になる。
@@ -28454,6 +28660,7 @@ function computeScoreBreakdown(horse, raceName) {
   if(raceName==='関屋記念') return computeScoreBreakdownSekiyaV2(horse, raceName);
   if (raceName === '新潟記念') return computeScoreBreakdownNiigataKinenV2(horse);
   if (raceName === '紫苑S' && horse && horse.isAvoided) return { total:0, max:87, pct:0, items:[], isAvoided:true, avoidReason: horse.avoidReason || '出走回避' };
+  if (raceName === '富士S') return computeScoreBreakdownFujiV1(horse);
   if (raceName === '秋華賞') return computeScoreBreakdownShukaV1(horse);
   if (raceName === 'サウジアラビアロイヤルC') return computeScoreBreakdownSaudiV1(horse);
   if (raceName === 'スワンS') return computeScoreBreakdownSwanV1(horse);
